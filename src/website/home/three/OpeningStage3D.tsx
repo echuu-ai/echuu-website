@@ -1,3 +1,4 @@
+import { SkyEdgeEffect } from './SkyEdgeEffect';
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Bloom, DepthOfField, EffectComposer, ToneMapping } from '@react-three/postprocessing';
@@ -21,6 +22,7 @@ import { publicUrl } from '../../../lib/publicUrl';
 import { HOME_OPENING_MODEL, HOME_OPENING_MOTIONS } from '../../assets';
 import { WEBSITE_SKY_HDR } from '../../sky';
 import heroSceneJson from '../heroScene.json';
+import { createReachPose } from './reachPose';
 import {
   OPENING,
   OPENING_MOTION,
@@ -33,7 +35,7 @@ import {
   type OpeningClock,
 } from '../openingTimeline';
 
-type MotionKey = keyof typeof HOME_OPENING_MOTIONS;
+import { MOTION_KEYS, motionTime, motionWeight, portraitPullback, type MotionKey } from '../openingMotion';
 
 /**
  * 首屏定格镜头来自 Cory 在 /scene-editor-lab 导出的场景文件（heroScene.json）：
@@ -101,18 +103,7 @@ const CAMERA_KEYS: CameraKey[] = [
   { t: OPENING_TOTAL, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
 ];
 
-type MotionPlan = { key: MotionKey; loop: THREE.AnimationActionLoopStyles; fade: number; offset?: number; timeScale?: number };
-
 const LOCK_CLIP = HERO_ACTOR?.clips.find((clip) => clip.motionId.includes('spot-target-locked'));
-
-function motionPlanAt(t: number): MotionPlan {
-  if (t < OPENING_MOTION.lieStart) return { key: 'sleep', loop: THREE.LoopRepeat, fade: 0.6, offset: 1.5 };
-  if (t < OPENING_MOTION.introStart) return { key: 'lieDown', loop: THREE.LoopOnce, fade: 0.9 };
-  // 白闪遮住这一刀：躺卧直接切到 PET_INTRO 第 0 帧，不做躺→站的四元数混合（那会出现一段奇怪的过渡动作）
-  if (t < OPENING_MOTION.introEndStart) return { key: 'intro', loop: THREE.LoopOnce, fade: 0 };
-  if (t < OPENING_MOTION.lockStart) return { key: 'introEnd', loop: THREE.LoopOnce, fade: 0.35 };
-  return { key: 'targetLock', loop: THREE.LoopOnce, fade: LOCK_CLIP?.blend ?? 0.6, timeScale: LOCK_CLIP?.speed ?? 1 };
-}
 
 /** 场景文件里的表情 / 注视只在定格阶段生效，开场分镜跟随动作本身 */
 const heroActorActive = (t: number) => t >= OPENING_MOTION.lockStart;
@@ -237,7 +228,6 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
   const state = useRef({
     mixer: null as THREE.AnimationMixer | null,
     actions: {} as Partial<Record<MotionKey, THREE.AnimationAction>>,
-    current: null as THREE.AnimationAction | null,
     currentKey: null as MotionKey | null,
     effect: 'none' as SceneEffectMode,
     restoreEffect: () => {},
@@ -259,7 +249,12 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
           const { clip } = bakeMotionForVrm(motions[key], vrm as never, { includeLookAt: false });
           if (!clip) return;
           clip.name = `website-opening:${key}`;
-          actions[key] = mixer.clipAction(clip);
+          const action = mixer.clipAction(clip);
+          action.setLoop(THREE.LoopOnce, 1);
+          action.clampWhenFinished = true;
+          action.paused = true;
+          action.play();
+          actions[key] = action;
         });
         state.current.mixer = mixer;
         state.current.actions = actions;
@@ -288,7 +283,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     anchor: new THREE.Vector3(), look: new THREE.Vector3(),
     posA: new THREE.Vector3(), posB: new THREE.Vector3(), lookA: new THREE.Vector3(), lookB: new THREE.Vector3(),
     targetPos: new THREE.Vector3(), targetLook: new THREE.Vector3(), smoothedLook: new THREE.Vector3(),
-    ikTarget: new THREE.Vector3(), ikPole: new THREE.Vector3(), qRoot: new THREE.Quaternion(), qMid: new THREE.Quaternion(),
+    ikTarget: new THREE.Vector3(), ikPole: new THREE.Vector3(),
     head: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), snapped: false,
   }), []);
 
@@ -304,29 +299,31 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     boneWorld(key.look, look).add(pool.anchor.set(key.lookOff[0], key.lookOff[1], key.lookOff[2]));
   };
 
-  const playMotion = (plan: MotionPlan, t: number) => {
+  const reachBones = useMemo(() => ({
+    root: vrm.humanoid.getNormalizedBoneNode('rightUpperArm'),
+    mid: vrm.humanoid.getNormalizedBoneNode('rightLowerArm'),
+    tip: vrm.humanoid.getNormalizedBoneNode('rightHand'),
+    head: vrm.humanoid.getNormalizedBoneNode('head'),
+  }), [vrm]);
+  const reachPose = useMemo(() => createReachPose(reachBones.root, reachBones.mid), [reachBones]);
+
+  const sampleMotion = (t: number) => {
     const s = state.current;
-    const action = s.actions[plan.key];
-    if (!action || s.currentKey === plan.key) return;
-    const previous = s.current;
-    action.reset();
-    action.enabled = true;
-    action.loop = plan.loop;
-    action.clampWhenFinished = true;
-    action.setEffectiveWeight(1);
-    action.setEffectiveTimeScale(plan.timeScale ?? 1);
-    action.time = plan.offset ?? 0;
-    // 跳过开场时直接停在 spot_target_locked 的最后一帧
-    if (plan.key === 'targetLock' && t >= OPENING_TOTAL - 0.05) action.time = Math.max(0, action.getClip().duration - 1e-3);
-    action.play();
-    if (previous && previous !== action) {
-      if (plan.fade <= 0) previous.stop();
-      else previous.crossFadeTo(action, plan.fade, false);
-    } else if (plan.fade > 0) {
-      action.fadeIn(plan.fade);
+    // PropertyMixer can skip unchanged tracks. Undo last frame's IK before sampling,
+    // otherwise a held/clamped animation accumulates the correction every frame.
+    reachPose.restore();
+    let dominantWeight = -1;
+    for (const key of MOTION_KEYS) {
+      const action = s.actions[key];
+      if (!action) continue;
+      const weight = motionWeight(key, t, LOCK_CLIP?.blend);
+      action.enabled = true;
+      action.paused = true;
+      action.time = motionTime(key, t, action.getClip().duration, LOCK_CLIP?.speed);
+      action.setEffectiveWeight(weight);
+      if (weight > dominantWeight) { dominantWeight = weight; s.currentKey = key; }
     }
-    s.current = action;
-    s.currentKey = plan.key;
+    s.mixer!.update(0);
   };
 
   const applyEffect = (mode: SceneEffectMode) => {
@@ -340,20 +337,15 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
   const applyReach = (weight: number) => {
     if (weight <= 0) return;
     const humanoid = vrm.humanoid;
-    const root = humanoid.getNormalizedBoneNode('rightUpperArm');
-    const mid = humanoid.getNormalizedBoneNode('rightLowerArm');
-    const tip = humanoid.getNormalizedBoneNode('rightHand');
-    const head = humanoid.getNormalizedBoneNode('head');
+    const { root, mid, tip, head } = reachBones;
     if (!root || !mid || !tip || !head) return;
     humanoid.normalizedHumanBonesRoot.updateMatrixWorld(true);
     head.getWorldPosition(pool.head);
     pool.ikTarget.copy(pool.head).add(pool.anchor.set(0.16, 0.52, 0.3));
     pool.ikPole.copy(pool.head).add(pool.anchor.set(0.62, 0.12, 0.36));
-    pool.qRoot.copy(root.quaternion);
-    pool.qMid.copy(mid.quaternion);
+    reachPose.capture();
     solveTwoBoneIk({ root, mid, tip }, pool.ikTarget, pool.ikPole);
-    root.quaternion.slerp(pool.qRoot, 1 - weight);
-    mid.quaternion.slerp(pool.qMid, 1 - weight);
+    reachPose.blend(weight);
   };
 
   /** 场景文件里的表情权重、眼镜开关与注视（与编辑器 Actor 同一套顺序）+ 定格后的眨眼 */
@@ -393,11 +385,10 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     const jumped = s.lastT >= 0 && Math.abs(t - s.lastT) > 1;
     s.lastT = t;
 
-    playMotion(motionPlanAt(t), t);
     // 先清掉手动表情再采样动作，回到动作模式时动作自己的表情才会恢复
     const actorActive = heroActorActive(t);
     if (vrm.expressionManager && HERO_ACTOR?.expression) for (const key of FACE_CHANNELS) vrm.expressionManager.setValue(key, 0);
-    s.mixer.update(jumped ? 2 : delta);
+    sampleMotion(t);
     applyReach(reachWeight(t));
     applyActorFace(actorActive, now);
     vrm.update(delta);
@@ -444,6 +435,14 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     }
 
     const perspective = camera as THREE.PerspectiveCamera;
+    const pullback = portraitPullback(perspective.aspect, t);
+    pool.anchor.copy(pool.targetPos).sub(pool.targetLook);
+    const extraFocusDistance = pool.anchor.length() * pullback;
+    pool.targetPos.addScaledVector(pool.anchor, pullback);
+    // Keep the character above the mobile title and action bar.
+    const portraitLift = Math.min(1, pullback) * 0.1;
+    pool.targetPos.y -= portraitLift;
+    pool.targetLook.y -= portraitLift;
     if (!pool.snapped || jumped) {
       camera.position.copy(pool.targetPos);
       pool.smoothedLook.copy(pool.targetLook);
@@ -468,7 +467,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     view.dofEnabled = enabled > 0.02;
     view.blur = THREE.MathUtils.lerp(dofA.blur ?? 1.4, dofB.blur ?? 1.4, u) * enabled;
     view.focusRange = THREE.MathUtils.lerp(dofA.focusRange ?? 0.3, dofB.focusRange ?? 0.3, u);
-    view.focusDistance = THREE.MathUtils.lerp(dofA.focusDistance ?? 4, dofB.focusDistance ?? 4, u);
+    view.focusDistance = THREE.MathUtils.lerp(dofA.focusDistance ?? 4, dofB.focusDistance ?? 4, u) + extraFocusDistance;
     view.focusMode = (u < 0.5 ? dofA : dofB).focusMode ?? 'target';
     view.target = (u < 0.5 ? dofA : dofB).target;
   });
@@ -596,7 +595,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       frameloop={running ? 'always' : 'never'}
       dpr={[1, 1.5]}
       camera={{ fov: 30, near: 0.05, far: 80, position: [2, 1, 2] }}
-      gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
     >
       <Suspense fallback={null}>
         <LiveRotatableHdrSky
@@ -618,6 +617,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
           <Bloom {...liveBloom(look)} mipmapBlur />
           <ToneMapping mode={ToneMappingMode.LINEAR} />
           <AppColorGradeLutPass forceWebGl includeTone />
+          <SkyEdgeEffect hole={hole} />
         </>
       </EffectComposer>
     </FlightCanvas>

@@ -10,7 +10,7 @@ export const CANONICAL_ORIGIN: string | null =
   (import.meta.env.VITE_SITE_ORIGIN as string | undefined) ?? null;
 
 /** 官网挂载路径。与 src/website/router.ts 的 WEBSITE_BASE 一致。 */
-export const BASE_PATH = '/website';
+export const BASE_PATH = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;
 
 /**
  * 内测报名接口。没有已验证的接口时保持 null，
@@ -36,6 +36,7 @@ export const BUSINESS_EMAIL_NOTE = {
 /** 只列已取得真实地址的社交账号。 */
 export const SOCIAL_LINKS = [
   { id: 'x', label: 'X', href: 'https://x.com/Echuu_AIVTUBING' },
+  { id: 'youtube', label: 'YouTube', href: 'https://youtu.be/4EOBKoR7OQQ' },
 ] as const;
 
 /** Beta 文档 / 准备指南。 */
@@ -73,4 +74,4 @@ export const BRAND_FONT_LICENSED =
   (import.meta.env.VITE_BRAND_FONT_LICENSED as string | undefined) === '1';
 
 /** Product sign-up remains on the separately deployed product app. */
-export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || "https://echuu.app").replace(/\/$/, "");
+export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.app")).replace(/\/$/, "");

@@ -11,20 +11,22 @@
     "check:assets": "node scripts/check-assets.mjs"
   },
   "dependencies": {
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "zustand": "4.5.7",
+    "@openpanel/web": "1.4.1",
+    "@pixiv/three-vrm": "3.5.2",
+    "@pixiv/three-vrm-animation": "3.5.3",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@react-three/drei": "9.122.0",
     "@react-three/fiber": "8.18.0",
     "@react-three/postprocessing": "2.19.1",
-    "postprocessing": "6.36.6",
-    "@pixiv/three-vrm": "3.5.2",
-    "three": "0.159.0",
-    "react-hsv-ring": "0.1.9",
-    "three-stdlib": "2.36.1",
     "lucide-react": "0.536.0",
-    "@pixiv/three-vrm-animation": "3.5.3",
-    "@openpanel/web": "1.4.1"
+    "motion": "^13.4.4",
+    "postprocessing": "6.36.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hsv-ring": "0.1.9",
+    "three": "0.159.0",
+    "three-stdlib": "2.36.1",
+    "zustand": "4.5.7"
   },
   "devDependencies": {
     "@types/node": "20.19.41",
@@ -32,10 +34,10 @@
     "@types/react-dom": "18.3.7",
     "@types/three": "0.158.3",
     "@vitejs/plugin-react": "4.7.0",
+    "happy-dom": "20.9.0",
     "typescript": "5.9.3",
     "vite": "6.4.3",
-    "vitest": "4.1.7",
-    "happy-dom": "20.9.0"
+    "vitest": "4.1.7"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -32,13 +32,13 @@ export function StepsSection() {
   const { h } = useHomeDict();
   return (
     <section className="hv-section hv-steps" id="steps" aria-labelledby="hv-steps-title">
-      <div className="hv-steps__head">
+      <Reveal className="hv-steps__head">
         <img className="hv-steps__girl" src={HOME_ASSETS.silhouetteGirl} alt="" width={88} height={232} loading="lazy" />
         <div>
           <h2 className="hv-h2 hv-h2--right" id="hv-steps-title">{h.steps.title}</h2>
           <p className="hv-lede hv-lede--right">{h.steps.lede}</p>
         </div>
-      </div>
+      </Reveal>
       <span className="hv-steps__three" aria-hidden="true">3</span>
       <ol className="hv-steps__list">
         {h.steps.items.map((item, index) => (
@@ -46,7 +46,7 @@ export function StepsSection() {
             <Reveal className="hv-steps__shot">
               <img src={HOME_ASSETS.steps[index]} alt={h.steps.shotAlt[index]} width={702} height={382} loading="lazy" decoding="async" />
             </Reveal>
-            <div className="hv-steps__text">
+            <Reveal className="hv-steps__text">
               <span className="hv-steps__no">{item.no}</span>
               <h3 className="hv-steps__title">{item.title}</h3>
               <p className="hv-steps__body">{item.body}</p>
@@ -55,7 +55,7 @@ export function StepsSection() {
                   {h.steps.vrmGuide}
                 </a>
               ) : null}
-            </div>
+            </Reveal>
           </li>
         ))}
       </ol>
@@ -68,7 +68,7 @@ function FeatureVideo() {
   const [playing, setPlaying] = useState(false);
   const src = `https://www.youtube-nocookie.com/embed/${INTRO_VIDEO.youtubeId}?autoplay=1&rel=0`;
   return (
-    <div className="hv-feature__video">
+    <Reveal className="hv-feature__video">
       {playing ? (
         <iframe
           src={src}
@@ -82,7 +82,7 @@ function FeatureVideo() {
           <span className="hv-feature__play" aria-hidden="true" />
         </button>
       )}
-    </div>
+    </Reveal>
   );
 }
 
@@ -107,15 +107,15 @@ export function FeatureSection() {
   return (
     <section className="hv-section hv-feature" id="feature" aria-labelledby="hv-feature-title">
       <img className="hv-feature__jagged" src={HOME_ASSETS.jaggedShape} alt="" aria-hidden="true" loading="lazy" />
-      <div className="hv-feature__head">
+      <Reveal className="hv-feature__head">
         <h2 className="hv-h2" id="hv-feature-title">
           {h.feature.title}
           <span className="hv-live">{h.feature.live}</span>
         </h2>
         <p className="hv-lede">{h.feature.lede}</p>
-      </div>
+      </Reveal>
       <FeatureVideo />
-      <div className="hv-fcards" role="list" aria-label={h.feature.title}>
+      <div className="hv-fcards" tabIndex={0} role="list" aria-label={h.feature.title}>
         <div className="hv-fcards__track">
           {loop.map((card, index) => (
             <article
@@ -218,10 +218,10 @@ export function ModesSection() {
           </li>
         ))}
       </ul>
-      <div className="hv-modes__crosswalk" aria-hidden="true">
+      <Reveal className="hv-modes__crosswalk" aria-hidden="true">
         <img className="hv-modes__road" src={HOME_ASSETS.crosswalk} alt="" loading="lazy" />
         <img className="hv-modes__cat" src={HOME_ASSETS.cat} alt="" loading="lazy" />
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -234,11 +234,11 @@ export function CreatorsSection() {
   return (
     <section className="hv-section hv-creators" id="creators" aria-labelledby="hv-creators-title">
       <div className="hv-creators__grid">
-        <div className="hv-creators__manifesto">
+        <Reveal className="hv-creators__manifesto">
           <p className="hv-creators__zh">{h.creators.manifesto}</p>
           <p className="hv-creators__en" lang="en">{h.creators.manifestoEn}</p>
-        </div>
-        <div className="hv-creators__right">
+        </Reveal>
+        <Reveal className="hv-creators__right">
           <h2 className="hv-h2 hv-h2--right" id="hv-creators-title">
             {title1}
             <br />
@@ -250,7 +250,7 @@ export function CreatorsSection() {
             <a className="hv-glass" href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">{h.creators.ip}</a>
             <a className="hv-glass" href={LEGAL_DOCS.ai} target="_blank" rel="noreferrer noopener">{h.creators.ai}</a>
           </div>
-        </div>
+        </Reveal>
       </div>
       <img className="hv-creators__art" src={HOME_ASSETS.creatorsCircle} alt={h.creators.imageAlt} width={1058} height={794} loading="lazy" decoding="async" />
     </section>

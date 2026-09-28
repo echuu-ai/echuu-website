@@ -43,10 +43,10 @@ export default function EchuuWebsite() {
 
   // 访问 /website 不带语言时，用 app 已有的语言检测补齐并改写地址，不做 IP 跳转
   useEffect(() => {
-    const parts = window.location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
-    const hasLocale = parts[1] && WEBSITE_LOCALES.includes(parts[1] as Locale);
+    const parts = window.location.pathname.slice(WEBSITE_BASE.length).split('/').filter(Boolean);
+    const hasLocale = parts[0] && WEBSITE_LOCALES.includes(parts[0] as Locale);
     if (!hasLocale) {
-      const target = `${WEBSITE_BASE}/${storeLocale}${parts[1] ? `/${parts[1]}` : ''}`;
+      const target = `${WEBSITE_BASE}/${storeLocale}${parts[0] ? `/${parts[0]}` : ''}`;
       window.history.replaceState(null, '', target + window.location.hash);
       window.dispatchEvent(new Event(SITE_NAVIGATE_EVENT));
     }

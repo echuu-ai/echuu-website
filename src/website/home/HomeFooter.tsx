@@ -1,33 +1,32 @@
+import { SocialLinks } from '../components/SocialLinks';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
-import { getBetaCta } from '../lib/cta';
-import { BETA_DOC_URL, CONTACT_EMAIL, LEGAL_DOCS, SOCIAL_LINKS } from '../config/site';
+import { BETA_DOC_URL, CONTACT_EMAIL, LEGAL_DOCS } from '../config/site';
 import { fill } from '../i18n';
+import { Reveal } from '../components/Reveal';
 
 /** 内测邀请 + 巨字 + 页脚。背景是从天空色沉到深蓝的渐变，中间是背对镜头的翅膀。 */
-export function HomeFooter() {
+export function HomeFooter({ onBeta }: { onBeta: () => void }) {
   const { h, locale } = useHomeDict();
-  const beta = getBetaCta(h.beta.emailSubject, h.beta.emailBody);
   const [title1, title2] = h.beta.title.split('\n');
   const home = websitePath(locale);
-  const x = SOCIAL_LINKS.find((item) => item.id === 'x');
 
   return (
     <footer className="hv-footer" id="beta">
       <img className="hv-footer__wings" src={HOME_ASSETS.footerWings} alt="" loading="lazy" decoding="async" aria-hidden="true" />
-      <div className="hv-beta">
+      <Reveal className="hv-beta">
         <h2 className="hv-beta__title">
           {title1}
           <br />
           {title2}
         </h2>
         <p className="hv-beta__body">{h.beta.body}</p>
-        <a className="hv-glass hv-glass--beta" href={beta.mode === 'email' ? beta.href : '#beta'}>
-          {beta.mode === 'email' ? h.beta.ctaEmail : h.beta.cta}
-        </a>
-      </div>
+        <button type="button" className="hv-glass hv-glass--beta" onClick={onBeta}>
+          {h.beta.cta}
+        </button>
+      </Reveal>
 
       <p className="hv-footer__giant" aria-hidden="true">{h.footer.giant}</p>
 
@@ -57,10 +56,7 @@ export function HomeFooter() {
         </div>
         <div className="hv-footer__col">
           <h3>{h.footer.social}</h3>
-          <span className="hv-footer__pending">{h.footer.socialLinks.xiaohongshu}</span>
-          {x ? (
-            <a href={x.href} target="_blank" rel="noreferrer noopener">{h.footer.socialLinks.x}</a>
-          ) : null}
+          <SocialLinks />
         </div>
       </div>
 

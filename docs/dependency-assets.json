@@ -528,5 +528,17 @@
     "path": "website/wing-deco.png",
     "bytes": 751,
     "sha256": "72636a5016798762c125cf9544e947b1843f1b6358644831efc371ad50f2d68c"
+  },
+  {
+    "path": "website/figma/logo-figma.png",
+    "bytes": 260962,
+    "sha256": "927915f984be0317a0827017b56b628b5904251dd4f35810918fb4e8ad4a9192",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2038:1070, MCP asset e5db6.png, retrieved 2026-09-28 (unaltered)"
+  },
+  {
+    "path": "website/social/wechat-contact.jpg",
+    "bytes": 102348,
+    "sha256": "29a9a7ca875ec11954481f1a943ae62b05dd4c6d8b13bdd6188c11077fe7251e",
+    "source": "User supplied WeChat contact QR, 2026-09-29"
   }
 ]

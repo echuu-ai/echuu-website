@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { navigateWithTransition, SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
 import { DEFAULT_WEBSITE_LOCALE, isWebsiteLocale, type Locale } from './i18n';
 
-export const WEBSITE_BASE = '/website';
+export const WEBSITE_BASE = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;
 
 export type WebsitePage =
   | 'home' | 'gallery' | 'creators' | 'journal' | 'feedback' | 'doodle' | 'moodboard' | 'not-found';

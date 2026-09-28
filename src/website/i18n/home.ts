@@ -34,7 +34,7 @@ export const homeZh = {
   hero: {
     /** 三段拼接：前缀 / 黄底高亮 / 中缀 / 蓝底高亮 */
     slogan: { pre: '为', hl1: 'OC创作者', mid: '打造的', hl2: '虚拟主播平台' },
-    register: '注册',
+    register: '登录',
     beta: '参与内测',
     logoAlt: 'Echuu エチュウゥ',
   },
@@ -147,7 +147,7 @@ export const homeEn: HomeDict = {
   },
   hero: {
     slogan: { pre: 'The', hl1: 'AI VTuber', mid: 'platform built for', hl2: 'OC creators' },
-    register: 'Sign up',
+    register: 'Log in',
     beta: 'Join the beta',
     logoAlt: 'Echuu エチュウゥ',
   },
@@ -257,7 +257,7 @@ export const homeJa: HomeDict = {
   },
   hero: {
     slogan: { pre: '', hl1: 'OCクリエイター', mid: 'のための', hl2: 'AI VTuber 配信プラットフォーム' },
-    register: '登録',
+    register: 'ログイン',
     beta: 'ベータに参加',
     logoAlt: 'Echuu エチュウゥ',
   },
@@ -367,7 +367,7 @@ export const homeKo: HomeDict = {
   },
   hero: {
     slogan: { pre: '', hl1: 'OC 크리에이터', mid: '를 위한', hl2: 'AI VTuber 플랫폼' },
-    register: '가입',
+    register: '로그인',
     beta: '베타 참여',
     logoAlt: 'Echuu エチュウゥ',
   },

@@ -3,7 +3,7 @@
 @font-face {
   font-family: 'PuguaXianyunsong Home';
   src: url('/fonts/pugua-qianyun-song-home.woff2') format('woff2');
-  font-weight: 100 400;
+  font-weight: 200;
   font-display: swap;
 }
 
@@ -14,7 +14,10 @@
    ========================================================================= */
 
 .echuu-website .hv {
+  position: relative; isolation: isolate; overflow: clip;
   --hv-blue: #72d5fe;
+  --hv-handoff: #7cd9ff;
+  --hv-footer-sky: #149fdb;
   --hv-blue-deep: #3ebeff;
   --hv-yellow: #fffa00;
   --hv-ink: #616161;
@@ -36,10 +39,10 @@
 
 html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 
-/* 设计稿细节：所有蒲瓜纤云宋文字都带 1pt 白色描边（stroke 画在填充之下，不吃掉字形） */
-.echuu-website .hv-h2, .echuu-website .hv-lede, .echuu-website .hv-menu, .echuu-website .hv-header__quote,
-.echuu-website .hv-intro__kicker, .echuu-website .hv-intro__body, .echuu-website .hv-steps__text,
-.echuu-website .hv-creators__manifesto, .echuu-website .hv-beta__title, .echuu-website .hv-beta__body,
+/* 品牌标题保留原稿描边；正文、说明与系统控件不用装饰描边。 */
+.echuu-website .hv-h2, .echuu-website .hv-lede, .echuu-website .hv-menu,
+.echuu-website .hv-intro__kicker, .echuu-website .hv-steps__title,
+.echuu-website .hv-creators__manifesto, .echuu-website .hv-beta__title,
 .echuu-website .hv-footer__giant, .echuu-website .hv-opening__loading, .echuu-website .hv-menu-overlay nav a {
   -webkit-text-stroke: 1pt #fff;
   paint-order: stroke fill;
@@ -100,7 +103,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 
 /* --- 首屏 / 舞台 -------------------------------------------------------- */
 .echuu-website .hv-hero {
-  position: relative; z-index: 2; min-height: 100svh; min-height: 100vh; overflow: hidden;
+  position: relative; z-index: 2; min-height: 100vh; min-height: 100svh; overflow: hidden;
   background: #7cd9ff;
   isolation: isolate;
 }
@@ -113,21 +116,12 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   transition: opacity 0.6s var(--hv-ease);
 }
 
-/* 首屏底部与下方内容的柔和衔接：同一张天空底图从透明渐入并轻微上浮的云边 */
-.echuu-website .hv-hero__seam {
-  position: absolute; left: -2%; right: -2%; bottom: -2px; height: clamp(120px, 26vh, 280px); z-index: 2; pointer-events: none;
-  background: var(--hv-sky-bg) center 12% / 104% auto no-repeat;
-  filter: blur(8px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.55) 55%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.55) 55%, #000 100%);
-  opacity: 0; transition: opacity 1.2s var(--hv-ease);
+/* The hero dissolves onto one continuous sky, shared with the page body. */
+.echuu-website .hv-hero[data-phase='hero'] { background: transparent; }
+.echuu-website .hv-hero[data-phase='hero'] .hv-stage__still {
+  -webkit-mask-image: linear-gradient(#000 58%, transparent 100%);
+  mask-image: linear-gradient(#000 58%, transparent 100%);
 }
-.echuu-website .hv-hero__seam::after {
-  content: ''; position: absolute; inset: auto 0 0; height: 45%;
-  background: linear-gradient(to bottom, rgba(124, 217, 255, 0), #7cd9ff 85%);
-}
-.echuu-website .hv-hero[data-phase='hero'] .hv-hero__seam { opacity: 1; }
-.echuu-website .hv-body { margin-top: -1px; }
 
 /* --- 开场覆盖层 --------------------------------------------------------- */
 .echuu-website .hv-opening {
@@ -325,7 +319,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-title {
   display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.2vw, 16px);
 }
-.echuu-website .hv-title__logo { width: 100%; height: auto; mix-blend-mode: difference; filter: drop-shadow(0 6px 20px rgba(0, 40, 90, 0.2)); }
+.echuu-website .hv-title__logo { width: 100%; height: auto; aspect-ratio: 344 / 155; object-fit: fill; mix-blend-mode: difference; filter: drop-shadow(0 6px 20px rgba(0, 40, 90, 0.2)); }
 .echuu-website .hv-title__slogan {
   margin: 0; color: #000; font-size: clamp(15px, 1.7vw, 24px); line-height: 1.2; letter-spacing: -0.1em;
   white-space: nowrap; text-align: center;
@@ -380,7 +374,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   position: fixed; inset: 0; z-index: 70;
   display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 28px;
   padding: 24px clamp(20px, 6vw, 80px);
-  background: rgba(10, 40, 80, 0.55); backdrop-filter: blur(22px) saturate(1.4);
+  background: rgba(10, 40, 80, 0.55); backdrop-filter: blur(16px) saturate(1.4);
   color: #fff; animation: hv-rise 0.35s var(--hv-ease);
 }
 .echuu-website .hv-menu-overlay nav { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
@@ -407,29 +401,30 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv-title { left: 16px; right: 16px; width: auto; top: auto; bottom: clamp(118px, 22vh, 190px); align-items: flex-start; }
   .echuu-website .hv-title__logo { width: min(300px, 62vw); mix-blend-mode: normal; }
   .echuu-website .hv-title__slogan { white-space: normal; text-align: left; font-size: clamp(16px, 4.6vw, 22px); }
-  .echuu-website .hv-cta { width: calc(100% - 32px); }
+  .echuu-website .hv-cta { width: min(400px, calc(100% - 32px)); }
 }
 @media (max-width: 520px) {
   .echuu-website .hv-cta { gap: 8px; padding: 10px; }
   .echuu-website .hv-cta__group { gap: 6px; }
   .echuu-website .hv-cta__icon.is-pending:nth-child(2), .echuu-website .hv-cta__icon.is-pending:nth-child(3) { display: none; }
   .echuu-website .hv-cta__beta { padding: 10px 12px; font-size: 15px; }
-  .echuu-website .hv-replay { display: none; }
+  .echuu-website .hv-replay { display: inline-flex; min-height: 36px; align-items: center; bottom: max(8px, env(safe-area-inset-bottom)); }
 }
 
 /* --- 页面主体：天空底 --------------------------------------------------- */
 .echuu-website .hv-body {
-  position: relative; z-index: 1; isolation: isolate; color: #fff;
-  background: linear-gradient(180deg, #7cd9ff 0%, #4cc4ff 40%, #3ebeff 100%);
+  position: relative; color: #fff; overflow: clip;
+  background: transparent;
 }
-.echuu-website .hv-body::before {
-  content: ''; position: absolute; inset: 0; z-index: -2;
-  background: var(--hv-sky-bg) center top / 100% auto repeat-y;
-  filter: blur(6px); opacity: 0.95; transform: scale(1.02);
+.echuu-website .hv::before {
+  content: ''; position: absolute; inset: -28px; z-index: -1; pointer-events: none;
+  background: linear-gradient(rgba(62, 191, 255, 0.5), rgba(62, 191, 255, 0.5)),
+    var(--hv-sky-bg) center / 143% 100% no-repeat;
+  filter: blur(14px);
 }
 .echuu-website .hv-body::after {
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(62, 190, 255, 0.35), rgba(62, 190, 255, 0.55));
+  content: ''; position: absolute; inset: auto 0 0; height: clamp(320px, 45vw, 650px); z-index: -1; pointer-events: none;
+  background: linear-gradient(transparent, var(--hv-footer-sky));
 }
 .echuu-website .hv-section { position: relative; width: var(--hv-shell); margin-inline: auto; }
 
@@ -458,18 +453,18 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   font-size: clamp(26px, 2.9vw, 42px); letter-spacing: -0.06em; line-height: 1;
 }
 .echuu-website .hv-intro__star { width: 1.15em; height: auto; }
-.echuu-website .hv-intro__body {
-  position: relative; z-index: 1; font-family: var(--hv-serif); font-weight: 300;
-  font-size: clamp(16px, 1.6vw, 24px); line-height: 1.5; letter-spacing: -0.04em; max-width: 24em;
+.echuu-website .hv .hv-intro__body {
+  position: relative; z-index: 1; font-family: var(--hv-sans); font-weight: 400;
+  font-size: clamp(16px, 1.4vw, 20px); line-height: 1.75; letter-spacing: -0.02em; max-width: 28em; margin: 0; color: #fff;
 }
 .echuu-website .hv-intro__art { position: relative; margin: 0; display: grid; place-items: center; padding: 24px 20px 0; }
-.echuu-website .hv-intro__art > img:first-child { width: min(433px, 100%); height: auto; transform: translateY(6%); filter: drop-shadow(0 24px 40px rgba(10, 60, 120, 0.28)); }
+.echuu-website .hv-intro__art > img:first-child { width: min(433px, 100%); height: auto; transform: translateY(6%); filter: drop-shadow(8px 16px 5px #bbd9e9); }
 .echuu-website .hv-intro__sparkle { position: absolute; right: 8%; top: 4%; width: 58px; mix-blend-mode: hard-light; }
 @media (max-width: 860px) {
   .echuu-website .hv-intro__card { grid-template-columns: 1fr; min-height: 0; }
   .echuu-website .hv-intro__panel { border-radius: 19px 19px 0 0; }
   .echuu-website .hv-intro__art { padding: 12px 20px 0; }
-  .echuu-website .hv-intro__art > img:first-child { width: min(300px, 70%); transform: translateY(4%); }
+  .echuu-website .hv-intro__art > img:first-child { width: min(250px, 62%); transform: translateY(4%) rotate(-3deg); }
 }
 
 /* --- 三步 ----------------------------------------------------------------- */
@@ -559,7 +554,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-fcard__art--gifts img:nth-child(4) { left: 6%; top: 46%; width: 72%; }
 .echuu-website .hv-fcard__text { text-align: center; font-weight: 300; }
 .echuu-website .hv-fcard__text h3 { margin: 0; font-family: var(--hv-sans); font-weight: 300; font-size: clamp(24px, 3.3vw, 48px); line-height: 1.2; letter-spacing: 0; }
-.echuu-website .hv-fcard__text p { margin: 6px 0 0; font-size: clamp(14px, 1.65vw, 24px); letter-spacing: -0.1em; color: #8d8655; }
+.echuu-website .hv-fcard__text p { margin: 6px 0 0; font-size: clamp(15px, 1.65vw, 24px); line-height: 1.5; letter-spacing: -0.025em; color: #68623e; }
 .echuu-website .hv-fcard__stars { position: absolute; inset: 0; pointer-events: none; }
 .echuu-website .hv-fcard__stars img { position: absolute; width: 43px; height: auto; opacity: 0.95; }
 .echuu-website .hv-fcard__stars img:nth-child(1) { right: 12%; top: 8%; }
@@ -621,8 +616,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-mcard__actions { display: flex; align-items: center; gap: 18px; padding: 14px 16px; background: rgba(204, 253, 253, 0.9); }
 .echuu-website .hv-mcard__actions img { width: 30px; height: 30px; filter: drop-shadow(0 1px 2px rgba(0, 60, 120, 0.45)); }
 .echuu-website .hv-mcard__save { margin-left: auto; }
-.echuu-website .hv-modes__crosswalk { position: relative; width: min(989px, 100%); margin: clamp(40px, 6vw, 100px) auto 0; aspect-ratio: 989 / 731; }
-.echuu-website .hv-modes__road { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: lighten; }
+.echuu-website .hv-modes__crosswalk { position: relative; width: min(989px, 100%); margin: clamp(40px, 6vw, 100px) auto 0; aspect-ratio: 989 / 731; mix-blend-mode: screen; }
+.echuu-website .hv-modes__road { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; }
 .echuu-website .hv-modes__cat { position: absolute; left: 32%; top: 13%; width: 34%; height: auto; }
 @media (max-width: 900px) {
   .echuu-website .hv-mcards { grid-template-columns: 1fr; width: min(480px, 100%); }
@@ -641,27 +636,31 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-creators__right { display: flex; flex-direction: column; align-items: flex-end; }
 .echuu-website .hv-creators__actions { display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin-top: 28px; width: min(235px, 100%); }
 .echuu-website .hv-creators__actions .hv-glass { min-height: 67px; padding: 12px 18px; text-align: center; }
-.echuu-website .hv-creators__art { display: block; width: min(1058px, 100%); height: auto; margin: clamp(-40px, -4vw, -20px) auto 0; }
+.echuu-website .hv-creators__art { display: block; width: min(1058px, 100%); height: auto; margin: clamp(-40px, -4vw, -20px) auto 0; filter: url(#hv-cool-art) saturate(.86); }
 @media (max-width: 860px) {
   .echuu-website .hv-creators__grid { grid-template-columns: 1fr; }
   .echuu-website .hv-creators__right { align-items: flex-start; }
   .echuu-website .hv-creators__right .hv-h2, .echuu-website .hv-creators__right .hv-lede { text-align: left; }
   .echuu-website .hv-creators__manifesto { order: 2; }
-  .echuu-website .hv-creators__actions { width: 100%; }
+  .echuu-website .hv-creators__actions { width: min(235px, 100%); }
   .echuu-website .hv-creators__actions .hv-glass { min-height: 52px; }
   .echuu-website .hv-creators__art { margin-top: 20px; }
 }
 
 /* --- 页脚 ----------------------------------------------------------------- */
 .echuu-website .hv-footer {
-  position: relative; overflow: hidden; margin-top: clamp(-80px, -6vw, -40px);
-  padding: clamp(160px, 24vw, 340px) 0 max(36px, env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, rgba(62, 190, 255, 0) 0%, #46a8ff 22%, #1f5be0 52%, #0d217e 78%, #071556 100%);
+  position: relative; overflow: hidden; margin-top: -1px;
+  --wings-width: min(1000px, 90vw);
+  padding: clamp(160px, 17vw, 230px) 0 max(48px, env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, var(--hv-footer-sky) 0%, #2162c8 16%, #102f66 45%, #031923 82%, #02121b 100%);
   color: #fff;
 }
 .echuu-website .hv-footer__wings {
-  position: absolute; left: 50%; top: 20%; width: min(1084px, 90%); height: auto; transform: translateX(-50%);
-  filter: blur(6px); opacity: 0.95; pointer-events: none;
+  /* The source has 484px transparent padding above the head (1000px wide). */
+  position: absolute; left: 50%; top: calc(32px - var(--wings-width) * .484); width: var(--wings-width); height: auto; transform: translateX(-50%);
+  opacity: .92; filter: url(#hv-cool-art) saturate(.72) blur(8px); pointer-events: none;
+  -webkit-mask-image: linear-gradient(#000 65%, rgba(0,0,0,.8) 83%, transparent 100%);
+  mask-image: linear-gradient(#000 65%, rgba(0,0,0,.8) 83%, transparent 100%);
 }
 .echuu-website .hv-beta { position: relative; text-align: center; width: min(560px, calc(100% - 32px)); margin: 0 auto; }
 .echuu-website .hv-beta__title { margin: 0; font-family: var(--hv-serif); font-weight: 300; font-size: clamp(34px, 4.4vw, 64px); line-height: 1; letter-spacing: -0.1em; }
@@ -670,7 +669,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-footer__giant {
   position: relative; width: var(--hv-shell); margin: clamp(60px, 8vw, 110px) auto 0;
   font-family: var(--hv-serif); font-weight: 300; font-size: clamp(44px, 12.7vw, 184px); line-height: 1; letter-spacing: -0.1em;
-  white-space: nowrap; overflow: hidden; text-overflow: clip;
+  white-space: normal; overflow-wrap: anywhere; text-wrap: balance;
 }
 .echuu-website .hv-footer__grid {
   position: relative; width: var(--hv-shell); margin: clamp(32px, 4vw, 56px) auto 0;
@@ -690,7 +689,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-footer__home { font-weight: 800; }
 @media (max-width: 900px) {
   .echuu-website .hv-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .echuu-website .hv-footer__wings { width: 150%; top: 30%; }
+  .echuu-website .hv-footer { --wings-width: min(780px, 110vw); }
+  .echuu-website .hv-footer__wings { opacity: .78; }
 }
 @media (max-width: 520px) {
   .echuu-website .hv-footer { padding-top: clamp(140px, 40vw, 200px); }
@@ -705,3 +705,130 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv-opening__window { transition: none; }
   .echuu-website .hv-opening__flash { animation: none; opacity: 0; }
 }
+
+/* Responsive art direction: compact controls, readable copy and a quiet page ending. */
+.echuu-website .hv-header__quote { font-family: var(--hv-sans); -webkit-text-stroke: 0; }
+.echuu-website .hv-steps__body, .echuu-website .hv-beta__body {
+  font-family: var(--hv-sans); font-weight: 400; line-height: 1.65; letter-spacing: -0.02em;
+}
+.echuu-website .hv-footer__col, .echuu-website .hv-footer__bottom { letter-spacing: -0.025em; }
+.echuu-website .hv-footer__col a { display: flex; align-items: center; min-height: 44px; }
+.echuu-website .hv-footer__col h3 { letter-spacing: -0.025em; margin-bottom: 18px; }
+.echuu-website .hv-intro__sparkle { filter: drop-shadow(0 0 12px rgba(255,255,255,.65)); }
+@media (min-width: 1024px) {
+  .echuu-website .hv-feature__video { margin-right: max(32px, calc((100% - 1360px) / 2)); }
+}
+@media (max-width: 1023px) {
+  .echuu-website .hv-hero { min-height: max(640px, 100svh); }
+  .echuu-website .hv-title { bottom: 178px; left: 24px; right: 24px; gap: 14px; }
+  .echuu-website .hv-title__logo { width: clamp(190px, 36vw, 280px); }
+  .echuu-website .hv-title__slogan { max-width: 28em; font-size: clamp(17px, 2.8vw, 22px); line-height: 1.65; letter-spacing: -0.04em; text-wrap: balance; }
+  .echuu-website .hv-title__register { min-height: 44px; }
+  .echuu-website .hv-cta { bottom: 68px; }
+  .echuu-website .hv-footer__bottom { padding-top: 24px; }
+}
+@media (max-width: 600px) {
+  .echuu-website .hv { --hv-shell: calc(100% - 40px); }
+  .echuu-website .hv-title { left: 20px; right: 20px; bottom: 170px; }
+  .echuu-website .hv-title__logo { width: 190px; }
+  .echuu-website .hv-title__slogan { max-width: 21em; font-size: 17px; }
+  .echuu-website .hv-intro { padding-top: 16px; }
+  .echuu-website .hv-intro__panel { padding: 28px 24px; gap: 18px; }
+  .echuu-website .hv-intro__kicker { font-size: clamp(24px, 6.8vw, 34px); line-height: 1.12; margin: 0; }
+  .echuu-website .hv-intro__art { padding-top: 0; }
+  .echuu-website .hv-intro__sparkle { width: 36px; top: 12%; right: 16%; }
+  .echuu-website .hv-steps__list { gap: 32px; }
+  .echuu-website .hv-steps__body { font-size: 16px; margin-top: 10px; }
+  .echuu-website .hv-feature__jagged { opacity: .45; width: 90%; left: -55%; }
+  .echuu-website .hv-footer__grid { column-gap: 24px; row-gap: 32px; padding: 0; }
+  .echuu-website .hv-footer__col { gap: 4px; font-size: 15px; }
+  .echuu-website .hv-footer__col h3 { margin-bottom: 8px; }
+  .echuu-website .hv-footer__bottom { margin-top: 32px; font-size: 12px; line-height: 1.7; padding-inline: 0; }
+  .echuu-website .hv-footer__bottom p { gap: 8px; }
+}
+@media (max-width: 860px), (prefers-reduced-motion: reduce) {
+  .echuu-website .hv-fcards { overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: thin; scrollbar-color: #e5fbff transparent; padding-bottom: 18px; }
+  .echuu-website .hv-fcards__track { animation: none; padding-inline: 20px; }
+  .echuu-website .hv-fcard { scroll-snap-align: start; flex-basis: min(548px, calc(100vw - 56px)); }
+  .echuu-website .hv-fcard[aria-hidden='true'] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv-stage__still { transition: none; }
+}
+
+/* Figma 2038:1044 — preserve the composition at its 1440px design width.
+   Mobile reflows the same artwork and content; it is not a separate Figma frame. */
+@media (min-width: 1024px) {
+  .echuu-website .hv-title { gap: 13px; }
+  .echuu-website .hv-title__slogan { line-height: 1.55; }
+  .echuu-website .hv-intro__card { padding: 32px 42px; min-height: 456px; background: rgba(255,255,255,.18); box-shadow: none; grid-template-columns: minmax(0, 624fr) minmax(0, 358fr); }
+  .echuu-website .hv-intro__panel { padding: 42px; border-radius: 0; background: #71cde7; }
+  .echuu-website .hv-intro__kicker { margin: 0; flex-wrap: nowrap; white-space: nowrap; }
+  .echuu-website .hv-intro__art { background: #e5f4ff; padding: 0; }
+  .echuu-website .hv-intro__art > img:first-child { width: 433px; max-width: none; position: absolute; right: -26px; top: -2px; transform: rotate(-1.13deg); }
+  .echuu-website .hv-steps { padding-top: clamp(20px, 3vw, 44px); padding-bottom: clamp(140px, 18vw, 260px); }
+  .echuu-website .hv-steps__head { flex-direction: row-reverse; justify-content: flex-start; align-items: flex-end; max-width: 960px; min-height: 258px; gap: 12px; margin-bottom: 29px; }
+  .echuu-website .hv-steps__no { font-size: clamp(32px, 3.33vw, 48px); }
+  .echuu-website .hv-steps__text { padding-bottom: 0; }
+  .echuu-website .hv-steps__three { color: rgba(255,242,0,.43); mix-blend-mode: luminosity; }
+  .echuu-website .hv-modes__keys { width: min(1440px, 100%); height: clamp(340px, 40vw, 576px); }
+  .echuu-website .hv-modes__key { width: min(18vw, 260px); }
+  .echuu-website .hv-modes__key--left { top: 109px; transform: translateX(calc(-100% - 1px - var(--key-open) * min(24vw, 344px))); }
+  .echuu-website .hv-modes__key--right { transform: translateX(calc(1px + var(--key-open) * min(24.7vw, 356px))); }
+  .echuu-website .hv-modes__head { margin-top: -264px; }
+  .echuu-website .hv-mcards { margin-top: 96px; }
+  .echuu-website .hv-creators__grid { align-items: start; }
+  .echuu-website .hv-creators__manifesto { padding-top: 145px; }
+  .echuu-website .hv-creators__art { margin-top: -121px; pointer-events: none; }
+  .echuu-website .hv-creators__right { position: relative; z-index: 1; }
+  .echuu-website .hv-creators__actions { margin-top: 28px; gap: 23px; margin-right: 15px; }
+  .echuu-website .hv-creators__actions .hv-glass { font-size: 24px; }
+  .echuu-website .hv-footer { padding-top: clamp(170px, 17vw, 230px); }
+}
+@media (max-width: 1023px) {
+  .echuu-website .hv-title { width: min(344px, calc(100% - 40px)); right: auto; align-items: center; }
+  .echuu-website .hv-title__logo { width: clamp(220px, 32vw, 280px); }
+  .echuu-website .hv-title__slogan { text-align: center; }
+  .echuu-website .hv-creators__actions { gap: 12px; }
+  .echuu-website .hv-creators__actions .hv-glass { border-color: rgba(255,255,255,.28); box-shadow: none; }
+}
+@media (max-width: 600px) {
+  .echuu-website .hv-title__logo { width: 240px; }
+  .echuu-website .hv-title { gap: 12px; }
+  .echuu-website .hv-title__register { min-height: 44px; min-width: 87px; }
+  .echuu-website .hv-creators__manifesto { line-height: 1.3; }
+}
+
+/* Reveal each content block once, without moving the document's scroll position. */
+.echuu-website .hv .reveal {
+  transform: translateY(32px);
+  transition: opacity 650ms var(--hv-ease), transform 650ms var(--hv-ease);
+}
+.echuu-website .hv .reveal.is-visible { transform: none; will-change: auto; }
+@media (max-width: 600px) {
+  .echuu-website .hv .reveal { transform: translateY(20px); transition-duration: 500ms; }
+  .echuu-website .hv .reveal.is-visible { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* CTA elements are buttons now: keep the original artwork's typography. */
+.echuu-website button.hv-title__register, .echuu-website button.hv-cta__beta { font-family: inherit; cursor: pointer; border: 0; }
+.echuu-website button.hv-glass--beta { cursor: pointer; }
+
+/* Compact persistent dock, portalled outside the animated/clipped hero. */
+.echuu-website .hv-cta {
+  position: fixed; z-index: 60; bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(340px, calc(100% - 24px)); min-height: 56px;
+  padding: 6px 10px; gap: 8px; border-radius: 14px;
+}
+.echuu-website .hv-cta__group { gap: 4px; }
+.echuu-website .hv-cta__icon { width: 28px; height: 44px; flex-shrink: 0; }
+.echuu-website .hv-cta__icon img { width: 21px; height: 21px; }
+.echuu-website .hv-cta__beta { min-height: 44px; padding: 8px 11px; font-size: 14px; border-radius: 10px; }
+.echuu-website .hv-cta__beta i { border-width: 4px 0 4px 8px; }
+/* Let the final links scroll clear of the persistent dock. */
+.echuu-website .hv-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+.echuu-website .hv-social-link { display:flex; align-items:center; min-height:44px; padding:0; border:0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.echuu-website .hv-cta__icon svg { color: white; width:22px; height:22px; }

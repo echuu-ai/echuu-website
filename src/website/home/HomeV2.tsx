@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react';
+import { useState, useRef, type CSSProperties } from 'react';
+import { AccessDialog, type AccessMode } from '../auth/AccessDialog';
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
 import { HOME_ASSETS } from '../assets';
@@ -16,20 +17,29 @@ import '../styles/home.css';
  */
 export function HomeV2() {
   const { locale, t } = useLocale();
+  const [accessMode, setAccessMode] = useState<AccessMode | null>(null);
+  const accessTrigger = useRef<HTMLElement | null>(null);
+  const openAccess = (mode: AccessMode) => { accessTrigger.current = document.activeElement as HTMLElement; setAccessMode(mode); };
   const { h } = useHomeDict();
   const style = { '--hv-sky-bg': `url(${HOME_ASSETS.skyBg})` } as CSSProperties;
   return (
     <div className="hv" style={style}>
+      <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
+        <defs><filter id="hv-cool-art" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="1.04 0 0 0 0   0 1.09 0 0 0   0 0 1.18 0 0   0 0 0 1 0" />
+        </filter></defs>
+      </svg>
       <Head locale={locale} htmlLang={t.htmlLang} title={h.meta.title} description={h.meta.description} path="" />
-      <OpeningHero />
+      <OpeningHero onLogin={() => openAccess('invite')} onBeta={() => openAccess('signup')} />
       <div className="hv-body">
         <IntroSection />
         <StepsSection />
         <FeatureSection />
         <ModesSection />
         <CreatorsSection />
-        <HomeFooter />
       </div>
+      <HomeFooter onBeta={() => openAccess('signup')} />
+      <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
 }

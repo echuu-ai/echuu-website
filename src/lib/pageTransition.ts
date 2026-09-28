@@ -24,7 +24,8 @@ export function navigateWithTransition(href: string) {
 
   const normalizedPath = destination.pathname.replace(/\/$/, '') || '/';
   // 官网 /website/{locale}/... 自己处理路由，和其他站点页一样走 pushState，不整页跳转
-  const isWebsiteRoute = normalizedPath === '/website' || normalizedPath.startsWith('/website/');
+  const websiteBase = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;
+  const isWebsiteRoute = normalizedPath === websiteBase || normalizedPath.startsWith(`${websiteBase}/`);
   const isSiteRoute = isWebsiteRoute
     || ['/', '/about', '/career', '/contact', '/blog'].includes(normalizedPath);
   if (destination.origin === window.location.origin && isSiteRoute) {

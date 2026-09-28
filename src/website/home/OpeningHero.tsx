@@ -1,11 +1,11 @@
+import { createPortal } from 'react-dom';
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useProgress } from '@react-three/drei';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
-import { getBetaCta } from '../lib/cta';
 import { LangSwitch } from '../components/LangSwitch';
-import { PRODUCT_ORIGIN, SOCIAL_LINKS } from '../config/site';
+import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
 import {
   OPENING,
@@ -51,7 +51,7 @@ function useStrokeProgress(ready: boolean, mode: StageMode) {
   return shown.current;
 }
 
-export function OpeningHero() {
+export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: () => void }) {
   const { h, locale } = useHomeDict();
   const reduced = usePrefersReducedMotion();
   const clock = useMemo(createOpeningClock, []);
@@ -64,7 +64,6 @@ export function OpeningHero() {
   const heroRef = useRef<HTMLElement | null>(null);
   const windowRef = useRef<HTMLDivElement | null>(null);
   const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false });
-  const beta = getBetaCta(h.beta.emailSubject, h.beta.emailBody);
   const stroke = useStrokeProgress(ready, mode);
 
   // 决定舞台模式；静态分镜自己起时钟，3D 等模型与动作就绪后再起
@@ -241,9 +240,6 @@ export function OpeningHero() {
         ) : null}
       </div>
 
-      {/* 首屏与下方内容的柔和衔接：天空底图从透明渐入，盖住 3D 画布的硬边 */}
-      <div className="hv-hero__seam" aria-hidden="true" />
-
       {showOpening ? (
         <div className="hv-opening" role="presentation" onClick={skip}>
           <div className="hv-opening__frame">
@@ -331,34 +327,29 @@ export function OpeningHero() {
             {h.hero.slogan.mid}
             <mark className="hv-title__hl hv-title__hl--blue">{h.hero.slogan.hl2}</mark>
           </p>
-          <a className="hv-title__register" href={`${PRODUCT_ORIGIN}/#landing/sign-up`}>{h.hero.register}</a>
+          <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
         </div>
 
-        <div className="hv-cta">
-          <button type="button" className="hv-cta__icon" aria-label={h.header.language} onClick={() => setMenuOpen(true)}>
-            <img src={HOME_ASSETS.icons.language} alt="" />
-          </button>
-          <span className="hv-cta__group">
-            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.xiaohongshu} alt="" /></span>
-            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.bilibili} alt="" /></span>
-            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.qq} alt="" /></span>
-            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.discord} alt="" /></span>
-            {SOCIAL_LINKS.map((social) => (
-              <a key={social.id} className="hv-cta__icon" href={social.href} target="_blank" rel="noreferrer noopener" aria-label={social.label}>
-                <img src={HOME_ASSETS.icons.x} alt="" />
-              </a>
-            ))}
-          </span>
-          <a className="hv-cta__beta" href={beta.mode === 'email' ? beta.href : '#beta'}>
-            {h.hero.beta}
-            <i aria-hidden="true" />
-          </a>
-        </div>
+
 
         {mode === '3d' && !reduced ? (
           <button type="button" className="hv-replay" onClick={replay}>{h.opening.replay}</button>
         ) : null}
       </div>
+
+      {phase === 'hero' && !menuOpen ? createPortal(
+        <div className="hv-cta">
+          <button type="button" className="hv-cta__icon" aria-label={h.header.language} onClick={() => setMenuOpen(true)}>
+            <img src={HOME_ASSETS.icons.language} alt="" />
+          </button>
+          <span className="hv-cta__group"><SocialLinks compact /></span>
+          <button type="button" className="hv-cta__beta" onClick={onBeta}>
+            {h.hero.beta}
+            <i aria-hidden="true" />
+          </button>
+        </div>,
+        document.querySelector('.echuu-website') ?? document.body,
+      ) : null}
 
       {menuOpen ? (
         <div className="hv-menu-overlay" id="hv-menu">

@@ -36,3 +36,19 @@ npm run preview
 生产构建输出 `dist/`，静态托管需将不存在的页面路径回退到 `index.html`；资源文件按真实路径服务。本仓库带 `vercel.json` 作为静态 SPA 配置，但本次未部署。
 
 公开发布仍需处理 `docs/website/OPEN_ITEMS.md` 已记录的素材/字体与产品范围待确认项。创建组织私有仓库不表示公开发布已批准。
+
+
+## GitHub Pages 临时预览
+
+源码仓库保持私有；组织套餐不支持私有仓库 Pages，因此临时预览使用公开的 `echuu-ai/echuu-website-preview`，仅发布构建产物。
+
+```sh
+npm run build -- --base=/echuu-website-preview/
+node scripts/prepare-pages.mjs
+```
+
+`prepare-pages.mjs` 为四语页面生成静态入口，支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
+
+## 邀请码与内测申请（2026-09-29）
+
+首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备中并禁用提交。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产沿用 `https://echuu.app`。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
