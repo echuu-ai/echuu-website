@@ -1,0 +1,378 @@
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useProgress } from '@react-three/drei';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useHomeDict } from './useHomeDict';
+import { HOME_ASSETS } from '../assets';
+import { getBetaCta } from '../lib/cta';
+import { LangSwitch } from '../components/LangSwitch';
+import { PRODUCT_ORIGIN, SOCIAL_LINKS } from '../config/site';
+import type { HoleRect } from './three/OpeningStage3D';
+import {
+  OPENING,
+  createOpeningClock,
+  openingTime,
+  phaseAt,
+  replayOpening,
+  skipOpening,
+  startOpeningClock,
+  type OpeningPhase,
+} from './openingTimeline';
+
+const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => ({ default: m.OpeningStage3D })));
+
+type StageMode = 'pending' | '3d' | 'still';
+
+/** 只要有 WebGL 就跑真实 3D（手机也是）；只有无 WebGL 或减少动态效果才走静态分镜。 */
+function decideStageMode(reduced: boolean): StageMode {
+  if (reduced) return 'still';
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    return gl ? '3d' : 'still';
+  } catch {
+    return 'still';
+  }
+}
+
+const MENU_ANCHORS = [
+  ['intro', '#intro'],
+  ['steps', '#steps'],
+  ['agent', '#feature'],
+  ['creators', '#creators'],
+  ['beta', '#beta'],
+] as const;
+
+/** 蓝色描边 = 加载进度：drei 的 loader 进度会分批跳动，只取单调递增值，就绪前封顶 92% */
+function useStrokeProgress(ready: boolean, mode: StageMode) {
+  const { progress } = useProgress();
+  const shown = useRef(0);
+  if (ready || mode === 'still') shown.current = 1;
+  else shown.current = Math.max(shown.current, Math.min(0.92, progress / 100));
+  return shown.current;
+}
+
+export function OpeningHero() {
+  const { h, locale } = useHomeDict();
+  const reduced = usePrefersReducedMotion();
+  const clock = useMemo(createOpeningClock, []);
+  const [mode, setMode] = useState<StageMode>('pending');
+  const [phase, setPhase] = useState<OpeningPhase>('loading');
+  const [stillShot, setStillShot] = useState<'back' | 'front'>('back');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [running, setRunning] = useState(true);
+  const [ready, setReady] = useState(false);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const windowRef = useRef<HTMLDivElement | null>(null);
+  const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false });
+  const beta = getBetaCta(h.beta.emailSubject, h.beta.emailBody);
+  const stroke = useStrokeProgress(ready, mode);
+
+  // 决定舞台模式；静态分镜自己起时钟，3D 等模型与动作就绪后再起
+  useEffect(() => {
+    const next = decideStageMode(reduced);
+    setMode(next);
+    if (next === 'still') {
+      startOpeningClock(clock, performance.now());
+      setReady(true);
+      if (reduced) skipOpening(clock, performance.now());
+    }
+  }, [clock, reduced]);
+
+  const handleReady = useCallback(() => setReady(true), []);
+
+  // 模型 / 动作加载失败，或超时仍未就绪：退回静态分镜，绝不把页面锁死在黑场
+  const fallbackToStill = useCallback(() => {
+    setMode((current) => {
+      if (current !== '3d') return current;
+      startOpeningClock(clock, performance.now());
+      setReady(true);
+      return 'still';
+    });
+  }, [clock]);
+  const handleFail = useCallback((error: unknown) => {
+    console.warn('[website-opening] 3D stage failed, using stills', error);
+    fallbackToStill();
+  }, [fallbackToStill]);
+  useEffect(() => {
+    if (mode !== '3d') return;
+    const timer = window.setTimeout(() => {
+      if (!clock.ready) fallbackToStill();
+    }, 25000);
+    return () => window.clearTimeout(timer);
+  }, [clock, fallbackToStill, mode]);
+
+  // 低频轮询时钟推导阶段；逐帧更新只发生在 3D 场景与 CSS 过渡里
+  useEffect(() => {
+    if (mode === 'pending') return;
+    const params = new URLSearchParams(window.location.search);
+    const hold = import.meta.env.DEV && params.has('ophold') ? Number(params.get('ophold')) : NaN;
+    const tick = () => {
+      const now = performance.now();
+      const t = Number.isFinite(hold) && clock.ready ? hold : openingTime(clock, now);
+      const next = phaseAt(t, clock.ready);
+      setPhase((current) => (current === next ? current : next));
+      if (mode === 'still') setStillShot(t < OPENING.povEnd + 3.2 ? 'back' : 'front');
+    };
+    tick();
+    const timer = window.setInterval(tick, 80);
+    return () => window.clearInterval(timer);
+  }, [clock, mode]);
+
+  // 开场期间锁住滚动；打开窗口时用 FLIP 把手机窗放大到整屏（3D 的黑幕开洞每帧跟着 DOM 走）
+  useEffect(() => {
+    const root = document.documentElement;
+    if (phase === 'hero') {
+      root.classList.remove('hv-lock');
+      hole.current.open = true;
+      return;
+    }
+    root.classList.add('hv-lock');
+    window.scrollTo(0, 0);
+    let raf = 0;
+    const track = () => {
+      const el = windowRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        hole.current.x = rect.left;
+        hole.current.y = rect.top;
+        hole.current.w = rect.width;
+        hole.current.h = rect.height;
+        hole.current.open = false;
+      }
+      raf = requestAnimationFrame(track);
+    };
+    track();
+    if (phase === 'open' && windowRef.current) {
+      // 手机窗放大到整屏。容器 .hv-opening__frame 带 transform，会成为 fixed 的包含块，
+      // 所以这里用相对 frame 的 absolute 坐标算目标，才能真正对齐视口（否则会偏出一条黑边、也不居中）
+      const el = windowRef.current;
+      const frame = el.parentElement as HTMLElement;
+      const rect = el.getBoundingClientRect();
+      const frameRect = frame.getBoundingClientRect();
+      el.style.transition = 'none';
+      el.style.position = 'absolute';
+      el.style.left = `${rect.left - frameRect.left}px`;
+      el.style.top = `${rect.top - frameRect.top}px`;
+      el.style.width = `${rect.width}px`;
+      el.style.height = `${rect.height}px`;
+      void el.offsetWidth;
+      el.style.transition = '';
+      requestAnimationFrame(() => {
+        el.style.left = `${-frameRect.left}px`;
+        el.style.top = `${-frameRect.top}px`;
+        el.style.width = `${window.innerWidth}px`;
+        el.style.height = `${window.innerHeight}px`;
+        el.style.boxShadow = '0 0 0 0 #000, inset 0 0 0 rgba(114,213,254,0)';
+      });
+    }
+    return () => {
+      cancelAnimationFrame(raf);
+      root.classList.remove('hv-lock');
+    };
+  }, [phase]);
+
+  // 首屏离开视口后停掉 3D 渲染循环
+  useEffect(() => {
+    const node = heroRef.current;
+    if (!node || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => setRunning(entries.some((entry) => entry.isIntersecting)), { threshold: 0.02 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const skip = useCallback(() => {
+    if (!clock.ready) {
+      fallbackToStill();
+      startOpeningClock(clock, performance.now());
+    }
+    skipOpening(clock, performance.now());
+    setPhase('hero');
+  }, [clock, fallbackToStill]);
+
+  const replay = useCallback(() => {
+    if (!clock.ready || reduced) return;
+    const el = windowRef.current;
+    if (el) el.removeAttribute('style');
+    replayOpening(clock, performance.now());
+    setStillShot('back');
+    setPhase(mode === 'still' ? 'sleep' : phaseAt(0, true));
+  }, [clock, mode, reduced]);
+
+  useEffect(() => {
+    if (phase === 'hero' || phase === 'loading') return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') skip();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [phase, skip]);
+
+  useEffect(() => setMenuOpen(false), [locale]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  const showOpening = phase !== 'hero';
+  const stageStill = mode === 'still';
+
+  return (
+    <section className={`hv-hero hv-hero--${mode}`} ref={heroRef} data-phase={phase} aria-label={h.header.brand}>
+      <div className="hv-stage" aria-hidden="true">
+        {mode === '3d' ? (
+          <Suspense fallback={null}>
+            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} />
+          </Suspense>
+        ) : null}
+        {stageStill ? (
+          <img
+            className="hv-stage__still"
+            src={stillShot === 'front' || phase === 'hero' ? HOME_ASSETS.heroShot : HOME_ASSETS.opening.back}
+            alt=""
+            width={1076}
+            height={782}
+            decoding="async"
+          />
+        ) : null}
+      </div>
+
+      {/* 首屏与下方内容的柔和衔接：天空底图从透明渐入，盖住 3D 画布的硬边 */}
+      <div className="hv-hero__seam" aria-hidden="true" />
+
+      {showOpening ? (
+        <div className="hv-opening" role="presentation" onClick={skip}>
+          <div className="hv-opening__frame">
+            <h1 className="hv-opening__title" lang="en">
+              <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
+              <span>{h.opening.title.pre}</span>
+              <mark className="hv-opening__hl hv-opening__hl--yellow">{h.opening.title.hl1}</mark>
+              <span>{h.opening.title.mid}</span>
+              <i className="hv-opening__dot" aria-hidden="true" />
+              <mark className="hv-opening__hl hv-opening__hl--blue">{h.opening.title.hl2}</mark>
+              <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
+            </h1>
+
+            <img className="hv-opening__deco hv-opening__deco--wing" src={HOME_ASSETS.opening.wing} alt="" />
+            <img className="hv-opening__deco hv-opening__deco--sword" src={HOME_ASSETS.opening.sword} alt="" />
+            <img className="hv-opening__deco hv-opening__deco--pegasus" src={HOME_ASSETS.opening.pegasus} alt="" />
+            <img className="hv-opening__deco hv-opening__deco--plane" src={HOME_ASSETS.opening.plane} alt="" />
+            <img className="hv-opening__ui" src={HOME_ASSETS.opening.uiList} alt="" />
+            <span className="hv-opening__stars" aria-hidden="true">★★★</span>
+
+            <div className="hv-opening__window" ref={windowRef} data-loaded={stroke >= 1}>
+              {/* 蓝色描边 = 进度条：沿矩形周长生长，描完镜头再冲进窗口 */}
+              <svg className="hv-opening__stroke" viewBox="0 0 684 294" preserveAspectRatio="none" aria-hidden="true">
+                <rect x="8.5" y="8.5" width="667" height="277" pathLength={1} style={{ strokeDashoffset: 1 - stroke }} />
+              </svg>
+              <span className="hv-opening__live">{h.opening.live}</span>
+              {stageStill ? (
+                <div className="hv-opening__stills">
+                  <span className="hv-opening__sky" />
+                  <img className="hv-opening__still hv-opening__still--lie" src={HOME_ASSETS.opening.lie} alt="" />
+                  <img className="hv-opening__still hv-opening__still--hand" src={HOME_ASSETS.opening.hand} alt="" />
+                </div>
+              ) : null}
+              <img className="hv-opening__outline hv-opening__outline--01" src={HOME_ASSETS.opening.outline01} alt="" />
+              <img className="hv-opening__outline hv-opening__outline--02" src={HOME_ASSETS.opening.outline02} alt="" />
+              {phase === 'loading' ? <span className="hv-opening__loading">{h.opening.loading}</span> : null}
+            </div>
+          </div>
+          {phase === 'open' ? <div className="hv-opening__flash" aria-hidden="true" /> : null}
+          <button type="button" className="hv-opening__skip" onClick={skip}>
+            {h.opening.skip}
+          </button>
+        </div>
+      ) : null}
+
+      <div className="hv-chrome" data-visible={phase === 'hero'}>
+        <header className="hv-header">
+          <div className="hv-header__left">
+            <span className="hv-header__tagline" lang="en">{h.header.tagline}</span>
+            <p className="hv-header__quote" lang="en">
+              {h.header.quote}
+              <br />
+              {h.header.quoteBy}
+            </p>
+          </div>
+          <p className="hv-header__lede">{h.header.lede}</p>
+          <div className="hv-header__right">
+            <span className="hv-header__brand" lang="en">{h.header.brand}</span>
+            <button
+              type="button"
+              className="hv-header__menu"
+              aria-expanded={menuOpen}
+              aria-controls="hv-menu"
+              aria-label={menuOpen ? h.header.close : h.header.menu}
+              onClick={() => setMenuOpen((value) => !value)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+        </header>
+
+        <nav className="hv-menu" aria-label={h.header.menu}>
+          {MENU_ANCHORS.map(([key, href]) => (
+            <a key={key} href={href}>{h.menu[key]}</a>
+          ))}
+        </nav>
+
+        <div className="hv-title">
+          <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={344} height={155} />
+          <p className="hv-title__slogan">
+            {h.hero.slogan.pre}
+            <mark className="hv-title__hl hv-title__hl--yellow">{h.hero.slogan.hl1}</mark>
+            {h.hero.slogan.mid}
+            <mark className="hv-title__hl hv-title__hl--blue">{h.hero.slogan.hl2}</mark>
+          </p>
+          <a className="hv-title__register" href={`${PRODUCT_ORIGIN}/#landing/sign-up`}>{h.hero.register}</a>
+        </div>
+
+        <div className="hv-cta">
+          <button type="button" className="hv-cta__icon" aria-label={h.header.language} onClick={() => setMenuOpen(true)}>
+            <img src={HOME_ASSETS.icons.language} alt="" />
+          </button>
+          <span className="hv-cta__group">
+            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.xiaohongshu} alt="" /></span>
+            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.bilibili} alt="" /></span>
+            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.qq} alt="" /></span>
+            <span className="hv-cta__icon is-pending" aria-hidden="true"><img src={HOME_ASSETS.icons.discord} alt="" /></span>
+            {SOCIAL_LINKS.map((social) => (
+              <a key={social.id} className="hv-cta__icon" href={social.href} target="_blank" rel="noreferrer noopener" aria-label={social.label}>
+                <img src={HOME_ASSETS.icons.x} alt="" />
+              </a>
+            ))}
+          </span>
+          <a className="hv-cta__beta" href={beta.mode === 'email' ? beta.href : '#beta'}>
+            {h.hero.beta}
+            <i aria-hidden="true" />
+          </a>
+        </div>
+
+        {mode === '3d' && !reduced ? (
+          <button type="button" className="hv-replay" onClick={replay}>{h.opening.replay}</button>
+        ) : null}
+      </div>
+
+      {menuOpen ? (
+        <div className="hv-menu-overlay" id="hv-menu">
+          <button type="button" className="hv-menu-overlay__close" onClick={() => setMenuOpen(false)} aria-label={h.header.close}>×</button>
+          <nav aria-label={h.header.menu}>
+            {MENU_ANCHORS.map(([key, href]) => (
+              <a key={key} href={href} onClick={() => setMenuOpen(false)}>{h.menu[key]}</a>
+            ))}
+          </nav>
+          <div className="hv-menu-overlay__lang">
+            <LangSwitch locale={locale} label={h.header.language} />
+          </div>
+        </div>
+      ) : null}
+    </section>
+  );
+}

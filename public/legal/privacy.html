@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echuu 隐私政策 · Privacy Policy · プライバシーポリシー · 개인정보처리방침</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#141417; --border:#26262b; --text:#eef0ea; --muted:#9a9a9f;
+    --accent:#B7FF7A; --accent-dim:#8fd45e; --warn:#ffb45c; --danger:#ff6b6b;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f7f7f5; --panel:#ffffff; --border:#e2e2e0; --text:#141416; --muted:#5c5c62; --accent:#5c9a1f; --accent-dim:#3f7d0f; }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans JP","Noto Sans KR","Microsoft YaHei",sans-serif;
+    line-height:1.7; font-size:15px;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:32px 20px 120px;}
+  .topbar{
+    position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{max-width:900px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .brand{font-weight:700; letter-spacing:.02em; color:var(--accent);}
+  .brand small{display:block; font-weight:400; color:var(--muted); font-size:11px; letter-spacing:.04em;}
+  .langswitch{display:flex; gap:6px;}
+  .langswitch button{
+    background:transparent; border:1px solid var(--border); color:var(--muted);
+    padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; transition:.15s;
+  }
+  .langswitch button.active{background:var(--accent); border-color:var(--accent); color:#0a0a0c; font-weight:600;}
+  .langswitch button:hover:not(.active){border-color:var(--accent-dim); color:var(--text);}
+
+  .banner{
+    background:linear-gradient(180deg, color-mix(in srgb, var(--warn) 12%, transparent), transparent);
+    border:1px solid color-mix(in srgb, var(--warn) 40%, var(--border));
+    border-radius:12px; padding:16px 18px; margin:24px 0 32px; font-size:13.5px; color:var(--text);
+  }
+  .banner b{color:var(--warn);}
+  .meta{color:var(--muted); font-size:13px; margin-bottom:4px;}
+  h1{font-size:26px; margin:0 0 6px; letter-spacing:-.01em;}
+  h2{font-size:19px; margin:40px 0 12px; padding-top:8px; border-top:1px solid var(--border); color:var(--accent);}
+  h3{font-size:15.5px; margin:22px 0 8px; color:var(--text);}
+  h4{font-size:14px; margin:16px 0 6px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+  p{margin:10px 0; color:var(--text);}
+  ul,ol{margin:10px 0; padding-left:22px;}
+  li{margin:6px 0;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--accent) 40%, transparent);}
+  a:hover{border-bottom-color:var(--accent);}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top;}
+  th{background:var(--panel); color:var(--accent); font-weight:600;}
+  .placeholder{color:var(--warn); font-family:ui-monospace,monospace;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin:16px 0;}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin:24px 0;}
+  .toc a{display:block; padding:3px 0; border-bottom:none; color:var(--text); font-size:13.5px;}
+  .toc a:hover{color:var(--accent);}
+  .jflag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted); margin-left:6px;}
+  .jflag.cn{color:#ff8080; border-color:#ff808055;}
+  .jflag.us{color:#7ab8ff; border-color:#7ab8ff55;}
+  .jflag.jp{color:#ffb45c; border-color:#ffb45c55;}
+  .jflag.kr{color:#c99bff; border-color:#c99bff55;}
+  .subsec{border-left:2px solid var(--border); padding-left:14px; margin:18px 0;}
+  .subsec.cn{border-left-color:#ff808055;}
+  .subsec.us{border-left-color:#7ab8ff55;}
+  .subsec.jp{border-left-color:#ffb45c55;}
+  .subsec.kr{border-left-color:#c99bff55;}
+  .footer-nav{margin-top:64px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; color:var(--muted); font-size:13px;}
+  [data-doc]{display:none;}
+  [data-doc].active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Echuu <small>Privacy Policy Draft</small></div>
+    <div class="langswitch" role="group" aria-label="Language">
+      <button data-lang="zh">简体中文</button>
+      <button data-lang="ja">日本語</button>
+      <button data-lang="en">English</button>
+      <button data-lang="ko">한국어</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ================= ZH ================= -->
+<article data-doc="zh" lang="zh">
+  <div class="meta">最后更新：2026-09-04 · 状态：草案</div>
+  <h1>Echuu 隐私政策</h1>
+  <div class="banner"><b>⚠️ 提示：</b>本文档为合规草案，由 AI 辅助起草，<b>不构成法律意见</b>。正式发布前须经持牌律师审阅。文中 <span class="placeholder">[ ]</span> 为待填占位符。</div>
+
+  <div class="toc">
+    <a href="#zh-1">1. 概述</a>
+    <a href="#zh-2">2. 我们收集的信息</a>
+    <a href="#zh-3">3. 我们如何使用信息</a>
+    <a href="#zh-4">4. 信息共享</a>
+    <a href="#zh-5">5. 数据存储与安全</a>
+    <a href="#zh-6">6. 您的权利</a>
+    <a href="#zh-7">7. 数据保留与删除</a>
+    <a href="#zh-8">8. 儿童隐私</a>
+    <a href="#zh-9">9. 政策更新</a>
+    <a href="#zh-10">10. 联系方式</a>
+    <a href="#zh-appendix">附录：司法辖区专章</a>
+    <a href="#zh-checklist">附录：发布前合规清单</a>
+  </div>
+
+  <h2 id="zh-1">1. 概述</h2>
+  <p>本隐私政策说明 <span class="placeholder">[Anngel LLC]</span>（"我们"）在您使用 Echuu 直播引擎时，如何收集、使用、存储、共享和保护您的个人信息。我们的产品设计原则之一是<b>数据最小化</b>：动作捕捉的核心处理在您的设备本地完成。</p>
+
+  <h2 id="zh-2">2. 我们收集的信息</h2>
+  <h3>2.1 您主动提供的信息</h3>
+  <table>
+    <tr><th>类别</th><th>具体内容</th><th>收集场景</th></tr>
+    <tr><td>账号信息</td><td>邮箱地址、密码（加密存储）、Google OAuth 基本资料（如接入）</td><td>注册/登录</td></tr>
+    <tr><td>用户内容</td><td>上传的 VRM/GLB/GLTF 角色模型文件、背景图片</td><td>角色选择步骤上传自定义模型</td></tr>
+    <tr><td>人设信息（Persona Card）</td><td>角色名称、性格设定、口癖、立场、雷点、背景故事等文本</td><td>角色人设配置步骤，<b>会被发送至后端 AI 服务用于生成对话</b></td></tr>
+    <tr><td>直播配置信息</td><td>直播主题、选择的语音音色、推流平台与 Stream Key</td><td>直播设置步骤</td></tr>
+    <tr><td>弹幕/聊天内容</td><td>您在直播间发送的文字消息</td><td>观众互动</td></tr>
+    <tr><td>支付相关信息</td><td>由第三方支付处理商直接收集（我们不接触您的完整卡号）</td><td>未来订阅/付费功能上线后</td></tr>
+  </table>
+  <h3>2.2 自动收集的信息</h3>
+  <table>
+    <tr><th>类别</th><th>具体内容</th><th>说明</th></tr>
+    <tr><td><b>摄像头视频（动作捕捉）</b></td><td>面部、身体姿态、手部关键点坐标</td><td><b>原始摄像头视频流仅在您的浏览器/设备本地内存中用于实时推理，不会上传或存储至我们的服务器。上传/传输的仅为计算后的动作坐标数据，用于驱动虚拟形象动画。</b>我们不采集麦克风音频用于动捕。</td></tr>
+    <tr><td>设备与日志信息</td><td>IP 地址、浏览器/操作系统类型、连接质量</td><td>通过实时音视频连接、WebSocket 连接产生，用于保障服务稳定性与安全</td></tr>
+    <tr><td>本地存储数据</td><td>界面偏好、工程草稿缓存</td><td>存储在您本地设备，不主动上传</td></tr>
+    <tr><td>使用分析数据</td><td>匿名标识、会话标识、页面/功能使用事件、设备与浏览器类型、屏幕尺寸、渲染帧率、错误信息</td><td>用于产品改进，详见 <a href="#zh-2-4">2.4 产品分析与用户研究</a></td></tr>
+  </table>
+  <h3>2.3 我们不收集的信息</h3>
+  <ul>
+    <li>我们不存储您的原始摄像头视频画面；</li>
+    <li>我们不进行面部识别以确认您的真实身份（动作捕捉的目的仅为驱动虚拟角色动画，不用于身份识别或与其他数据源比对识别个人）；</li>
+    <li>我们目前不采集用户真实声纹样本用于声音克隆（角色音色训练使用预置 TTS 音色合成，不使用真人录音）。</li>
+  </ul>
+  <p><b>待办（发布前必须澄清）</b>：若未来产品增加"上传自拍照生成角色""录制个人声音克隆音色"等功能，上述条款需要相应更新为收集生物识别信息的专项告知与单独同意流程。</p>
+
+  <h3 id="zh-2-4">2.4 产品分析与用户研究</h3>
+  <p>为了判断产品哪里好用、哪里卡住，我们采集使用行为数据，并在下列范围内采集自由文本。所有数据存放在我们自有的私有对象存储（AWS S3，美国东部），<b>不共享给第三方分析平台</b>。</p>
+  <table>
+    <tr><th>类别</th><th>内容</th><th>标识</th><th>保留期</th></tr>
+    <tr><td>行为事件</td><td>阶段跳转、功能面板打开、场景/形象/动作等资源选择、直播开始与结束时长、错误与帧率</td><td>浏览器本地生成的匿名 ID + 会话 ID；登录后关联账号 ID</td><td>24 个月</td></tr>
+    <tr><td><b>人设与直播主题文本</b></td><td>您在人设卡、直播主题中填写的文字</td><td>同上</td><td>12 个月</td></tr>
+    <tr><td><b>直播间弹幕内容</b></td><td>直播间内发送的文字消息</td><td>发送者标识经<b>单向哈希</b>处理后存储，不保留原始昵称或账号</td><td>3 个月</td></tr>
+  </table>
+  <p><b>入库前的处理</b>：所有自由文本在写入前会自动过滤邮箱、电话号码、网址、@账号、长数字串等可直接定位到个人的片段，并截断至 2000 字符。</p>
+  <p><b>我们不采集</b>：推流密钥（Stream Key）、密码、支付卡号、原始 IP 地址（仅保留国家/地区代码）、原始摄像头画面。</p>
+  <p><b>用途</b>：仅用于分析产品使用情况、改进功能与内容供给。人设与弹幕文本会以聚合或抽样方式提供给我们的 AI 分析助手用于归纳产品结论，<b>不用于训练对外的通用模型</b>。</p>
+  <p><b>您的选择</b>：可在产品设置中关闭使用分析（关闭后不再上报，本地队列立即清空），也可重置匿名标识以断开与历史数据的关联。如需删除已收集的数据，请联系 <a href="mailto:cory@anngel.live">cory@anngel.live</a>。</p>
+  <p><b>关于弹幕发送者</b>：弹幕由观众发送，观众可能并非本产品注册用户。我们对该内容仅保留哈希化标识、做 PII 过滤、并采用最短保留期（3 个月）。主播在直播间使用互动功能即表示已知悉本条；如您作为观众希望删除自己发送的内容，请联系上述邮箱。</p>
+
+  <h2 id="zh-3">3. 我们如何使用信息</h2>
+  <ul>
+    <li>提供、维护、改进服务（渲染角色、生成表演内容、推流、互动）；</li>
+    <li>账号管理、身份验证、客户支持；</li>
+    <li>安全防护、欺诈识别、滥用行为监测；</li>
+    <li>在获得必要同意/依据合法基础的前提下，用于产品分析与改进；</li>
+    <li>履行法律义务。</li>
+  </ul>
+  <p><b>人设信息（Persona Card）与主题文本会被传输给我们的 AI 后端服务（含第三方大模型/TTS 服务商）用于生成剧本、语音</b>。请勿在人设信息中输入您不希望被处理的敏感个人信息。</p>
+
+  <h2 id="zh-4">4. 信息共享</h2>
+  <p>我们不出售您的个人信息。我们仅在以下情形共享信息：</p>
+  <ul>
+    <li><b>服务提供商</b>：云服务器、实时音视频服务、文件存储、AI 生成服务、支付处理商——均在为我们提供服务所必需的范围内处理您的信息；</li>
+    <li><b>法律要求</b>：应法律、法规、法院令状或政府主管部门的合法要求；</li>
+    <li><b>业务转让</b>：如发生合并、收购、资产出售，您的信息可能作为交易的一部分被转移，我们会提前通知；</li>
+    <li><b>经您同意的其他情形</b>。</li>
+  </ul>
+
+  <h3 id="zh-4-ai">4.1 第三方 AI 服务与数据流</h3>
+  <p><b>范围原则：</b>Echuu 当前面向用户的生成式 AI 主要用于角色对话、直播脚本和互动回应等<b>文本玩法</b>，以及把这些文字转换成语音。当前核心产品流程不调用图像或视频生成模型，也不会把您的角色模型、角色图片、摄像头画面或直播录像交给图像或视频生成模型。</p>
+  <table>
+    <tr><th>供应商 / 技术</th><th>状态与能力</th><th>可能处理的数据</th></tr>
+    <tr><td><b>阿里云百炼 / DashScope（通义千问）</b></td><td><b>当前主力。</b>Qwen 文本模型用于人设建议、直播剧本、角色对话和互动回应；Qwen TTS 将剧本文字合成为预置角色音色；Qwen ASR 在用户开启语音输入时生成字幕；Qwen Omni 仅在用户主动使用 Reaction 模式时理解指定视频并输出文字时间点与反应脚本，不生成图片或视频。</td><td>完成所选功能所需的人设、主题、提示词和对话上下文；待合成的文字；仅在开启语音输入时处理的麦克风音频；仅在启动 Reaction 模式时处理的指定公开视频链接及其音视频内容。</td></tr>
+    <tr><td><b>Google Gemini</b></td><td><b>可选文本提供商。</b>仅在部署方配置并启用时，用于生成角色文本、剧本与互动回复。</td><td>仅为完成该次文本请求所需的人设、主题、提示词和对话上下文；当前面向用户的核心流程不使用其图像生成功能。</td></tr>
+    <tr><td><b>Anthropic Claude</b></td><td><b>可选文本提供商。</b>仅在部署方配置并启用时，用于生成角色文本、剧本与互动回复。</td><td>仅为完成该次文本请求所需的人设、主题、提示词和对话上下文；不用于图像生成或声音克隆。</td></tr>
+    <tr><td><b>Google MediaPipe</b></td><td><b>设备本地处理。</b>识别面部、身体和手部关键点，用于驱动虚拟角色动作；它是动作感知技术，不是云端生成式 AI 服务。</td><td>原始摄像头帧在您的设备上实时处理，不发送给 MediaPipe 云端；Echuu 仅使用动作关键点结果驱动角色。</td></tr>
+  </table>
+  <p>实际调用的供应商取决于部署地区、服务可用性及您主动启用的功能。Echuu 只发送完成该次功能所必需的数据，不出售这些数据，也不会在您未另行明确主动选择加入（opt-in）的情况下，将用户内容提供给 Echuu 或第三方用于训练生成式 AI 模型。第三方服务自身的数据处理同时受其适用条款约束。</p>
+
+  <h2 id="zh-5">5. 数据存储与安全</h2>
+  <p>我们采取合理的技术与管理措施（加密传输、访问控制）保护您的信息，但无法保证绝对安全。数据存储于 <span class="placeholder">[占位——需明确服务器物理地域]</span>，跨境传输安排见附录 A.6。账号密码采用加密存储，不以明文形式保存。</p>
+
+  <h2 id="zh-6">6. 您的权利</h2>
+  <p>根据您所在司法辖区，您可能享有：访问、更正、删除您的个人信息；撤回同意、限制或反对特定处理；数据可携带；拒绝将个人信息用于分析目的。行使上述权利，请联系 <a href="mailto:cory@anngel.live">cory@anngel.live</a>，我们将在法定期限内响应（中国大陆一般为 15 个工作日内，美国各州法律期限不同，通常为 45 天）。</p>
+
+  <h2 id="zh-7">7. 数据保留与删除</h2>
+  <p>账号信息在账号存续期间保留；您可申请注销账号并删除关联数据，法律要求保留的除外。上传的模型等用户内容在您删除后从我们的存储中移除（合理的备份周期内可能仍存在副本）。弹幕/聊天记录的保留期限：<span class="placeholder">[占位，建议明确具体天数]</span>。</p>
+  <p><b>删除请求：</b>如果您希望删除自己的账号、用户内容或已收集的个人信息，欢迎随时发送邮件至 <a href="mailto:cory@anngel.live">cory@anngel.live</a>。我们会在核验请求者身份后积极配合，并在适用法律规定的期限内完成处理；法律要求保留的数据及合理备份周期内的残留副本除外。</p>
+
+  <h2 id="zh-8">8. 儿童隐私</h2>
+  <p>服务不面向 13 周岁以下儿童（美国 COPPA 基准）。若我们发现在未获得可验证家长同意的情况下收集了 13 周岁以下儿童的个人信息，将及时删除。中国大陆对不满 14 周岁未成年人个人信息保护有专门的"儿童个人信息"规则（视为敏感个人信息，需监护人单独同意），我们尚未建成对应的监护人同意机制，在此机制上线前，服务不应用于已知的中国大陆未满 14 周岁未成年人。</p>
+
+  <h2 id="zh-9">9. 政策更新</h2>
+  <p>我们可能不时更新本隐私政策，重大变更将通过服务内通知或更新"最后更新日期"告知。</p>
+
+  <h2 id="zh-10">10. 联系方式</h2>
+  <p>数据保护与删除请求：<a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
+  <p>产品反馈与建议：欢迎加入我们的 <a href="/contact/">Discord / 微信社群</a>，或添加微信 <b>lyh958014884</b>。</p>
+
+  <h2 id="zh-appendix">附录：司法辖区专章</h2>
+
+  <div class="subsec cn">
+    <h3>A. 中国大陆合规专章 <span class="jflag cn">详细</span></h3>
+    <p>覆盖依据：《网络安全法》《数据安全法》《个人信息保护法》(PIPL)《生成式人工智能服务管理暂行办法》《人工合成内容标识办法》《网络直播营销管理办法》《互联网直播服务管理规定》《未成年人网络保护条例》《信息网络传播权保护条例》。</p>
+    <h4>A.1 个人信息处理的合法性基础与最小化</h4>
+    <p>处理个人信息以<b>用户同意</b>为主要合法性基础（PIPL 第 13 条），敏感个人信息（如可能涉及的生物识别特征）需<b>单独同意</b>（PIPL 第 29 条）；隐私政策需以<b>显著方式</b>呈现给中国大陆用户，需支持随时撤回同意。产品设计上坚持"动捕数据本地处理、不上传原始视频"的架构，是降低敏感个人信息处理范围的关键技术选择。</p>
+    <h4>A.2 生成式人工智能服务合规</h4>
+    <p>若服务面向中国大陆公众提供生成式 AI 功能，需要：训练数据来源合法性审查；生成内容不得含有法律禁止内容；建立提示词/生成结果的安全过滤机制（<b>当前产品完成度审计显示"内容审核"为 0%，是关键缺口</b>）；达到一定用户规模需完成算法备案与安全评估。</p>
+    <h4>A.3 人工合成内容标识（2025-09-01 施行）</h4>
+    <p>AI 生成的语音、图像、视频等合成内容需要同时具备<b>显式标识</b>（用户可感知的界面位置标注"AI 生成"）与<b>隐式标识</b>（文件元数据中嵌入标识）。这是强制且直接适用的规则，需要在直播画面/切片导出/回放页面加入可见的 AI 生成标识。</p>
+    <h4>A.4 网络直播与主播资质</h4>
+    <p>需关注：<b>主播实名认证</b>要求；<b>网络表演经纪资质</b>（是否触发需结合实际运营模式由中国律师判断）；<b>虚拟礼物/打赏</b>需遵守打赏限额、未成年人禁止打赏、账号实名制、资金存管要求，虚拟货币不得与法定货币直接双向兑换。</p>
+    <h4>A.5 未成年人保护（2024-01-01 施行）</h4>
+    <p>需实现：青少年模式（限定内容范围、限制打赏/充值）；时段限制（一般 22:00-6:00 限制未成年人使用直播/推送）；监护人同意（处理不满 14 周岁未成年人个人信息）；禁止未成年人参与打赏。<b>当前产品未实现任何相关机制，是关键缺口</b>。</p>
+    <h4>A.6 跨境数据传输</h4>
+    <p>若运营主体为美国 LLC 且处理中国大陆用户个人信息，向境外传输数据需符合 PIPL 第三章规则之一：国家网信部门安全评估；<b>个人信息出境标准合同</b>（SCC）备案；个人信息保护认证。是否需要在中国大陆单独部署服务器/成立境内主体，需尽早与律师和技术团队共同决策。</p>
+    <h4>A.7 消费者权益与自动续费</h4>
+    <p>若上线订阅制，需遵守《消费者权益保护法》及市场监管总局关于自动续费的显著提示、到期前提醒、便捷取消等要求。</p>
+  </div>
+
+  <div class="subsec us">
+    <h3>B. 美国合规专章 <span class="jflag us">详细</span></h3>
+    <h4>B.1 儿童在线隐私保护法（COPPA）</h4>
+    <p>若明知收集 13 周岁以下儿童个人信息，需取得可验证的家长同意，并提供家长访问/删除权利。建议设定最低年龄 13+（或更高），注册流程加入出生日期核验。</p>
+    <h4>B.2 加州消费者隐私法（CCPA/CPRA）</h4>
+    <p>需在隐私政策中列明所收集个人信息的类别、收集目的、是否"出售"或"共享"个人信息。目前产品<b>不出售个人信息</b>。CPRA 下的<b>敏感个人信息</b>类别包括精确地理位置、生物识别信息——动作捕捉产生的面部/身体关键点坐标，如被认定为"用于识别特定个人的生物识别信息"，将落入该类别。当前架构（本地推理、不上传原始视频）是关键的合规抗辩点。</p>
+    <h4>B.3 州级生物识别信息法（BIPA 等）</h4>
+    <p>伊利诺伊州 BIPA 对面部几何特征扫描等"生物识别标识符"要求事先书面同意、公开保留和销毁时间表，禁止出售，设有较高私人诉权。<b>风险评估</b>：由于原始视频不上传、不留存、仅本地瞬时推理生成动作坐标，产品架构大概率不构成 BIPA 意义上的"收集"生物识别标识符，但建议正式上线前由美国律师就现有实现出具书面意见。</p>
+    <h4>B.4 版权（DMCA）</h4>
+    <p>建议指定 DMCA Designated Agent 并在美国版权局登记，以获得"安全港"保护。</p>
+    <h4>B.5 FTC Act 与 AI/机器人披露</h4>
+    <p>以虚假或误导方式使用 AI 生成内容可能构成 FTC Act §5 项下的不公平或欺骗性行为；加州《机器人身份法》要求以商业为目的与消费者互动的机器人进行披露。<b>建议在直播间界面固定展示"AI 虚拟角色"标识</b>。</p>
+    <h4>B.6 深度伪造/合成媒体相关州法</h4>
+    <p>Reaction 模式若涉及对真实公众人物的模仿/评论，需要额外评估肖像权与讽刺/评论合理使用边界。</p>
+    <h4>B.7 支付与货币传输</h4>
+    <p>目前尚未开放应用内支付/虚拟礼物购买，资金不经过我们托管；若未来自建虚拟礼物余额/钱包系统，需重新评估是否需要在相关州注册为货币转移商(Money Transmitter License)。</p>
+  </div>
+
+  <div class="subsec jp">
+    <h3>C. 日本合规要点 <span class="jflag jp">框架级，二期完善</span></h3>
+    <p>依据：《个人情報保護法》(APPI)、《特定商取引法》。以下为上线前需要补齐的最小清单：</p>
+    <ul>
+      <li>明确利用目的（APPI 要求处理个人信息前需特定并公示利用目的）；</li>
+      <li>未经本人同意不得向第三方提供个人数据，法律另有规定的除外；</li>
+      <li>跨境传输至日本境外需满足 APPI 第 28 条告知/同意要求；</li>
+      <li>若涉及付费打赏/订阅，需按《特定商取引法》进行"特定商取引法に基づく表示"（经营者名称、地址、联系方式、退款政策等强制披露）；</li>
+      <li>委托个人信息处理给云服务商需履行监督义务并可能需要告知用户。</li>
+    </ul>
+  </div>
+
+  <div class="subsec kr">
+    <h3>D. 韩国合规要点 <span class="jflag kr">框架级，二期完善</span></h3>
+    <p>依据：《개인정보 보호법》(PIPA)。以下为上线前需要补齐的最小清单：</p>
+    <ul>
+      <li>PIPA 对同意的要求比多数司法辖区更细颗粒度，通常需要分项勾选同意；</li>
+      <li>若处理量达到一定门槛，可能需要指定个人信息保护负责人并设立国内联系窗口/代表；</li>
+      <li>涉及未成年人（14 岁以下）需要法定代理人同意，且同意方式有特别形式要求；</li>
+      <li>涉及实名认证类功能需关注韩国网络实名制相关规则；</li>
+      <li>付费虚拟礼物业务需关注韩国消费者保护规则（如强制退款条款）。</li>
+    </ul>
+  </div>
+
+  <h2 id="zh-checklist">附录：发布前合规清单</h2>
+  <table>
+    <tr><th>优先级</th><th>事项</th><th>状态</th></tr>
+    <tr><td>P0</td><td>律师审阅（中国大陆律师 + 美国律师）</td><td>未开始</td></tr>
+    <tr><td>P0</td><td>补全公司主体信息</td><td>未开始</td></tr>
+    <tr><td>P0</td><td>AI 生成内容显式/隐式标识功能开发</td><td>未开始</td></tr>
+    <tr><td>P0</td><td>内容审核/敏感词过滤机制</td><td>未开始（0%）</td></tr>
+    <tr><td>P0</td><td>年龄核验 + 青少年模式 / COPPA 出生日期核验</td><td>未开始</td></tr>
+    <tr><td>P1</td><td>DMCA Designated Agent 注册</td><td>未开始</td></tr>
+    <tr><td>P1</td><td>中国大陆跨境数据传输方案确定</td><td>未开始</td></tr>
+    <tr><td>P1</td><td>网络表演经纪/网络文化经营许可证需求判断</td><td>未开始</td></tr>
+    <tr><td>P1</td><td>虚拟礼物/打赏结算系统的合规设计</td><td>规划中</td></tr>
+    <tr><td>P2</td><td>日本《特定商取引法》展示页</td><td>未开始</td></tr>
+    <tr><td>P2</td><td>韩国 PIPA 分项同意机制</td><td>未开始</td></tr>
+  </table>
+
+  <div class="footer-nav"><span>← <a href="./terms.html">用户协议</a></span><span>本文档为内部工作稿，不得直接作为正式对外发布的法律文本使用</span></div>
+</article>
+
+<!-- ================= EN ================= -->
+<article data-doc="en" lang="en">
+  <div class="meta">Last updated: 2026-09-04 · Status: Draft</div>
+  <h1>Echuu Privacy Policy</h1>
+  <div class="banner"><b>⚠️ Notice:</b> This is a compliance draft, AI-assisted, and <b>does not constitute legal advice</b>. It must be reviewed by licensed counsel before publication. <span class="placeholder">[ ]</span> marks placeholders to be filled in.</div>
+
+  <div class="toc">
+    <a href="#en-1">1. Overview</a>
+    <a href="#en-2">2. Information We Collect</a>
+    <a href="#en-3">3. How We Use Information</a>
+    <a href="#en-4">4. Information Sharing</a>
+    <a href="#en-5">5. Data Storage &amp; Security</a>
+    <a href="#en-6">6. Your Rights</a>
+    <a href="#en-7">7. Data Retention &amp; Deletion</a>
+    <a href="#en-8">8. Children's Privacy</a>
+    <a href="#en-9">9. Policy Updates</a>
+    <a href="#en-10">10. Contact</a>
+    <a href="#en-appendix">Appendix: Jurisdiction Chapters</a>
+    <a href="#en-checklist">Appendix: Pre-Launch Compliance Checklist</a>
+  </div>
+
+  <h2 id="en-1">1. Overview</h2>
+  <p>This Privacy Policy explains how <span class="placeholder">[Anngel LLC]</span> ("we," "us") collects, uses, stores, shares, and protects your personal information when you use the Echuu streaming engine. One of our product design principles is <b>data minimization</b>: the core of motion-capture processing happens locally on your device.</p>
+
+  <h2 id="en-2">2. Information We Collect</h2>
+  <h3>2.1 Information you provide directly</h3>
+  <table>
+    <tr><th>Category</th><th>Details</th><th>When collected</th></tr>
+    <tr><td>Account information</td><td>Email address, password (stored encrypted), Google OAuth basic profile (if connected)</td><td>Registration/login</td></tr>
+    <tr><td>User content</td><td>Uploaded VRM/GLB/GLTF character model files, background images</td><td>Uploading a custom model during character selection</td></tr>
+    <tr><td>Persona information (Persona Card)</td><td>Character name, personality, verbal tics, stances, sensitivities, backstory, and other text</td><td>Persona configuration step; <b>sent to our backend AI service to generate dialogue</b></td></tr>
+    <tr><td>Stream configuration</td><td>Stream topic, selected voice, streaming platform and stream key</td><td>Stream setup step</td></tr>
+    <tr><td>Chat/danmaku content</td><td>Text messages you send in the stream room</td><td>Audience interaction</td></tr>
+    <tr><td>Payment-related information</td><td>Collected directly by a third-party payment processor (we never see your full card number)</td><td>Once subscription/paid features launch</td></tr>
+  </table>
+  <h3>2.2 Information collected automatically</h3>
+  <table>
+    <tr><th>Category</th><th>Details</th><th>Notes</th></tr>
+    <tr><td><b>Camera video (motion capture)</b></td><td>Face, body pose, and hand keypoint coordinates</td><td><b>The raw camera video stream exists only in your browser/device's local memory for real-time inference and is never uploaded to or stored on our servers. Only the resulting motion-coordinate data is transmitted, to drive your avatar's animation.</b> We do not collect microphone audio for motion capture.</td></tr>
+    <tr><td>Device &amp; log information</td><td>IP address, browser/OS type, connection quality</td><td>Generated via real-time audio/video and WebSocket connections; used for service reliability and security</td></tr>
+    <tr><td>Local storage data</td><td>UI preferences, project draft caches</td><td>Stored on your device; not proactively uploaded</td></tr>
+    <tr><td>Usage analytics</td><td>Anonymous ID, session ID, page/feature events, device and browser type, screen size, render frame rate, errors</td><td>For product improvement — see <a href="#en-2-4">2.4 Product Analytics &amp; User Research</a></td></tr>
+  </table>
+  <h3>2.3 What we do not collect</h3>
+  <ul>
+    <li>We do not store your raw camera video footage;</li>
+    <li>We do not perform facial recognition to confirm your real-world identity (motion capture exists solely to drive avatar animation, not to identify you or match you against other data sources);</li>
+    <li>We do not currently collect real voice samples for voice cloning (character voice training uses synthesized speech from preset TTS voices, not real human recordings).</li>
+  </ul>
+  <p><b>To-do (must be clarified before launch)</b>: if features such as "generate a character from a selfie" or "record your voice to clone a voice" are added, the above must be updated with dedicated biometric-information notices and separate consent flows.</p>
+
+  <h3 id="en-2-4">2.4 Product Analytics &amp; User Research</h3>
+  <p>To learn what works and where people get stuck, we collect usage events and, within the scope below, free-form text. All of it is stored in our own private object storage (AWS S3, US East) and is <b>not shared with third-party analytics vendors</b>.</p>
+  <table>
+    <tr><th>Category</th><th>Content</th><th>Identifier</th><th>Retention</th></tr>
+    <tr><td>Behavioural events</td><td>Stage transitions, tool panels opened, scene/avatar/motion selections, stream start and duration, errors and frame rate</td><td>Anonymous ID generated in your browser + session ID; linked to your account ID once signed in</td><td>24 months</td></tr>
+    <tr><td><b>Persona &amp; stream topic text</b></td><td>Text you write in the persona card and stream topic fields</td><td>As above</td><td>12 months</td></tr>
+    <tr><td><b>Live chat messages</b></td><td>Text messages sent in the stream room</td><td>Sender identifier stored as a <b>one-way hash</b>; no raw nickname or account is kept</td><td>3 months</td></tr>
+  </table>
+  <p><b>Processing before storage</b>: free-form text is automatically filtered for e-mail addresses, phone numbers, URLs, @handles and long digit strings, and truncated to 2,000 characters.</p>
+  <p><b>We do not collect</b>: stream keys, passwords, card numbers, raw IP addresses (country code only), or raw camera footage.</p>
+  <p><b>Purpose</b>: product usage analysis and improvement only. Persona and chat text may be passed in aggregated or sampled form to our AI analysis assistant to summarise findings; it is <b>not used to train general-purpose external models</b>.</p>
+  <p><b>Your choices</b>: you can turn usage analytics off in product settings (collection stops and the local queue is cleared immediately), or reset your anonymous identifier to break the link to earlier data. To request deletion of collected data, contact <a href="mailto:cory@anngel.live">cory@anngel.live</a>.</p>
+  <p><b>About chat senders</b>: live chat is written by viewers, who may not be registered users of this product. For that content we keep only a hashed identifier, apply PII filtering, and use the shortest retention period (3 months). Broadcasters using interaction features acknowledge this clause; viewers who want their messages deleted may contact the address above.</p>
+
+  <h2 id="en-3">3. How We Use Information</h2>
+  <ul>
+    <li>Provide, maintain, and improve the Service (rendering characters, generating performance content, streaming, interaction);</li>
+    <li>Account management, authentication, customer support;</li>
+    <li>Security, fraud detection, abuse monitoring;</li>
+    <li>Product analytics and improvement, where we have the necessary consent or legal basis;</li>
+    <li>Compliance with legal obligations.</li>
+  </ul>
+  <p><b>Persona Card information and topic text are transmitted to our AI backend services (including third-party LLM/TTS providers) to generate scripts and voice</b>. Do not enter sensitive personal information you do not wish to have processed into persona fields.</p>
+
+  <h2 id="en-4">4. Information Sharing</h2>
+  <p>We do not sell your personal information. We share information only:</p>
+  <ul>
+    <li><b>With service providers</b>: cloud servers, real-time audio/video services, file storage, AI generation services, payment processors — each processes your information only as necessary to provide services to us;</li>
+    <li><b>For legal reasons</b>: in response to valid legal, regulatory, court, or government requests;</li>
+    <li><b>In business transfers</b>: your information may be transferred as part of a merger, acquisition, or asset sale, with advance notice;</li>
+    <li><b>With your consent</b>, in other circumstances.</li>
+  </ul>
+
+  <h3 id="en-4-ai">4.1 Third-Party AI Services &amp; Data Flows</h3>
+  <p><b>Scope principle:</b> Echuu's current user-facing generative AI is used primarily for <b>text-based interaction</b>, including character dialogue, live scripts, and interactive responses, plus speech synthesis from that text. The current core product flow does not call image- or video-generation models, and we do not send your character models, character images, camera footage, or stream recordings to image- or video-generation models.</p>
+  <table>
+    <tr><th>Provider / technology</th><th>Status and capability</th><th>Data that may be processed</th></tr>
+    <tr><td><b>Alibaba Cloud Model Studio / DashScope (Qwen)</b></td><td><b>Current primary provider.</b> Qwen text models support persona suggestions, live scripts, character dialogue, and interactive replies; Qwen TTS turns script text into a preset character voice; Qwen ASR creates captions when voice input is enabled; Qwen Omni is used only when a user actively starts Reaction mode to understand a specified video and return text timestamps and a reaction script. It does not generate images or video.</td><td>Persona, topic, prompt, and conversation context required for the selected feature; text to synthesize; microphone audio only when voice input is enabled; and a specified public video URL and its audiovisual content only when Reaction mode is started.</td></tr>
+    <tr><td><b>Google Gemini</b></td><td><b>Optional text provider.</b> It is used for character text, scripts, and interactive replies only when configured and enabled by the deployment.</td><td>Only the persona, topic, prompt, and conversation context required for that text request. Its image-generation capability is not used in the current user-facing core flow.</td></tr>
+    <tr><td><b>Anthropic Claude</b></td><td><b>Optional text provider.</b> It is used for character text, scripts, and interactive replies only when configured and enabled by the deployment.</td><td>Only the persona, topic, prompt, and conversation context required for that text request; it is not used for image generation or voice cloning.</td></tr>
+    <tr><td><b>Google MediaPipe</b></td><td><b>On-device processing.</b> It detects face, body, and hand landmarks to drive virtual-character motion. It is a perception technology, not a cloud generative-AI service.</td><td>Raw camera frames are processed in real time on your device and are not sent to MediaPipe's cloud; Echuu uses only the resulting motion landmarks to drive the character.</td></tr>
+  </table>
+  <p>The provider actually called depends on deployment region, service availability, and the features you actively enable. Echuu sends only the data necessary to perform the requested feature, does not sell it, and does not provide User Content to Echuu or third parties for generative-AI model training unless you separately and affirmatively opt in. A third-party service's own processing is also governed by its applicable terms.</p>
+
+  <h2 id="en-5">5. Data Storage &amp; Security</h2>
+  <p>We use reasonable technical and organizational measures (encryption in transit, access controls) to protect your information, but cannot guarantee absolute security. Data is stored in <span class="placeholder">[placeholder — server region to be specified]</span>; cross-border transfer arrangements are described in Appendix A.6. Passwords are stored encrypted, never in plaintext.</p>
+
+  <h2 id="en-6">6. Your Rights</h2>
+  <p>Depending on your jurisdiction, you may have the right to access, correct, or delete your personal information; withdraw consent, restrict, or object to specific processing; data portability; and opt out of analytics use. To exercise these rights, contact <a href="mailto:cory@anngel.live">cory@anngel.live</a>; we will respond within the statutory period (generally 15 business days in mainland China; typically 45 days under various U.S. state laws).</p>
+
+  <h2 id="en-7">7. Data Retention &amp; Deletion</h2>
+  <p>Account information is retained while your account is active. You may request account deletion and removal of associated data, except where retention is legally required. Uploaded user content such as models is removed from our storage after deletion (residual copies may exist during a reasonable backup cycle). Chat/danmaku retention period: <span class="placeholder">[placeholder — specific number of days to be defined]</span>.</p>
+  <p><b>Deletion requests:</b> If you would like us to delete your account, User Content, or collected personal information, you are welcome to contact us at any time at <a href="mailto:cory@anngel.live">cory@anngel.live</a>. After verifying the requester's identity, we will cooperate fully and complete the request within the period required by applicable law, except for data that must be retained by law and residual copies within a reasonable backup cycle.</p>
+
+  <h2 id="en-8">8. Children's Privacy</h2>
+  <p>The Service is not directed to children under 13 (the U.S. COPPA baseline). If we learn we have collected personal information from a child under 13 without verifiable parental consent, we will delete it promptly. Mainland China has special "children's personal information" rules for those under 14 (treated as sensitive personal information requiring separate guardian consent); we have not yet built a corresponding guardian-consent mechanism, and until it exists, the Service should not be used by known mainland China users under 14.</p>
+
+  <h2 id="en-9">9. Policy Updates</h2>
+  <p>We may update this Privacy Policy from time to time; material changes will be announced via in-Service notice or an updated "Last updated" date.</p>
+
+  <h2 id="en-10">10. Contact</h2>
+  <p>Data protection and deletion requests: <a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
+  <p>Product feedback and suggestions: join our <a href="/contact/">Discord / WeChat community</a>, or add us on WeChat at <b>lyh958014884</b>.</p>
+
+  <h2 id="en-appendix">Appendix: Jurisdiction Chapters</h2>
+
+  <div class="subsec cn">
+    <h3>A. Mainland China Compliance Chapter <span class="jflag cn">Detailed</span></h3>
+    <p>Basis: Cybersecurity Law, Data Security Law, Personal Information Protection Law (PIPL), Interim Measures for the Management of Generative AI Services, Measures for Labeling AI-Generated Content, Measures for the Administration of Online Live-streaming Marketing, Provisions on the Administration of Online Live-streaming Services, Regulations on the Protection of Minors in Cyberspace, Regulations on the Protection of the Right to Network Dissemination of Information.</p>
+    <h4>A.1 Legal basis &amp; data minimization</h4>
+    <p>Processing relies primarily on <b>user consent</b> (PIPL Art. 13); sensitive personal information (e.g., any biometric characteristics involved) requires <b>separate consent</b> (PIPL Art. 29). The Privacy Policy must be presented to mainland China users in a <b>prominent manner</b>, with consent revocable at any time. Keeping motion-capture processing local (raw video never uploaded) is the key technical choice reducing our exposure to sensitive-personal-information obligations.</p>
+    <h4>A.2 Generative AI service compliance</h4>
+    <p>If generative AI features (auto-generated scripts/voice/dialogue) are offered to the mainland China public: training-data legality must be reviewed; generated content must not contain legally prohibited material; a prompt/output safety filtering mechanism must be built (<b>the current product-completion audit shows 0% for content moderation — a key gap</b>); services reaching a certain scale must complete algorithm filing and a security assessment.</p>
+    <h4>A.3 Labeling of AI-generated content (effective 2025-09-01)</h4>
+    <p>AI-generated audio, images, and video must carry both an <b>explicit label</b> (a user-visible "AI-generated" indicator) and an <b>implicit label</b> (metadata embedded in the file). This rule applies directly and mandatorily to Echuu's core product; visible AI-generated labeling must be added to the stream view, clip export, and replay pages.</p>
+    <h4>A.4 Livestreaming &amp; host licensing</h4>
+    <p>Relevant considerations: <b>real-name authentication</b> requirements for hosts; whether a <b>network performance brokerage license</b> is triggered (depends on the actual operating model — to be assessed by PRC counsel); <b>virtual gifts/tipping</b> must comply with tipping limits, a ban on minors tipping, real-name account requirements, and fund custody rules; virtual currency must not be directly convertible both ways with legal tender.</p>
+    <h4>A.5 Minor protection (effective 2024-01-01)</h4>
+    <p>Requires: a youth mode (restricting content and disabling tipping/top-up); time-of-day restrictions (generally restricting livestream/push features for minors 22:00–6:00); guardian consent for processing personal information of those under 14; a ban on minors tipping. <b>None of these mechanisms currently exist — a key gap.</b></p>
+    <h4>A.6 Cross-border data transfer</h4>
+    <p>If the operating entity is a U.S. LLC processing mainland China users' personal information, transferring data abroad requires one of the PIPL Chapter 3 mechanisms: a CAC-organized security assessment; a filed <b>Standard Contract</b> (SCC) for cross-border transfer; or personal information protection certification. Whether to deploy servers in / establish an entity in mainland China is a major architectural decision that should be made jointly with counsel and engineering, early.</p>
+    <h4>A.7 Consumer protection &amp; auto-renewal</h4>
+    <p>If a subscription is launched, it must comply with the Consumer Rights Protection Law and SAMR requirements on prominent auto-renewal disclosure, pre-expiry reminders, and easy cancellation.</p>
+  </div>
+
+  <div class="subsec us">
+    <h3>B. United States Compliance Chapter <span class="jflag us">Detailed</span></h3>
+    <h4>B.1 Children's Online Privacy Protection Act (COPPA)</h4>
+    <p>If we knowingly collect personal information from children under 13, verifiable parental consent is required, along with parental access/deletion rights. We recommend a minimum age of 13+ (or higher), with a date-of-birth check at registration.</p>
+    <h4>B.2 California Consumer Privacy Act (CCPA/CPRA)</h4>
+    <p>The Privacy Policy must list categories of personal information collected, purposes, and whether we "sell" or "share" personal information. The Service currently <b>does not sell personal information</b>. CPRA's <b>sensitive personal information</b> categories include precise geolocation and biometric information — the facial/body keypoint coordinates produced by motion capture, if deemed "biometric information capable of identifying a specific individual," would fall in this category. Our current architecture (on-device inference, no raw video uploaded) is a key point supporting a favorable classification.</p>
+    <h4>B.3 State biometric privacy statutes (e.g., BIPA)</h4>
+    <p>Illinois BIPA requires prior written consent, a public retention/destruction schedule, and a ban on sale for "biometric identifiers" such as facial geometry scans, with a robust private right of action. <b>Risk assessment</b>: because raw video is never uploaded or retained, and only transient on-device inference produces motion coordinates, our architecture likely does not constitute "collection" of biometric identifiers under BIPA. We nonetheless recommend obtaining written counsel opinion on the actual implementation before launching in states with such statutes.</p>
+    <h4>B.4 Copyright (DMCA)</h4>
+    <p>We recommend designating a DMCA Designated Agent and registering with the U.S. Copyright Office to obtain safe-harbor protection.</p>
+    <h4>B.5 FTC Act &amp; AI/bot disclosure</h4>
+    <p>Using AI-generated content in a false or misleading manner may constitute an unfair or deceptive practice under FTC Act §5; California's B.O.T. Act requires disclosure for bots that interact with consumers for commercial purposes. <b>We recommend a persistent "AI virtual character" indicator in the stream-room UI.</b></p>
+    <h4>B.6 State deepfake/synthetic-media laws</h4>
+    <p>If Reaction mode imitates or comments on real public figures, likeness rights and the boundaries of parody/commentary fair use should be separately assessed.</p>
+    <h4>B.7 Payments &amp; money transmission</h4>
+    <p>In-app payments/virtual-gift purchases are not yet available, and funds do not pass through us. If an in-app virtual-gift balance/wallet system (stored value + cash-out) is built later, whether Money Transmitter License registration is required in relevant states should be reassessed.</p>
+  </div>
+
+  <div class="subsec jp">
+    <h3>C. Japan Compliance Notes <span class="jflag jp">Framework-level, Phase 2</span></h3>
+    <p>Basis: Act on the Protection of Personal Information (APPI), Act on Specified Commercial Transactions. Minimum checklist before launch:</p>
+    <ul>
+      <li>Specify and publish the purpose of use before processing personal information (APPI requirement);</li>
+      <li>Do not provide personal data to third parties without consent, except as legally permitted;</li>
+      <li>Cross-border transfers outside Japan must satisfy APPI Art. 28 notice/consent requirements;</li>
+      <li>Paid tipping/subscriptions require the "Act on Specified Commercial Transactions" disclosure page (operator name, address, contact, refund policy, etc.);</li>
+      <li>Entrusting personal-information processing to cloud providers requires oversight obligations and possibly user notice.</li>
+    </ul>
+  </div>
+
+  <div class="subsec kr">
+    <h3>D. Korea Compliance Notes <span class="jflag kr">Framework-level, Phase 2</span></h3>
+    <p>Basis: Personal Information Protection Act (PIPA). Minimum checklist before launch:</p>
+    <ul>
+      <li>PIPA consent requirements are more granular than most jurisdictions, typically requiring itemized opt-in checkboxes;</li>
+      <li>Above a certain processing threshold, a Chief Privacy Officer and a domestic contact/representative may be required;</li>
+      <li>Processing data of minors under 14 requires legal-guardian consent with specific formal requirements;</li>
+      <li>Real-name-verification features must account for Korea's online real-name-system rules;</li>
+      <li>Paid virtual gifts must account for Korean consumer-protection rules (e.g., mandatory refund provisions).</li>
+    </ul>
+  </div>
+
+  <h2 id="en-checklist">Appendix: Pre-Launch Compliance Checklist</h2>
+  <table>
+    <tr><th>Priority</th><th>Item</th><th>Status</th></tr>
+    <tr><td>P0</td><td>Counsel review (mainland China counsel + U.S. counsel)</td><td>Not started</td></tr>
+    <tr><td>P0</td><td>Finalize operating-entity details</td><td>Not started</td></tr>
+    <tr><td>P0</td><td>Build AI-generated-content explicit/implicit labeling</td><td>Not started</td></tr>
+    <tr><td>P0</td><td>Content moderation / sensitive-word filtering</td><td>Not started (0%)</td></tr>
+    <tr><td>P0</td><td>Age verification + youth mode / COPPA date-of-birth check</td><td>Not started</td></tr>
+    <tr><td>P1</td><td>Register DMCA Designated Agent</td><td>Not started</td></tr>
+    <tr><td>P1</td><td>Finalize mainland China cross-border transfer approach</td><td>Not started</td></tr>
+    <tr><td>P1</td><td>Assess need for livestream brokerage / cultural-operation licenses</td><td>Not started</td></tr>
+    <tr><td>P1</td><td>Compliance design for virtual gifts/tipping settlement</td><td>Planned</td></tr>
+    <tr><td>P2</td><td>Japan Specified Commercial Transactions Act disclosure page</td><td>Not started</td></tr>
+    <tr><td>P2</td><td>Korea PIPA itemized-consent mechanism</td><td>Not started</td></tr>
+  </table>
+
+  <div class="footer-nav"><span>← <a href="./terms.html">Terms of Service</a></span><span>Internal working draft — not for use as a final public legal text</span></div>
+</article>
+
+<!-- ================= JA ================= -->
+<article data-doc="ja" lang="ja">
+  <div class="meta">最終更新日：2026-09-04 ・ ステータス：ドラフト</div>
+  <h1>Echuu プライバシーポリシー</h1>
+  <div class="banner"><b>⚠️ ご注意：</b>本書はAIの支援を受けて作成されたコンプライアンス草案であり、<b>法的助言を構成するものではありません</b>。正式公開前に、有資格の弁護士によるレビューが必要です。<span class="placeholder">[ ]</span> は要記入のプレースホルダーです。</div>
+
+  <div class="toc">
+    <a href="#ja-1">1. 概要</a>
+    <a href="#ja-2">2. 当社が収集する情報</a>
+    <a href="#ja-3">3. 情報の利用方法</a>
+    <a href="#ja-4">4. 情報の共有</a>
+    <a href="#ja-5">5. データの保存とセキュリティ</a>
+    <a href="#ja-6">6. お客様の権利</a>
+    <a href="#ja-7">7. データの保持と削除</a>
+    <a href="#ja-8">8. 子供のプライバシー</a>
+    <a href="#ja-9">9. ポリシーの更新</a>
+    <a href="#ja-10">10. お問い合わせ</a>
+    <a href="#ja-appendix">付録：法域別章</a>
+    <a href="#ja-checklist">付録：公開前コンプライアンスチェックリスト</a>
+  </div>
+
+  <h2 id="ja-1">1. 概要</h2>
+  <p>本プライバシーポリシーは、<span class="placeholder">[Anngel LLC]</span>（「当社」）がEchuu配信エンジンをご利用いただく際に、お客様の個人情報をどのように収集・利用・保存・共有・保護するかを説明するものです。当社の製品設計原則の一つは<b>データ最小化</b>であり、モーションキャプチャのコア処理はお客様のデバイス上でローカルに実行されます。</p>
+
+  <h2 id="ja-2">2. 当社が収集する情報</h2>
+  <h3>2.1 お客様が直接提供する情報</h3>
+  <table>
+    <tr><th>区分</th><th>内容</th><th>収集される場面</th></tr>
+    <tr><td>アカウント情報</td><td>メールアドレス、パスワード（暗号化して保存）、Google OAuthの基本プロフィール（連携時）</td><td>登録・ログイン</td></tr>
+    <tr><td>ユーザーコンテンツ</td><td>アップロードされたVRM/GLB/GLTFキャラクターモデルファイル、背景画像</td><td>キャラクター選択時のカスタムモデルのアップロード</td></tr>
+    <tr><td>ペルソナ情報（Persona Card）</td><td>キャラクター名、性格設定、口癖、立場、注意点、背景設定等のテキスト</td><td>ペルソナ設定ステップ。<b>対話生成のため当社のバックエンドAIサービスに送信されます</b></td></tr>
+    <tr><td>配信設定情報</td><td>配信テーマ、選択した音声、配信プラットフォームとストリームキー</td><td>配信設定ステップ</td></tr>
+    <tr><td>チャット・コメント内容</td><td>配信ルームで送信するテキストメッセージ</td><td>視聴者との交流</td></tr>
+    <tr><td>決済関連情報</td><td>第三者決済事業者が直接収集（当社はカード情報全体には触れません）</td><td>今後サブスクリプション・有料機能が開始された場合</td></tr>
+  </table>
+  <h3>2.2 自動的に収集される情報</h3>
+  <table>
+    <tr><th>区分</th><th>内容</th><th>説明</th></tr>
+    <tr><td><b>カメラ映像（モーションキャプチャ）</b></td><td>顔、身体姿勢、手指のキーポイント座標</td><td><b>カメラの生映像はリアルタイム推論のためブラウザ／デバイスのローカルメモリ内にのみ存在し、当社サーバーへアップロード・保存されることはありません。</b>送信されるのは計算後の動作座標データのみで、アバターアニメーションの駆動に用いられます。モーションキャプチャのためにマイク音声を収集することはありません。</td></tr>
+    <tr><td>デバイス・ログ情報</td><td>IPアドレス、ブラウザ／OSの種類、接続品質</td><td>リアルタイム音声・映像通信およびWebSocket接続により発生し、サービスの安定性とセキュリティ確保に利用</td></tr>
+    <tr><td>ローカルストレージデータ</td><td>UI設定、プロジェクト下書きキャッシュ</td><td>お客様のデバイスに保存され、自動的にアップロードされません</td></tr>
+    <tr><td>利用状況分析データ</td><td>匿名 ID、セッション ID、ページ・機能の利用イベント、デバイス／ブラウザ種別、画面サイズ、描画フレームレート、エラー情報</td><td>製品改善のため。詳細は <a href="#ja-2-4">2.4 プロダクト分析とユーザーリサーチ</a></td></tr>
+  </table>
+  <h3>2.3 当社が収集しない情報</h3>
+  <ul>
+    <li>お客様のカメラの生映像は保存しません；</li>
+    <li>実際の身元確認のための顔認識は行いません（モーションキャプチャの目的はアバターアニメーションの駆動のみであり、身元確認や他のデータソースとの照合には使用しません）；</li>
+    <li>現時点では、声のクローン作成のための実際の声紋サンプルは収集していません（キャラクターの音声トレーニングには事前設定されたTTS音声の合成音声を使用し、実在の人物の録音は使用しません）。</li>
+  </ul>
+  <p><b>要対応事項（公開前に明確化必須）：</b>今後「自撮り写真からキャラクターを生成」「個人の声を録音して声をクローン」等の機能を追加する場合、上記条項を生体情報の専用告知および個別同意フローとして更新する必要があります。</p>
+
+  <h3 id="ja-2-4">2.4 プロダクト分析とユーザーリサーチ</h3>
+  <p>製品のどこが使いやすく、どこで詰まるかを把握するため、利用イベントおよび下記の範囲で自由記述テキストを収集します。データは当社専用のプライベートオブジェクトストレージ（AWS S3、米国東部）に保存され、<b>第三者の分析プラットフォームには共有しません</b>。</p>
+  <table>
+    <tr><th>区分</th><th>内容</th><th>識別子</th><th>保持期間</th></tr>
+    <tr><td>行動イベント</td><td>ステージ遷移、ツールパネルの開閉、シーン／アバター／モーションの選択、配信開始と配信時間、エラーとフレームレート</td><td>ブラウザで生成される匿名 ID とセッション ID。ログイン後はアカウント ID と紐付け</td><td>24 か月</td></tr>
+    <tr><td><b>ペルソナ・配信テーマのテキスト</b></td><td>ペルソナカードや配信テーマに入力した文章</td><td>同上</td><td>12 か月</td></tr>
+    <tr><td><b>配信ルームのチャット</b></td><td>配信ルーム内で送信されたテキスト</td><td>送信者識別子は<b>一方向ハッシュ</b>で保存し、元のニックネームやアカウントは保持しません</td><td>3 か月</td></tr>
+  </table>
+  <p><b>保存前の処理</b>：自由記述テキストは保存前にメールアドレス、電話番号、URL、@アカウント、長い数字列を自動的にフィルタリングし、2,000 文字に切り詰めます。</p>
+  <p><b>収集しないもの</b>：ストリームキー、パスワード、カード番号、生の IP アドレス（国コードのみ保持）、生のカメラ映像。</p>
+  <p><b>利用目的</b>：製品の利用状況分析と改善のみ。ペルソナおよびチャットのテキストは集計またはサンプリングした形で当社の AI 分析アシスタントに渡し、示唆の要約に用いることがありますが、<b>外部向け汎用モデルの学習には使用しません</b>。</p>
+  <p><b>お客様の選択</b>：製品設定から利用状況分析をオフにできます（オフ後は送信を停止し、ローカルキューを直ちに消去します）。匿名識別子をリセットして過去データとの紐付けを解除することもできます。収集済みデータの削除をご希望の場合は <a href="mailto:cory@anngel.live">cory@anngel.live</a> までご連絡ください。</p>
+  <p><b>チャット送信者について</b>：チャットは視聴者が送信するもので、本製品の登録ユーザーとは限りません。当該内容についてはハッシュ化した識別子のみを保持し、PII フィルタリングを行い、最短の保持期間（3 か月）を適用します。配信者はインタラクション機能の利用をもって本条を了解したものとみなされます。視聴者としてご自身の送信内容の削除をご希望の場合は上記アドレスへご連絡ください。</p>
+
+  <h2 id="ja-3">3. 情報の利用方法</h2>
+  <ul>
+    <li>本サービスの提供、維持、改善（キャラクターのレンダリング、パフォーマンスコンテンツの生成、配信、交流）；</li>
+    <li>アカウント管理、本人確認、カスタマーサポート；</li>
+    <li>セキュリティ保護、不正検知、悪用監視；</li>
+    <li>必要な同意または法的根拠に基づく製品分析・改善；</li>
+    <li>法的義務の履行。</li>
+  </ul>
+  <p><b>ペルソナ情報（Persona Card）およびテーマテキストは、台本・音声生成のために当社のAIバックエンドサービス（第三者の大規模言語モデル・TTSプロバイダーを含む）に送信されます</b>。処理されたくない機微な個人情報をペルソナ情報に入力しないでください。</p>
+
+  <h2 id="ja-4">4. 情報の共有</h2>
+  <p>当社はお客様の個人情報を販売しません。以下の場合にのみ情報を共有します：</p>
+  <ul>
+    <li><b>サービス提供事業者</b>：クラウドサーバー、リアルタイム音声・映像サービス、ファイルストレージ、AI生成サービス、決済処理事業者——いずれも当社へのサービス提供に必要な範囲でのみお客様の情報を処理します；</li>
+    <li><b>法的要請</b>：法律、規制、裁判所命令、または政府当局からの適法な要請に応じる場合；</li>
+    <li><b>事業譲渡</b>：合併、買収、資産売却が発生した場合、取引の一部としてお客様の情報が移転される可能性があり、事前に通知します；</li>
+    <li><b>お客様の同意</b>を得たその他の場合。</li>
+  </ul>
+
+  <h3 id="ja-4-ai">4.1 第三者 AI サービスとデータフロー</h3>
+  <p><b>適用範囲：</b>Echuu の現在のユーザー向け生成 AI は、キャラクターの会話、配信台本、インタラクティブな応答などの<b>テキスト中心の体験</b>と、そのテキストの音声化に主として使用されます。現在のコア製品フローは画像・動画生成モデルを呼び出さず、お客様のキャラクターモデル、キャラクター画像、カメラ映像、配信録画を画像・動画生成モデルへ送信しません。</p>
+  <table>
+    <tr><th>提供事業者 / 技術</th><th>状態と機能</th><th>処理される可能性のあるデータ</th></tr>
+    <tr><td><b>Alibaba Cloud Model Studio / DashScope（通義千問・Qwen）</b></td><td><b>現在の主要プロバイダー。</b>Qwen テキストモデルはペルソナ提案、配信台本、キャラクター会話、インタラクティブな応答に使用されます。Qwen TTS は台本文をプリセットのキャラクター音声へ変換し、Qwen ASR は音声入力を有効にした場合に字幕を生成します。Qwen Omni は、ユーザーが Reaction モードを明示的に開始した場合に限り、指定動画を理解してテキストのタイムスタンプと反応台本を出力し、画像や動画は生成しません。</td><td>選択機能に必要なペルソナ、テーマ、プロンプト、会話コンテキスト、合成対象テキスト。音声入力を有効にした場合のみマイク音声、Reaction モード開始時のみ指定された公開動画 URL とその音声・映像内容。</td></tr>
+    <tr><td><b>Google Gemini</b></td><td><b>任意のテキスト提供事業者。</b>導入環境で設定・有効化された場合に限り、キャラクターテキスト、台本、インタラクティブな応答を生成します。</td><td>そのテキスト要求に必要なペルソナ、テーマ、プロンプト、会話コンテキストのみ。現在のユーザー向けコアフローでは画像生成機能を使用しません。</td></tr>
+    <tr><td><b>Anthropic Claude</b></td><td><b>任意のテキスト提供事業者。</b>導入環境で設定・有効化された場合に限り、キャラクターテキスト、台本、インタラクティブな応答を生成します。</td><td>そのテキスト要求に必要なペルソナ、テーマ、プロンプト、会話コンテキストのみ。画像生成や音声クローンには使用しません。</td></tr>
+    <tr><td><b>Google MediaPipe</b></td><td><b>デバイス内処理。</b>顔、身体、手のランドマークを検出して仮想キャラクターの動きを駆動する知覚技術であり、クラウド生成 AI サービスではありません。</td><td>生のカメラフレームはデバイス上でリアルタイム処理され、MediaPipe のクラウドには送信されません。Echuu は結果のモーションランドマークのみをキャラクター駆動に使用します。</td></tr>
+  </table>
+  <p>実際に呼び出されるプロバイダーは、導入地域、サービスの可用性、お客様が明示的に有効化した機能によって異なります。Echuu は要求された機能に必要なデータのみを送信し、販売しません。また、お客様が別途明示的かつ積極的にオプトインしない限り、ユーザーコンテンツを Echuu または第三者の生成 AI モデル学習に提供しません。第三者サービスによる処理には、当該サービスの適用条項も適用されます。</p>
+
+  <h2 id="ja-5">5. データの保存とセキュリティ</h2>
+  <p>当社は、お客様の情報を保護するために合理的な技術的・組織的措置（送信時の暗号化、アクセス制御）を講じますが、絶対的な安全性を保証するものではありません。データは<span class="placeholder">[プレースホルダー——サーバーの物理的所在地を明記予定]</span>に保存され、越境移転の取り決めは付録A.6をご覧ください。パスワードは暗号化して保存し、平文では保存しません。</p>
+
+  <h2 id="ja-6">6. お客様の権利</h2>
+  <p>お客様の所在する法域により、個人情報へのアクセス・訂正・削除、同意の撤回・処理の制限や異議申立て、データポータビリティ、分析目的での利用の拒否等の権利を有する場合があります。これらの権利を行使するには <a href="mailto:cory@anngel.live">cory@anngel.live</a> までご連絡ください。法定期間内（中国本土では通常15営業日以内、米国の各州法では通常45日以内）に対応いたします。</p>
+
+  <h2 id="ja-7">7. データの保持と削除</h2>
+  <p>アカウント情報はアカウントの存続期間中保持されます。法律上の保存義務がある場合を除き、アカウント削除および関連データの消去を申請できます。アップロードされたモデル等のユーザーコンテンツは、削除後、当社のストレージから除去されます（合理的なバックアップ周期内では複製が残存する場合があります）。チャット・コメント履歴の保持期間：<span class="placeholder">[プレースホルダー——具体的な日数を明記予定]</span>。</p>
+  <p><b>削除のご依頼：</b>アカウント、ユーザーコンテンツ、または収集済み個人情報の削除をご希望の場合は、いつでも <a href="mailto:cory@anngel.live">cory@anngel.live</a> までご連絡ください。ご本人確認後、当社は誠実に協力し、適用法令で定められた期間内に対応します。ただし、法令上保存が必要なデータおよび合理的なバックアップ周期内の残存コピーを除きます。</p>
+
+  <h2 id="ja-8">8. 子供のプライバシー</h2>
+  <p>本サービスは13歳未満のお子様を対象としていません（米国COPPA基準）。検証可能な保護者の同意なしに13歳未満のお子様の個人情報を収集したことが判明した場合、速やかに削除します。中国本土では14歳未満の未成年者の個人情報保護について専用の「児童個人情報」規則（機微な個人情報として扱われ、保護者の個別同意が必要）があります。当社は対応する保護者同意メカニズムをまだ構築しておらず、それが整備されるまで、本サービスは中国本土の14歳未満と判明している未成年者には利用されるべきではありません。</p>
+
+  <h2 id="ja-9">9. ポリシーの更新</h2>
+  <p>当社は随時本プライバシーポリシーを更新することがあり、重要な変更についてはサービス内通知または「最終更新日」の更新によりお知らせします。</p>
+
+  <h2 id="ja-10">10. お問い合わせ</h2>
+  <p>データ保護および削除のご依頼：<a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
+  <p>製品へのフィードバック・ご提案：<a href="/contact/">Discord / WeChat コミュニティ</a>への参加、または WeChat <b>lyh958014884</b> への追加を歓迎します。</p>
+
+  <h2 id="ja-appendix">付録：法域別章</h2>
+
+  <div class="subsec cn">
+    <h3>A. 中国本土コンプライアンス章 <span class="jflag cn">詳細</span></h3>
+    <p>根拠法令：「サイバーセキュリティ法」「データセキュリティ法」「個人情報保護法」(PIPL)、「生成的人工知能サービス管理暫定弁法」、「AI生成コンテンツ標識弁法」、「ネット配信マーケティング管理弁法」、「インターネット配信サービス管理規定」、「未成年者ネット保護条例」、「情報ネットワーク伝播権保護条例」。</p>
+    <h4>A.1 個人情報処理の適法性根拠と最小化</h4>
+    <p>個人情報の処理は主に<b>本人の同意</b>（PIPL第13条）を適法性の根拠とし、機微な個人情報（生体的特徴が関わりうる場合）には<b>個別の同意</b>（PIPL第29条）が必要です。プライバシーポリシーは中国本土のユーザーに対し<b>顕著な方法</b>で提示し、いつでも同意を撤回できるようにする必要があります。モーションキャプチャデータをローカル処理し生映像をアップロードしないアーキテクチャを維持することは、機微な個人情報の処理範囲を低減する重要な技術的選択です。</p>
+    <h4>A.2 生成的AIサービスのコンプライアンス</h4>
+    <p>生成的AI機能を中国本土の一般公衆に提供する場合：学習データの出所の適法性審査；生成コンテンツに法令で禁止される内容を含めないこと；プロンプト・生成結果に対する安全フィルタリング機構の構築（<b>現行製品の完成度監査ではコンテンツモデレーションが0%であり、重要な欠落事項</b>）；一定規模に達する場合はアルゴリズム届出と安全評価の完了が必要です。</p>
+    <h4>A.3 AI生成コンテンツの標識（2025年9月1日施行）</h4>
+    <p>AIが生成する音声・画像・動画等の合成コンテンツには、<b>明示的標識</b>（ユーザーが認識できるインターフェース上に「AI生成」等の表示）と<b>暗示的標識</b>（ファイルメタデータへの標識埋め込み）の両方が必要です。これはEchuuのコア製品に直接かつ強制的に適用される規則であり、配信画面・クリップ書き出し・リプレイページに視認可能なAI生成標識を追加する必要があります。</p>
+    <h4>A.4 ネット配信と配信者資格</h4>
+    <p>留意事項：配信者の<b>実名認証</b>要件；<b>ネット公演仲介資格</b>が発生するかどうか（実際の運営モデルに応じて中国法弁護士が判断）；<b>バーチャルギフト・投げ銭</b>は投げ銭上限、未成年者の投げ銭禁止、アカウント実名制、資金管理の要件を遵守する必要があり、仮想通貨は法定通貨と直接双方向で交換できません。</p>
+    <h4>A.5 未成年者保護（2024年1月1日施行）</h4>
+    <p>実装が必要：青少年モード（コンテンツ範囲の制限、投げ銭・チャージの制限）；時間帯制限（通常22:00～6:00に未成年者の配信・プッシュ機能利用を制限）；14歳未満の個人情報処理に対する保護者同意；未成年者の投げ銭参加の禁止。<b>現行製品にはこれらのメカニズムが実装されておらず、重要な欠落事項です。</b></p>
+    <h4>A.6 越境データ移転</h4>
+    <p>運営主体が米国LLCであり中国本土ユーザーの個人情報を処理する場合、データの越境移転にはPIPL第3章の以下いずれかの方式が必要です：国家インターネット情報弁公室による安全評価；<b>個人情報越境標準契約</b>(SCC)の届出；個人情報保護認証。中国本土内にサーバーを個別配置する／現地法人を設立するかどうかは、早期に弁護士および技術チームと共同で決定すべき重要なアーキテクチャ上の意思決定事項です。</p>
+    <h4>A.7 消費者権益と自動更新</h4>
+    <p>サブスクリプション制を導入する場合、「消費者権益保護法」および市場監督管理総局の自動更新に関する顕著な表示、期限前のリマインド、簡便な解約等の要件を遵守する必要があります。</p>
+  </div>
+
+  <div class="subsec us">
+    <h3>B. 米国コンプライアンス章 <span class="jflag us">詳細</span></h3>
+    <h4>B.1 児童オンラインプライバシー保護法（COPPA）</h4>
+    <p>13歳未満の児童の個人情報を故意に収集する場合、検証可能な保護者の同意が必要であり、保護者によるアクセス・削除の権利を提供する必要があります。最低年齢を13歳以上（またはそれ以上）に設定し、登録時に生年月日の確認を追加することを推奨します。</p>
+    <h4>B.2 カリフォルニア州消費者プライバシー法（CCPA/CPRA）</h4>
+    <p>プライバシーポリシーには、収集する個人情報のカテゴリ、収集目的、個人情報の「販売」または「共有」の有無を記載する必要があります。本サービスは現在、<b>個人情報を販売していません</b>。CPRAの<b>機微な個人情報</b>のカテゴリには、正確な位置情報や生体情報が含まれます——モーションキャプチャにより生成される顔・身体のキーポイント座標が「特定の個人を識別するための生体情報」と認定された場合、このカテゴリに該当します。現行のアーキテクチャ（オンデバイス推論、生映像の非アップロード）は重要なコンプライアンス上の論拠となります。</p>
+    <h4>B.3 州レベルの生体情報保護法（BIPA等）</h4>
+    <p>イリノイ州BIPAは、顔の幾何学的特徴のスキャン等の「生体識別子」について事前の書面による同意、公開された保持・廃棄スケジュール、販売の禁止を要求し、強力な私的訴権を規定しています。<b>リスク評価</b>：生映像がアップロード・保持されず、オンデバイスの一時的な推論のみで動作座標が生成されるため、現行のアーキテクチャはBIPAにいう生体識別子の「収集」には該当しない可能性が高いですが、正式公開前に現行実装について米国弁護士の書面意見を取得することを推奨します。</p>
+    <h4>B.4 著作権（DMCA）</h4>
+    <p>セーフハーバー保護を得るため、DMCA指定エージェントを指名し、米国著作権局に登録することを推奨します。</p>
+    <h4>B.5 FTC法とAI／ボット開示</h4>
+    <p>AI生成コンテンツを虚偽または誤解を招く方法で使用することは、FTC法第5条に基づく不公正または欺瞞的行為に該当する可能性があります；カリフォルニア州のB.O.T.法は、商業目的で消費者と交流するボットに開示を義務付けています。<b>配信ルームのUIに常時「AIバーチャルキャラクター」の表示を設けることを推奨します。</b></p>
+    <h4>B.6 ディープフェイク／合成メディア関連の州法</h4>
+    <p>Reactionモードが実在の著名人の模倣・論評を伴う場合、肖像権およびパロディ・論評の公正利用の境界について別途評価が必要です。</p>
+    <h4>B.7 決済と資金移動</h4>
+    <p>現時点ではアプリ内決済・バーチャルギフト購入は提供しておらず、資金は当社を経由しません。今後アプリ内バーチャルギフト残高・ウォレットシステム（チャージ＋出金）を構築する場合、関連州でMoney Transmitter Licenseの登録が必要かどうかを改めて評価する必要があります。</p>
+  </div>
+
+  <div class="subsec jp">
+    <h3>C. 日本のコンプライアンス要点 <span class="jflag jp">フレームワークレベル、第2フェーズ</span></h3>
+    <p>根拠法令：個人情報保護法(APPI)、特定商取引に関する法律。公開前に最低限必要な項目：</p>
+    <ul>
+      <li>利用目的の特定と公表（APPIは個人情報の処理前に利用目的を特定・公表することを要求）；</li>
+      <li>本人の同意なく第三者に個人データを提供しないこと（法令に別段の定めがある場合を除く）；</li>
+      <li>日本国外への越境移転にはAPPI第28条の告知・同意要件を満たすこと；</li>
+      <li>有料投げ銭・サブスクリプションが関わる場合、特定商取引法に基づく表示（事業者名、住所、連絡先、返金ポリシー等の強制開示）が必要；</li>
+      <li>クラウド事業者への個人情報処理の委託には監督義務を履行し、ユーザーへの告知が必要な場合がある。</li>
+    </ul>
+  </div>
+
+  <div class="subsec kr">
+    <h3>D. 韓国のコンプライアンス要点 <span class="jflag kr">フレームワークレベル、第2フェーズ</span></h3>
+    <p>根拠法令：個人情報保護法(PIPA)。公開前に最低限必要な項目：</p>
+    <ul>
+      <li>PIPAの同意要件は多くの法域より粒度が細かく、通常は項目別のオプトイン同意が必要；</li>
+      <li>処理量が一定の閾値に達する場合、個人情報保護責任者の指定および国内連絡窓口・代表者の設置が必要な場合がある；</li>
+      <li>14歳未満の未成年者に関するデータ処理には法定代理人の同意が必要で、同意方法に特別な形式要件がある；</li>
+      <li>実名認証機能に関しては韓国のネット実名制関連規則に留意する必要がある；</li>
+      <li>有料バーチャルギフト事業は韓国の消費者保護規則（強制返金条項等）に留意する必要がある。</li>
+    </ul>
+  </div>
+
+  <h2 id="ja-checklist">付録：公開前コンプライアンスチェックリスト</h2>
+  <table>
+    <tr><th>優先度</th><th>項目</th><th>状況</th></tr>
+    <tr><td>P0</td><td>弁護士レビュー（中国本土弁護士＋米国弁護士）</td><td>未着手</td></tr>
+    <tr><td>P0</td><td>運営主体情報の確定</td><td>未着手</td></tr>
+    <tr><td>P0</td><td>AI生成コンテンツの明示的・暗示的標識機能の開発</td><td>未着手</td></tr>
+    <tr><td>P0</td><td>コンテンツモデレーション・不適切語フィルタリング機構</td><td>未着手（0%）</td></tr>
+    <tr><td>P0</td><td>年齢確認＋青少年モード／COPPA生年月日確認</td><td>未着手</td></tr>
+    <tr><td>P1</td><td>DMCA指定エージェントの登録</td><td>未着手</td></tr>
+    <tr><td>P1</td><td>中国本土の越境データ移転方式の確定</td><td>未着手</td></tr>
+    <tr><td>P1</td><td>ネット公演仲介・ネット文化経営許可証の要否判断</td><td>未着手</td></tr>
+    <tr><td>P1</td><td>バーチャルギフト・投げ銭決済システムのコンプライアンス設計</td><td>計画中</td></tr>
+    <tr><td>P2</td><td>日本の特定商取引法表示ページ</td><td>未着手</td></tr>
+    <tr><td>P2</td><td>韓国PIPAの項目別同意メカニズム</td><td>未着手</td></tr>
+  </table>
+
+  <div class="footer-nav"><span>← <a href="./terms.html">利用規約</a></span><span>本書は内部作業用ドラフトであり、正式な対外公開用の法的文書として使用しないでください</span></div>
+</article>
+
+<!-- ================= KO ================= -->
+<article data-doc="ko" lang="ko">
+  <div class="meta">최종 업데이트: 2026-09-04 · 상태: 초안</div>
+  <h1>Echuu 개인정보처리방침</h1>
+  <div class="banner"><b>⚠️ 안내:</b> 본 문서는 AI의 도움을 받아 작성된 컴플라이언스 초안이며 <b>법률 자문에 해당하지 않습니다</b>. 정식 공개 전 반드시 자격을 갖춘 변호사의 검토를 거쳐야 합니다. <span class="placeholder">[ ]</span>는 작성이 필요한 자리표시자입니다.</div>
+
+  <div class="toc">
+    <a href="#ko-1">1. 개요</a>
+    <a href="#ko-2">2. 당사가 수집하는 정보</a>
+    <a href="#ko-3">3. 정보 이용 방법</a>
+    <a href="#ko-4">4. 정보 공유</a>
+    <a href="#ko-5">5. 데이터 저장 및 보안</a>
+    <a href="#ko-6">6. 귀하의 권리</a>
+    <a href="#ko-7">7. 데이터 보유 및 삭제</a>
+    <a href="#ko-8">8. 아동의 개인정보 보호</a>
+    <a href="#ko-9">9. 정책 업데이트</a>
+    <a href="#ko-10">10. 문의처</a>
+    <a href="#ko-appendix">부록: 관할별 장</a>
+    <a href="#ko-checklist">부록: 출시 전 컴플라이언스 체크리스트</a>
+  </div>
+
+  <h2 id="ko-1">1. 개요</h2>
+  <p>본 개인정보처리방침은 <span class="placeholder">[Anngel LLC]</span>("당사")가 Echuu 스트리밍 엔진을 이용하실 때 귀하의 개인정보를 어떻게 수집·이용·저장·공유·보호하는지 설명합니다. 당사의 제품 설계 원칙 중 하나는 <b>데이터 최소화</b>이며, 모션 캡처의 핵심 처리는 귀하의 기기에서 로컬로 수행됩니다.</p>
+
+  <h2 id="ko-2">2. 당사가 수집하는 정보</h2>
+  <h3>2.1 귀하가 직접 제공하는 정보</h3>
+  <table>
+    <tr><th>구분</th><th>내용</th><th>수집 시점</th></tr>
+    <tr><td>계정 정보</td><td>이메일 주소, 비밀번호(암호화 저장), Google OAuth 기본 프로필(연동 시)</td><td>가입/로그인</td></tr>
+    <tr><td>사용자 콘텐츠</td><td>업로드한 VRM/GLB/GLTF 캐릭터 모델 파일, 배경 이미지</td><td>캐릭터 선택 단계에서 커스텀 모델 업로드 시</td></tr>
+    <tr><td>페르소나 정보(Persona Card)</td><td>캐릭터 이름, 성격 설정, 말버릇, 입장, 민감 소재, 배경 스토리 등 텍스트</td><td>페르소나 설정 단계, <b>대화 생성을 위해 당사 백엔드 AI 서비스로 전송됨</b></td></tr>
+    <tr><td>방송 설정 정보</td><td>방송 주제, 선택한 음성, 송출 플랫폼 및 스트림 키</td><td>방송 설정 단계</td></tr>
+    <tr><td>채팅 내용</td><td>방송룸에서 전송하는 텍스트 메시지</td><td>시청자와의 상호작용</td></tr>
+    <tr><td>결제 관련 정보</td><td>제3자 결제 처리업체가 직접 수집(당사는 카드 전체 번호에 접근하지 않음)</td><td>향후 구독/유료 기능 출시 후</td></tr>
+  </table>
+  <h3>2.2 자동으로 수집되는 정보</h3>
+  <table>
+    <tr><th>구분</th><th>내용</th><th>설명</th></tr>
+    <tr><td><b>카메라 영상(모션 캡처)</b></td><td>얼굴, 신체 자세, 손 키포인트 좌표</td><td><b>원본 카메라 영상 스트림은 실시간 추론을 위해 귀하의 브라우저/기기 로컬 메모리에만 존재하며, 당사 서버에 업로드되거나 저장되지 않습니다.</b> 전송되는 것은 계산된 동작 좌표 데이터뿐이며, 이는 아바타 애니메이션 구동에 사용됩니다. 모션 캡처를 위해 마이크 오디오는 수집하지 않습니다.</td></tr>
+    <tr><td>기기 및 로그 정보</td><td>IP 주소, 브라우저/OS 종류, 연결 품질</td><td>실시간 음성·영상 연결 및 WebSocket 연결을 통해 발생하며, 서비스 안정성 및 보안 확보에 사용</td></tr>
+    <tr><td>로컬 저장 데이터</td><td>UI 환경설정, 프로젝트 초안 캐시</td><td>귀하의 기기에 저장되며 자동으로 업로드되지 않음</td></tr>
+    <tr><td>사용 분석 데이터</td><td>익명 ID, 세션 ID, 페이지/기능 사용 이벤트, 기기 및 브라우저 유형, 화면 크기, 렌더링 프레임률, 오류 정보</td><td>제품 개선 목적 — <a href="#ko-2-4">2.4 제품 분석 및 사용자 연구</a> 참조</td></tr>
+  </table>
+  <h3>2.3 당사가 수집하지 않는 정보</h3>
+  <ul>
+    <li>귀하의 원본 카메라 영상은 저장하지 않습니다;</li>
+    <li>실제 신원 확인을 위한 얼굴 인식은 수행하지 않습니다(모션 캡처의 목적은 오직 아바타 애니메이션 구동이며, 신원 확인이나 다른 데이터 소스와의 대조에는 사용되지 않습니다);</li>
+    <li>현재 음성 복제를 위한 실제 성문 샘플은 수집하지 않습니다(캐릭터 음성 학습에는 사전 설정된 TTS 음성의 합성 음성을 사용하며, 실제 인물의 녹음은 사용하지 않습니다).</li>
+  </ul>
+  <p><b>할 일(출시 전 반드시 명확화 필요):</b> 향후 "셀카로 캐릭터 생성", "개인 음성을 녹음해 음성 복제" 등의 기능이 추가될 경우, 위 조항은 생체정보에 대한 전용 고지 및 개별 동의 절차로 업데이트되어야 합니다.</p>
+
+  <h3 id="ko-2-4">2.4 제품 분석 및 사용자 연구</h3>
+  <p>제품에서 무엇이 잘 작동하고 어디에서 막히는지 파악하기 위해 사용 이벤트와 아래 범위의 자유 서술 텍스트를 수집합니다. 모든 데이터는 당사 전용 프라이빗 오브젝트 스토리지(AWS S3, 미국 동부)에 저장되며 <b>제3자 분석 플랫폼과 공유하지 않습니다</b>.</p>
+  <table>
+    <tr><th>구분</th><th>내용</th><th>식별자</th><th>보유 기간</th></tr>
+    <tr><td>행동 이벤트</td><td>단계 전환, 도구 패널 열기, 장면/아바타/모션 선택, 방송 시작 및 방송 시간, 오류와 프레임률</td><td>브라우저에서 생성되는 익명 ID와 세션 ID. 로그인 후 계정 ID와 연결</td><td>24개월</td></tr>
+    <tr><td><b>페르소나 및 방송 주제 텍스트</b></td><td>페르소나 카드와 방송 주제에 입력한 문장</td><td>상동</td><td>12개월</td></tr>
+    <tr><td><b>방송실 채팅 내용</b></td><td>방송실에서 전송된 텍스트 메시지</td><td>발신자 식별자는 <b>단방향 해시</b>로 저장하며 원본 닉네임이나 계정은 보관하지 않습니다</td><td>3개월</td></tr>
+  </table>
+  <p><b>저장 전 처리</b>: 자유 서술 텍스트는 저장 전에 이메일 주소, 전화번호, URL, @계정, 긴 숫자열을 자동 필터링하고 2,000자로 잘라냅니다.</p>
+  <p><b>수집하지 않는 정보</b>: 스트림 키, 비밀번호, 카드 번호, 원본 IP 주소(국가 코드만 보관), 원본 카메라 영상.</p>
+  <p><b>이용 목적</b>: 제품 사용 현황 분석 및 개선에만 사용합니다. 페르소나와 채팅 텍스트는 집계 또는 표본 형태로 당사 AI 분석 어시스턴트에 전달되어 시사점 요약에 사용될 수 있으나 <b>외부용 범용 모델 학습에는 사용하지 않습니다</b>.</p>
+  <p><b>선택권</b>: 제품 설정에서 사용 분석을 끌 수 있습니다(끄면 전송이 중단되고 로컬 대기열이 즉시 삭제됩니다). 익명 식별자를 재설정하여 과거 데이터와의 연결을 끊을 수도 있습니다. 수집된 데이터의 삭제를 원하시면 <a href="mailto:cory@anngel.live">cory@anngel.live</a> 로 연락해 주십시오.</p>
+  <p><b>채팅 발신자에 대하여</b>: 채팅은 시청자가 작성하며 시청자는 본 제품의 가입 사용자가 아닐 수 있습니다. 해당 내용에 대해서는 해시 처리된 식별자만 보관하고 PII 필터링을 적용하며 가장 짧은 보유 기간(3개월)을 사용합니다. 방송자는 상호작용 기능 사용으로 본 조항을 인지한 것으로 봅니다. 시청자로서 본인이 보낸 메시지의 삭제를 원하시면 위 주소로 연락해 주십시오.</p>
+
+  <h2 id="ko-3">3. 정보 이용 방법</h2>
+  <ul>
+    <li>서비스 제공, 유지, 개선(캐릭터 렌더링, 퍼포먼스 콘텐츠 생성, 스트리밍, 상호작용);</li>
+    <li>계정 관리, 본인 확인, 고객 지원;</li>
+    <li>보안 보호, 사기 탐지, 오남용 모니터링;</li>
+    <li>필요한 동의 또는 법적 근거가 있는 경우 제품 분석 및 개선 목적;</li>
+    <li>법적 의무 이행.</li>
+  </ul>
+  <p><b>페르소나 정보(Persona Card)와 주제 텍스트는 대본·음성 생성을 위해 당사의 AI 백엔드 서비스(제3자 대규모언어모델·TTS 제공업체 포함)로 전송됩니다</b>. 처리되기를 원하지 않는 민감한 개인정보는 페르소나 정보에 입력하지 마십시오.</p>
+
+  <h2 id="ko-4">4. 정보 공유</h2>
+  <p>당사는 귀하의 개인정보를 판매하지 않습니다. 다음의 경우에만 정보를 공유합니다:</p>
+  <ul>
+    <li><b>서비스 제공업체</b>: 클라우드 서버, 실시간 음성·영상 서비스, 파일 저장, AI 생성 서비스, 결제 처리업체 — 모두 당사에 서비스를 제공하는 데 필요한 범위 내에서만 귀하의 정보를 처리합니다;</li>
+    <li><b>법적 요구</b>: 법률, 규정, 법원 명령 또는 정부 기관의 적법한 요청에 따르는 경우;</li>
+    <li><b>사업 이전</b>: 합병, 인수, 자산 매각이 발생하는 경우 귀하의 정보가 거래의 일부로 이전될 수 있으며, 사전에 통지합니다;</li>
+    <li><b>귀하의 동의</b>를 받은 기타 경우.</li>
+  </ul>
+
+  <h3 id="ko-4-ai">4.1 제3자 AI 서비스 및 데이터 흐름</h3>
+  <p><b>범위 원칙:</b> Echuu의 현재 사용자 대상 생성형 AI는 캐릭터 대화, 방송 대본, 상호작용 응답 등 <b>텍스트 중심의 놀이</b>와 해당 텍스트의 음성 변환에 주로 사용됩니다. 현재 핵심 제품 흐름은 이미지 또는 동영상 생성 모델을 호출하지 않으며, 사용자의 캐릭터 모델, 캐릭터 이미지, 카메라 영상 또는 방송 녹화물을 이미지·동영상 생성 모델로 보내지 않습니다.</p>
+  <table>
+    <tr><th>제공업체 / 기술</th><th>상태 및 기능</th><th>처리될 수 있는 데이터</th></tr>
+    <tr><td><b>Alibaba Cloud Model Studio / DashScope(Qwen)</b></td><td><b>현재 주 제공업체.</b>Qwen 텍스트 모델은 페르소나 제안, 방송 대본, 캐릭터 대화 및 상호작용 응답에 사용됩니다. Qwen TTS는 대본 텍스트를 사전 설정된 캐릭터 음성으로 변환하고, Qwen ASR은 사용자가 음성 입력을 켠 경우 자막을 생성합니다. Qwen Omni는 사용자가 Reaction 모드를 명시적으로 시작한 경우에만 지정 동영상을 이해해 텍스트 타임스탬프와 반응 대본을 출력하며 이미지나 동영상을 생성하지 않습니다.</td><td>선택 기능에 필요한 페르소나, 주제, 프롬프트, 대화 맥락 및 합성할 텍스트. 음성 입력을 켠 경우에만 마이크 오디오, Reaction 모드를 시작한 경우에만 지정된 공개 동영상 URL과 해당 음성·영상 내용.</td></tr>
+    <tr><td><b>Google Gemini</b></td><td><b>선택형 텍스트 제공업체.</b>배포 환경에서 구성하고 활성화한 경우에만 캐릭터 텍스트, 대본 및 상호작용 응답을 생성합니다.</td><td>해당 텍스트 요청에 필요한 페르소나, 주제, 프롬프트 및 대화 맥락만 처리하며, 현재 사용자 대상 핵심 흐름에서는 이미지 생성 기능을 사용하지 않습니다.</td></tr>
+    <tr><td><b>Anthropic Claude</b></td><td><b>선택형 텍스트 제공업체.</b>배포 환경에서 구성하고 활성화한 경우에만 캐릭터 텍스트, 대본 및 상호작용 응답을 생성합니다.</td><td>해당 텍스트 요청에 필요한 페르소나, 주제, 프롬프트 및 대화 맥락만 처리하며 이미지 생성이나 음성 복제에는 사용하지 않습니다.</td></tr>
+    <tr><td><b>Google MediaPipe</b></td><td><b>기기 내 처리.</b>얼굴, 신체, 손 랜드마크를 감지하여 가상 캐릭터 동작을 구동하는 인지 기술이며 클라우드 생성형 AI 서비스가 아닙니다.</td><td>원본 카메라 프레임은 기기에서 실시간 처리되며 MediaPipe 클라우드로 전송되지 않습니다. Echuu는 결과 동작 랜드마크만 캐릭터 구동에 사용합니다.</td></tr>
+  </table>
+  <p>실제로 호출되는 제공업체는 배포 지역, 서비스 가용성 및 사용자가 명시적으로 활성화한 기능에 따라 달라집니다. Echuu는 요청 기능 수행에 필요한 데이터만 전송하고 이를 판매하지 않으며, 사용자가 별도로 명확하게 옵트인하지 않는 한 사용자 콘텐츠를 Echuu 또는 제3자의 생성형 AI 모델 학습에 제공하지 않습니다. 제3자 서비스 자체의 처리에는 해당 서비스의 적용 약관도 적용됩니다.</p>
+
+  <h2 id="ko-5">5. 데이터 저장 및 보안</h2>
+  <p>당사는 귀하의 정보를 보호하기 위해 합리적인 기술적·관리적 조치(전송 시 암호화, 접근 통제)를 취하지만, 절대적인 보안을 보장할 수는 없습니다. 데이터는 <span class="placeholder">[자리표시자 — 서버 물리적 위치 명시 예정]</span>에 저장되며, 국외 이전 방식은 부록 A.6을 참조하십시오. 비밀번호는 암호화하여 저장하며 평문으로 저장하지 않습니다.</p>
+
+  <h2 id="ko-6">6. 귀하의 권리</h2>
+  <p>귀하가 속한 관할권에 따라 개인정보에 대한 열람·정정·삭제, 동의 철회·처리 제한·이의 제기, 데이터 이동권, 분석 목적 이용 거부 등의 권리를 가질 수 있습니다. 이러한 권리 행사를 원하시면 <a href="mailto:cory@anngel.live">cory@anngel.live</a>로 연락해 주십시오. 법정 기한 내(중국 본토는 일반적으로 15영업일 이내, 미국 각 주법은 통상 45일) 응답드리겠습니다.</p>
+
+  <h2 id="ko-7">7. 데이터 보유 및 삭제</h2>
+  <p>계정 정보는 계정이 존속하는 동안 보유됩니다. 법률상 보유 의무가 있는 경우를 제외하고 계정 삭제 및 관련 데이터 삭제를 신청할 수 있습니다. 업로드한 모델 등 사용자 콘텐츠는 삭제 후 당사 저장소에서 제거됩니다(합리적인 백업 주기 내에는 사본이 남아있을 수 있음). 채팅 기록 보유 기간: <span class="placeholder">[자리표시자 — 구체적 일수 명시 예정]</span>.</p>
+  <p><b>삭제 요청:</b> 계정, 사용자 콘텐츠 또는 수집된 개인정보의 삭제를 원하시면 언제든지 <a href="mailto:cory@anngel.live">cory@anngel.live</a>로 연락해 주십시오. 요청자의 신원을 확인한 후 적극 협조하여 관련 법률이 정한 기간 내에 처리하겠습니다. 단, 법률상 보관이 필요한 데이터와 합리적인 백업 주기 내 잔존 사본은 제외됩니다.</p>
+
+  <h2 id="ko-8">8. 아동의 개인정보 보호</h2>
+  <p>본 서비스는 만 13세 미만 아동을 대상으로 하지 않습니다(미국 COPPA 기준). 검증 가능한 보호자 동의 없이 만 13세 미만 아동의 개인정보를 수집한 사실을 인지하는 경우, 신속히 삭제합니다. 중국 본토는 만 14세 미만 미성년자의 개인정보 보호에 관한 전용 "아동 개인정보" 규정(민감한 개인정보로 취급되어 보호자의 개별 동의 필요)을 두고 있습니다. 당사는 이에 상응하는 보호자 동의 메커니즘을 아직 구축하지 않았으며, 이 메커니즘이 마련되기 전까지 본 서비스는 중국 본토의 만 14세 미만으로 알려진 미성년자에게 이용되어서는 안 됩니다.</p>
+
+  <h2 id="ko-9">9. 정책 업데이트</h2>
+  <p>당사는 수시로 본 개인정보처리방침을 업데이트할 수 있으며, 중대한 변경 사항은 서비스 내 공지 또는 "최종 업데이트일" 갱신을 통해 안내합니다.</p>
+
+  <h2 id="ko-10">10. 문의처</h2>
+  <p>개인정보 보호 및 삭제 요청: <a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
+  <p>제품 피드백 및 제안: <a href="/contact/">Discord / WeChat 커뮤니티</a>에 참여하거나 WeChat <b>lyh958014884</b>를 추가해 주세요.</p>
+
+  <h2 id="ko-appendix">부록: 관할별 장</h2>
+
+  <div class="subsec cn">
+    <h3>A. 중국 본토 컴플라이언스 장 <span class="jflag cn">상세</span></h3>
+    <p>근거 법령: 「사이버보안법」, 「데이터보안법」, 「개인정보보호법」(PIPL), 「생성형 인공지능 서비스 관리 임시방법」, 「AI 생성 콘텐츠 표시방법」, 「온라인 방송 마케팅 관리방법」, 「인터넷 방송 서비스 관리 규정」, 「미성년자 사이버공간 보호조례」, 「정보네트워크전파권보호조례」.</p>
+    <h4>A.1 개인정보 처리의 적법성 근거와 최소화</h4>
+    <p>개인정보 처리는 주로 <b>이용자 동의</b>(PIPL 제13조)를 적법성 근거로 하며, 민감한 개인정보(생체적 특징이 관련될 수 있는 경우)는 <b>개별 동의</b>(PIPL 제29조)가 필요합니다. 개인정보처리방침은 중국 본토 이용자에게 <b>현저한 방식</b>으로 제시되어야 하며, 언제든 동의를 철회할 수 있어야 합니다. 모션 캡처 데이터를 로컬에서 처리하고 원본 영상을 업로드하지 않는 아키텍처를 유지하는 것은 민감한 개인정보 처리 범위를 줄이는 핵심적인 기술적 선택입니다.</p>
+    <h4>A.2 생성형 AI 서비스 컴플라이언스</h4>
+    <p>생성형 AI 기능을 중국 본토 대중에게 제공하는 경우: 학습 데이터 출처의 적법성 검토; 생성 콘텐츠에 법률상 금지된 내용이 포함되지 않도록 함; 프롬프트·생성 결과에 대한 안전 필터링 메커니즘 구축(<b>현행 제품 완성도 감사 결과 콘텐츠 검수가 0%로, 핵심 공백 사항</b>); 일정 규모에 도달할 경우 알고리즘 등록 및 안전성 평가 완료 필요.</p>
+    <h4>A.3 AI 생성 콘텐츠 표시(2025년 9월 1일 시행)</h4>
+    <p>AI가 생성한 음성·이미지·영상 등 합성 콘텐츠에는 <b>명시적 표시</b>(사용자가 인지 가능한 인터페이스 위치에 "AI 생성" 등 표시)와 <b>암묵적 표시</b>(파일 메타데이터에 표시 정보 삽입)가 모두 필요합니다. 이는 Echuu의 핵심 제품에 직접적이고 강제적으로 적용되는 규정으로, 방송 화면·클립 내보내기·리플레이 페이지에 시각적으로 인지 가능한 AI 생성 표시를 추가해야 합니다.</p>
+    <h4>A.4 온라인 방송 및 진행자 자격</h4>
+    <p>고려사항: 진행자 <b>실명 인증</b> 요건; <b>온라인 공연 중개 자격</b> 발생 여부(실제 운영 모델에 따라 중국 법률 전문가가 판단); <b>가상 선물·후원</b>은 후원 한도, 미성년자 후원 금지, 계정 실명제, 자금 관리 요건을 준수해야 하며, 가상화폐는 법정화폐와 직접 양방향 교환이 불가능합니다.</p>
+    <h4>A.5 미성년자 보호(2024년 1월 1일 시행)</h4>
+    <p>구현이 필요한 사항: 청소년 모드(콘텐츠 범위 제한, 후원·충전 제한); 시간대 제한(일반적으로 22:00~6:00에 미성년자의 방송·푸시 기능 이용 제한); 만 14세 미만 개인정보 처리에 대한 보호자 동의; 미성년자의 후원 참여 금지. <b>현행 제품에는 이러한 메커니즘이 구현되어 있지 않으며, 핵심 공백 사항입니다.</b></p>
+    <h4>A.6 국경 간 데이터 이전</h4>
+    <p>운영 주체가 미국 LLC이면서 중국 본토 이용자의 개인정보를 처리하는 경우, 해외로의 데이터 이전은 PIPL 제3장의 다음 방식 중 하나를 충족해야 합니다: 국가 인터넷정보판공실의 안전성 평가; <b>개인정보 국외 이전 표준계약</b>(SCC) 등록; 개인정보 보호 인증. 중국 본토 내에 서버를 별도로 배치하거나 현지 법인을 설립할지 여부는 조기에 변호사 및 기술팀과 공동으로 결정해야 할 중요한 아키텍처 결정 사항입니다.</p>
+    <h4>A.7 소비자 권익 및 자동 갱신</h4>
+    <p>구독제를 도입하는 경우 「소비자권익보호법」 및 시장감독관리총국의 자동 갱신에 관한 현저한 고지, 만료 전 알림, 간편한 해지 등 요건을 준수해야 합니다.</p>
+  </div>
+
+  <div class="subsec us">
+    <h3>B. 미국 컴플라이언스 장 <span class="jflag us">상세</span></h3>
+    <h4>B.1 아동 온라인 개인정보 보호법(COPPA)</h4>
+    <p>만 13세 미만 아동의 개인정보를 고의로 수집하는 경우, 검증 가능한 보호자 동의를 받아야 하며 보호자의 열람·삭제 권리를 제공해야 합니다. 최소 연령을 만 13세 이상(또는 그 이상)으로 설정하고, 가입 절차에 생년월일 확인을 추가할 것을 권장합니다.</p>
+    <h4>B.2 캘리포니아 소비자 개인정보 보호법(CCPA/CPRA)</h4>
+    <p>개인정보처리방침에는 수집하는 개인정보의 범주, 수집 목적, 개인정보의 "판매" 또는 "공유" 여부를 명시해야 합니다. 본 서비스는 현재 <b>개인정보를 판매하지 않습니다</b>. CPRA의 <b>민감한 개인정보</b> 범주에는 정밀 위치정보 및 생체정보가 포함되며 — 모션 캡처로 생성되는 얼굴·신체 키포인트 좌표가 "특정 개인을 식별하기 위한 생체정보"로 인정될 경우 이 범주에 해당합니다. 현행 아키텍처(온디바이스 추론, 원본 영상 미업로드)는 중요한 컴플라이언스 방어 근거입니다.</p>
+    <h4>B.3 주 단위 생체정보 보호법(BIPA 등)</h4>
+    <p>일리노이주 BIPA는 얼굴 기하학적 특징 스캔 등 "생체 식별자"에 대해 사전 서면 동의, 공개된 보유·폐기 일정을 요구하고 판매를 금지하며, 강력한 사적 소권을 규정하고 있습니다. <b>위험 평가</b>: 원본 영상이 업로드·보유되지 않고 온디바이스의 일시적 추론만으로 동작 좌표가 생성되므로, 현행 아키텍처는 BIPA상 생체 식별자의 "수집"에 해당하지 않을 가능성이 높으나, 정식 출시 전 현행 구현에 대해 미국 변호사의 서면 의견을 받을 것을 권장합니다.</p>
+    <h4>B.4 저작권(DMCA)</h4>
+    <p>세이프 하버 보호를 받기 위해 DMCA 지정 대리인을 지정하고 미국 저작권청에 등록할 것을 권장합니다.</p>
+    <h4>B.5 FTC법 및 AI/봇 고지</h4>
+    <p>AI 생성 콘텐츠를 허위 또는 오해를 유발하는 방식으로 사용하는 것은 FTC법 제5조상 불공정 또는 기만적 행위에 해당할 수 있습니다; 캘리포니아 B.O.T. 법은 상업적 목적으로 소비자와 상호작용하는 봇에 대해 고지를 요구합니다. <b>방송룸 UI에 "AI 가상 캐릭터" 표시를 상시 노출할 것을 권장합니다.</b></p>
+    <h4>B.6 딥페이크/합성 미디어 관련 주법</h4>
+    <p>Reaction 모드가 실제 공인을 모방하거나 논평하는 경우, 초상권 및 패러디·논평의 공정 이용 경계에 대해 별도 평가가 필요합니다.</p>
+    <h4>B.7 결제 및 자금 이체</h4>
+    <p>현재 앱 내 결제·가상 선물 구매는 제공되지 않으며 자금은 당사를 경유하지 않습니다. 향후 앱 내 가상 선물 잔액·지갑 시스템(충전+출금)을 구축할 경우, 관련 주에서 Money Transmitter License 등록이 필요한지 재평가해야 합니다.</p>
+  </div>
+
+  <div class="subsec jp">
+    <h3>C. 일본 컴플라이언스 요점 <span class="jflag jp">프레임워크 수준, 2단계</span></h3>
+    <p>근거 법령: 개인정보보호법(APPI), 특정상거래법. 출시 전 최소한으로 필요한 항목:</p>
+    <ul>
+      <li>이용 목적의 특정 및 공표(APPI는 개인정보 처리 전 이용 목적을 특정·공표할 것을 요구);</li>
+      <li>본인 동의 없이 제3자에게 개인 데이터를 제공하지 않을 것(법령에 별도 규정이 있는 경우 제외);</li>
+      <li>일본 국외로의 국경 간 이전은 APPI 제28조의 고지·동의 요건을 충족해야 함;</li>
+      <li>유료 후원·구독이 관련된 경우 특정상거래법에 따른 표시(사업자명, 주소, 연락처, 환불 정책 등 강제 공개)가 필요;</li>
+      <li>클라우드 사업자에 대한 개인정보 처리 위탁 시 감독 의무 이행 및 이용자 고지가 필요할 수 있음.</li>
+    </ul>
+  </div>
+
+  <div class="subsec kr">
+    <h3>D. 한국 컴플라이언스 요점 <span class="jflag kr">프레임워크 수준, 2단계</span></h3>
+    <p>근거 법령: 개인정보 보호법(PIPA). 출시 전 최소한으로 필요한 항목:</p>
+    <ul>
+      <li>PIPA의 동의 요건은 대부분의 관할권보다 세분화되어 있어, 통상 항목별 옵트인 동의가 필요;</li>
+      <li>처리량이 일정 기준을 초과하는 경우 개인정보 보호책임자 지정 및 국내 연락 창구·대리인 설치가 필요할 수 있음;</li>
+      <li>만 14세 미만 미성년자 관련 데이터 처리에는 법정대리인 동의가 필요하며 동의 방식에 특별한 형식 요건이 있음;</li>
+      <li>실명 인증 기능과 관련해서는 한국의 인터넷 실명제 관련 규정에 유의해야 함;</li>
+      <li>유료 가상 선물 사업은 한국의 소비자 보호 규정(강제 환불 조항 등)에 유의해야 함.</li>
+    </ul>
+  </div>
+
+  <h2 id="ko-checklist">부록: 출시 전 컴플라이언스 체크리스트</h2>
+  <table>
+    <tr><th>우선순위</th><th>항목</th><th>상태</th></tr>
+    <tr><td>P0</td><td>변호사 검토(중국 본토 변호사 + 미국 변호사)</td><td>미착수</td></tr>
+    <tr><td>P0</td><td>운영 주체 정보 확정</td><td>미착수</td></tr>
+    <tr><td>P0</td><td>AI 생성 콘텐츠 명시적·암묵적 표시 기능 개발</td><td>미착수</td></tr>
+    <tr><td>P0</td><td>콘텐츠 검수/민감어 필터링 메커니즘</td><td>미착수(0%)</td></tr>
+    <tr><td>P0</td><td>연령 확인 + 청소년 모드 / COPPA 생년월일 확인</td><td>미착수</td></tr>
+    <tr><td>P1</td><td>DMCA 지정 대리인 등록</td><td>미착수</td></tr>
+    <tr><td>P1</td><td>중국 본토 국경 간 데이터 이전 방안 확정</td><td>미착수</td></tr>
+    <tr><td>P1</td><td>온라인 공연 중개/온라인 문화 경영 허가 필요 여부 판단</td><td>미착수</td></tr>
+    <tr><td>P1</td><td>가상 선물/후원 정산 시스템의 컴플라이언스 설계</td><td>계획 중</td></tr>
+    <tr><td>P2</td><td>일본 특정상거래법 표시 페이지</td><td>미착수</td></tr>
+    <tr><td>P2</td><td>한국 PIPA 항목별 동의 메커니즘</td><td>미착수</td></tr>
+  </table>
+
+  <div class="footer-nav"><span>← <a href="./terms.html">이용약관</a></span><span>본 문서는 내부 작업용 초안이며 정식 대외 공개 법률 문서로 사용할 수 없습니다</span></div>
+</article>
+
+</div>
+
+<script>
+(function(){
+  var supported = ['zh','ja','en','ko'];
+  var params = new URLSearchParams(location.search);
+  var stored = localStorage.getItem('echuu-legal-lang');
+  var lang = params.get('lang') || stored || 'zh';
+  if (supported.indexOf(lang) === -1) lang = 'zh';
+
+  function apply(l){
+    document.querySelectorAll('[data-doc]').forEach(function(el){
+      el.classList.toggle('active', el.getAttribute('data-doc') === l);
+    });
+    document.querySelectorAll('.langswitch button').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === l);
+    });
+    document.documentElement.setAttribute('lang', l);
+    localStorage.setItem('echuu-legal-lang', l);
+  }
+
+  document.querySelectorAll('.langswitch button').forEach(function(btn){
+    btn.addEventListener('click', function(){ apply(btn.getAttribute('data-lang')); });
+  });
+
+  apply(lang);
+})();
+</script>
+
+</body>
+</html>

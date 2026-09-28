@@ -1,0 +1,532 @@
+[
+  {
+    "path": "apple-touch-icon.png",
+    "bytes": 123461,
+    "sha256": "963848e8eeb5f528606d024973587ebd48e57206f60ab61a8181df4bc7283185"
+  },
+  {
+    "path": "assets/Fonts/MHTIROGLA.ttf",
+    "bytes": 16296,
+    "sha256": "cb7d16840e967653c5efeb1a80971ff56dc4cd6990ce99f6c0aeb89ab4ebd4ed"
+  },
+  {
+    "path": "assets/Fonts/NewEdge666Test-RegularRounded.otf",
+    "bytes": 14296,
+    "sha256": "44a9ad4f6a384e85f0cbbb26acacfae60d73cd48b9a30f5ed2f93f2985f66afd"
+  },
+  {
+    "path": "assets/Fonts/NewEdge666Test-SemiboldRounded.otf",
+    "bytes": 14460,
+    "sha256": "69276a23df415cfe512379666890ec5d8b3293530137192268cd8c5ddc086835"
+  },
+  {
+    "path": "assets/animation/mate-engine/PET_INTRO_PET_INTRO.vrma",
+    "bytes": 585316,
+    "sha256": "5c243e727fab36418c88e2d33f1ff49cde8bcded96d428fc96571b5c90e222af"
+  },
+  {
+    "path": "assets/animation/mate-engine/PET_INTRO_PET_INTRO_END.vrma",
+    "bytes": 96972,
+    "sha256": "9c08168cdde36a41182f273c928442fc433bb39291fb9d3d804ccc5fc2dc48ee"
+  },
+  {
+    "path": "assets/animation/mate-engine/PET_SLEEPING_PET_SLEEPING.vrma",
+    "bytes": 1879732,
+    "sha256": "94563ab295a9f302900c765cc01545fe2421344833a656369003a0892d84797c"
+  },
+  {
+    "path": "assets/animation/plane-interaction/throw-object.fbx",
+    "bytes": 2266816,
+    "sha256": "bb458ab1a912aff1896ecb71d60a815bfa75db008ec1172c2a513d44410a80d6"
+  },
+  {
+    "path": "assets/animation/vroid/Resources/animations/pv/female/spot_lie_down_1.vrma",
+    "bytes": 39316,
+    "sha256": "e7b371be8e69435ac6962271adac7ab7355a23701ab2953ead8771fb26c4ab09"
+  },
+  {
+    "path": "assets/animation/vroid/Resources/animations/pv/male/spot_target_locked.vrma",
+    "bytes": 39316,
+    "sha256": "ea6b10b7a04a511e09cc3ade2abecfbcfa95170b39c156b7e7a56513bbd5f7a5"
+  },
+  {
+    "path": "assets/cursor/crystal-arrow.glb",
+    "bytes": 185020,
+    "sha256": "e1e165c8ff7b055db133b0c0841340b60c391111acf69c7fedef4a6880c69652"
+  },
+  {
+    "path": "assets/cursor/silver-paper-plane.svg",
+    "bytes": 202126,
+    "sha256": "f052b13754882751ec40797e0fb962831bc75dbe7cf4d0dc2db34023a0a180a1"
+  },
+  {
+    "path": "assets/loading/corynorootbone.loading.vrm",
+    "bytes": 31560148,
+    "sha256": "b6b4e1c347df8729cfa46a85d3afc11adce82d2e0fa12ddce48fe8035ca15e67"
+  },
+  {
+    "path": "assets/stream-gifts/sealed-envelope.png",
+    "bytes": 2437,
+    "sha256": "1d719f9564ec9850536fe5cab856ff55cf29087178f53a03a31dbb5d6fbc3066"
+  },
+  {
+    "path": "assets/stream-gifts/white-pebble.png",
+    "bytes": 2399,
+    "sha256": "02706d584caf3fd74a419bb91fd3b5fa26febfe4ea136b466d4ed109ab167456"
+  },
+  {
+    "path": "favicon.png",
+    "bytes": 123461,
+    "sha256": "963848e8eeb5f528606d024973587ebd48e57206f60ab61a8181df4bc7283185"
+  },
+  {
+    "path": "figma/landing/figma-1146-ellipse-center-a.svg",
+    "bytes": 901,
+    "sha256": "1560570091a97358be178e830e51805c6a72e4d2c00b77ccf2cf8a7dd3d3b29b"
+  },
+  {
+    "path": "figma/landing/figma-1146-ellipse-left.svg",
+    "bytes": 904,
+    "sha256": "ea0642a607f11efe237beab1f98bced9e2c131b4055270d92858d54689050ce0"
+  },
+  {
+    "path": "figma/landing/figma-1146-ellipse-right.svg",
+    "bytes": 903,
+    "sha256": "2243fab3ddf79ba02d62affe146eef437800951cbbe14ef9db96fcc04d8add83"
+  },
+  {
+    "path": "figma/landing/figma-1146-play.svg",
+    "bytes": 1209,
+    "sha256": "efce1ae90db4a53fbd60c3bec21e356d583e6c304aef155c7c5f5536f268e81f"
+  },
+  {
+    "path": "figma/landing/figma-1146-sky-glow.png",
+    "bytes": 2764,
+    "sha256": "258792b4b96bff36ab9f6882f90a23fa1c6b0a29d5d930fc1e6196edebf1810b"
+  },
+  {
+    "path": "figma/landing/figma-1146-wing-mark.svg",
+    "bytes": 566,
+    "sha256": "d0665a79fb02b58cb3091ee28621b74d91906e6963d6154921986e9472f3f94b"
+  },
+  {
+    "path": "fonts/BlurWeb-Light W03 Regular.ttf",
+    "bytes": 65864,
+    "sha256": "4e8692d7066eeec3c05c5df34f98cdb0bd67a22d92d25e2279439f4014ce62a6"
+  },
+  {
+    "path": "fonts/BlurWeb-Medium W03 Regular.ttf",
+    "bytes": 66100,
+    "sha256": "be1d39984ab3d53f4ba7f54d2ec68d8026bebea0e1f58724ca55d875659a970b"
+  },
+  {
+    "path": "fonts/FuturaPTBook.otf",
+    "bytes": 112916,
+    "sha256": "85be74ee15c50c39cb5601ec40aee5fc3c79090582047140fc0a9827cc3f7dab"
+  },
+  {
+    "path": "fonts/PFPixelscriptPro-subset.otf",
+    "bytes": 27872,
+    "sha256": "b440ed79f8977b10fb5fc2b845536ec684a076cc512076320c0f3bcfad136617"
+  },
+  {
+    "path": "fonts/fz-lantinghei.ttf",
+    "bytes": 12164040,
+    "sha256": "664a53fa101acc3efc9ba407979004c64def0730516e9b5fdb8a63c0f7e825c7"
+  },
+  {
+    "path": "fonts/inter-bold.ttf",
+    "bytes": 316584,
+    "sha256": "412c068eab6f36e6807d630ff89127165e8e4d3e8653434cdfb56b60cdcc3a32"
+  },
+  {
+    "path": "fonts/inter-regular.ttf",
+    "bytes": 310252,
+    "sha256": "3127f0b873387ee37e2040135a06e9e9c05030f509eb63689529becf28b50384"
+  },
+  {
+    "path": "fonts/maru-buri-light.woff2",
+    "bytes": 435344,
+    "sha256": "81dc58bb33e008d3bb2b7e9330fdb56806b830fbe5328b5532c486276e9aad12"
+  },
+  {
+    "path": "fonts/maru-buri-semibold.woff2",
+    "bytes": 465624,
+    "sha256": "7428cf5ba1da87f6ca2e3de8bb99c2e8cb4cbff19dea5220c9f7b21e0c21a6ca"
+  },
+  {
+    "path": "fonts/notosansjp-bold.ttf",
+    "bytes": 5319680,
+    "sha256": "a3910e15eea0451ffbea62e894e951ea9f7c812c8b4b5e947593b6ecc2d4b057"
+  },
+  {
+    "path": "fonts/pp-editorial-new-regular.otf",
+    "bytes": 58264,
+    "sha256": "527c535ac11f1206411ce5ba5e61c86616b7356fb170e42a3c9a774f0e348fd3"
+  },
+  {
+    "path": "fonts/pugua-qianyun-song-home.woff2",
+    "bytes": 148228,
+    "sha256": "547f738c7c458de377dec7fbacf54d4d7b62fb82b41b3cee2739bb7e9ad7079d"
+  },
+  {
+    "path": "fonts/pugua-qianyun-song.woff2",
+    "bytes": 135764,
+    "sha256": "699cd09103084cc6ab3a1397fcff3cd39eeb5b5a2be7c70a9dc76ce1c7cc58b8"
+  },
+  {
+    "path": "fonts/shippori-mincho-bold.woff2",
+    "bytes": 3330636,
+    "sha256": "c5a85f96ba730362bf79b43725bd3eec9a34f75a0ffc8a3906c3ac48491c7082"
+  },
+  {
+    "path": "fonts/yomeng-script.woff2",
+    "bytes": 3850320,
+    "sha256": "0c34190ca58b20b98a329663d5222186e2c7fd8c3bc41a146f482b307b0bb109"
+  },
+  {
+    "path": "fonts/zaozigongfangyueyuanti.ttf",
+    "bytes": 3106872,
+    "sha256": "1e10a800df429bfdc946d43a3e9481c81d8db70bde236aa58f36679d940ff1c4"
+  },
+  {
+    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Bold.ttf",
+    "bytes": 3778984,
+    "sha256": "d726be217b3039398300c0e1c5991119e78e54af56b0b53423769479493128a7"
+  },
+  {
+    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Light.ttf",
+    "bytes": 3723328,
+    "sha256": "ddf1803fbd0d7dd43dfe15ef63f8461905a0a097389acb469a96443e41bc9f64"
+  },
+  {
+    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Medium.ttf",
+    "bytes": 3810920,
+    "sha256": "fa15ff0f55e0f848935c9b9264ddb8a9212c2e22d8dea2aee373ff43c7fc3211"
+  },
+  {
+    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Regular.ttf",
+    "bytes": 3832732,
+    "sha256": "d1e5d9a182b5a6a64609ce237a3d44cd9a7eee588b74893b3ebe2c90caaac11d"
+  },
+  {
+    "path": "legal/ATTRIBUTION-motion.md",
+    "bytes": 2544,
+    "sha256": "ba4aa68d6fdd5a4d20c3920032b1f38fa7fa8b74817cfa49dc44a94a692dac74"
+  },
+  {
+    "path": "legal/ai-content-disclosure.html",
+    "bytes": 11873,
+    "sha256": "4287a04254dde350e3b6fbf785ed582461cdd61cd409f7f41aea9471fdaf98a6"
+  },
+  {
+    "path": "legal/privacy.html",
+    "bytes": 109501,
+    "sha256": "6168c82f0751d300ffe84c78a4444484eaf3b8abdcc6c5bb26d6b1864c25da73"
+  },
+  {
+    "path": "legal/terms.html",
+    "bytes": 64223,
+    "sha256": "70b57b4c9ea081f72539735cbaaab5becdc53f27f0b0bbfee8af966b64c71e5d"
+  },
+  {
+    "path": "website/angel-deco.png",
+    "bytes": 1034,
+    "sha256": "d2a3c0c1e67f09021a3f192d3673cdcce78f196e9b4a67a29ef13d537f64ec61"
+  },
+  {
+    "path": "website/figma/brooch.webp",
+    "bytes": 118784,
+    "sha256": "f8bf57d87e9dff28bf6026c50023f8d59301f6c168f5f3b67fdb31b5c56aeb23"
+  },
+  {
+    "path": "website/figma/cat.webp",
+    "bytes": 16410,
+    "sha256": "4e62a712a486eeb325923eb2807c76463a762b92d22935278c67593921fa1c7a"
+  },
+  {
+    "path": "website/figma/creators-circle.webp",
+    "bytes": 171554,
+    "sha256": "6cd741137a9d4ebef11678d0bdbfaa34c040d6d06bc437d0563015fbcbcdc2da"
+  },
+  {
+    "path": "website/figma/crosswalk.webp",
+    "bytes": 23970,
+    "sha256": "c2a257b032af6901ace5d02f028b347ba90a43d1a1def8aae8c5672efe623ccf"
+  },
+  {
+    "path": "website/figma/deco-pegasus.webp",
+    "bytes": 51570,
+    "sha256": "091a34a20b0702fb23b70f315033e1d625555519b9e77a3d3fcd3c7d7443aa4f"
+  },
+  {
+    "path": "website/figma/deco-plane.webp",
+    "bytes": 20478,
+    "sha256": "657a96859874aca7700852c6f985cdc03eaea1a663744bcff876e99a6c32180e"
+  },
+  {
+    "path": "website/figma/deco-sword.webp",
+    "bytes": 6126,
+    "sha256": "2c857cabc33d62c5b262f21e59dea20da6790d7bc4ed0bf7145044ce67cbdb0a"
+  },
+  {
+    "path": "website/figma/deco-wing.webp",
+    "bytes": 26808,
+    "sha256": "a063c515d463e27976533d4cb0f6e18afbed0ee7cc54be5f9d32893a91d633a9"
+  },
+  {
+    "path": "website/figma/footer-wings.webp",
+    "bytes": 114070,
+    "sha256": "5620f114abd0e31837d224d0d39d959f4a867bd5cdf4711f81e03328ea7d5268"
+  },
+  {
+    "path": "website/figma/gift-bun.webp",
+    "bytes": 9692,
+    "sha256": "f8c5a87b28df4cdbbf63e08a6208c88ec3a30cfb86eb494c3122c80c3bf123e5"
+  },
+  {
+    "path": "website/figma/gift-croissant.webp",
+    "bytes": 14746,
+    "sha256": "2f4593118372bcb9f40c49a66f14dce35c44501147c27138631a9be0459c07ed"
+  },
+  {
+    "path": "website/figma/gift-envelope.webp",
+    "bytes": 9116,
+    "sha256": "53a6997b1c76739d54b0c8449e8ee679215cee70dde160b1bf1b8aef32b0920d"
+  },
+  {
+    "path": "website/figma/gift-onigiri.webp",
+    "bytes": 6960,
+    "sha256": "6752306c5c9bc8ae0c0c557b47464b108aa1e2452814dea016582ff369afc393"
+  },
+  {
+    "path": "website/figma/hero-shot.webp",
+    "bytes": 29564,
+    "sha256": "61a78c938480feb398ac961927e076d731031da7f8be7616bdcc857b4c5f0bcb"
+  },
+  {
+    "path": "website/figma/icon-bilibili.svg",
+    "bytes": 3515,
+    "sha256": "6f07d55b7efb675ccd8fd8531141a91c44fbfd8e69aacbac6322846fa9cb93a4"
+  },
+  {
+    "path": "website/figma/icon-bookmark.svg",
+    "bytes": 875,
+    "sha256": "d6d04a4f796bdb7ba3ed4e903e84c2ea4afbf42bfdf906e0e13258d42db4c658"
+  },
+  {
+    "path": "website/figma/icon-comment.svg",
+    "bytes": 903,
+    "sha256": "a5b23032dbd3f003d84977635d1fbd4b52a833a11d000544c92b9a28e4df7177"
+  },
+  {
+    "path": "website/figma/icon-discord.svg",
+    "bytes": 3058,
+    "sha256": "20cc9e796e93c2a14be3ea62500dbfcc0cb63c167253529e2df7faf510f70a0b"
+  },
+  {
+    "path": "website/figma/icon-heart.svg",
+    "bytes": 1097,
+    "sha256": "a7682566f88a38e51a972a1fd8fd875504c09092f868b341c05dcc9a91cf8e46"
+  },
+  {
+    "path": "website/figma/icon-language.svg",
+    "bytes": 2805,
+    "sha256": "3792ed0b68d05f1b24e05f472e67ccc2ee1708fec947e7d79d0a5c39f3bae667"
+  },
+  {
+    "path": "website/figma/icon-qq.svg",
+    "bytes": 2603,
+    "sha256": "1fe75b3a83be337a34a6ccfcf9425e7c9fe6b784a4775d6c2828bec72ef99f09"
+  },
+  {
+    "path": "website/figma/icon-share.svg",
+    "bytes": 1064,
+    "sha256": "d81c0838fa9148cdcc7b18aea22c5b8ac870330b7aa7188acb764bd769008021"
+  },
+  {
+    "path": "website/figma/icon-x.svg",
+    "bytes": 475,
+    "sha256": "1028f183ff8848d2df8574a0c69750cf260845623d016c36eb050c9182689143"
+  },
+  {
+    "path": "website/figma/icon-xiaohongshu.svg",
+    "bytes": 8114,
+    "sha256": "d13c8fac23d37b327f11a271c78c48fe9ddfcb46bd47a5cf277390e20c8364c9"
+  },
+  {
+    "path": "website/figma/jagged-shape.svg",
+    "bytes": 3185,
+    "sha256": "6719f28518613715ca07edca10ff67b0281e4f4700eb11ec73f35fb73dbe90b8"
+  },
+  {
+    "path": "website/figma/key-left.webp",
+    "bytes": 34250,
+    "sha256": "cd4bfe17d574821fdbd5ff47677cd1ec453c19fa3b6320436068b29782f57c55"
+  },
+  {
+    "path": "website/figma/key-right.webp",
+    "bytes": 38300,
+    "sha256": "4d438e7da4488e19c92f2b7451a8fff9d7eefd9514f10433d84d9c1d19ef90d2"
+  },
+  {
+    "path": "website/figma/key.webp",
+    "bytes": 45432,
+    "sha256": "adee19b5da801396d9c3f424e6177bc382c8f4c237d0f07584eaec5ab5257efc"
+  },
+  {
+    "path": "website/figma/logo-3d.webp",
+    "bytes": 40016,
+    "sha256": "8116a0e7f6d202f76ae0838a8323972bafcfa45e80be12216fa4f592fe9ccc20"
+  },
+  {
+    "path": "website/figma/mocap-figure.webp",
+    "bytes": 16086,
+    "sha256": "46699f2b4514358897deef248911d7014d77f04d59f3a29ccd5dfe3c069aa715"
+  },
+  {
+    "path": "website/figma/mode-reaction.webp",
+    "bytes": 207940,
+    "sha256": "2894880d3ba4ab356c1a5dc45883d90c1912e3d0ac29e01618db9acb7fde8a21"
+  },
+  {
+    "path": "website/figma/mode-song.webp",
+    "bytes": 62434,
+    "sha256": "173d4c008ad42788eaaec2d9d7a93ea1d37717f9944df357f9aff6dc72bc2214"
+  },
+  {
+    "path": "website/figma/mode-talk.webp",
+    "bytes": 90462,
+    "sha256": "1f8f038a18941e7e51e317803adddfabed1e8ac817a73686baaaa085bf4b7a99"
+  },
+  {
+    "path": "website/figma/op-01-lie.webp",
+    "bytes": 32932,
+    "sha256": "1434d211d6820fa34a4a3c09e8a7fd49dc808da426ab4d248cab7218ab3a1522"
+  },
+  {
+    "path": "website/figma/op-01-outline.svg",
+    "bytes": 6148,
+    "sha256": "d5b285c96d10f4442c9aff57b51a5d039d9be95fcbceba910dec2ef328d381c7"
+  },
+  {
+    "path": "website/figma/op-02-hand.webp",
+    "bytes": 36956,
+    "sha256": "943baf2fae22e4a89f9a46dd2b92a24a789e45bff9b4576e44328760bd59c938"
+  },
+  {
+    "path": "website/figma/op-02-outline.webp",
+    "bytes": 19226,
+    "sha256": "0bf1954a3102fccc8c9b9422408151a503702ecf27db104d96746688a1367ddf"
+  },
+  {
+    "path": "website/figma/op-03-back.webp",
+    "bytes": 19350,
+    "sha256": "9a3d7cdd2f81997da718a03cdcf9677a1a511ce9fc0ed18c040a42e77ee70a18"
+  },
+  {
+    "path": "website/figma/op-04-front.webp",
+    "bytes": 22822,
+    "sha256": "c6e7b6100ec3d0fa8dbb0cb9d8fffec6182009ac25363a983ef0c6208a5d14ff"
+  },
+  {
+    "path": "website/figma/op-star.png",
+    "bytes": 13454,
+    "sha256": "a33d4d4b534244d16677ad1080219bbd2bd5928a0ae69c8c1df215a6e2dd73ae"
+  },
+  {
+    "path": "website/figma/op-ui-list.webp",
+    "bytes": 4098,
+    "sha256": "28f8f33ad31af8b3c2f8b126e8b86901fa17fa1b721deabfb7e91f9151cf1535"
+  },
+  {
+    "path": "website/figma/running-silhouette.svg",
+    "bytes": 7867,
+    "sha256": "c2c97f4339ab73b079d1af6cbe619d2deb42ce8b3cad8dbc9ce44b490dfa8bb0"
+  },
+  {
+    "path": "website/figma/silhouette-girl.svg",
+    "bytes": 10069,
+    "sha256": "4b289a083a198ca918723c6d0f066ed4fb658adcbe28ea355a117db08e52d304"
+  },
+  {
+    "path": "website/figma/sky-bg.webp",
+    "bytes": 216074,
+    "sha256": "4ecdaad860dfbf8bb65356d6b318b39c26d3f649c39b7f1d028ec8804c8af680"
+  },
+  {
+    "path": "website/figma/snapshot-stamp.webp",
+    "bytes": 90400,
+    "sha256": "e7ed52df11eaab3936396372bd33b32f27c93ea382663fb0b239048be0bb0b4e"
+  },
+  {
+    "path": "website/figma/sparkle.svg",
+    "bytes": 1478,
+    "sha256": "a8a47545db5b0cd1a97807f63e142887731aaf1e766c3afa464476b7a34f936a"
+  },
+  {
+    "path": "website/figma/star-4.svg",
+    "bytes": 317,
+    "sha256": "ab024b0e7d380b6d87c5bb021e55e3826cf00596d15208a6efc3fe98f860f891"
+  },
+  {
+    "path": "website/figma/step-01.webp",
+    "bytes": 26974,
+    "sha256": "80f399bb1eb8e783b3d551fa3c44ac6bc9d5993b40f19c9dae23617b8844d61f"
+  },
+  {
+    "path": "website/figma/step-02.webp",
+    "bytes": 61918,
+    "sha256": "ecbf041cbd82a75cc34e05f29ea5570649a49d1cbf91fcd074569840e91492b7"
+  },
+  {
+    "path": "website/figma/step-03.webp",
+    "bytes": 47942,
+    "sha256": "25f76b6fa2c3c79ae90c7d81b1a4fcf0554bd107720b0d75cd705e1a2815fe29"
+  },
+  {
+    "path": "website/figma/video-poster.webp",
+    "bytes": 54942,
+    "sha256": "94f3150e6ab1b9dc11d446c30b76288e0e8335c7024747fe98b76ef6a3e5347a"
+  },
+  {
+    "path": "website/internal/chat-panel.jpg",
+    "bytes": 55983,
+    "sha256": "b5d6c0918c31f137144175b7464977cc32a59894440f362c87b80bbd6f95b223"
+  },
+  {
+    "path": "website/internal/idle.jpg",
+    "bytes": 37343,
+    "sha256": "f1bdc4141ebdec868f7727dae37b9d97d8ea2b39c5f57482212670b5b7b2d6ec"
+  },
+  {
+    "path": "website/internal/script-generating.jpg",
+    "bytes": 39097,
+    "sha256": "074334c0410516777b54cbe4a22e334107e7a21277b9fa748d996ea2595c3824"
+  },
+  {
+    "path": "website/internal/script-preview.jpg",
+    "bytes": 56195,
+    "sha256": "746b6ba5957854445e4e4d72231a19bdc14246338506d8e45d04642f54491743"
+  },
+  {
+    "path": "website/internal/subtitle.jpg",
+    "bytes": 39522,
+    "sha256": "c18555826358e7946188f36c590623298cf40c1795acbd3677026bf32b6efb88"
+  },
+  {
+    "path": "website/sky-1k.hdr",
+    "bytes": 930297,
+    "sha256": "ce760f0a9d5648d2de9f6c87265bb50f6e1ba74a087e5ce57b26a7834b79918c"
+  },
+  {
+    "path": "website/sky-blob.png",
+    "bytes": 281075,
+    "sha256": "c8a7ab8a2842763dbf456b6515e482ec915f126b81451a4ab2542fac9b934655"
+  },
+  {
+    "path": "website/wing-deco.png",
+    "bytes": 751,
+    "sha256": "72636a5016798762c125cf9544e947b1843f1b6358644831efc371ad50f2d68c"
+  }
+]

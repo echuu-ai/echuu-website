@@ -1,0 +1,104 @@
+@import './ui-typography.css';
+* { box-sizing: border-box; }
+html, body { margin: 0; min-width: 320px; min-height: 100%; font-synthesis: none; text-rendering: geometricPrecision; }
+body { font-family: var(--font-system); font-weight: var(--font-weight-system-regular); overflow-x: hidden; }
+button, input { font: inherit; }
+button { border: 0; cursor: pointer; }
+.blend-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.blend-cursor__plane {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  will-change: transform;
+}
+
+@media (pointer: coarse), (hover: none) {
+  .blend-cursor, .blend-cursor-trail, .cursor-tooltip { display: none; }
+}
+
+.blend-cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.blend-cursor-chip,
+.cursor-tooltip {
+  overflow: hidden;
+  padding: 3px 8px 4px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.blend-cursor-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform, opacity, clip-path;
+}
+
+.blend-cursor-chip__face {
+  display: block;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blend-cursor-trail {
+    display: none;
+  }
+}
+
+.cursor-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  max-width: min(280px, calc(100vw - 48px));
+  background: #111111;
+  color: #ffffff;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms ease-out, visibility 120ms step-end;
+  will-change: transform;
+}
+
+.cursor-tooltip[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 120ms ease-out, visibility 0ms step-start;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-tooltip {
+    display: none;
+  }
+}
+
+.blend-cursor__plane { position: relative; }
+.blend-cursor__fallback { display: block; width: 100%; height: 100%; }
+.metal-plane-canvas { position: absolute; left: -40px; top: -40px; width: 112px; height: 112px; opacity: 0; pointer-events: none; }
+.metal-plane-canvas[data-ready="true"] { opacity: 1; }
+.blend-cursor__plane:has(.metal-plane-canvas[data-ready="true"]) .blend-cursor__fallback { visibility: hidden; }
+/* Shared color-grade filter definitions must not take up document space. */
+.app-color-grade-svg { position: absolute; width: 1px; height: 1px; overflow: hidden; pointer-events: none; }

@@ -1,0 +1,364 @@
+/**
+ * Echuu UX — UI typography system
+ *
+ * System / titles: BlurWeb Light / Medium
+ * Decorative chrome: BlurWeb-LightW03-Regular @ 12pt
+ * Body copy: BlurWeb-LightW03-Regular @ 20pt
+ */
+
+/*
+ * Keep brand fonts self-contained. These faces were previously only available
+ * when the visitor happened to have the fonts installed locally, which made
+ * production silently fall back to MuseoModerno/system fonts.
+ */
+@font-face {
+  font-family: 'MHTIROGLA';
+  src: url('/assets/Fonts/MHTIROGLA.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PFPixelscriptPro';
+  src: url('/fonts/PFPixelscriptPro-subset.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Futura PT Book';
+  src: url('/fonts/FuturaPTBook.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'FZLanTingHei';
+  src: url('/fonts/fz-lantinghei.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PuguaQianyunSong';
+  src: url('/fonts/pugua-qianyun-song.woff2') format('woff2');
+  /* File is ExtraLight (OS/2 200) only. A 200–800 range would pretend 800
+     already exists and skip faux-bold synthesis. */
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF;
+}
+
+@font-face {
+  font-family: 'Shippori Mincho';
+  src: url('/fonts/shippori-mincho-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Local preview asset: supplied PP Editorial New personal-use package. */
+@font-face {
+  font-family: 'PP Editorial New';
+  src: url('/fonts/pp-editorial-new-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Maru Buri';
+  src: url('/fonts/maru-buri-light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Maru Buri';
+  src: url('/fonts/maru-buri-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Yomeng Script';
+  src: url('/fonts/yomeng-script.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans JP';
+  src: url('/fonts/notosansjp-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NewEdge666 Test';
+  src: url('/assets/Fonts/NewEdge666Test-RegularRounded.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NewEdge666 Test';
+  src: url('/assets/Fonts/NewEdge666Test-SemiboldRounded.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BlurWeb-LightW03-Regular';
+  src: url('/fonts/BlurWeb-Light%20W03%20Regular.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BlurWeb-MediumW03-Regular';
+  src: url('/fonts/BlurWeb-Medium%20W03%20Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * 造字工房悦圆体：仅接管中文汉字与中日韩标点。
+ * 拉丁字符继续落到原有 BlurWeb / NewEdge 字体，保留品牌字形。
+ */
+@font-face {
+  font-family: 'Echuu Yueyuan CJK';
+  src: url('/fonts/zaozigongfangyueyuanti.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+2E80-2EFF,
+    U+2F00-2FDF,
+    U+3000-303F,
+    U+31C0-31EF,
+    U+3400-4DBF,
+    U+4E00-9FFF,
+    U+F900-FAFF,
+    U+FE10-FE1F,
+    U+FE30-FE4F,
+    U+FF01-FF60;
+}
+
+@font-face {
+  font-family: 'Echuu Zen Maru';
+  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+3000-30FF, U+3130-318F, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+AC00-D7AF, U+F900-FAFF, U+FF01-FFEF;
+}
+
+@font-face {
+  font-family: 'Echuu Zen Maru';
+  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+3000-30FF, U+3130-318F, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+AC00-D7AF, U+F900-FAFF, U+FF01-FFEF;
+}
+
+@font-face {
+  font-family: 'Echuu Zen Maru';
+  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+3000-30FF, U+3130-318F, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+AC00-D7AF, U+F900-FAFF, U+FF01-FFEF;
+}
+
+@font-face {
+  font-family: 'Echuu Zen Maru';
+  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Bold.ttf') format('truetype');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+3000-30FF, U+3130-318F, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+AC00-D7AF, U+F900-FAFF, U+FF01-FFEF;
+}
+
+:root {
+  --font-system: 'BlurWeb-LightW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-system-medium: 'BlurWeb-MediumW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-deco: 'BlurWeb-LightW03-Regular', ui-sans-serif, sans-serif;
+  --font-deco-medium: 'BlurWeb-MediumW03-Regular', ui-sans-serif, sans-serif;
+  --font-size-system-body: 20pt;
+  --font-size-deco: 12pt;
+  --font-weight-system-regular: 300;
+  --font-weight-system-medium: 500;
+}
+
+html:lang(zh-CN) {
+  --font-system: 'FZLanTingHei', 'BlurWeb-LightW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-system-medium: 'FZLanTingHei', 'BlurWeb-MediumW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-deco: 'FZLanTingHei', 'BlurWeb-LightW03-Regular', ui-sans-serif, sans-serif;
+  --font-deco-medium: 'FZLanTingHei', 'BlurWeb-MediumW03-Regular', ui-sans-serif, sans-serif;
+}
+
+html:lang(ja),
+html:lang(ko) {
+  --font-system: 'Echuu Zen Maru', 'BlurWeb-LightW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-system-medium: 'Echuu Zen Maru', 'BlurWeb-MediumW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-deco: 'Echuu Zen Maru', 'BlurWeb-LightW03-Regular', ui-sans-serif, sans-serif;
+  --font-deco-medium: 'Echuu Zen Maru', 'BlurWeb-MediumW03-Regular', ui-sans-serif, sans-serif;
+}
+
+/* Onboarding has several art-directed literal font stacks; prepend the CJK face only in Chinese. */
+html:lang(zh-CN) .onboarding-screen :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  em,
+  a,
+  button,
+  input,
+  textarea,
+  label
+) {
+  font-family: 'FZLanTingHei', var(--font-system) !important;
+}
+
+html:lang(ja) .onboarding-screen :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  em,
+  a,
+  button,
+  input,
+  textarea,
+  label
+),
+html:lang(ko) .onboarding-screen :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  em,
+  a,
+  button,
+  input,
+  textarea,
+  label
+) {
+  font-family: 'Echuu Zen Maru', var(--font-system) !important;
+}
+
+/* Prefer these classes in CSS / JSX over ad-hoc font-family */
+.font-system {
+  font-family: var(--font-system);
+}
+
+.font-system-body {
+  font-family: var(--font-system);
+  font-size: var(--font-size-system-body);
+  font-weight: var(--font-weight-system-regular);
+  line-height: 1.25;
+}
+
+.font-system-title {
+  font-family: var(--font-system);
+  font-weight: var(--font-weight-system-regular);
+  line-height: 1.2;
+}
+
+.font-system-title-medium {
+  font-family: var(--font-system-medium);
+  font-weight: var(--font-weight-system-medium);
+  line-height: 1.2;
+}
+
+.font-deco {
+  font-family: var(--font-deco);
+  font-size: var(--font-size-deco);
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+/* Shared editorial title families: landing and onboarding use one locale map. */
+:root {
+  --font-brand-title: 'PuguaQianyunSong', 'PP Editorial New', serif;
+  --font-brand-title-weight: 700;
+  --font-brand-title-synthesis: style weight;
+}
+html:lang(en) {
+  --font-brand-title: 'PP Editorial New', Georgia, serif;
+  --font-brand-title-weight: 400;
+  --font-brand-title-synthesis: none;
+}
+html:lang(ja) {
+  --font-brand-title: 'Shippori Mincho', 'Yu Mincho', serif;
+  --font-brand-title-weight: 700;
+  --font-brand-title-synthesis: none;
+}
+html:lang(ko) {
+  --font-brand-title: 'Maru Buri', 'Batang', serif;
+  --font-brand-title-weight: 600;
+  --font-brand-title-synthesis: none;
+}
+
+/* Include typewriter children: the locale body-font rule otherwise overrides
+   inherited title fonts on every nested span. Keep body copy on its UI font. */
+html .onboarding-screen :is(.ob-brand-title, .ob-title, .ob-persona-name, .ob-persona-title__text, .ob-cloud-field__head h4, .ob-topic-text em),
+html .onboarding-screen :is(.ob-brand-title, .ob-title, .ob-persona-name, .ob-persona-title__text, .ob-cloud-field__head h4, .ob-topic-text em) :is(span, em) {
+  font-family: var(--font-brand-title) !important;
+  font-weight: var(--font-brand-title-weight);
+  font-synthesis: var(--font-brand-title-synthesis);
+}
+
+/* Chinese display glyphs need synthetic weight; PP Regular Latin does not. */
+html:lang(zh-CN) .onboarding-screen .ob-brand-title .brand-title-latin {
+  font-family: 'PP Editorial New', Georgia, serif !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: -0.01em;
+  -webkit-text-stroke: 0.25px currentColor;
+  paint-order: stroke fill;
+}
+
+/* Step instruction is upright in every locale; no synthetic oblique/skew. */
+html .onboarding-screen .ob-brand-title {
+  font-style: normal;
+}

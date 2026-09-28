@@ -1,0 +1,381 @@
+{
+  "generatedAt": "2026-09-17",
+  "generatedBy": "Echuu 官网素材盘点（已并入 echuu-ux-r3f-vite，多数素材直接复用 app 既有 public/，不再复制）",
+  "rightsStatusLegend": {
+    "approved": "来源与使用范围已核对，可用于对外页面",
+    "unverified": "来源已知但授权未核实，只能内部审阅",
+    "conflict": "文件内嵌授权与现行条款表述冲突，需团队核实",
+    "pending-material": "素材尚未取得"
+  },
+  "productStatusLegend": {
+    "in-use": "已用于对外页面",
+    "preview-only": "仅本地预览",
+    "internal-only": "仅内部 moodboard",
+    "blocked": "不可用",
+    "rejected": "已排除"
+  },
+  "items": [
+    {
+      "id": "B01",
+      "localPath": "public/website/sky-blob.png",
+      "sourceUrlOrPath": "public/figma/landing/figma-1146-sky.png",
+      "creator": "Echuu / Anngel LLC（Figma ECHUU-V1-UX node 1146:251 导出）",
+      "rightsStatus": "approved",
+      "allowedUse": "官网 Hero 与区块背景",
+      "credit": "不需要单独署名（自有品牌资产）",
+      "alt": "",
+      "dimensions": "880x880",
+      "usedIn": [
+        "home:hero",
+        "home:video-poster",
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": "已按 880px 重新取样以控制首屏体积；原图 1000x1000 保留在主仓库。",
+      "bytes": 300141
+    },
+    {
+      "id": "B02",
+      "localPath": "public/figma/landing/figma-1146-sky-glow.png",
+      "sourceUrlOrPath": "public/figma/landing/figma-1146-sky-glow.png",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "小范围天光，低强度，不盖文字",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "1024x657",
+      "usedIn": [
+        "home:hero",
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": "",
+      "bytes": 2764
+    },
+    {
+      "id": "B03",
+      "localPath": "public/figma/landing/figma-1146-ellipse-center-a.svg｜public/figma/landing/figma-1146-ellipse-center-b.svg｜public/figma/landing/figma-1146-ellipse-left.svg｜public/figma/landing/figma-1146-ellipse-right.svg",
+      "sourceUrlOrPath": "public/figma/landing/figma-1146-ellipse-*.svg",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "Hero 轨道环装饰；按最新蓝白配色使用，不复刻旧薄荷绿",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "vector",
+      "usedIn": [
+        "home:hero",
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": ""
+    },
+    {
+      "id": "B04",
+      "localPath": null,
+      "sourceUrlOrPath": "public/figma/landing/landing-silhouette-extracted.png",
+      "creator": "unknown",
+      "rightsStatus": "unverified",
+      "allowedUse": "不采用。来源不明的人物剪影不作为平台原创角色展示。",
+      "credit": "unknown",
+      "alt": "",
+      "dimensions": "unknown",
+      "usedIn": [],
+      "productStatus": "rejected",
+      "note": "已查看原图：噪点处理的人物剪影，无作者记录。按任务书默认不使用。"
+    },
+    {
+      "id": "B05a",
+      "localPath": "public/website/angel-deco.png",
+      "sourceUrlOrPath": "public/assets/icon/pic/angel-deco.png",
+      "creator": "Echuu / Anngel LLC（Figma 1328:314 导出）",
+      "rightsStatus": "approved",
+      "allowedUse": "小型品牌装饰，保留透明底",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "35x34",
+      "usedIn": [
+        "home:hero",
+        "home:creators",
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": "",
+      "bytes": 1506
+    },
+    {
+      "id": "B05b",
+      "localPath": "public/website/wing-deco.png",
+      "sourceUrlOrPath": "public/assets/icon/pic/wing-deco.png",
+      "creator": "Echuu / Anngel LLC（Figma 1323:306 导出）",
+      "rightsStatus": "approved",
+      "allowedUse": "页脚装饰",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "28x24",
+      "usedIn": [
+        "footer",
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": "",
+      "bytes": 1161
+    },
+    {
+      "id": "B06",
+      "localPath": "public/figma/landing/figma-1146-wing-mark.svg",
+      "sourceUrlOrPath": "public/figma/landing/figma-1146-wing-mark.svg",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "品牌 mark / favicon / 模式卡占位；沿用已有资产，不重绘新 logo",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "vector",
+      "usedIn": [
+        "header",
+        "favicon",
+        "home:modes"
+      ],
+      "productStatus": "in-use",
+      "note": "",
+      "bytes": 566
+    },
+    {
+      "id": "B07",
+      "localPath": "public/figma/landing/figma-1146-play.svg",
+      "sourceUrlOrPath": "public/figma/landing/figma-1146-play.svg",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "播放按钮图标",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "vector",
+      "usedIn": [
+        "home:video",
+        "home:gallery"
+      ],
+      "productStatus": "in-use",
+      "note": "",
+      "bytes": 1209
+    },
+    {
+      "id": "P07",
+      "localPath": null,
+      "sourceUrlOrPath": "https://youtu.be/qvF5M1orvcU",
+      "creator": "Echuu",
+      "rightsStatus": "approved",
+      "allowedUse": "首页介绍视频；点击后才加载 youtube-nocookie 播放器",
+      "credit": "Echuu",
+      "alt": "Echuu 介绍视频",
+      "dimensions": "unknown（第三方托管）",
+      "usedIn": [
+        "home:video",
+        "home:gallery"
+      ],
+      "productStatus": "in-use",
+      "note": "团队已公开发布的链接。Notion 页面为 JS 渲染，本次未能读到远端正文，链接来自任务书记录。"
+    },
+    {
+      "id": "P08",
+      "localPath": "public/website/internal/*.jpg",
+      "sourceUrlOrPath": "~/Desktop/Echuu-预研完整演示-主题-弹幕-礼物-MVP.mp4",
+      "creator": "Echuu（录制）；画面中角色模型作者 unknown",
+      "rightsStatus": "unverified",
+      "allowedUse": "仅内部 moodboard 审阅。对外发布前需确认角色模型作者与授权。",
+      "credit": "待确认",
+      "alt": "本地预研演示画面",
+      "dimensions": "1000x640",
+      "usedIn": [
+        "moodboard"
+      ],
+      "productStatus": "internal-only",
+      "note": "文件已核对：384.016 秒（6 分 24 秒），1108x720，与版本记录一致。已抽取 5 帧并裁掉录制边框。"
+    },
+    {
+      "id": "C01",
+      "localPath": null,
+      "sourceUrlOrPath": "public/assets/charactermodel/corynorootbone.vrm",
+      "creator": "一方亦行QQ897682512（VRM0 内嵌 meta.author）",
+      "rightsStatus": "conflict",
+      "allowedUse": "不采用于官网展示。",
+      "credit": "一方亦行",
+      "alt": "",
+      "dimensions": "VRM 模型 52MB",
+      "usedIn": [],
+      "productStatus": "blocked",
+      "note": "文件内嵌 meta：title=冬藏, licenseName=Redistribution_Prohibited, commercialUssageName=Disallow, allowedUserName=ExplicitlyLicensedPerson。与现行用户协议 4.4 条「Echuu 主张拥有的唯一预置角色模型」表述冲突，需团队核实后才可用于品牌展示。"
+    },
+    {
+      "id": "C02",
+      "localPath": null,
+      "sourceUrlOrPath": "public/assets/charactermodel/*.vrm（VRoid 样例 9 个）",
+      "creator": "pixiv VRoid Project",
+      "rightsStatus": "unverified",
+      "allowedUse": "不采用于官网营销展示。",
+      "credit": "pixiv VRoid Project（creditNotation=required）",
+      "alt": "",
+      "dimensions": "VRM 模型 14–20MB",
+      "usedIn": [],
+      "productStatus": "blocked",
+      "note": "内嵌 meta：commercialUsage=personalNonProfit、avatarPermission=onlyAuthor、多数 modification=prohibited。官网属商业宣传用途，需另行取得授权。"
+    },
+    {
+      "id": "C03",
+      "localPath": "public/assets/stream-gifts/sealed-envelope.png｜public/assets/stream-gifts/white-pebble.png",
+      "sourceUrlOrPath": "public/assets/stream-gifts/",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "互动局部配图；不暗示礼物购买或支付已上线",
+      "credit": "不需要单独署名",
+      "alt": "",
+      "dimensions": "57x57",
+      "usedIn": [
+        "moodboard"
+      ],
+      "productStatus": "in-use",
+      "note": ""
+    },
+    {
+      "id": "T01a",
+      "localPath": "public/fonts/pp-editorial-new-regular.otf",
+      "sourceUrlOrPath": "public/fonts/pp-editorial-new-regular.otf",
+      "creator": "Pangram Pangram Foundry",
+      "rightsStatus": "unverified",
+      "allowedUse": "仅本地预览。商业发布授权未核实，随包附个人使用 EULA。",
+      "credit": "Pangram Pangram",
+      "alt": "",
+      "dimensions": "font",
+      "usedIn": [
+        "brand-tagline（预览）"
+      ],
+      "productStatus": "preview-only",
+      "note": "发布前须取得商业授权或替换为有明确许可的英文衬线字体。release gate 会提示。",
+      "bytes": 58264
+    },
+    {
+      "id": "T01b",
+      "localPath": "public/fonts/shippori-mincho-bold.woff2",
+      "sourceUrlOrPath": "public/fonts/shippori-mincho-bold.woff2",
+      "creator": "Shippori Mincho（OFL）",
+      "rightsStatus": "approved",
+      "allowedUse": "日文标题字体",
+      "credit": "SIL Open Font License（随包 shippori-mincho-OFL.txt）",
+      "alt": "",
+      "dimensions": "3.3MB woff2",
+      "usedIn": [
+        "ja:headings"
+      ],
+      "productStatus": "in-use",
+      "note": "仅在 ja 语言下通过 unicode-range 触发下载；体积较大，建议后续取子集。",
+      "bytes": 3330636
+    },
+    {
+      "id": "T01c",
+      "localPath": "public/fonts/maru-buri-semibold.woff2",
+      "sourceUrlOrPath": "public/fonts/maru-buri-semibold.woff2",
+      "creator": "Maru Buri（Naver）",
+      "rightsStatus": "unverified",
+      "allowedUse": "韩文标题字体（预览）",
+      "credit": "Naver",
+      "alt": "",
+      "dimensions": "465KB woff2",
+      "usedIn": [
+        "ko:headings"
+      ],
+      "productStatus": "preview-only",
+      "note": "主仓库 fonts/manifest.json 只标 local-font-asset，未附许可文件，需核实商用条款。",
+      "bytes": 465624
+    },
+    {
+      "id": "T01d",
+      "localPath": null,
+      "sourceUrlOrPath": "public/fonts/pugua-qianyun-song.woff2",
+      "creator": "蒲瓜纤云宋",
+      "rightsStatus": "unverified",
+      "allowedUse": "不采用于本站中文标题。",
+      "credit": "待确认",
+      "alt": "",
+      "dimensions": "135KB woff2 子集",
+      "usedIn": [],
+      "productStatus": "blocked",
+      "note": "实测子集只含 599 个字形，本站中文标题文案缺字（含「三、两、做、哪、测、研、讲、谁、鱼、鸦」及部分拉丁与全角标点）。需从原字体重新取子集并确认授权。"
+    },
+    {
+      "id": "T01e",
+      "localPath": "public/fonts/inter-regular.ttf｜public/fonts/inter-bold.ttf",
+      "sourceUrlOrPath": "public/fonts/",
+      "creator": "Inter（Rasmus Andersson，OFL）",
+      "rightsStatus": "approved",
+      "allowedUse": "全站 UI 与正文",
+      "credit": "SIL Open Font License",
+      "alt": "",
+      "dimensions": "310KB / 316KB ttf",
+      "usedIn": [
+        "ui"
+      ],
+      "productStatus": "in-use",
+      "note": "建议后续转 woff2 以减小体积。"
+    },
+    {
+      "id": "L01",
+      "localPath": "public/legal/terms.html｜public/legal/privacy.html｜public/legal/ai-content-disclosure.html",
+      "sourceUrlOrPath": "public/legal/",
+      "creator": "Echuu / Anngel LLC",
+      "rightsStatus": "approved",
+      "allowedUse": "按原样提供，保留草案与占位项",
+      "credit": "—",
+      "alt": "",
+      "dimensions": "64KB / 110KB / 12KB",
+      "usedIn": [
+        "footer",
+        "home:trust"
+      ],
+      "productStatus": "in-use",
+      "note": "用户协议仍含草案与占位项；未提供日英韩审定译本。"
+    }
+  ],
+  "pendingMaterials": [
+    {
+      "id": "P01",
+      "source": "Notion 01-loading-home.gif",
+      "status": "pending-material",
+      "reason": "Notion 页面为 JS 渲染，WebFetch 返回空内容，未取得文件。"
+    },
+    {
+      "id": "P02",
+      "source": "Notion 02-onboarding.gif",
+      "status": "pending-material",
+      "reason": "同上。三步开播区因此显示「待取得素材」。"
+    },
+    {
+      "id": "P03",
+      "source": "Notion 03-persona-story.gif",
+      "status": "pending-material",
+      "reason": "同上。"
+    },
+    {
+      "id": "P04",
+      "source": "Notion 05-live-mvp.gif / 06-actual-live.gif",
+      "status": "pending-material",
+      "reason": "同上。Gallery 显示待取得条目。"
+    },
+    {
+      "id": "P05",
+      "source": "Notion 07-gift-steers-story.gif",
+      "status": "pending-material",
+      "reason": "同上。"
+    },
+    {
+      "id": "P06",
+      "source": "Notion 10-live-ending.gif",
+      "status": "pending-material",
+      "reason": "同上；本版叙事未使用。"
+    },
+    {
+      "id": "R01",
+      "source": "public/figma/ECHUU-V1-UX--12-/05-HeroLandingPage.png",
+      "status": "unverified",
+      "reason": "历史构图参考，已是旧配色；本次以最新蓝白记录为准，未复制其配色。"
+    }
+  ],
+  "note": "只有 B01 / B05a / B05b / P08 是为官网重新处理过的派生素材，放在 public/website/；其余 localPath 均为 app 既有资源。"
+}

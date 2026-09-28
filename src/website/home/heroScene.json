@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "actors": [
+    {
+      "id": "f685425f-bdc6-491c-983a-562fc2154665",
+      "modelId": "cory",
+      "name": "Actor 1",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": 1,
+      "clips": [
+        {
+          "id": "7a19324c-2da1-4f2d-aecb-cabed1ef486e",
+          "motionId": "vroid/resources-animations-pv-male-spot-target-locked",
+          "duration": 4,
+          "blend": 0.6,
+          "speed": 1
+        }
+      ],
+      "framingHeight": 1.6524708708748221,
+      "expression": {
+        "mode": "manual",
+        "weights": {
+          "aa": 0.36,
+          "happy": 0.13,
+          "sad": 0.19,
+          "relaxed": 0
+        }
+      },
+      "gaze": {
+        "mode": "camera",
+        "target": [
+          -0.8648525116825428,
+          1.3839979410927847,
+          0.11998363711127055
+        ],
+        "yaw": 0,
+        "pitch": 0
+      }
+    }
+  ],
+  "camera": {
+    "id": "15411cc4-9e59-46dd-bb91-afee710e1711",
+    "time": 0,
+    "position": [
+      -0.8648525116825428,
+      1.3839979410927847,
+      0.11998363711127055
+    ],
+    "target": [
+      -0.022283978262816754,
+      1.4262063617193255,
+      -0.19476899797411892
+    ],
+    "fov": 22.895192527371208,
+    "dofEnabled": true,
+    "focusMode": "manual",
+    "focusDistance": 0.85,
+    "focusRange": 0.16,
+    "blur": 7.5,
+    "easing": "linear"
+  },
+  "keys": [
+    {
+      "id": "15411cc4-9e59-46dd-bb91-afee710e1711",
+      "time": 0,
+      "position": [
+        -1.6000846510851787,
+        1.255877861864865,
+        2.104808460604312
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "4095a62e-5bb8-4ee2-9c2a-839c59efed13",
+      "time": 1.75,
+      "position": [
+        -1.238476914262102,
+        1.255877861864865,
+        2.335950444532095
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997152,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "a319e00c-0d08-4ccd-87aa-14109d0ba7c5",
+      "time": 3.5,
+      "position": [
+        -0.8442375479089608,
+        1.255877861864865,
+        2.505544353862158
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "e815ec9d-7b57-4881-a5c6-148be972d173",
+      "time": 5.25,
+      "position": [
+        -0.4277540471827952,
+        1.255877861864865,
+        2.6091216954348084
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997152,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "a798e0a8-cb87-4f52-9562-13fcdbbff9eb",
+      "time": 7,
+      "position": [
+        0,
+        1.255877861864865,
+        2.6439533933997157
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "f0fff748-c5bf-4ee2-9cc8-48b63e11dcc0",
+      "time": 8.75,
+      "position": [
+        0.4277540471827952,
+        1.255877861864865,
+        2.6091216954348084
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997152,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "78314b17-9f4e-44ea-a192-0c788d229555",
+      "time": 10.5,
+      "position": [
+        0.8442375479089609,
+        1.255877861864865,
+        2.505544353862158
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "0b691b7e-a5a3-4eb8-9447-0a047cc71803",
+      "time": 12.25,
+      "position": [
+        1.2384769142621017,
+        1.255877861864865,
+        2.3359504445320955
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    },
+    {
+      "id": "1ae54873-9fac-4269-a012-589b83c9e48e",
+      "time": 14,
+      "position": [
+        1.6000846510851787,
+        1.255877861864865,
+        2.104808460604312
+      ],
+      "target": [
+        0,
+        1.255877861864865,
+        0
+      ],
+      "fov": 22.895192527371208,
+      "dofEnabled": true,
+      "focusMode": "target",
+      "focusDistance": 2.6439533933997157,
+      "focusRange": 0.3,
+      "blur": 1.8,
+      "easing": "linear"
+    }
+  ],
+  "duration": 14,
+  "skyRotation": 0,
+  "grid": true,
+  "lighting": {
+    "ambientColor": "#e4e5ff",
+    "ambientIntensity": 0.95,
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "key": {
+      "enabled": true,
+      "color": "#c2f0ff",
+      "intensity": 1.2,
+      "position": [
+        0.3,
+        3.1,
+        3.4
+      ]
+    },
+    "fill": {
+      "enabled": true,
+      "color": "#ffb3ee",
+      "intensity": 0.35,
+      "position": [
+        -2.4,
+        2.4,
+        2.8
+      ]
+    },
+    "rim": {
+      "enabled": false,
+      "color": "#d4dcff",
+      "intensity": 1,
+      "position": [
+        0,
+        2.5,
+        -3
+      ]
+    },
+    "environmentIntensity": 0.75,
+    "backgroundIntensity": 0.95,
+    "fogDensity": 0.03
+  }
+}

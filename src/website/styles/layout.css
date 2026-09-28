@@ -1,0 +1,530 @@
+/* =========================================================================
+   导航 / 页脚 / 区块具体版式
+   ========================================================================= */
+
+/* --- 顶栏 --------------------------------------------------------------- */
+.echuu-website .site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.echuu-website .site-header__inner {
+  width: var(--shell); margin-inline: auto;
+  display: flex; align-items: center; gap: 20px;
+  min-height: 64px;
+}
+.echuu-website .brand-link {
+  display: inline-flex; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--ink); font-weight: 700;
+  letter-spacing: 0.04em; font-size: 18px;
+  min-height: 44px;
+}
+.echuu-website .brand-link img { width: 22px; height: 22px; }
+.echuu-website .site-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.echuu-website .site-nav a {
+  padding: 10px 12px; border-radius: var(--radius-s);
+  text-decoration: none; color: var(--ink-soft); font-size: 15px; font-weight: 500;
+  min-height: 44px; display: inline-flex; align-items: center;
+}
+.echuu-website .site-nav a:hover { color: var(--accent); background: var(--accent-tint); }
+.echuu-website .site-nav a[aria-current='page'] { color: var(--accent); }
+
+.echuu-website .header-actions { display: flex; align-items: center; gap: 10px; margin-left: 12px; }
+
+/* 语言菜单：显示语言名，不用国旗 */
+.echuu-website .lang-switch { position: relative; }
+.echuu-website .lang-switch__button {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 44px; padding: 8px 14px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--white); color: var(--ink-soft);
+  font: inherit; font-size: 15px; cursor: pointer;
+}
+.echuu-website .lang-switch__button:hover { border-color: var(--accent); color: var(--accent); }
+.echuu-website .lang-switch__menu {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  min-width: 170px; padding: 6px;
+  background: var(--white); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m); box-shadow: 0 12px 34px rgba(23, 43, 69, 0.13);
+  list-style: none; margin: 0; z-index: 50;
+}
+.echuu-website .lang-switch__menu a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 44px; padding: 10px 14px; border-radius: var(--radius-s);
+  text-decoration: none; color: var(--ink); font-size: 15px;
+}
+.echuu-website .lang-switch__menu a:hover { background: var(--accent-tint); }
+.echuu-website .lang-switch__menu a[aria-current='true'] { color: var(--accent); font-weight: 600; }
+
+.echuu-website .menu-toggle {
+  display: none; min-height: 44px; min-width: 44px;
+  align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--white); color: var(--ink); font: inherit; font-size: 15px;
+  padding: 8px 16px; cursor: pointer;
+}
+.echuu-website .mobile-menu {
+  border-top: 1px solid var(--line);
+  background: var(--white);
+  padding: 12px 0 20px;
+}
+.echuu-website .mobile-menu ul { list-style: none; margin: 0; padding: 0; }
+.echuu-website .mobile-menu a {
+  display: flex; align-items: center; min-height: 48px;
+  padding: 10px 4px; text-decoration: none; color: var(--ink); font-size: 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .echuu-website .site-nav { display: none; }
+  .echuu-website .menu-toggle { display: inline-flex; }
+  .echuu-website .header-actions .btn--primary { display: none; }
+}
+
+/* --- S01 Hero ----------------------------------------------------------- */
+.echuu-website .hero {
+  position: relative; overflow: hidden;
+  padding: clamp(36px, 4.6vw, 64px) 0 clamp(40px, 5vw, 72px);
+}
+.echuu-website .hero__sky {
+  position: absolute; right: -6%; top: -4%;
+  width: min(620px, 52vw); pointer-events: none;
+  z-index: 0; opacity: 0.95;
+}
+.echuu-website .hero__glow {
+  position: absolute; left: -10%; bottom: -26%;
+  width: min(460px, 46vw); opacity: 0.55; pointer-events: none; z-index: 0;
+}
+.echuu-website .hero__rings { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45; }
+.echuu-website .hero__ring { position: absolute; }
+.echuu-website .hero__ring--a { width: 40vw; right: 3vw; top: 40%; }
+.echuu-website .hero__ring--b { width: 30vw; right: 16vw; top: 12%; }
+.echuu-website .hero__ring--c { width: 22vw; right: 30vw; top: 58%; }
+.echuu-website .hero__inner { position: relative; z-index: 1; width: var(--shell); margin-inline: auto; }
+.echuu-website .hero__body { max-width: min(640px, 100%); }
+
+/* 品牌 tagline 是首屏主要视觉文字：两行、不缩字、不换行拆词 */
+.echuu-website .hero__tagline {
+  font-family: var(--font-brand);
+  font-weight: 400;
+  font-size: clamp(40px, 6.4vw, 92px);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 0;
+  color: var(--ink);
+}
+.echuu-website .hero__tagline span { display: block; white-space: nowrap; }
+
+/* 品类说明：第二视觉层级，AI VTuber 必须清晰可读 */
+.echuu-website .hero__category {
+  margin-top: clamp(16px, 2vw, 22px);
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 1.9vw, 28px);
+  line-height: 1.34;
+  color: var(--ink);
+  font-weight: 600;
+  max-width: 26ch;
+}
+.echuu-website .hero__lede {
+  margin-top: 12px; font-size: 17px; line-height: 1.6;
+  color: var(--ink-soft); max-width: 42ch;
+}
+.echuu-website .hero__actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; }
+.echuu-website .hero__status {
+  margin-top: 16px; font-size: 14px; color: var(--ink-faint);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.echuu-website .hero__status::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--sky); flex: none;
+}
+.echuu-website .hero__wing {
+  position: absolute; right: 6%; bottom: 12%; width: 35px; opacity: 0.75;
+  z-index: 0; pointer-events: none;
+}
+
+@media (max-width: 1080px) {
+  .echuu-website .hero__sky { width: min(520px, 48vw); right: -10%; }
+}
+
+@media (max-width: 860px) {
+  .echuu-website .hero__body { max-width: none; }
+  /* 移动端分行保留完整 tagline，不缩到看不清 */
+  .echuu-website .hero__tagline { font-size: clamp(34px, 9.4vw, 52px); }
+  .echuu-website .hero__category { font-size: clamp(20px, 5.2vw, 24px); max-width: none; }
+  .echuu-website .hero__lede { max-width: none; font-size: 16px; }
+  /* 优先删装饰留空间，不隐藏品类、不压缩 tagline */
+  .echuu-website .hero__rings, .echuu-website .hero__wing, .echuu-website .hero__glow { display: none; }
+  .echuu-website .hero__sky { right: -22%; top: auto; bottom: -6%; width: 78vw; opacity: 0.5; }
+  .echuu-website .hero__actions .btn { flex: 1 1 100%; }
+}
+
+/* --- S02 视频 ----------------------------------------------------------- */
+.echuu-website .video-block { display: grid; gap: 20px; justify-items: center; }
+.echuu-website .video-frame {
+  position: relative; width: 100%; aspect-ratio: 16 / 9;
+  border-radius: var(--radius-l); overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: linear-gradient(160deg, var(--sky-pale), var(--white) 70%);
+}
+.echuu-website .video-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.echuu-website .video-poster {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  border: 0; background: transparent; cursor: pointer; font: inherit; color: var(--ink);
+}
+.echuu-website .video-poster__sky {
+  position: absolute; inset: 0; margin: auto; width: 62%;
+  opacity: 0.75; pointer-events: none;
+}
+.echuu-website .video-poster__play {
+  position: relative; width: 74px; height: 74px; border-radius: 50%;
+  background: var(--white); border: 1px solid var(--line-strong);
+  display: grid; place-items: center;
+  box-shadow: 0 10px 26px rgba(23, 43, 69, 0.14);
+  transition: transform 0.18s var(--step-ease);
+}
+.echuu-website .video-poster:hover .video-poster__play { transform: scale(1.04); }
+.echuu-website .video-poster__play img { width: 22px; }
+.echuu-website .video-poster__label { position: relative; font-weight: 600; }
+.echuu-website .video-note { font-size: 14px; color: var(--ink-faint); text-align: center; max-width: 46ch; }
+
+/* --- S03 三步 ----------------------------------------------------------- */
+.echuu-website .steps { display: grid; gap: 28px; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: start; }
+.echuu-website .steps__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.echuu-website .steps__item { border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--white); }
+.echuu-website .steps__button {
+  width: 100%; text-align: left; background: transparent; border: 0;
+  font: inherit; color: inherit; cursor: pointer;
+  padding: 18px 20px; display: grid; gap: 6px; border-radius: var(--radius-m);
+  min-height: 44px;
+}
+.echuu-website .steps__item[data-active='true'] { border-color: var(--accent); background: var(--accent-tint); }
+.echuu-website .steps__no { font-size: 13px; letter-spacing: 0.12em; color: var(--ink-faint); font-weight: 700; }
+.echuu-website .steps__title { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .steps__body { color: var(--ink-soft); font-size: 15px; }
+.echuu-website .steps__figure {
+  border: 1px solid var(--line-strong); border-radius: var(--radius-l);
+  background: var(--white); padding: 14px; position: relative; min-height: 260px;
+  display: grid; place-items: center; gap: 12px;
+}
+.echuu-website .steps__pending {
+  text-align: center; color: var(--ink-faint); font-size: 15px; padding: 28px 18px;
+  display: grid; gap: 10px; justify-items: center;
+}
+@media (max-width: 860px) {
+  .echuu-website .steps { grid-template-columns: 1fr; }
+  .echuu-website .steps__figure { order: 2; min-height: 180px; }
+}
+
+/* --- S04 Features ------------------------------------------------------- */
+.echuu-website .feature-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.echuu-website .feature-card {
+  border: 1px solid var(--line); border-radius: var(--radius-l);
+  background: var(--white); padding: 22px; display: grid; gap: 10px; align-content: start;
+}
+.echuu-website .feature-card__title { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .feature-card__body { color: var(--ink-soft); font-size: 15px; }
+.echuu-website .feature-card__media {
+  border-radius: var(--radius-m); border: 1px solid var(--line);
+  background: linear-gradient(170deg, var(--sky-pale), var(--white));
+  aspect-ratio: 4 / 3; display: grid; place-items: center; padding: 14px;
+  text-align: center; color: var(--ink-faint); font-size: 14px;
+}
+@media (max-width: 860px) { .feature-grid { grid-template-columns: 1fr; } }
+
+/* --- S05 模式 ----------------------------------------------------------- */
+.echuu-website .mode-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.echuu-website .mode-card {
+  border: 1px solid var(--line); border-radius: var(--radius-l);
+  background: var(--white); padding: 22px; display: grid; gap: 12px; align-content: start;
+  transition: transform 0.18s var(--step-ease), border-color 0.18s var(--step-ease);
+}
+.echuu-website .mode-card:hover, .echuu-website .mode-card:focus-within { transform: translateY(-4px); border-color: var(--line-strong); }
+.echuu-website .mode-card__poster {
+  border-radius: var(--radius-m); aspect-ratio: 3 / 2;
+  background: linear-gradient(160deg, var(--sky-pale) 0%, #ffffff 76%);
+  border: 1px solid var(--line); display: grid; place-items: center;
+}
+.echuu-website .mode-card__poster img { width: 46px; opacity: 0.6; }
+.echuu-website .mode-card--dev .mode-card__poster { background: linear-gradient(160deg, #eef0f8 0%, #ffffff 76%); }
+.echuu-website .mode-card__name { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .mode-card__body { color: var(--ink-soft); font-size: 15px; }
+@media (max-width: 860px) {
+  .echuu-website .mode-grid { grid-template-columns: 1fr; }
+  .echuu-website .mode-card:hover { transform: none; }
+}
+
+/* --- S06 Gallery -------------------------------------------------------- */
+.echuu-website .gallery-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.echuu-website .gallery-card {
+  border: 1px solid var(--line); border-radius: var(--radius-l); overflow: hidden;
+  background: var(--white); display: grid; align-content: start;
+}
+.echuu-website .gallery-card__media {
+  aspect-ratio: 16 / 10; background: linear-gradient(160deg, var(--sky-pale), var(--white) 78%);
+  display: grid; place-items: center; border-bottom: 1px solid var(--line);
+}
+.echuu-website .gallery-card__media img { width: 40px; opacity: 0.7; }
+.echuu-website .gallery-card__meta { padding: 16px 18px 18px; display: grid; gap: 8px; }
+.echuu-website .gallery-card__name { font-family: var(--font-heading); font-size: 17px; font-weight: 600; }
+/* 署名始终可见，不靠 hover */
+.echuu-website .gallery-card__rows { display: grid; gap: 4px; font-size: 14px; color: var(--ink-soft); }
+.echuu-website .gallery-card__rows dt { color: var(--ink-faint); font-size: 13px; }
+.echuu-website .gallery-card__rows dd { margin: 0; }
+.echuu-website .gallery-card__row { display: flex; gap: 8px; flex-wrap: wrap; }
+.echuu-website .gallery-card--pending { background: #fbfdff; border-style: dashed; }
+@media (max-width: 520px) { .gallery-grid { grid-template-columns: 1fr; } }
+
+/* --- 弹窗 --------------------------------------------------------------- */
+.echuu-website .modal-backdrop {
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(23, 43, 69, 0.42);
+  display: grid; place-items: center; padding: var(--gutter);
+}
+.echuu-website .modal {
+  background: var(--white); border-radius: var(--radius-l);
+  width: min(760px, 100%); max-height: 88vh; overflow: auto;
+  padding: 22px; border: 1px solid var(--line-strong);
+  animation: modal-in 0.2s var(--step-ease);
+}
+@keyframes modal-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.echuu-website .modal__head { display: flex; align-items: flex-start; gap: 16px; justify-content: space-between; }
+.echuu-website .modal__title { font-family: var(--font-heading); font-size: 21px; font-weight: 600; }
+.echuu-website .modal__body { margin-top: 16px; display: grid; gap: 14px; }
+.echuu-website .modal dl { display: grid; gap: 6px; margin: 0; font-size: 15px; }
+.echuu-website .modal dt { color: var(--ink-faint); font-size: 13px; }
+.echuu-website .modal dd { margin: 0; color: var(--ink-soft); }
+
+/* --- S07 创作者 --------------------------------------------------------- */
+.echuu-website .creators-block { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+.echuu-website .creators-manifesto {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 2.8vw, 30px); font-weight: 600; line-height: 1.35;
+}
+.echuu-website .creators-art {
+  border: 1px solid var(--line-strong); border-radius: var(--radius-l);
+  background: linear-gradient(165deg, var(--sky-pale), var(--white) 72%);
+  aspect-ratio: 4 / 3; display: grid; place-items: center; padding: 20px; text-align: center;
+  color: var(--ink-faint); font-size: 14px; gap: 10px;
+}
+.echuu-website .creators-art img { width: 64px; opacity: 0.7; }
+.echuu-website .intents { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; }
+.echuu-website .intent-card { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 18px; background: var(--white); }
+.echuu-website .intent-card h3 { font-size: 17px; margin-bottom: 6px; }
+.echuu-website .intent-card p { font-size: 14px; color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .echuu-website .creators-block { grid-template-columns: 1fr; }
+  .echuu-website .intents { grid-template-columns: 1fr; }
+}
+
+/* --- S08 信任 ----------------------------------------------------------- */
+.echuu-website .trust-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.echuu-website .trust-item { display: grid; gap: 8px; align-content: start; }
+.echuu-website .trust-item h3 { font-size: 17px; }
+.echuu-website .trust-item p { color: var(--ink-soft); font-size: 15px; }
+.echuu-website .trust-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+@media (max-width: 860px) { .trust-grid { grid-template-columns: 1fr; } }
+
+/* --- S09 日志 ----------------------------------------------------------- */
+.echuu-website .note-list { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.echuu-website .note-card {
+  border: 1px solid var(--line); border-radius: var(--radius-m);
+  background: var(--white); padding: 20px; display: grid; gap: 8px; align-content: start;
+}
+.echuu-website .note-card h3 { font-size: 18px; }
+.echuu-website .note-card p { color: var(--ink-soft); font-size: 15px; }
+.echuu-website .note-card__meta { font-size: 13px; color: var(--ink-faint); }
+.echuu-website .note-empty {
+  border: 1px dashed var(--line-strong); border-radius: var(--radius-m);
+  padding: 20px; color: var(--ink-faint); background: #fbfdff; font-size: 15px;
+}
+@media (max-width: 720px) { .note-list { grid-template-columns: 1fr; } }
+
+/* --- S09/S10 申请与社区 ------------------------------------------------- */
+.echuu-website .apply-block { text-align: center; display: grid; gap: 16px; justify-items: center; }
+.echuu-website .apply-block .section__title { max-width: 22ch; }
+.echuu-website .apply-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.echuu-website .apply-note { font-size: 14px; color: var(--ink-faint); max-width: 48ch; }
+.echuu-website .email-line {
+  display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  justify-content: center; font-size: 15px;
+}
+.echuu-website .corner-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.echuu-website .corner-card {
+  border: 1px solid var(--line); border-radius: var(--radius-l); padding: 22px;
+  background: var(--white); display: grid; gap: 10px; align-content: start;
+}
+.echuu-website .corner-card h3 { font-size: 19px; }
+.echuu-website .corner-card p { color: var(--ink-soft); font-size: 15px; }
+@media (max-width: 720px) { .corner-grid { grid-template-columns: 1fr; } }
+
+/* --- 页脚 --------------------------------------------------------------- */
+.echuu-website .site-footer {
+  border-top: 1px solid var(--line); background: var(--white);
+  padding: 48px 0 40px; margin-top: 24px; position: relative;
+}
+.echuu-website .footer-grid { display: grid; gap: 28px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.echuu-website .footer-col h2 { font-size: 14px; letter-spacing: 0.06em; color: var(--ink-faint); font-weight: 700; }
+.echuu-website .footer-col ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; }
+.echuu-website .footer-col a {
+  font-size: 15px; text-decoration: none; color: var(--ink-soft);
+  display: inline-flex; align-items: center; min-height: 36px;
+}
+.echuu-website .footer-col a:hover { color: var(--accent); text-decoration: underline; }
+.echuu-website .footer-bottom {
+  margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between;
+  font-size: 14px; color: var(--ink-faint);
+}
+/* 手绘笔迹只用于页脚与涂鸦小注释 */
+.echuu-website .footer-scribble {
+  font-family: var(--font-brand); font-style: italic;
+  color: var(--ink-faint); font-size: 15px;
+}
+.echuu-website .footer-wing { position: absolute; right: 3%; top: 22px; width: 28px; opacity: 0.6; pointer-events: none; }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } .footer-wing { display: none; } }
+
+/* --- 表单 --------------------------------------------------------------- */
+.echuu-website .form { display: grid; gap: 18px; max-width: 620px; }
+.echuu-website .field { display: grid; gap: 7px; }
+.echuu-website .field label { font-weight: 600; font-size: 15px; }
+.echuu-website .field input, .echuu-website .field textarea, .echuu-website .field select {
+  font: inherit; color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-s);
+  padding: 12px 14px; background: var(--white); min-height: 48px; width: 100%;
+}
+.echuu-website .field textarea { min-height: 170px; resize: vertical; line-height: 1.6; }
+.echuu-website .field input:focus, .echuu-website .field textarea:focus, .echuu-website .field select:focus { border-color: var(--accent); }
+.echuu-website .field__hint { font-size: 13px; color: var(--ink-faint); }
+.echuu-website .field__error { font-size: 14px; color: #a3272b; }
+.echuu-website .radio-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.echuu-website .radio-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  padding: 10px 16px; min-height: 44px; cursor: pointer; font-size: 15px;
+  background: var(--white);
+}
+.echuu-website .radio-chip input { accent-color: var(--accent); }
+.echuu-website .radio-chip:has(input:checked) { border-color: var(--accent); background: var(--accent-tint); color: var(--accent); }
+.echuu-website .notice {
+  border: 1px solid var(--line-strong); border-radius: var(--radius-m);
+  background: #f2f8ff; padding: 14px 16px; font-size: 14px; color: var(--ink-soft);
+  display: grid; gap: 6px;
+}
+.echuu-website .notice--warn { background: #fffaf0; border-color: #ead9b6; }
+.echuu-website .status-line { font-size: 15px; color: var(--accent); min-height: 24px; }
+
+/* --- 涂鸦 --------------------------------------------------------------- */
+.echuu-website .doodle-toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-m);
+  padding: 12px; background: var(--white); margin-bottom: 14px;
+}
+.echuu-website .doodle-toolbar label { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; min-height: 44px; }
+.echuu-website .doodle-toolbar input[type='color'] { width: 44px; height: 44px; padding: 2px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--white); }
+.echuu-website .doodle-toolbar input[type='range'] { width: 130px; accent-color: var(--accent); }
+.echuu-website .doodle-canvas-wrap {
+  border: 1px solid var(--line-strong); border-radius: var(--radius-l);
+  background: var(--white); overflow: hidden;
+  /* 画布不拦截整页触控滚动由 JS 的 touch-action 控制 */
+}
+.echuu-website .doodle-canvas { display: block; width: 100%; touch-action: none; cursor: crosshair; background: var(--white); }
+
+/* --- 页内面包屑/页头 ---------------------------------------------------- */
+.echuu-website .page-head { padding: 52px 0 12px; }
+.echuu-website .page-head h1 { font-size: clamp(28px, 4vw, 42px); }
+.echuu-website .page-head p { margin-top: 10px; color: var(--ink-soft); }
+
+/* --- Moodboard（内部） -------------------------------------------------- */
+.echuu-website .mood-banner {
+  background: #fff6e5; border: 1px solid #ecd4a4; border-radius: var(--radius-m);
+  padding: 14px 16px; font-size: 14px; color: #6a4e14; margin: 20px 0;
+}
+.echuu-website .mood-col { margin-top: 40px; }
+.echuu-website .mood-col h2 { font-size: 20px; margin-bottom: 4px; }
+.echuu-website .mood-col > p { color: var(--ink-soft); font-size: 15px; margin-bottom: 16px; }
+.echuu-website .mood-samples { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.echuu-website .mood-sample {
+  border: 1px solid var(--line); border-radius: var(--radius-m);
+  background: var(--white); overflow: hidden; display: grid; align-content: start;
+}
+.echuu-website .mood-sample img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: var(--page); }
+.echuu-website .mood-sample__note { padding: 12px 14px; font-size: 13px; color: var(--ink-soft); display: grid; gap: 4px; }
+.echuu-website .mood-sample__note strong { color: var(--ink); font-size: 14px; }
+.echuu-website .swatch-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.echuu-website .swatch { border: 1px solid var(--line); border-radius: var(--radius-m); overflow: hidden; background: var(--white); }
+.echuu-website .swatch__chip { height: 76px; }
+.echuu-website .swatch__meta { padding: 10px 12px; font-size: 13px; color: var(--ink-soft); }
+.echuu-website .type-sample { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 18px; background: var(--white); margin-bottom: 12px; }
+.echuu-website .type-sample__label { font-size: 13px; color: var(--ink-faint); margin-bottom: 8px; }
+
+/* --- 移动端触控目标 ≥ 44×44 --------------------------------------------
+   页脚与正文内联链接默认高度不足 44px；对内联元素加纵向 padding 可以扩大
+   命中区域而不改变行盒高度，不会推开版式。 */
+.echuu-website .footer-col a { min-height: 44px; min-width: 44px; padding-inline-end: 10px; }
+
+.video-note a,
+.section__foot a,
+.email-line a,
+.doodle-canvas-wrap + .section__foot a,
+.echuu-website .apply-note a {
+  padding-block: 12px;
+  display: inline-block;
+}
+
+/* 语言菜单与移动菜单里的链接已是 44px 以上，这里不重复设置 */
+
+/* --- 首屏 3D 舞台（复用产品的 HDR 天空与 VRM 角色）---------------------
+   静态图层一直在，3D 就绪后淡入盖住它；失败或不支持时静态层照常显示。 */
+.echuu-website .hero-stage3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  animation: website-stage-in 0.6s var(--step-ease) both;
+}
+.echuu-website .hero-stage3d__sky {
+  /* LoadingSky 的画布是 alpha:false（不透明），不显式压层会盖住角色 */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.echuu-website .hero-stage3d__sky canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+.echuu-website .hero-stage3d__character {
+  /* home 取景是斜角相机 + 空翻定格，容器给小了会把人物框出画面 */
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 66%;
+  height: 100%;
+}
+@keyframes website-stage-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 3D 接管后隐掉静态天空与装饰，避免两层重叠 */
+.echuu-website .hero--stage3d .hero__sky,
+.echuu-website .hero--stage3d .hero__glow,
+.echuu-website .hero--stage3d .hero__rings,
+.echuu-website .hero--stage3d .hero__wing { opacity: 0; transition: opacity 0.5s var(--step-ease); }
+
+/* 文字在 3D 之上，并加一层极浅的可读性垫底 */
+.echuu-website .hero--stage3d .hero__inner { position: relative; z-index: 2; }
+.echuu-website .hero--stage3d .hero__body {
+  background: linear-gradient(100deg, rgba(255,255,255,0.86) 0%, rgba(255,255,255,0.72) 58%, rgba(255,255,255,0) 100%);
+  padding: 28px 32px 30px;
+  margin-left: -32px;
+  border-radius: var(--radius-l);
+  backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hero-stage3d { animation: none; }
+}

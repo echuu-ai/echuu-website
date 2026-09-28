@@ -1,0 +1,14 @@
+.cursor-settings{position:fixed;right:18px;bottom:18px;z-index:2147483000;font:12px/1.5 system-ui;color:#e9f3ff;pointer-events:none}
+.cursor-settings button,.cursor-settings__panel{pointer-events:auto}
+.cursor-settings button,.cursor-settings select{border:1px solid #ffffff28;border-radius:8px;background:#172439;color:inherit;padding:6px 10px;cursor:pointer}
+.cursor-settings__toggle{float:right;box-shadow:0 4px 20px #0003}
+.cursor-settings__panel{position:absolute;bottom:44px;right:0;width:min(290px,calc(100vw - 36px));max-height:calc(100dvh - 92px);overflow:auto;box-sizing:border-box;padding:16px;background:#0d1727f5;border:1px solid #9ecfff33;border-radius:14px;box-shadow:0 14px 50px #0005;backdrop-filter:blur(18px)}
+.cursor-settings header,.cursor-settings footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cursor-settings label{display:block;margin-top:12px}.cursor-settings output{float:right;font-variant-numeric:tabular-nums;color:#abd8ff}
+.cursor-settings input[type=range]{display:block;width:100%;accent-color:#9cd6ff;margin-top:7px}.cursor-settings select{float:right;padding:2px}
+.cursor-settings__colors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cursor-settings input[type=color]{display:block;width:100%;height:28px;padding:0;border:0;background:none;cursor:pointer}
+.cursor-settings p{color:#8da5bf;font-size:11px;margin:14px 0}.cursor-settings footer span{color:#8da5bf;font-size:11px}
+.cursor-settings :focus-visible{outline:2px solid #a8dbff;outline-offset:3px}
+
+/* Hidden in normal use. F7 reveals the entry; Alt+P still opens it directly. */
+html:not(.debug-panels-visible) .cursor-settings:not(:has(.cursor-settings__panel)){display:none}

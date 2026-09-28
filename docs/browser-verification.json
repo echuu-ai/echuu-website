@@ -1,0 +1,308 @@
+{
+  "checks": [
+    {
+      "route": "zh/",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "Echuu — 为 OC 创作者打造的 AI 虚拟主播平台",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/gallery",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "角色展示 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/creators",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "创作者合作 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/journal",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "创作日志 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/feedback",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "意见箱 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/doodle",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "涂鸦小角落 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "zh/moodboard",
+      "pass": true,
+      "lang": "zh-CN",
+      "title": "Moodboard（内部审阅）— Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/",
+      "pass": true,
+      "lang": "en",
+      "title": "Echuu — the AI VTuber platform built for OC creators",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/gallery",
+      "pass": true,
+      "lang": "en",
+      "title": "Characters — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/creators",
+      "pass": true,
+      "lang": "en",
+      "title": "Creator partnerships — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/journal",
+      "pass": true,
+      "lang": "en",
+      "title": "Journal — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/feedback",
+      "pass": true,
+      "lang": "en",
+      "title": "Feedback — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/doodle",
+      "pass": true,
+      "lang": "en",
+      "title": "Doodle corner — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "en/moodboard",
+      "pass": true,
+      "lang": "en",
+      "title": "Moodboard（内部审阅）— Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/",
+      "pass": true,
+      "lang": "ja",
+      "title": "Echuu — OC クリエイターのための AI VTuber プラットフォーム",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/gallery",
+      "pass": true,
+      "lang": "ja",
+      "title": "キャラクター — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/creators",
+      "pass": true,
+      "lang": "ja",
+      "title": "クリエイターとの協業 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/journal",
+      "pass": true,
+      "lang": "ja",
+      "title": "制作ノート — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/feedback",
+      "pass": true,
+      "lang": "ja",
+      "title": "ご意見 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/doodle",
+      "pass": true,
+      "lang": "ja",
+      "title": "落書きコーナー — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ja/moodboard",
+      "pass": true,
+      "lang": "ja",
+      "title": "Moodboard（内部审阅）— Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/",
+      "pass": true,
+      "lang": "ko",
+      "title": "Echuu — OC 크리에이터를 위한 AI VTuber 플랫폼",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/gallery",
+      "pass": true,
+      "lang": "ko",
+      "title": "캐릭터 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/creators",
+      "pass": true,
+      "lang": "ko",
+      "title": "크리에이터 협업 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/journal",
+      "pass": true,
+      "lang": "ko",
+      "title": "작업 기록 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/feedback",
+      "pass": true,
+      "lang": "ko",
+      "title": "의견 보내기 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/doodle",
+      "pass": true,
+      "lang": "ko",
+      "title": "낙서 코너 — Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "route": "ko/moodboard",
+      "pass": true,
+      "lang": "ko",
+      "title": "Moodboard（内部审阅）— Echuu",
+      "broken": [],
+      "overflow": 0,
+      "top": 0,
+      "overlay": false
+    },
+    {
+      "name": "YouTube embed",
+      "pass": true
+    },
+    {
+      "name": "Product signup destination",
+      "pass": true
+    },
+    {
+      "name": "Mobile no overflow",
+      "pass": true
+    },
+    {
+      "name": "Root redirects to website",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "badLocal": [],
+  "externalFailures": [
+    {
+      "url": "https://www.youtube-nocookie.com/embed/qvF5M1orvcU?autoplay=1&rel=0",
+      "error": "net::ERR_ABORTED"
+    }
+  ]
+}
