@@ -35,6 +35,7 @@ export const BUSINESS_EMAIL_NOTE = {
 
 /** 只列已取得真实地址的社交账号。 */
 export const SOCIAL_LINKS = [
+  { id: 'xiaohongshu', label: '小红书', href: 'https://www.xiaohongshu.com/discovery/item/6aa7598600000000260082ce?app_platform=ios&app_version=9.46&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBrupst93eg5hDP3eKDcN5QnUWQx0evF1yETMv5parcIU=&author_share=1&xhsshare=CopyLink&shareRedId=ODc2QzNKOE82NzUyOTgwNjY1OTk0O0tK&apptime=1789893332&share_id=17d12c73dafc4882ab3f6e44266931f8' },
   { id: 'x', label: 'X', href: 'https://x.com/Echuu_AIVTUBING' },
   { id: 'youtube', label: 'YouTube', href: 'https://youtu.be/4EOBKoR7OQQ' },
 ] as const;

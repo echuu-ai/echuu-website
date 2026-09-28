@@ -25,7 +25,7 @@ export function SocialLinks({ compact = false }: { compact?: boolean }) {
       {compact ? <img src={id === 'wechat' ? HOME_ASSETS.icons.bilibili : HOME_ASSETS.icons.qq} alt="" /> : c[i]}
     </button>)}
     {SOCIAL_LINKS.map((social) => <a key={social.id} className={compact ? 'hv-cta__icon' : 'hv-social-link'} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label}>
-      {compact ? social.id === 'x' ? <img src={HOME_ASSETS.icons.x} alt="" /> : <Youtube size={22} aria-hidden="true" /> : social.label}
+      {compact ? social.id === 'xiaohongshu' ? <img src={HOME_ASSETS.icons.xiaohongshu} alt="" /> : social.id === 'x' ? <img src={HOME_ASSETS.icons.x} alt="" /> : <Youtube size={22} aria-hidden="true" /> : social.label}
     </a>)}
     <Dialog.Root open={Boolean(channel)} onOpenChange={(value) => { if (!value) setChannel(null); }}>
       <Dialog.Portal><Dialog.Overlay className="echuu-access-overlay" />
