@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
-import { BETA_DOC_URL, INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
+import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
 import { buildMailto } from '../lib/cta';
+import { VrmGuide } from '../components/VrmGuide';
 import { Reveal } from '../components/Reveal';
 
 /** 简介卡：左蓝色说明面板 + 右侧别针吊饰 */
@@ -51,9 +52,7 @@ export function StepsSection() {
               <h3 className="hv-steps__title">{item.title}</h3>
               <p className="hv-steps__body">{item.body}</p>
               {index === 0 ? (
-                <a className="hv-pill hv-pill--yellow" href={BETA_DOC_URL} target="_blank" rel="noreferrer noopener">
-                  {h.steps.vrmGuide}
-                </a>
+                <VrmGuide label={h.steps.vrmGuide} />
               ) : null}
             </Reveal>
           </li>

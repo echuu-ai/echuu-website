@@ -5,6 +5,7 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { LangSwitch } from '../components/LangSwitch';
+import { BetaCount } from '../components/BetaCount';
 import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
 import {
@@ -328,6 +329,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             <mark className="hv-title__hl hv-title__hl--blue">{h.hero.slogan.hl2}</mark>
           </p>
           <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
+          <BetaCount />
         </div>
 
 
