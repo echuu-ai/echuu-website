@@ -160,7 +160,7 @@ export const ja: Dict = {
     social: 'ソーシャル',
     contact: 'お問い合わせ',
     rights: 'Echuu. キャラクターの権利はそれぞれの制作者に帰属します。',
-    draftNotice: '利用規約には草案と未記入の項目が残っています。文書内の表記をご確認ください。',
+    draftNotice: '法的文書はレビュー草案です。運営者とデータ処理の詳細は確認が必要です。',
   },
 
   feedbackPage: {
@@ -217,8 +217,36 @@ export const ja: Dict = {
   },
 
   journalPage: {
-    title: '制作ノート',
+    title: '短い記録',
     lede: 'プロダクト記録とリサーチ記録。',
+  },
+
+  blogPage: {
+    title: '制作ノート',
+    lede: 'プロダクトの考え方、キャラクター演技の設計、AI VTuber 制作の実践。',
+    readMore: '続きを読む',
+    backToList: '記事一覧に戻る',
+    note: '原文は中国語です。日本語・英語・韓国語版は作業中の下訳で、ネイティブによる校正はまだ行っていません。',
+  },
+
+  teamPage: {
+    title: 'チーム',
+    lede: 'オリジナルキャラクターを舞台に上げる、小さなチームです。',
+    coreTitle: 'コアメンバー',
+    advisorTitle: '技術アドバイザー',
+    aboutTitle: 'Echuu について',
+    facts: [
+      ['名称', 'Echuu / エチュウゥ / 爱啾'],
+      ['開発元', 'Echuu（Anngel LLC、米国ネバダ州）。Cory Yihua Li が創業・主宰'],
+      ['設立', '2025'],
+      ['拠点', '中国・上海 / 米国・ネバダ州'],
+      ['プラットフォーム', 'Web とデスクトップ。Twitch、YouTube、bilibili への出力に対応'],
+      ['メディア連絡先', 'cory@anngel.live'],
+    ],
+    thanks: 'Qwen（Alibaba Cloud）、LiveKit、VRoid、three-vrm、そしてオープンな VRM エコシステムの上に構築しています。ウェイトリストの 215 名のクリエイターに感謝します。誰よりも早く、皆さんのキャラクターに会わせてくれました。',
+    source: 'Notion のプレスキット（最終更新 2026.8.28）と内容を揃えています。',
+    github: 'GitHub',
+    website: 'ウェブサイト',
   },
 
   legal: {
@@ -235,7 +263,9 @@ export const ja: Dict = {
     },
     gallery: { title: 'キャラクター — Echuu', description: 'Echuu のデモ素材とクレジット。' },
     creators: { title: 'クリエイターとの協業 — Echuu', description: '原画、Live2D、3D モデリングのクリエイター向けのご案内。' },
-    journal: { title: '制作ノート — Echuu', description: 'Echuu のプロダクト記録とリサーチ記録。' },
+    journal: { title: '短い記録 — Echuu', description: 'Echuu のプロダクト記録とリサーチ記録。' },
+    blog: { title: '制作ノート — Echuu', description: 'Echuu のプロダクトの考え方、キャラクター演技の設計、AI VTuber 制作の実践。' },
+    team: { title: 'チーム — Echuu', description: 'オリジナルキャラクターを舞台に上げる Echuu のチームと技術アドバイザー。' },
     feedback: { title: 'ご意見 — Echuu', description: '不具合の報告や、ほしい機能を教えてください。' },
     doodle: { title: '落書きコーナー — Echuu', description: 'あなたの Original Character に、落書きをひとつ。' },
   },

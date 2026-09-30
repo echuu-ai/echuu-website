@@ -49,6 +49,13 @@ node scripts/prepare-pages.mjs
 
 `prepare-pages.mjs` 为四语页面生成静态入口，支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
 
+## 博客、团队与语言切换（2026-09-30）
+
+- 博客：`src/website/data/blog.ts` 维护四语文章（中文为源文，日/英/韩为执行初稿）；列表 `/website/{locale}/blog`，文章 `/website/{locale}/blog/{slug}`，首页新增「创作日志」区块（最近三篇）。路由第三段 slug 只对 blog 开放。
+- 团队：`src/website/data/team.ts` 与 Notion 媒体资料包「团队」段落对齐（最后更新 2026.8.28），另加技术顾问张佳鹏（zjp / shadow，前 Vast 算法工程师）；页面 `/website/{locale}/team`。他的 GitHub 地址待补。
+- 语言：首屏页头新增一行「中 · 日 · EN · 한」切换（`LangInline`），保留当前子页与文章；子页面继续用 `LangSwitch`。四语路由本身未变。
+- 原「创作日志」子页改称「短记录」（journal），避免与博客重名。
+
 ## 邀请码与内测申请（2026-09-29）
 
 首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备中并禁用提交。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产沿用 `https://echuu.app`。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。

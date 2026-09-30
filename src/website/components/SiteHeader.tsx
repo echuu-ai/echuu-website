@@ -28,6 +28,8 @@ export function SiteHeader() {
     { href: `${home}#steps`, label: t.nav.how },
     { href: websitePath(locale, 'gallery'), label: t.nav.gallery },
     { href: websitePath(locale, 'creators'), label: t.nav.creators },
+    { href: websitePath(locale, 'blog'), label: t.blogPage.title },
+    { href: websitePath(locale, 'team'), label: t.teamPage.title },
   ];
 
   return (

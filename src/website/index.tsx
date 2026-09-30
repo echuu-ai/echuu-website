@@ -10,6 +10,8 @@ import { HomeV2 } from './home/HomeV2';
 import { GalleryPage } from './pages/GalleryPage';
 import { CreatorsPage } from './pages/CreatorsPage';
 import { JournalPage } from './pages/JournalPage';
+import { BlogPage } from './pages/BlogPage';
+import { TeamPage } from './pages/TeamPage';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { DoodlePage } from './pages/DoodlePage';
 import { MoodboardPage } from './pages/MoodboardPage';
@@ -76,6 +78,8 @@ export default function EchuuWebsite() {
     page === 'gallery' ? <GalleryPage />
     : page === 'creators' ? <CreatorsPage />
     : page === 'journal' ? <JournalPage />
+    : page === 'blog' ? <BlogPage />
+    : page === 'team' ? <TeamPage />
     : page === 'feedback' ? <FeedbackPage />
     : page === 'doodle' ? <DoodlePage />
     : page === 'moodboard' ? <MoodboardPage />

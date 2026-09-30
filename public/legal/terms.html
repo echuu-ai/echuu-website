@@ -1,450 +1,127 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Echuu 用户协议 · Terms of Service · 利用規約 · 이용약관</title>
-<meta name="robots" content="noindex">
-<style>
-  :root{
-    --bg:#0a0a0c; --panel:#141417; --border:#26262b; --text:#eef0ea; --muted:#9a9a9f;
-    --accent:#B7FF7A; --accent-dim:#8fd45e; --warn:#ffb45c; --danger:#ff6b6b;
-  }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#f7f7f5; --panel:#ffffff; --border:#e2e2e0; --text:#141416; --muted:#5c5c62; --accent:#5c9a1f; --accent-dim:#3f7d0f; }
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg); color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans JP","Noto Sans KR","Microsoft YaHei",sans-serif;
-    line-height:1.7; font-size:15px;
-  }
-  .wrap{max-width:860px; margin:0 auto; padding:32px 20px 120px;}
-  .topbar{
-    position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
-  }
-  .topbar-inner{max-width:860px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-  .brand{font-weight:700; letter-spacing:.02em; color:var(--accent);}
-  .brand small{display:block; font-weight:400; color:var(--muted); font-size:11px; letter-spacing:.04em;}
-  .langswitch{display:flex; gap:6px;}
-  .langswitch button{
-    background:transparent; border:1px solid var(--border); color:var(--muted);
-    padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; transition:.15s;
-  }
-  .langswitch button.active{background:var(--accent); border-color:var(--accent); color:#0a0a0c; font-weight:600;}
-  .langswitch button:hover:not(.active){border-color:var(--accent-dim); color:var(--text);}
-
-  .banner{
-    background:linear-gradient(180deg, color-mix(in srgb, var(--warn) 12%, transparent), transparent);
-    border:1px solid color-mix(in srgb, var(--warn) 40%, var(--border));
-    border-radius:12px; padding:16px 18px; margin:24px 0 32px; font-size:13.5px; color:var(--text);
-  }
-  .banner b{color:var(--warn);}
-  .meta{color:var(--muted); font-size:13px; margin-bottom:4px;}
-  h1{font-size:26px; margin:0 0 6px; letter-spacing:-.01em;}
-  h2{font-size:19px; margin:40px 0 12px; padding-top:8px; border-top:1px solid var(--border); color:var(--accent);}
-  h3{font-size:15.5px; margin:22px 0 8px; color:var(--text);}
-  p{margin:10px 0; color:var(--text);}
-  ul,ol{margin:10px 0; padding-left:22px;}
-  li{margin:6px 0;}
-  a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--accent) 40%, transparent);}
-  a:hover{border-bottom-color:var(--accent);}
-  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
-  th,td{border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top;}
-  th{background:var(--panel); color:var(--accent); font-weight:600;}
-  .placeholder{color:var(--warn); font-family:ui-monospace,monospace;}
-  .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin:16px 0;}
-  .toc{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin:24px 0;}
-  .toc a{display:block; padding:3px 0; border-bottom:none; color:var(--text); font-size:13.5px;}
-  .toc a:hover{color:var(--accent);}
-  .jflag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted); margin-left:6px;}
-  .jflag.cn{color:#ff8080; border-color:#ff808055;}
-  .jflag.us{color:#7ab8ff; border-color:#7ab8ff55;}
-  .jflag.jp{color:#ffb45c; border-color:#ffb45c55;}
-  .jflag.kr{color:#c99bff; border-color:#c99bff55;}
-  .footer-nav{margin-top:64px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; color:var(--muted); font-size:13px;}
-  [data-doc]{display:none;}
-  [data-doc].active{display:block;}
-</style>
-</head>
-<body>
-
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">Echuu <small>Terms of Service Draft</small></div>
-    <div class="langswitch" role="group" aria-label="Language">
-      <button data-lang="zh">简体中文</button>
-      <button data-lang="ja">日本語</button>
-      <button data-lang="en">English</button>
-      <button data-lang="ko">한국어</button>
-    </div>
-  </div>
-</div>
-
-<div class="wrap">
-
-<!-- ================= ZH ================= -->
-<article data-doc="zh" lang="zh">
-  <div class="meta">最后更新：2026-09-04 · 状态：草案</div>
-  <h1>Echuu 用户协议</h1>
-  <div class="banner"><b>⚠️ 提示：</b>本文档为合规草案，由 AI 辅助起草，<b>不构成法律意见</b>。正式发布前须经持牌律师审阅。文中 <span class="placeholder">[ ]</span> 为待填占位符。</div>
-
-  <div class="toc">
-    <a href="#zh-1">1. 接受条款</a>
-    <a href="#zh-2">2. 服务说明与 AI 生成内容的性质</a>
-    <a href="#zh-3">3. 账号</a>
-    <a href="#zh-4">4. 用户内容与知识产权</a>
-    <a href="#zh-5">5. 虚拟礼物、订阅与支付</a>
-    <a href="#zh-6">6. 用户行为规范</a>
-    <a href="#zh-7">7. 免责声明与责任限制</a>
-    <a href="#zh-8">8. 终止</a>
-    <a href="#zh-9">9. 争议解决与准据法</a>
-    <a href="#zh-10">10. 条款变更</a>
-    <a href="#zh-11">11. 联系方式</a>
-    <a href="#zh-appendix">附录：司法辖区合规要点</a>
-  </div>
-
-  <h2 id="zh-1">1. 接受条款</h2>
-  <p>欢迎使用 Echuu（以下称"<b>服务</b>"，由 <span class="placeholder">[Anngel LLC]</span> 及其关联方，以下统称"<b>我们</b>"提供）。服务包括：AI 虚拟主播直播引擎（角色生成、剧本/语音/动作自动生成、多平台推流、观众互动）。</p>
-  <p>访问或使用服务即表示您同意受本协议及《隐私政策》约束。若您不同意，请勿使用服务。</p>
-  <p><b>未成年人使用限制：</b>服务的最低使用年龄为 <b>13 周岁</b>（美国 COPPA 基准）；若您所在司法辖区规定了更高的最低年龄或需要监护人同意（例如中国大陆《未成年人网络保护条例》），以该司法辖区规定为准。我们目前<b>尚未上线</b>年龄核验、监护人同意、青少年模式等专项机制，在此类机制上线前，服务不应向已知的未成年人开放核心互动功能（弹幕互动、虚拟礼物、AI 生成内容分发）。</p>
-
-  <h2 id="zh-2">2. 服务说明与 AI 生成内容的性质</h2>
-  <p><b>2.1 AI 生成内容声明。</b>您理解并同意，通过服务生成的角色对话、剧本、语音、歌唱内容、表情动作均由人工智能系统自动生成，<b>不代表真人的真实观点或事实陈述</b>，可能包含不准确、不完整或"设计出的表演性失误"（故意的口误、停顿、情绪波动，属于产品的表演结构设计功能）。您在对外展示、分发相关内容时，应清晰标注其 AI 生成属性。</p>
-  <p><b>2.2 非人类身份披露。</b>若您使用服务运营一个对外公开互动的虚拟主播/聊天角色，您需要保证观众能够识别该角色为 AI 驱动的虚拟形象，不得将其伪装成真人以从事欺骗性商业行为。</p>
-  <p><b>2.3 服务当前阶段限制。</b>服务目前处于早期开发阶段，部分功能（推流稳定性、内容审核、虚拟礼物结算等）尚未完全建成，我们不对服务的连续可用性、内容质量或商业化收益作出保证。</p>
-
-  <h2 id="zh-3">3. 账号</h2>
-  <p>3.1 注册时您需提供真实有效的电子邮箱；使用第三方登录（如 Google OAuth）需遵守对应第三方的条款。</p>
-  <p>3.2 您对账号下的所有活动负责，须妥善保管登录凭证；发现未经授权使用应立即通知我们。</p>
-  <p>3.3 我们可能要求进行<b>身份/实名核验</b>，以满足特定司法辖区的监管要求（例如中国大陆对网络表演/直播主播的实名认证要求）。</p>
-
-  <h2 id="zh-4">4. 用户内容与知识产权</h2>
-  <p><b>4.1 您上传/生成内容的权利归属。</b>您对自己上传的 VRM/GLB/GLTF 模型文件、语音样本、背景图片、人设文本、Reaction 模式的源视频等内容（"<b>用户内容</b>"）保留原有权利。通过上传，您授予我们一项全球性、非独占、免版税、可转授权的许可，仅用于：(a) 在服务中向您展示/渲染/驱动该内容；(b) 按您的指示进行推流、生成 Timeline、生成回放与切片；(c) 提供技术支持所必需的存储、备份和处理。该许可在您删除内容或账号后终止，但已推流/已被第三方观众合法留存的内容不受影响。</p>
-  <p><b>4.2 您对用户内容的保证。</b>您保证您拥有或已获得上传、使用、通过 Reaction 模式引用、通过直播/切片分发相关内容所需的一切权利（著作权、肖像权、声音权、商标权等）。<b>Reaction 模式的特别提示</b>：一期仅允许使用您自有素材或已获得明确授权的内容作为反应源视频；使用未经授权的第三方平台内容进行反应并对外分发切片，风险由您自行承担，我们保留在收到权利人投诉后下架相关内容的权利。</p>
-  <p><b>4.3 服务内容的权利归属。</b>Echuu 的界面设计、通用动画重定向引擎、表演结构生成系统等软件实现、源代码、品牌资产归 <span class="placeholder">[Anngel LLC]</span> 及/或 Echuu 所有。预置的 VRM 模型样例、动画库（含 Mixamo 等第三方资源）遵循其各自原始许可协议，您需在商业使用前自行核实许可范围。</p>
-  <p><b>4.4 模型所有权、第三方来源与配布平台。</b>除 <b>CoryNoRootBone</b>（Echuu 主张拥有的唯一预置角色模型）外，Echuu <b>不拥有</b>服务中展示、预置或用于演示的其他角色模型。据我们的资源记录，这些第三方模型或其组成素材来源于 BOOTH 上的独立创作者，或通过 VRoid Studio、VRoid Hub 等 VRoid 相关渠道制作或配布。各模型、服装、纹理、配件及相关素材的著作权和其他权利仍归原作者或相应权利人所有，其使用、直播、商用、修改、署名与再配布条件以对应商品页、配布页、模型内嵌许可及权利人说明为准。模型在 Echuu 中展示或实现技术兼容，不构成 Echuu 对该模型权利的取得、转让、再许可、担保或额外授权。BOOTH、pixiv、VRoid、VRoid Hub 及其他相关配布平台或工具均为独立第三方；除非其另有明确书面声明，其不赞助、背书、运营 Echuu，也不代表 Echuu 审核或授予模型许可，并不因相关模型被 Echuu 引用而对 Echuu 服务、用户使用、用户生成内容或相关争议承担责任，但法律不可排除的责任或因该第三方自身行为产生的责任除外。</p>
-  <p><b>4.5 AI 生成内容的权利。</b>就您通过输入人设/主题生成的剧本文本、合成语音、生成的表演 Timeline 而言，在您遵守本协议且已支付相应费用（如适用）的前提下，我们授予您在全球范围内使用、展示、分发、商业化该等生成内容的权利。除非您另行、明确且主动选择加入（opt-in），我们不会将您的角色模型、人设、提示词、脚本、语音、直播/回放、聊天内容或其他用户内容用于训练 Echuu 或第三方的生成式 AI 模型。提供服务所必需的数据处理以及经允许的产品分析不属于模型训练，详见《隐私政策》。</p>
-  <p><b>4.6 通知删除（Notice-and-Takedown）。</b>若您认为服务中的内容侵犯了您的知识产权，请发送通知至 <span class="placeholder">[DMCA/版权代理邮箱占位]</span>，内容包含：权利人签名、被侵权作品说明、侵权内容位置、联系方式、善意声明、内容真实性声明。我们将参照美国 DMCA 17 U.S.C. § 512 与中国《信息网络传播权保护条例》的通知-删除机制处理，并在反复侵权情形下终止相关账号。</p>
-
-  <h2 id="zh-5">5. 虚拟礼物、订阅与支付</h2>
-  <p><b>5.1 虚拟礼物。</b>服务中展示的虚拟礼物目前为<b>展示性功能</b>，尚未开放付费购买/兑换。若未来开放虚拟礼物购买，虚拟礼物<b>无现实货币价值、不可兑现、不可转让、不可退款</b>（法律另有强制规定的除外），仅限在服务内消耗，且<b>未成年人账号不得购买或赠送虚拟礼物</b>。</p>
-  <p><b>5.2 能力订阅（规划中）。</b>若未来上线订阅制，订阅费用、计费周期、自动续费、取消方式将在上线时以单独条款说明，并遵守您所在地消费者保护法关于自动续费的强制披露/确认要求。若接入第三方支付处理商，支付信息由其直接收集和处理，我们不存储您的完整支付卡信息。</p>
-
-  <h2 id="zh-6">6. 用户行为规范</h2>
-  <p>您承诺不会利用服务：</p>
-  <ul>
-    <li>生成、上传或传播违法、侵权、淫秽色情、暴力极端、仇恨歧视、骚扰、诽谤内容；</li>
-    <li>冒充他人身份或误导观众服务角色为真人操控（除非已进行相应披露）；</li>
-    <li>上传您无权使用的第三方版权模型/动画/音频/视频素材；</li>
-    <li>利用虚拟礼物/打赏机制进行洗钱、变相赌博、刷单等违规行为；</li>
-    <li>干扰、破坏服务的正常运行；</li>
-    <li>违反中国大陆《网络安全法》《数据安全法》《个人信息保护法》《生成式人工智能服务管理暂行办法》《网络直播营销管理办法》《未成年人网络保护条例》等相关规定（详见附录）；</li>
-    <li>违反美国联邦及州法律，包括但不限于 DMCA、COPPA、各州生物识别信息保护法、AI 披露相关法律（详见附录）。</li>
-  </ul>
-
-  <h2 id="zh-7">7. 免责声明与责任限制</h2>
-  <p>7.1 服务按"现状"和"可得性"提供，不作任何明示或默示的适销性、特定用途适用性保证。</p>
-  <p>7.2 在法律允许的最大范围内，<span class="placeholder">[Anngel LLC]</span> 对因使用服务产生的间接、偶然、特殊、后果性损害不承担责任；直接损害的累计责任上限为您在触发索赔前 12 个月内支付的费用总额（如有）或 <span class="placeholder">[占位金额]</span>，以较高者为准。</p>
-  <p>7.3 本条款不排除或限制法律不允许排除或限制的责任。<b>中国大陆消费者的强制性权利不因本条款而被排除。</b></p>
-
-  <h2 id="zh-8">8. 终止</h2>
-  <p>我们可在合理判断您违反本协议、损害其他用户或第三方权益、或存在法律/监管要求的情况下，中止或终止您的账号访问权限，通常会提前通知，但涉及安全或合规紧急情形除外。您可随时停止使用服务并申请删除账号。</p>
-
-  <h2 id="zh-9">9. 争议解决与准据法</h2>
-  <p>9.1 一般用户：本协议适用 <span class="placeholder">[占位——建议：美国特拉华州法律]</span>，争议提交 <span class="placeholder">[占位——仲裁机构/管辖法院]</span> 解决。</p>
-  <p>9.2 中国大陆用户的特别提示：根据中国法律，涉及中国大陆消费者的部分强制性规定不因协议约定域外法律或域外管辖而被排除适用。</p>
-  <p>9.3 本条款为通用占位表述，<b>正式发布前必须由律师根据实际运营主体架构重新设计</b>。</p>
-
-  <h2 id="zh-10">10. 条款变更</h2>
-  <p>我们可能不时更新本协议，重大变更将通过服务内通知或邮件提前告知（建议至少提前 7-30 天，具体天数按目标司法辖区法律要求确定）。变更后继续使用服务视为接受新条款。</p>
-
-  <h2 id="zh-11">11. 联系方式</h2>
-  <p>如对本协议有疑问，请联系：<a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
-
-  <h2 id="zh-appendix">附录：司法辖区合规要点</h2>
-  <p>完整的司法辖区逐项分析（中国大陆详细专章、美国详细专章、日本/韩国框架级要点）请见 <a href="./privacy.html#zh-appendix">隐私政策附录</a>——两份文档共享同一份合规附录，以避免内容不一致。</p>
-</article>
-
-<!-- ================= EN ================= -->
-<article data-doc="en" lang="en">
-  <div class="meta">Last updated: 2026-09-04 · Status: Draft</div>
-  <h1>Echuu Terms of Service</h1>
-  <div class="banner"><b>⚠️ Notice:</b> This is a compliance draft, AI-assisted, and <b>does not constitute legal advice</b>. It must be reviewed by licensed counsel before publication. <span class="placeholder">[ ]</span> marks placeholders to be filled in.</div>
-
-  <div class="toc">
-    <a href="#en-1">1. Acceptance of Terms</a>
-    <a href="#en-2">2. Service Description &amp; Nature of AI-Generated Content</a>
-    <a href="#en-3">3. Accounts</a>
-    <a href="#en-4">4. User Content &amp; Intellectual Property</a>
-    <a href="#en-5">5. Virtual Gifts, Subscriptions &amp; Payments</a>
-    <a href="#en-6">6. Acceptable Use</a>
-    <a href="#en-7">7. Disclaimers &amp; Limitation of Liability</a>
-    <a href="#en-8">8. Termination</a>
-    <a href="#en-9">9. Dispute Resolution &amp; Governing Law</a>
-    <a href="#en-10">10. Changes to These Terms</a>
-    <a href="#en-11">11. Contact</a>
-    <a href="#en-appendix">Appendix: Jurisdiction Compliance Notes</a>
-  </div>
-
-  <h2 id="en-1">1. Acceptance of Terms</h2>
-  <p>Welcome to Echuu (the "<b>Service</b>," provided by <span class="placeholder">[Anngel LLC]</span> and its affiliates, "<b>we</b>," "<b>us</b>"). The Service includes an AI virtual-streamer performance engine: character generation, automated script/voice/motion generation, multi-platform streaming, and audience interaction.</p>
-  <p>By accessing or using the Service, you agree to be bound by these Terms and our Privacy Policy. If you do not agree, do not use the Service.</p>
-  <p><b>Minimum age.</b> The minimum age to use the Service is <b>13</b> (the U.S. COPPA baseline). Where your jurisdiction sets a higher minimum age or requires guardian consent (e.g., China's Regulations on the Protection of Minors in Cyberspace), that requirement controls. We have <b>not yet built</b> age verification, guardian-consent, or youth-mode mechanisms; until these exist, core interactive features (chat/danmaku, virtual gifting, distribution of AI-generated content) should not knowingly be made available to minors.</p>
-
-  <h2 id="en-2">2. Service Description &amp; Nature of AI-Generated Content</h2>
-  <p><b>2.1 AI-generated content disclosure.</b> You understand and agree that character dialogue, scripts, voice, singing content, and expressions/motions generated through the Service are produced automatically by AI systems, <b>do not represent the genuine views or factual statements of a real person</b>, and may contain inaccuracies or "designed performance imperfections" (deliberate slips, pauses, or emotional shifts that are a designed performance-structure feature of the product). When you display or distribute such content externally, you should clearly label it as AI-generated.</p>
-  <p><b>2.2 Non-human identity disclosure.</b> If you use the Service to operate a publicly-interactive virtual streamer/chat character, you must ensure viewers can identify the character as an AI-driven virtual persona, and must not disguise it as a real person for deceptive commercial purposes.</p>
-  <p><b>2.3 Current-stage limitations.</b> The Service is in early development; some functionality (streaming stability, content moderation, virtual-gift settlement, etc.) is not yet fully built. We do not warrant continuous availability, content quality, or commercialization outcomes.</p>
-
-  <h2 id="en-3">3. Accounts</h2>
-  <p>3.1 You must provide a valid email address at registration; third-party sign-in (e.g., Google OAuth) is subject to that provider's terms.</p>
-  <p>3.2 You are responsible for all activity under your account and must safeguard your credentials; notify us immediately of any unauthorized use.</p>
-  <p>3.3 We may require <b>identity/real-name verification</b> to satisfy regulatory requirements in specific jurisdictions (e.g., real-name authentication requirements for livestreaming hosts in mainland China).</p>
-
-  <h2 id="en-4">4. User Content &amp; Intellectual Property</h2>
-  <p><b>4.1 Ownership of content you upload/generate.</b> You retain your existing rights in VRM/GLB/GLTF model files, voice samples, background images, persona text, and Reaction-mode source videos you upload ("<b>User Content</b>"). By uploading, you grant us a worldwide, non-exclusive, royalty-free, sublicensable license solely to: (a) display/render/drive that content within the Service for you; (b) stream, generate Timelines, and generate replays/clips per your instructions; (c) store, back up, and process content as necessary to provide technical support. This license terminates when you delete the content or your account, except with respect to content already streamed or lawfully retained by third-party viewers.</p>
-  <p><b>4.2 Your warranties regarding User Content.</b> You warrant that you own or have obtained all rights (copyright, likeness, voice, trademark, etc.) necessary to upload, use, reference via Reaction mode, and distribute such content via streaming/clips. <b>Special note on Reaction mode</b>: in this phase, only your own materials or content you have clear authorization to use may serve as reaction source video. Using unauthorized third-party platform content is at your own risk; we reserve the right to remove content upon receiving a rights-holder complaint.</p>
-  <p><b>4.3 Ownership of Service content.</b> Echuu's interface design, universal animation-retargeting engine, performance-structure generation system, other software implementations, source code, and brand assets belong to <span class="placeholder">[Anngel LLC]</span> and/or Echuu. Bundled sample VRM models and animation libraries (including third-party resources such as Mixamo) remain subject to their original licenses; verify license scope before commercial use.</p>
-  <p><b>4.4 Model ownership, third-party sources, and distribution platforms.</b> Except for <b>CoryNoRootBone</b>, the only bundled character model in which Echuu claims ownership, Echuu <b>does not own</b> the other character models displayed, bundled, or used for demonstration in the Service. According to our asset records, those third-party models or their components come from independent creators on BOOTH or were created or distributed through VRoid-related channels such as VRoid Studio and VRoid Hub. Copyright and all other rights in each model, outfit, texture, accessory, and related asset remain with its original creator or other applicable rights holder. Use for streaming or commercial purposes, modification, attribution, and redistribution are governed by the applicable listing, distribution page, embedded model license, and rights-holder terms. Displaying a model in Echuu or making it technically compatible with the Service does not transfer ownership to Echuu and is not a sublicense, warranty, or additional permission from Echuu. BOOTH, pixiv, VRoid, VRoid Hub, and other relevant distribution platforms or tools are independent third parties. Unless they expressly state otherwise in writing, they do not sponsor, endorse, or operate Echuu; they do not review or grant model licenses on Echuu's behalf; and they are not responsible merely because a referenced model is used with Echuu for the Service, user conduct, user-generated content, or related disputes, except for liability that cannot legally be excluded or that arises from the third party's own conduct.</p>
-  <p><b>4.5 Rights in AI-generated content.</b> For scripts, synthesized voice, and generated performance Timelines produced from your persona/topic inputs, provided you comply with these Terms and have paid any applicable fees, we grant you worldwide rights to use, display, distribute, and commercialize such generated content. Unless you separately, expressly, and affirmatively opt in, we will not use your character models, personas, prompts, scripts, voice, streams/replays, chat, or other User Content to train generative AI models operated by Echuu or third parties. Processing necessary to provide the Service and permitted product analytics are not model training; see the Privacy Policy.</p>
-  <p><b>4.6 Notice-and-takedown.</b> If you believe content on the Service infringes your intellectual property, send a notice to <span class="placeholder">[DMCA/copyright agent email placeholder]</span> including: rights-holder signature, description of the infringed work, location of infringing content, contact information, a good-faith statement, and an accuracy statement. We process notices under a framework modeled on the U.S. DMCA, 17 U.S.C. § 512, and China's Regulations on the Protection of the Right to Network Dissemination of Information, and terminate accounts of repeat infringers.</p>
-
-  <h2 id="en-5">5. Virtual Gifts, Subscriptions &amp; Payments</h2>
-  <p><b>5.1 Virtual gifts.</b> Virtual gifts shown in the Service are currently a <b>display-only feature</b>; paid purchase/redemption is not yet available. If enabled in the future, virtual gifts will have <b>no real-world monetary value, will not be redeemable for cash, transferable, or refundable</b> (except as required by law), may only be consumed within the Service, and <b>minor accounts may not purchase or send virtual gifts</b>.</p>
-  <p><b>5.2 Capability subscriptions (planned).</b> If a subscription tier is launched in the future, fees, billing cycles, auto-renewal, and cancellation will be described in separate terms at launch, and will comply with applicable consumer-protection auto-renewal disclosure requirements in your jurisdiction. If a third-party payment processor is integrated, payment information is collected and processed directly by that processor; we do not store your full payment card information.</p>
-
-  <h2 id="en-6">6. Acceptable Use</h2>
-  <p>You agree not to use the Service to:</p>
-  <ul>
-    <li>Generate, upload, or distribute illegal, infringing, obscene, violent/extremist, hateful/discriminatory, harassing, or defamatory content;</li>
-    <li>Impersonate any person or mislead viewers into believing a Service character is human-operated (absent appropriate disclosure);</li>
-    <li>Upload third-party copyrighted models/animations/audio/video you are not authorized to use;</li>
-    <li>Use virtual gifting/tipping mechanisms for money laundering, disguised gambling, or wash-trading;</li>
-    <li>Interfere with or disrupt normal operation of the Service;</li>
-    <li>Violate applicable PRC laws including the Cybersecurity Law, Data Security Law, Personal Information Protection Law, Interim Measures for the Management of Generative AI Services, Measures for the Administration of Online Live-streaming Marketing, and Regulations on the Protection of Minors in Cyberspace (see Appendix);</li>
-    <li>Violate applicable U.S. federal and state law, including the DMCA, COPPA, state biometric-privacy statutes, and AI-disclosure laws (see Appendix).</li>
-  </ul>
-
-  <h2 id="en-7">7. Disclaimers &amp; Limitation of Liability</h2>
-  <p>7.1 The Service is provided "as is" and "as available," without warranties of merchantability or fitness for a particular purpose, express or implied.</p>
-  <p>7.2 To the maximum extent permitted by law, <span class="placeholder">[Anngel LLC]</span> is not liable for indirect, incidental, special, or consequential damages arising from use of the Service; our aggregate liability for direct damages is capped at the total fees you paid us in the 12 months preceding the claim (if any), or <span class="placeholder">[placeholder amount]</span>, whichever is greater.</p>
-  <p>7.3 Nothing in this section excludes or limits liability that cannot be excluded or limited by law. <b>Mandatory rights of mainland China consumers are not excluded by this section.</b></p>
-
-  <h2 id="en-8">8. Termination</h2>
-  <p>We may suspend or terminate your account access where we reasonably determine you have violated these Terms, harmed other users or third parties, or where legal/regulatory requirements apply, generally with advance notice except in security or compliance emergencies. You may stop using the Service and request account deletion at any time.</p>
-
-  <h2 id="en-9">9. Dispute Resolution &amp; Governing Law</h2>
-  <p>9.1 General users: these Terms are governed by <span class="placeholder">[placeholder — proposed: State of Delaware law]</span>; disputes are submitted to <span class="placeholder">[placeholder — arbitration body / court of competent jurisdiction]</span>.</p>
-  <p>9.2 Special note for mainland China users: under PRC law, certain mandatory rules protecting mainland China consumers are not displaced by a contractually chosen foreign governing law or forum.</p>
-  <p>9.3 This section is placeholder language and <b>must be redesigned by counsel</b> based on the actual operating-entity structure before publication.</p>
-
-  <h2 id="en-10">10. Changes to These Terms</h2>
-  <p>We may update these Terms from time to time; material changes will be announced via in-Service notice or email in advance (recommended minimum 7–30 days depending on the target jurisdiction's legal requirements). Continued use after changes take effect constitutes acceptance.</p>
-
-  <h2 id="en-11">11. Contact</h2>
-  <p>Questions about these Terms: <a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
-
-  <h2 id="en-appendix">Appendix: Jurisdiction Compliance Notes</h2>
-  <p>For the full jurisdiction-by-jurisdiction analysis (detailed mainland China chapter, detailed U.S. chapter, framework-level Japan/Korea notes), see the <a href="./privacy.html#en-appendix">Privacy Policy appendix</a> — both documents share a single compliance appendix to avoid inconsistency.</p>
-</article>
-
-<!-- ================= JA ================= -->
-<article data-doc="ja" lang="ja">
-  <div class="meta">最終更新日：2026-09-04 ・ ステータス：ドラフト</div>
-  <h1>Echuu 利用規約</h1>
-  <div class="banner"><b>⚠️ ご注意：</b>本書はAIの支援を受けて作成されたコンプライアンス草案であり、<b>法的助言を構成するものではありません</b>。正式公開前に、有資格の弁護士によるレビューが必要です。<span class="placeholder">[ ]</span> は要記入のプレースホルダーです。<br><span class="jflag jp">JP：本セクションは枠組みレベルであり、日本での正式提供前に日本法弁護士による精緻化が必要です。</span></div>
-
-  <div class="toc">
-    <a href="#ja-1">1. 規約への同意</a>
-    <a href="#ja-2">2. サービスの説明とAI生成コンテンツの性質</a>
-    <a href="#ja-3">3. アカウント</a>
-    <a href="#ja-4">4. ユーザーコンテンツと知的財産権</a>
-    <a href="#ja-5">5. バーチャルギフト、サブスクリプション、支払い</a>
-    <a href="#ja-6">6. 禁止行為</a>
-    <a href="#ja-7">7. 免責事項と責任制限</a>
-    <a href="#ja-8">8. 利用停止・終了</a>
-    <a href="#ja-9">9. 紛争解決と準拠法</a>
-    <a href="#ja-10">10. 規約の変更</a>
-    <a href="#ja-11">11. お問い合わせ</a>
-    <a href="#ja-appendix">付録：法域別コンプライアンス要点</a>
-  </div>
-
-  <h2 id="ja-1">1. 規約への同意</h2>
-  <p>Echuu（以下「<b>本サービス</b>」といい、<span class="placeholder">[Anngel LLC]</span>及びその関連会社（以下「<b>当社</b>」）が提供します）へようこそ。本サービスには、AIバーチャル配信者パフォーマンスエンジン（キャラクター生成、台本・音声・動作の自動生成、複数プラットフォームへの配信、視聴者との交流）が含まれます。</p>
-  <p>本サービスにアクセスまたは利用することにより、本規約およびプライバシーポリシーに拘束されることに同意したものとみなされます。同意しない場合は、本サービスを利用しないでください。</p>
-  <p><b>未成年者の利用制限：</b>本サービスの最低利用年齢は<b>13歳</b>（米国COPPA基準）です。お住まいの法域でより高い年齢制限または保護者の同意が求められる場合は、当該法域の規定が優先されます。年齢確認・保護者同意・青少年モード等の仕組みは<b>現時点で未整備</b>であり、これらが整備されるまでは、既知の未成年者に対しコアとなる交流機能（チャット・ギフト・AI生成コンテンツの配布）を提供すべきではありません。</p>
-
-  <h2 id="ja-2">2. サービスの説明とAI生成コンテンツの性質</h2>
-  <p><b>2.1 AI生成コンテンツの開示。</b>本サービスを通じて生成されるキャラクターの対話、台本、音声、歌唱コンテンツ、表情・動作はすべてAIシステムにより自動生成されるものであり、<b>実在の人物の見解や事実を代表するものではありません</b>。不正確・不完全な内容や、意図的に設計された「パフォーマンス上の不完全さ」（意図的な言い淀み、間、感情の起伏など、製品の演出構造機能の一部）を含む場合があります。関連コンテンツを対外的に表示・配布する際は、AI生成である旨を明確に表示してください。</p>
-  <p><b>2.2 非人間であることの開示。</b>本サービスを利用して公開的に交流するバーチャル配信者・チャットキャラクターを運営する場合、視聴者がそのキャラクターをAI駆動のバーチャルキャラクターであると認識できるようにする必要があり、適切な開示なしに実在の人物であるかのように偽装してはなりません。</p>
-  <p><b>2.3 現段階における制限。</b>本サービスは開発初期段階にあり、一部機能（配信の安定性、コンテンツモデレーション、バーチャルギフトの決済等）は未完成です。継続的な可用性、コンテンツ品質、収益化について保証しません。</p>
-
-  <h2 id="ja-3">3. アカウント</h2>
-  <p>3.1 登録時には有効なメールアドレスの提供が必要です。第三者ログイン（Google OAuth等）を利用する場合は、当該第三者の規約に従うものとします。</p>
-  <p>3.2 アカウント内のすべての活動についてお客様が責任を負い、認証情報を適切に管理する必要があります。不正利用を発見した場合は直ちに当社にご連絡ください。</p>
-  <p>3.3 特定の法域における規制要件（例：中国本土におけるネット配信者の実名認証要件）を満たすため、<b>本人確認・実名確認</b>を求める場合があります。</p>
-
-  <h2 id="ja-4">4. ユーザーコンテンツと知的財産権</h2>
-  <p><b>4.1 アップロード・生成コンテンツの権利帰属。</b>お客様がアップロードするVRM/GLB/GLTFモデルファイル、音声サンプル、背景画像、ペルソナテキスト、Reactionモードのソース動画等（「<b>ユーザーコンテンツ</b>」）について、既存の権利を保持します。アップロードにより、お客様は当社に対し、(a) 本サービス内でお客様のためにコンテンツを表示・レンダリング・駆動すること、(b) お客様の指示に従い配信・タイムライン生成・リプレイ／クリップ生成を行うこと、(c) 技術サポートに必要な保存・バックアップ・処理を行うことのみを目的とした、世界的・非独占的・ロイヤリティフリー・再許諾可能なライセンスを付与します。当該ライセンスは、コンテンツまたはアカウントの削除により終了しますが、既に配信済みまたは第三者視聴者により適法に保持されたコンテンツには影響しません。</p>
-  <p><b>4.2 ユーザーコンテンツに関する保証。</b>お客様は、アップロード、使用、Reactionモードでの引用、配信・クリップによる配布に必要な一切の権利（著作権、肖像権、音声権、商標権等）を保有または取得済みであることを保証します。<b>Reactionモードに関する特記事項：</b>本フェーズでは、お客様自身の素材または明確な許諾を得たコンテンツのみをリアクション用ソース動画として使用できます。無許諾の第三者プラットフォームコンテンツの使用はお客様の自己責任とし、当社は権利者からの申立てを受けて該当コンテンツを削除する権利を留保します。</p>
-  <p><b>4.3 サービスコンテンツの権利帰属。</b>Echuuのインターフェースデザイン、汎用アニメーションリターゲティングエンジン、パフォーマンス構造生成システム等のソフトウェア実装、ソースコード、ブランド資産は<span class="placeholder">[Anngel LLC]</span>および／またはEchuuに帰属します。同梱のVRMモデルサンプルやアニメーションライブラリ（Mixamo等の第三者リソースを含む）は各々の原ライセンスに従うため、商用利用前にライセンス範囲をご自身でご確認ください。</p>
-  <p><b>4.4 モデルの所有権、第三者からの入手元および配布プラットフォーム。</b>Echuuが所有権を主張する唯一の同梱キャラクターモデルである<b>CoryNoRootBone</b>を除き、Echuuは本サービスに表示・同梱され、またはデモに使用されるその他のキャラクターモデルを<b>所有していません</b>。当社のアセット記録上、これらの第三者モデルまたはその構成素材は、BOOTH上の独立したクリエイターから入手したもの、またはVRoid Studio、VRoid Hub等のVRoid関連チャネルを通じて制作・配布されたものです。各モデル、衣装、テクスチャ、アクセサリーおよび関連素材の著作権その他の権利は、原作者または該当する権利者に帰属します。配信・商用利用、改変、クレジット表記および再配布の条件は、該当する商品ページ、配布ページ、モデル内のライセンスおよび権利者の条件に従います。Echuu上での表示または技術的互換性の実現は、Echuuへの所有権移転、Echuuによる再許諾、保証または追加許諾を意味しません。BOOTH、pixiv、VRoid、VRoid Hubその他の関連する配布プラットフォーム・ツールは独立した第三者です。書面で明示されない限り、これらの第三者はEchuuを後援、推奨または運営せず、Echuuを代理してモデルライセンスを審査・付与するものではなく、関連モデルがEchuuで参照されたという理由のみで、本サービス、ユーザーの利用、ユーザー生成コンテンツまたは関連紛争について責任を負いません。ただし、法令上排除できない責任または当該第三者自身の行為に起因する責任を除きます。</p>
-  <p><b>4.5 AI生成コンテンツに関する権利。</b>お客様が入力したペルソナ・テーマに基づき生成された台本テキスト、合成音声、生成されたパフォーマンスタイムラインについて、本規約を遵守し（該当する場合）所定の料金をお支払いいただいていることを条件に、当社はお客様に対し、世界的範囲での使用・表示・配布・商業化の権利を付与します。お客様が別途、明示的かつ能動的にオプトインしない限り、当社はキャラクターモデル、ペルソナ、プロンプト、台本、音声、配信・リプレイ、チャットその他のユーザーコンテンツを、Echuu または第三者の生成 AI モデルの学習に使用しません。サービス提供に必要なデータ処理および許可されたプロダクト分析はモデル学習には含まれません。詳細はプライバシーポリシーをご覧ください。</p>
-  <p><b>4.6 通知と削除（Notice-and-Takedown）。</b>本サービス内のコンテンツがお客様の知的財産権を侵害していると思われる場合は、<span class="placeholder">[DMCA／著作権エージェントのメールアドレスのプレースホルダー]</span>宛てに、権利者の署名、侵害された著作物の説明、侵害コンテンツの所在、連絡先、誠実な申告、内容の真実性に関する申告を含む通知をお送りください。当社は米国DMCA（17 U.S.C. § 512）および中国の「情報ネットワーク伝播権保護条例」に準拠した通知・削除の仕組みに則って対応し、繰り返し侵害を行うアカウントについては停止措置を講じます。</p>
-
-  <h2 id="ja-5">5. バーチャルギフト、サブスクリプション、支払い</h2>
-  <p><b>5.1 バーチャルギフト。</b>本サービスで表示されるバーチャルギフトは現時点では<b>表示のみの機能</b>であり、有料での購入・交換はまだ提供されていません。将来的に有料化された場合、バーチャルギフトは<b>現実の通貨価値を持たず、現金化・譲渡・返金はできません</b>（法律で強制される場合を除く）。本サービス内でのみ消費でき、<b>未成年者アカウントによるバーチャルギフトの購入・贈与はできません</b>。</p>
-  <p><b>5.2 機能サブスクリプション（計画中）。</b>将来サブスクリプション制を導入する場合、料金、課金周期、自動更新、解約方法については導入時に別途規約で説明し、お客様の所在地における消費者保護法上の自動更新に関する開示・確認要件を遵守します。第三者決済事業者と連携する場合、決済情報は当該事業者が直接収集・処理し、当社はお客様の完全なカード情報を保存しません。</p>
-
-  <h2 id="ja-6">6. 禁止行為</h2>
-  <p>お客様は、本サービスを以下の目的で利用しないことに同意するものとします：</p>
-  <ul>
-    <li>違法、権利侵害、わいせつ、暴力的・過激、憎悪・差別的、嫌がらせ、名誉毀損的なコンテンツの生成・アップロード・拡散；</li>
-    <li>他者になりすます、または視聴者に対し本サービスのキャラクターが人間により操作されていると誤認させる行為（適切な開示がある場合を除く）；</li>
-    <li>使用権限のない第三者著作権のあるモデル・アニメーション・音声・動画素材のアップロード；</li>
-    <li>バーチャルギフト・投げ銭の仕組みを利用したマネーロンダリング、賭博まがいの行為、不正取引；</li>
-    <li>本サービスの正常な運営に対する妨害・破壊行為；</li>
-    <li>中国の「サイバーセキュリティ法」「データセキュリティ法」「個人情報保護法」「生成的人工知能サービス管理暫定弁法」「ネット配信マーケティング管理弁法」「未成年者ネット保護条例」等の関連法規（付録参照）への違反；</li>
-    <li>米国連邦法・州法（DMCA、COPPA、各州の生体情報保護法、AI開示関連法等、付録参照）への違反。</li>
-  </ul>
-
-  <h2 id="ja-7">7. 免責事項と責任制限</h2>
-  <p>7.1 本サービスは「現状有姿」および「提供可能な範囲」で提供され、商品性や特定目的への適合性についての明示または黙示の保証は一切行いません。</p>
-  <p>7.2 法律で許容される最大限の範囲において、<span class="placeholder">[Anngel LLC]</span>は本サービスの利用に起因する間接的、付随的、特別、結果的損害について責任を負いません。直接損害に関する累積責任額の上限は、請求発生前12か月間にお客様が支払った料金の合計額（該当する場合）または<span class="placeholder">[プレースホルダー金額]</span>のいずれか高い方とします。</p>
-  <p>7.3 本条は、法律上除外・制限できない責任を除外・制限するものではありません。<b>中国本土の消費者の強制的権利は本条により排除されません。</b></p>
-
-  <h2 id="ja-8">8. 利用停止・終了</h2>
-  <p>当社は、お客様が本規約に違反した、他のユーザーまたは第三者の権益を損なった、または法令・規制上の要求がある場合、合理的な判断に基づきアカウントへのアクセスを停止または終了することがあります。通常は事前通知を行いますが、セキュリティまたはコンプライアンス上の緊急事態を除きます。お客様はいつでも本サービスの利用を停止し、アカウント削除を申請することができます。</p>
-
-  <h2 id="ja-9">9. 紛争解決と準拠法</h2>
-  <p>9.1 一般ユーザー：本規約は<span class="placeholder">[プレースホルダー——提案：米国デラウェア州法]</span>に準拠し、紛争は<span class="placeholder">[プレースホルダー——仲裁機関／管轄裁判所]</span>に提出するものとします。</p>
-  <p>9.2 中国本土ユーザーへの特記事項：中国法上、中国本土の消費者を保護する一部の強行規定は、契約で選択された域外準拠法または域外管轄によって排除されません。</p>
-  <p>9.3 本条は汎用的なプレースホルダー文言であり、<b>公開前に実際の運営主体の構造に基づき弁護士が再設計する必要があります</b>。</p>
-
-  <h2 id="ja-10">10. 規約の変更</h2>
-  <p>当社は随時本規約を更新することがあり、重要な変更についてはサービス内通知またはメールにより事前に（対象法域の法的要件に応じ、最低7～30日前を推奨）お知らせします。変更後も本サービスの利用を継続した場合、新しい規約に同意したものとみなされます。</p>
-
-  <h2 id="ja-11">11. お問い合わせ</h2>
-  <p>本規約に関するご質問は <a href="mailto:cory@anngel.live">cory@anngel.live</a> までご連絡ください。</p>
-
-  <h2 id="ja-appendix">付録：法域別コンプライアンス要点</h2>
-  <p>法域別の詳細な分析（中国本土の詳細章、米国の詳細章、日本・韓国の枠組みレベルの要点）については、<a href="./privacy.html#ja-appendix">プライバシーポリシーの付録</a>をご覧ください。内容の不整合を避けるため、両文書は同一のコンプライアンス付録を共有しています。</p>
-</article>
-
-<!-- ================= KO ================= -->
-<article data-doc="ko" lang="ko">
-  <div class="meta">최종 업데이트: 2026-09-04 · 상태: 초안</div>
-  <h1>Echuu 이용약관</h1>
-  <div class="banner"><b>⚠️ 안내:</b> 본 문서는 AI의 도움을 받아 작성된 컴플라이언스 초안이며 <b>법률 자문에 해당하지 않습니다</b>. 정식 공개 전 반드시 자격을 갖춘 변호사의 검토를 거쳐야 합니다. <span class="placeholder">[ ]</span>는 작성이 필요한 자리표시자입니다.<br><span class="jflag kr">KR: 본 섹션은 프레임워크 수준이며, 한국 정식 서비스 전 한국 법률 전문가의 정교화가 필요합니다.</span></div>
-
-  <div class="toc">
-    <a href="#ko-1">1. 약관 동의</a>
-    <a href="#ko-2">2. 서비스 설명 및 AI 생성 콘텐츠의 성격</a>
-    <a href="#ko-3">3. 계정</a>
-    <a href="#ko-4">4. 사용자 콘텐츠 및 지식재산권</a>
-    <a href="#ko-5">5. 가상 선물, 구독 및 결제</a>
-    <a href="#ko-6">6. 이용자 행위 규범</a>
-    <a href="#ko-7">7. 면책 및 책임 제한</a>
-    <a href="#ko-8">8. 이용 중지 및 종료</a>
-    <a href="#ko-9">9. 분쟁 해결 및 준거법</a>
-    <a href="#ko-10">10. 약관 변경</a>
-    <a href="#ko-11">11. 문의처</a>
-    <a href="#ko-appendix">부록: 관할별 컴플라이언스 요점</a>
-  </div>
-
-  <h2 id="ko-1">1. 약관 동의</h2>
-  <p>Echuu(이하 "<b>서비스</b>", <span class="placeholder">[Anngel LLC]</span> 및 그 관계사가 제공하며 이하 "<b>당사</b>")를 이용해 주셔서 감사합니다. 서비스에는 AI 가상 스트리머 퍼포먼스 엔진(캐릭터 생성, 대본·음성·동작 자동 생성, 다중 플랫폼 송출, 시청자 상호작용)이 포함됩니다.</p>
-  <p>서비스에 접속하거나 이를 이용함으로써 귀하는 본 약관 및 개인정보처리방침에 구속되는 데 동의하는 것으로 간주됩니다. 동의하지 않는 경우 서비스를 이용하지 마십시오.</p>
-  <p><b>미성년자 이용 제한:</b> 서비스의 최소 이용 연령은 <b>만 13세</b>(미국 COPPA 기준)입니다. 귀하가 속한 관할권에서 더 높은 최소 연령 또는 법정대리인 동의를 요구하는 경우(예: 중국 「미성년자 사이버공간 보호조례」), 해당 관할권 규정이 우선합니다. 연령 확인, 보호자 동의, 청소년 모드 등의 메커니즘은 <b>현재 구축되어 있지 않으며</b>, 이러한 메커니즘이 마련되기 전까지 핵심 상호작용 기능(채팅, 가상 선물, AI 생성 콘텐츠 배포)은 미성년자로 알려진 이용자에게 제공되어서는 안 됩니다.</p>
-
-  <h2 id="ko-2">2. 서비스 설명 및 AI 생성 콘텐츠의 성격</h2>
-  <p><b>2.1 AI 생성 콘텐츠 고지.</b> 서비스를 통해 생성되는 캐릭터 대화, 대본, 음성, 노래 콘텐츠, 표정·동작은 모두 AI 시스템에 의해 자동 생성되며, <b>실제 인물의 진정한 견해나 사실 진술을 대표하지 않습니다</b>. 부정확하거나 불완전한 내용, 또는 "설계된 퍼포먼스적 결함"(의도적인 말실수, 정지, 감정 기복 등 제품의 퍼포먼스 구조 설계 기능)이 포함될 수 있습니다. 관련 콘텐츠를 외부에 게시·배포할 때는 AI 생성 콘텐츠임을 명확히 표시해야 합니다.</p>
-  <p><b>2.2 비인간 신원 고지.</b> 서비스를 이용해 공개적으로 상호작용하는 가상 스트리머·채팅 캐릭터를 운영하는 경우, 시청자가 해당 캐릭터를 AI 기반 가상 캐릭터로 인식할 수 있도록 해야 하며, 적절한 고지 없이 실제 인물인 것처럼 위장하여 기만적인 상업 행위를 해서는 안 됩니다.</p>
-  <p><b>2.3 현 단계의 제한사항.</b> 서비스는 초기 개발 단계에 있으며, 일부 기능(송출 안정성, 콘텐츠 검수, 가상 선물 정산 등)이 아직 완전히 구축되지 않았습니다. 당사는 서비스의 지속적인 가용성, 콘텐츠 품질 또는 수익화 결과를 보장하지 않습니다.</p>
-
-  <h2 id="ko-3">3. 계정</h2>
-  <p>3.1 가입 시 유효한 이메일 주소를 제공해야 하며, 제3자 로그인(Google OAuth 등) 이용 시 해당 제3자의 약관을 따라야 합니다.</p>
-  <p>3.2 귀하는 계정 하에서 이루어지는 모든 활동에 대해 책임을 지며, 로그인 정보를 적절히 관리해야 합니다. 무단 사용을 발견하면 즉시 당사에 통지해야 합니다.</p>
-  <p>3.3 당사는 특정 관할권의 규제 요건(예: 중국 본토의 온라인 방송 진행자 실명 인증 요건)을 충족하기 위해 <b>신원·실명 확인</b>을 요구할 수 있습니다.</p>
-
-  <h2 id="ko-4">4. 사용자 콘텐츠 및 지식재산권</h2>
-  <p><b>4.1 업로드·생성 콘텐츠의 권리 귀속.</b> 귀하가 업로드한 VRM/GLB/GLTF 모델 파일, 음성 샘플, 배경 이미지, 페르소나 텍스트, Reaction 모드의 소스 영상 등("<b>사용자 콘텐츠</b>")에 대해 귀하는 기존 권리를 보유합니다. 업로드함으로써 귀하는 당사에 (a) 서비스 내에서 귀하를 위해 해당 콘텐츠를 표시·렌더링·구동하고, (b) 귀하의 지시에 따라 스트리밍, 타임라인 생성, 리플레이·클립 생성을 수행하며, (c) 기술 지원에 필요한 저장·백업·처리를 수행하기 위한 목적으로만, 전 세계적·비독점적·무상·재라이선스 가능한 라이선스를 부여합니다. 해당 라이선스는 콘텐츠 또는 계정 삭제 시 종료되나, 이미 송출되었거나 제3자 시청자가 적법하게 보유한 콘텐츠에는 영향을 미치지 않습니다.</p>
-  <p><b>4.2 사용자 콘텐츠에 대한 보증.</b> 귀하는 업로드, 사용, Reaction 모드를 통한 인용, 스트리밍·클립을 통한 배포에 필요한 모든 권리(저작권, 초상권, 음성권, 상표권 등)를 보유하거나 취득했음을 보증합니다. <b>Reaction 모드 관련 특별 안내:</b> 현 단계에서는 귀하 소유의 소재 또는 명확히 허가받은 콘텐츠만 리액션 소스 영상으로 사용할 수 있습니다. 무단 제3자 플랫폼 콘텐츠 사용은 귀하의 책임이며, 당사는 권리자의 이의 제기 시 해당 콘텐츠를 삭제할 권리를 보유합니다.</p>
-  <p><b>4.3 서비스 콘텐츠의 권리 귀속.</b> Echuu의 인터페이스 디자인, 범용 애니메이션 리타겟팅 엔진, 퍼포먼스 구조 생성 시스템 등 소프트웨어 구현, 소스 코드, 브랜드 자산은 <span class="placeholder">[Anngel LLC]</span> 및/또는 Echuu에 귀속됩니다. 기본 제공되는 VRM 모델 샘플과 애니메이션 라이브러리(Mixamo 등 제3자 리소스 포함)는 각각의 원 라이선스를 따르므로, 상업적 이용 전 라이선스 범위를 직접 확인해야 합니다.</p>
-  <p><b>4.4 모델 소유권, 제3자 출처 및 배포 플랫폼.</b> Echuu가 소유권을 주장하는 유일한 기본 제공 캐릭터 모델인 <b>CoryNoRootBone</b>을 제외하고, Echuu는 서비스에 표시·포함되거나 데모에 사용되는 다른 캐릭터 모델을 <b>소유하지 않습니다</b>. 당사의 에셋 기록에 따르면 이러한 제3자 모델 또는 그 구성 소재는 BOOTH의 독립 창작자로부터 제공되었거나 VRoid Studio, VRoid Hub 등 VRoid 관련 채널을 통해 제작·배포되었습니다. 각 모델, 의상, 텍스처, 액세서리 및 관련 소재의 저작권과 기타 권리는 원작자 또는 해당 권리자에게 귀속됩니다. 스트리밍·상업적 이용, 수정, 출처 표시 및 재배포 조건은 해당 상품 페이지, 배포 페이지, 모델에 포함된 라이선스 및 권리자의 조건을 따릅니다. Echuu에서 모델을 표시하거나 기술적으로 호환되도록 하는 것은 Echuu로의 소유권 이전, Echuu에 의한 재라이선스, 보증 또는 추가 허가를 의미하지 않습니다. BOOTH, pixiv, VRoid, VRoid Hub 및 기타 관련 배포 플랫폼·도구는 독립된 제3자입니다. 별도의 명시적 서면 고지가 없는 한 이들은 Echuu를 후원·보증·운영하지 않고, Echuu를 대신해 모델 라이선스를 심사하거나 부여하지 않으며, 관련 모델이 Echuu에서 참조되었다는 이유만으로 서비스, 이용자의 사용, 이용자 생성 콘텐츠 또는 관련 분쟁에 대해 책임을 부담하지 않습니다. 다만 법률상 배제할 수 없는 책임 또는 해당 제3자 자신의 행위로 발생한 책임은 제외합니다.</p>
-  <p><b>4.5 AI 생성 콘텐츠에 대한 권리.</b> 귀하가 입력한 페르소나·주제를 기반으로 생성된 대본 텍스트, 합성 음성, 생성된 퍼포먼스 타임라인에 대해, 귀하가 본 약관을 준수하고(해당하는 경우) 소정의 요금을 지불한 것을 조건으로, 당사는 귀하에게 전 세계적으로 해당 생성 콘텐츠를 사용·표시·배포·상업화할 수 있는 권리를 부여합니다. 귀하가 별도로 명시적이고 자발적으로 옵트인하지 않는 한, 당사는 귀하의 캐릭터 모델, 페르소나, 프롬프트, 대본, 음성, 스트림·리플레이, 채팅 또는 기타 사용자 콘텐츠를 Echuu 또는 제3자의 생성형 AI 모델 학습에 사용하지 않습니다. 서비스 제공에 필요한 데이터 처리와 허용된 제품 분석은 모델 학습에 해당하지 않습니다. 자세한 내용은 개인정보처리방침을 참조하십시오.</p>
-  <p><b>4.6 통지 및 삭제(Notice-and-Takedown).</b> 서비스 내 콘텐츠가 귀하의 지식재산권을 침해한다고 판단되는 경우, <span class="placeholder">[DMCA/저작권 담당 이메일 자리표시자]</span>로 권리자 서명, 침해된 저작물 설명, 침해 콘텐츠 위치, 연락처, 선의의 진술, 내용의 진실성에 대한 진술을 포함한 통지를 보내주십시오. 당사는 미국 DMCA(17 U.S.C. § 512) 및 중국 「정보네트워크전파권보호조례」의 통지-삭제 메커니즘에 준하여 처리하며, 반복 침해 시 해당 계정을 종료합니다.</p>
-
-  <h2 id="ko-5">5. 가상 선물, 구독 및 결제</h2>
-  <p><b>5.1 가상 선물.</b> 서비스에 표시되는 가상 선물은 현재 <b>전시용 기능</b>이며, 유료 구매·교환은 아직 제공되지 않습니다. 향후 가상 선물 구매가 개방될 경우, 가상 선물은 <b>실제 화폐 가치가 없으며 환금·양도·환불이 불가능</b>합니다(법률상 강제되는 경우 제외). 서비스 내에서만 소비할 수 있으며, <b>미성년자 계정은 가상 선물을 구매하거나 증정할 수 없습니다</b>.</p>
-  <p><b>5.2 기능 구독(계획 중).</b> 향후 구독제가 도입될 경우, 요금, 결제 주기, 자동 갱신, 해지 방법은 출시 시 별도 약관으로 안내하며, 귀하의 소재지 소비자 보호법상 자동 갱신 관련 강제 고지·확인 요건을 준수합니다. 제3자 결제 처리업체와 연동하는 경우, 결제 정보는 해당 업체가 직접 수집·처리하며 당사는 귀하의 전체 카드 정보를 저장하지 않습니다.</p>
-
-  <h2 id="ko-6">6. 이용자 행위 규범</h2>
-  <p>귀하는 서비스를 다음 목적으로 이용하지 않을 것을 약속합니다:</p>
-  <ul>
-    <li>불법, 권리침해, 음란, 폭력·극단주의, 혐오·차별, 괴롭힘, 명예훼손 콘텐츠의 생성·업로드·배포;</li>
-    <li>타인을 사칭하거나 시청자로 하여금 서비스 캐릭터가 실제 인물에 의해 조작된다고 오인하게 하는 행위(적절한 고지가 있는 경우 제외);</li>
-    <li>사용 권한이 없는 제3자 저작권 모델·애니메이션·오디오·비디오 소재의 업로드;</li>
-    <li>가상 선물·후원 메커니즘을 이용한 자금세탁, 변칙적 도박, 부정거래;</li>
-    <li>서비스의 정상적인 운영을 방해·훼손하는 행위;</li>
-    <li>중국의 「사이버보안법」, 「데이터보안법」, 「개인정보보호법」, 「생성형 인공지능 서비스 관리 임시방법」, 「온라인 방송 마케팅 관리방법」, 「미성년자 사이버공간 보호조례」 등 관련 법규 위반(부록 참조);</li>
-    <li>미국 연방 및 주법(DMCA, COPPA, 각 주의 생체정보보호법, AI 고지 관련 법률 등, 부록 참조) 위반.</li>
-  </ul>
-
-  <h2 id="ko-7">7. 면책 및 책임 제한</h2>
-  <p>7.1 서비스는 "있는 그대로" 및 "이용 가능한 범위 내에서" 제공되며, 상품성이나 특정 목적 적합성에 대한 명시적·묵시적 보증을 하지 않습니다.</p>
-  <p>7.2 법률이 허용하는 최대 범위 내에서, <span class="placeholder">[Anngel LLC]</span>는 서비스 이용으로 인한 간접적, 부수적, 특별, 결과적 손해에 대해 책임을 지지 않습니다. 직접 손해에 대한 누적 책임 한도는 청구 발생 전 12개월간 귀하가 당사에 지불한 총 요금(있는 경우) 또는 <span class="placeholder">[자리표시 금액]</span> 중 더 높은 금액으로 합니다.</p>
-  <p>7.3 본 조항은 법률상 배제·제한할 수 없는 책임을 배제·제한하지 않습니다. <b>중국 본토 소비자의 강행적 권리는 본 조항으로 인해 배제되지 않습니다.</b></p>
-
-  <h2 id="ko-8">8. 이용 중지 및 종료</h2>
-  <p>당사는 귀하가 본 약관을 위반했거나, 다른 이용자 또는 제3자의 권익을 침해했거나, 법률·규제상 요구가 있다고 합리적으로 판단하는 경우 귀하의 계정 접근을 중지 또는 종료할 수 있으며, 통상적으로 사전 통지하나 보안 또는 컴플라이언스 긴급 상황은 예외로 합니다. 귀하는 언제든지 서비스 이용을 중단하고 계정 삭제를 신청할 수 있습니다.</p>
-
-  <h2 id="ko-9">9. 분쟁 해결 및 준거법</h2>
-  <p>9.1 일반 이용자: 본 약관은 <span class="placeholder">[자리표시자 — 제안: 미국 델라웨어주법]</span>의 적용을 받으며, 분쟁은 <span class="placeholder">[자리표시자 — 중재기관/관할법원]</span>에 제출합니다.</p>
-  <p>9.2 중국 본토 이용자를 위한 특별 안내: 중국법상 중국 본토 소비자를 보호하는 일부 강행규정은 계약상 선택된 역외 준거법 또는 역외 관할에 의해 배제되지 않습니다.</p>
-  <p>9.3 본 조항은 범용 자리표시 문구이며, <b>공개 전 실제 운영 주체 구조에 따라 변호사가 재설계해야 합니다</b>.</p>
-
-  <h2 id="ko-10">10. 약관 변경</h2>
-  <p>당사는 수시로 본 약관을 업데이트할 수 있으며, 중대한 변경 사항은 서비스 내 공지 또는 이메일을 통해 사전에(대상 관할권의 법적 요건에 따라 최소 7~30일 전 권장) 안내합니다. 변경 후에도 서비스 이용을 계속하는 경우 새 약관에 동의한 것으로 간주됩니다.</p>
-
-  <h2 id="ko-11">11. 문의처</h2>
-  <p>본 약관에 관한 문의: <a href="mailto:cory@anngel.live">cory@anngel.live</a></p>
-
-  <h2 id="ko-appendix">부록: 관할별 컴플라이언스 요점</h2>
-  <p>관할권별 상세 분석(중국 본토 상세 장, 미국 상세 장, 일본·한국 프레임워크 수준 요점)은 <a href="./privacy.html#ko-appendix">개인정보처리방침 부록</a>을 참조하십시오. 내용 불일치를 방지하기 위해 두 문서는 동일한 컴플라이언스 부록을 공유합니다.</p>
-</article>
-
-</div>
-
-<script>
-(function(){
-  var supported = ['zh','ja','en','ko'];
-  var params = new URLSearchParams(location.search);
-  var stored = localStorage.getItem('echuu-legal-lang');
-  var lang = params.get('lang') || stored || 'zh';
-  if (supported.indexOf(lang) === -1) lang = 'zh';
-
-  function apply(l){
-    document.querySelectorAll('[data-doc]').forEach(function(el){
-      el.classList.toggle('active', el.getAttribute('data-doc') === l);
-    });
-    document.querySelectorAll('.langswitch button').forEach(function(btn){
-      btn.classList.toggle('active', btn.getAttribute('data-lang') === l);
-    });
-    document.documentElement.setAttribute('lang', l);
-    localStorage.setItem('echuu-legal-lang', l);
-  }
-
-  document.querySelectorAll('.langswitch button').forEach(function(btn){
-    btn.addEventListener('click', function(){ apply(btn.getAttribute('data-lang')); });
-  });
-
-  apply(lang);
-})();
-</script>
-
-</body>
-</html>
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Echuu · 用户协议</title><style>*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#edf7ff;color:#18364e;font:16px/1.85 system-ui,-apple-system,sans-serif}main{max-width:920px;margin:auto;padding:32px 24px 80px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}nav{display:flex;gap:12px;flex-wrap:wrap}a{color:#075fac;text-underline-offset:4px}h1{font-size:clamp(28px,5vw,42px);line-height:1.3}h2{font-size:21px;line-height:1.5;margin-top:36px}p{overflow-wrap:anywhere}.notice{padding:18px 22px;background:#fff;border-radius:16px;border-left:4px solid #54afd5}.toc{padding:20px 0;gap:8px 18px}.toc a{font-size:14px}article{display:none}article:target{scroll-margin-top:24px}article.active{display:block}footer{margin-top:40px;padding:24px;background:#dcefff;border-radius:16px}button{font:inherit;padding:6px 12px;border:1px solid #9dc3de;border-radius:12px;background:white;color:#18364e;cursor:pointer}button[aria-pressed=true]{background:#173b60;color:white}:focus-visible{outline:3px solid #198bcc;outline-offset:4px}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}</style></head><body><main><header><strong>Echuu / Legal</strong><nav aria-label="Language">
+<button type="button" data-lang="zh">中文</button>
+<button type="button" data-lang="en">English</button>
+<button type="button" data-lang="ja">日本語</button>
+<button type="button" data-lang="ko">한국어</button>
+</nav></header>
+<article data-doc="zh" lang="zh" class="active">
+<h1>用户协议</h1>
+<p class="notice">审阅稿 · 更新于 2026-09-30。运营主体、公开联系地址及16+内测政策已由运营方提供；S3配置已只读核查。公司注册州、实际生产供应商配置、数据保存及完整删除流程仍待审定。</p>
+<nav class="toc" aria-label="Contents">
+<a href="#zh-1">1. 适用范围与内测状态</a>
+<a href="#zh-2">2. 账号与邀请码</a>
+<a href="#zh-3">3. 您的角色与作品</a>
+<a href="#zh-4">4. 第三方素材与生成内容</a>
+<a href="#zh-5">5. 直播与社区行为</a>
+<a href="#zh-6">6. 费用与虚拟礼物</a>
+<a href="#zh-7">7. 隐私与 AI 训练</a>
+<a href="#zh-8">8. 中止、删除与申诉</a>
+<a href="#zh-9">9. 责任、争议与变更</a>
+<a href="#zh-10">10. 版权、隐私与投诉流程</a>
+</nav>
+<section><h2 id="zh-1">1. 适用范围与内测状态</h2><p>服务运营主体为 Anngel LLC。公开联系地址（运营方提供的注册代理地址）：Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA。注册代理不因此成为 Echuu 的服务运营者或个人信息处理者。该地址不等同于已核实公司成立／注册州。电子联系：cory@anngel.live。 内测仅面向已满16周岁的用户，不接受未满16周岁者注册或参与。16至17周岁用户应与父母或其他监护人共同阅读条款，并在依法需要时取得同意；未达到所在地成年年龄的其他用户同样适用。需要同意或核验的功能，在相应程序完成前不得开通。年龄声明或“自己负责”不能代替这些程序。 本稿涵盖 Echuu 官网、内测申请和另行提供的 OC 共创表演／AI 虚拟主播服务。官网演示不代表全部功能已开放；实际能力以您所访问的服务与明确告知为准。官网邀请码兑换和邮箱密码申请界面已提供，服务端未接通时不会完成注册、验证或发信。申请不保证获得资格、开放时间或永久免费。</p></section>
+<section><h2 id="zh-2">2. 账号与邀请码</h2><p>使用实际开放的账号服务时，请提供可联系的邮箱并妥善保管密码与邀请码。不要出售、公开分享或绕过邀请码验证，不得冒用他人身份。异常登录或泄露请及时联系我们。资格、有效期与使用次数应在发放邀请码时明确告知；本稿不虚构这些限制。</p></section>
+<section><h2 id="zh-3">3. 您的角色与作品</h2><p>您保留对 OC 设定、模型、图片、声音及其他原创作品已有的权利。为执行您主动请求的功能，Echuu 仅取得提供相应存储、渲染、生成和传输所需的有限许可，不因上传取得角色所有权。官网宣传、案例展示、素材再分发或 AI 训练不包含在这一服务许可中，须另行取得适当授权。</p></section>
+<section><h2 id="zh-4">4. 第三方素材与生成内容</h2><p>使用 BOOTH、VRoid、模之屋或约稿作品前，请核实直播、商用、修改、署名和再分发许可。技术兼容或示例展示不等于获得授权，平台名称不代表合作或背书。Echuu 不对尚未完成权利核验的示例模型作所有权保证。AI 输出可能相似、出错或涉及第三方权利；平台可授予的使用许可不等于保证输出享有版权、独占性或商用无风险。发布前需核实音乐、视频、声音和角色等权利。</p></section>
+<section><h2 id="zh-5">5. 直播与社区行为</h2><p>不得利用服务冒充真人、诈骗、骚扰、侵犯隐私、传播违法内容或侵犯知识产权。不得绕过安全限制、窃取账号或干扰系统。公开使用 AI 角色时应清楚披露 AI 参与，遵守直播平台规则与适用的内容标识要求；勿让观众误以为虚构经历是真实事实。 您应如实提供年龄与必要信息，妥善保管账号，对上传素材的使用权、公开内容及使用行为承担适用法律规定的责任。此约定不使未成年人放弃法定撤销、退款、隐私或其他权利，也不免除 Echuu 的安全、告知、数据保护及其他不可免除的法定义务。</p></section>
+<section><h2 id="zh-6">6. 费用与虚拟礼物</h2><p>官网演示中的礼物效果不构成付费承诺。若实际提供收费、订阅或虚拟礼物购买，应在付款前另行说明价格、币种、续费、取消和退款条件并取得必要确认；本稿不设默认自动续费，也不作一概不可退款的约定。法定消费者权利不受影响。</p></section>
+<section><h2 id="zh-7">7. 隐私与 AI 训练</h2><p>官网和主程序的数据处理范围不同，请阅读隐私政策。拟议规则为：提供服务所必需的处理不等于取得 AI 训练许可；将用户内容用于训练须另行、明确、主动选择加入。正式服务仍需核实第三方供应商的实际保留与训练设置，不以本稿替代核验。</p></section>
+<section><h2 id="zh-8">8. 中止、删除与申诉</h2><p>发生合理的安全、侵权或违法风险时，可采取必要、相称的限制措施；除紧急情况或法律禁止告知外，应说明原因和申诉方式。您可停止使用，并通过联系邮箱申请账号／内容删除或复核限制措施。内测可能调整或中断，请保留作品备份；这不免除依法应承担的责任。</p></section>
+<section><h2 id="zh-9">9. 责任、争议与变更</h2><p>内测存在错误、延迟或不可用的可能。本稿不虚设赔偿上限、强制仲裁、指定外国法院或排除法定权利。争议可先通过联系邮箱协商，并可依法寻求主管机关或有管辖权法院的救济。重大规则变更应在适用前清楚通知；依法需要重新同意的，应重新取得同意。</p></section>
+<section><h2 id="zh-10">10. 版权、隐私与投诉流程</h2><p>请向联系邮箱提供相关页面／内容位置、问题描述、您的联系方式及必要的权利证明。不要发送密码、邀请码或不必要的身份证件。我们会核验请求，必要时索取适量补充材料，并依法处理或说明处理结果。该邮箱是一般联系渠道，不代表已登记的 DMCA 代理人。</p></section>
+<footer><h2>联系与权利请求</h2><p>Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA</p><a href="mailto:cory@anngel.live">cory@anngel.live</a><nav>
+<a href="./privacy.html?lang=zh">隐私政策</a>
+<a href="./minors.html?lang=zh">未成年人使用说明</a>
+<a href="./ai-content-disclosure.html?lang=zh">AI 内容披露</a>
+<a href="../website/zh/">返回官网</a></nav></footer></article>
+<article data-doc="en" lang="en" class="">
+<h1>Terms of service</h1>
+<p class="notice">Review draft · Updated 2026-09-30. The operator supplied its name, public contact address and 16+ beta policy; S3 settings were checked read-only. Incorporation jurisdiction, actual production providers, retention and complete deletion still require review.</p>
+<nav class="toc" aria-label="Contents">
+<a href="#en-1">1. Scope and beta status</a>
+<a href="#en-2">2. Accounts and invitations</a>
+<a href="#en-3">3. Your characters and works</a>
+<a href="#en-4">4. Third-party assets and outputs</a>
+<a href="#en-5">5. Streaming and conduct</a>
+<a href="#en-6">6. Payments and gifts</a>
+<a href="#en-7">7. Privacy and training</a>
+<a href="#en-8">8. Restrictions, deletion and appeals</a>
+<a href="#en-9">9. Liability, disputes and changes</a>
+<a href="#en-10">10. Complaints and rights requests</a>
+</nav>
+<section><h2 id="en-1">1. Scope and beta status</h2><p>The service operator is Anngel LLC. Public contact address supplied by the operator (registered-agent address): Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA. The agent is not thereby the service operator or data controller. This address does not verify the company’s incorporation jurisdiction. Email: cory@anngel.live. Beta participation requires age 16 or older; registration and participation by anyone under 16 are not permitted. Users aged 16–17 should review the terms with a parent or guardian and obtain consent where legally required; the same applies to other users below their local age of majority. Features requiring consent or verification must not be enabled before those procedures are completed. An age declaration or acceptance of responsibility is not a substitute. This draft covers the Echuu website, beta applications and separately offered OC performance / AI streaming services. Demonstrations do not mean every feature is available. Without connected backend endpoints, website invitation and application forms cannot create accounts, verify codes or send invitations. Applying does not guarantee admission, timing or permanent free access.</p></section>
+<section><h2 id="en-2">2. Accounts and invitations</h2><p>Use a reachable email address and protect your password and invitation. Do not sell, publicly share or bypass invitations or impersonate others. Report suspected compromise. Eligibility, expiry and usage limits must be stated when an invitation is issued; this draft does not invent them.</p></section>
+<section><h2 id="en-3">3. Your characters and works</h2><p>You retain existing rights in original characters, models, images, voices and other works. The proposed service license is limited to storage, rendering, generation and transmission necessary for functions you request; uploading does not transfer character ownership. Promotion, redistribution and model training require separate appropriate permission.</p></section>
+<section><h2 id="en-4">4. Third-party assets and outputs</h2><p>Check streaming, commercial use, modification, attribution and redistribution permissions for BOOTH, VRoid, Aplaybox and commissioned assets. Compatibility or demonstration is not a license or endorsement. Echuu makes no ownership assurance for sample models whose rights remain unverified. AI outputs may overlap, be incorrect or affect third-party rights. Any permission Echuu can grant does not guarantee copyright, exclusivity or unrestricted commercial use. Check music, video, voice and character rights before publication.</p></section>
+<section><h2 id="en-5">5. Streaming and conduct</h2><p>Do not impersonate real people, defraud, harass, invade privacy, infringe rights, publish illegal content or bypass security. Clearly disclose AI involvement to audiences and follow applicable labeling requirements and streaming-platform rules. Provide truthful age and necessary information, protect your account, and take responsibility under applicable law for rights in uploaded materials, public content and your conduct. This does not waive minors’ statutory avoidance, refund, privacy or other rights, or remove Echuu’s non-waivable safety, disclosure and data-protection duties.</p></section>
+<section><h2 id="en-6">6. Payments and gifts</h2><p>Demonstrated gifts are not a paid offer. Any future purchase or subscription must disclose price, currency, renewal, cancellation and refund conditions before payment and obtain necessary confirmation. This draft creates neither automatic renewal nor a blanket no-refund rule. Mandatory consumer rights remain unaffected.</p></section>
+<section><h2 id="en-7">7. Privacy and training</h2><p>Website and product data flows differ; see the privacy policy. Proposed rules require separate affirmative opt-in for training rather than treating necessary service processing as a training license. Actual vendor retention and training settings still require verification.</p></section>
+<section><h2 id="en-8">8. Restrictions, deletion and appeals</h2><p>Necessary, proportionate restrictions may address substantiated security, infringement or legal risks. Except in emergencies or where disclosure is prohibited, reasons and an appeal route should be provided. You may stop using the service and request deletion or review through the contact email. Beta availability may change; retain backups. This does not waive mandatory liability.</p></section>
+<section><h2 id="en-9">9. Liability, disputes and changes</h2><p>Beta services may fail or be delayed. This draft does not invent a liability cap, mandatory arbitration or exclusive foreign jurisdiction. Contact us to seek resolution; statutory remedies and competent courts remain available. Material changes should be clearly notified before applying, with renewed consent where required.</p></section>
+<section><h2 id="en-10">10. Complaints and rights requests</h2><p>Send the relevant content location, issue, contact details and necessary evidence of rights to the contact email. Do not send passwords, invitations or unnecessary identity documents. Requests require proportionate verification and handling under applicable law. This is a general contact channel, not a claim of a registered DMCA agent.</p></section>
+<footer><h2>Contact and rights requests</h2><p>Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA</p><a href="mailto:cory@anngel.live">cory@anngel.live</a><nav>
+<a href="./privacy.html?lang=en">Privacy policy</a>
+<a href="./minors.html?lang=en">Use by minors</a>
+<a href="./ai-content-disclosure.html?lang=en">AI content disclosure</a>
+<a href="../website/en/">Back to website</a></nav></footer></article>
+<article data-doc="ja" lang="ja" class="">
+<h1>利用規約</h1>
+<p class="notice">レビュー草案 · 2026-09-30 更新。運営者名、公開連絡先、16歳以上の方針は運営者提供、S3設定は読み取り確認済みです。設立法域、本番の委託先、保存・完全削除は引き続き確認が必要です。</p>
+<nav class="toc" aria-label="Contents">
+<a href="#ja-1">1. 対象とベータ版</a>
+<a href="#ja-2">2. アカウントと招待</a>
+<a href="#ja-3">3. OC と作品の権利</a>
+<a href="#ja-4">4. 第三者素材と生成物</a>
+<a href="#ja-5">5. 配信と禁止行為</a>
+<a href="#ja-6">6. 料金とギフト</a>
+<a href="#ja-7">7. 個人情報と学習</a>
+<a href="#ja-8">8. 停止・削除・異議</a>
+<a href="#ja-9">9. 責任・紛争・変更</a>
+<a href="#ja-10">10. 権利侵害の連絡</a>
+</nav>
+<section><h2 id="ja-1">1. 対象とベータ版</h2><p>運営者は Anngel LLC です。運営者提供の公開連絡先（登録代理人住所）：Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA。代理人がサービス運営者・個人情報管理者になるものではありません。この住所から会社の設立州を認定しません。メール：cory@anngel.live。 ベータ参加は16歳以上に限定し、16歳未満の登録・参加は認めません。16～17歳は保護者と規約を読み、法令上必要な同意を取得してください。現地の成年年齢未満の他の利用者にも適用します。必要な同意・確認が完了するまで対象機能を開放しません。年齢申告や自己責任の表明だけでは代替できません。 本草案は公式サイト、ベータ申請、および別途提供する OC 表現・AI 配信サービスを対象とします。デモは全機能の公開を意味しません。バックエンド未接続時、申請・招待画面は登録、コード検証、メール送信を完了しません。申請は参加資格、時期、永久無料を保証しません。</p></section>
+<section><h2 id="ja-2">2. アカウントと招待</h2><p>連絡可能なメールを使用し、パスワードと招待コードを保護してください。招待の販売・公開共有、不正な検証回避、なりすましは禁止します。期限や利用回数は発行時に明示すべきもので、本稿では推測しません。</p></section>
+<section><h2 id="ja-3">3. OC と作品の権利</h2><p>創作者は OC、モデル、画像、音声等に関する既存の権利を保持します。提案する利用許諾は、依頼された保存、描画、生成、伝送に必要な範囲に限定され、所有権の移転を意味しません。広告利用、再配布、AI 学習には別途適切な許諾が必要です。</p></section>
+<section><h2 id="ja-4">4. 第三者素材と生成物</h2><p>BOOTH、VRoid、模之屋、依頼作品の配信・商用・改変・クレジット・再配布条件を確認してください。互換性やデモは許諾や提携を意味しません。権利未確認のサンプルの所有権は保証しません。生成物の著作権、独占性、自由な商用利用も保証できず、音楽・動画・声等の権利確認が必要です。</p></section>
+<section><h2 id="ja-5">5. 配信と禁止行為</h2><p>詐欺、なりすまし、嫌がらせ、プライバシーや知的財産の侵害、違法コンテンツ、安全措置の回避は禁止します。AI の関与を視聴者に明示し、適用法令の表示義務と配信先の規則に従ってください。 年齢等を正しく申告し、アカウントを保護し、素材の権利、公開内容、行為について適用法に従い責任を負ってください。未成年者の取消・返金・プライバシー権や、Echuuの免除できない安全・説明・保護義務を放棄させるものではありません。</p></section>
+<section><h2 id="ja-6">6. 料金とギフト</h2><p>デモのギフトは有料販売の申し出ではありません。有料化時には価格、通貨、更新、解約、返金条件を支払前に提示し、必要な確認を得る必要があります。本稿は自動更新や一律返金不可を定めず、法定の消費者権利を制限しません。</p></section>
+<section><h2 id="ja-7">7. 個人情報と学習</h2><p>公式サイトと製品の処理範囲は異なります。サービス提供の処理を学習の許諾とせず、学習には別途明確なオプトインを求める提案です。実際の委託先の保存・学習設定は確認が必要です。</p></section>
+<section><h2 id="ja-8">8. 停止・削除・異議</h2><p>安全や権利侵害の合理的なリスクには必要かつ相応の制限を行い、緊急時や法令上禁止される場合を除き理由と異議申立方法を説明すべきです。利用停止、データ削除、制限の再審査をメールで依頼できます。ベータ版は変更・中断する可能性があるためバックアップを保管してください。</p></section>
+<section><h2 id="ja-9">9. 責任・紛争・変更</h2><p>本草案は責任上限、強制仲裁、外国の専属管轄を創作しません。メールで協議でき、法定の救済と管轄裁判所への申立ては妨げません。重大な変更は適用前に通知し、必要な場合は改めて同意を取得すべきです。</p></section>
+<section><h2 id="ja-10">10. 権利侵害の連絡</h2><p>内容の所在、問題、連絡先、必要な権利証明をメールで送付してください。パスワードや不要な身分証は送らないでください。必要最小限の確認を行い、適用法に従って対応します。一般窓口であり、登録済み DMCA 代理人との表示ではありません。</p></section>
+<footer><h2>お問い合わせ・権利請求</h2><p>Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA</p><a href="mailto:cory@anngel.live">cory@anngel.live</a><nav>
+<a href="./privacy.html?lang=ja">プライバシーポリシー</a>
+<a href="./minors.html?lang=ja">未成年者の利用</a>
+<a href="./ai-content-disclosure.html?lang=ja">AI コンテンツの開示</a>
+<a href="../website/ja/">公式サイトへ</a></nav></footer></article>
+<article data-doc="ko" lang="ko" class="">
+<h1>이용약관</h1>
+<p class="notice">검토 초안 · 2026-09-30 갱신. 운영자명·공개 연락 주소·16세 이상 정책은 운영자가 제공했고 S3 설정은 읽기 전용으로 확인했습니다. 설립 관할, 실제 운영 공급자, 보관·완전 삭제는 추가 검토가 필요합니다.</p>
+<nav class="toc" aria-label="Contents">
+<a href="#ko-1">1. 범위와 베타 상태</a>
+<a href="#ko-2">2. 계정과 초대</a>
+<a href="#ko-3">3. 캐릭터와 작품</a>
+<a href="#ko-4">4. 외부 자산과 출력</a>
+<a href="#ko-5">5. 방송과 금지 행위</a>
+<a href="#ko-6">6. 결제와 선물</a>
+<a href="#ko-7">7. 개인정보와 학습</a>
+<a href="#ko-8">8. 제한과 삭제</a>
+<a href="#ko-9">9. 책임과 분쟁</a>
+<a href="#ko-10">10. 신고 방법</a>
+</nav>
+<section><h2 id="ko-1">1. 범위와 베타 상태</h2><p>운영자는 Anngel LLC입니다. 운영자가 제공한 공개 연락 주소(등록 대리인 주소): Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA. 대리인이 서비스 운영자나 개인정보 처리자가 되는 것은 아닙니다. 이 주소만으로 회사 설립 주를 확정하지 않습니다. 이메일: cory@anngel.live. 베타는 만16세 이상만 이용할 수 있으며 16세 미만의 가입·참여는 허용하지 않습니다. 16~17세는 보호자와 약관을 읽고 법적으로 필요한 동의를 받아야 합니다. 현지 성년 미만의 다른 사용자도 같습니다. 필요한 동의·검증을 마치기 전 해당 기능을 제공하지 않습니다. 나이 신고나 자기책임 선언은 절차를 대신하지 않습니다. 본 초안은 Echuu 웹사이트, 베타 신청 및 별도 OC 퍼포먼스·AI 방송 서비스를 다룹니다. 데모가 모든 기능의 출시를 의미하지 않습니다. 백엔드 미연결 시 신청·초대 화면은 가입, 코드 검증, 메일 발송을 완료하지 않습니다. 신청은 선정, 일정 또는 영구 무료를 보장하지 않습니다.</p></section>
+<section><h2 id="ko-2">2. 계정과 초대</h2><p>연락 가능한 이메일을 쓰고 비밀번호와 초대 코드를 보호하세요. 초대 판매·공개 공유, 검증 우회, 사칭을 금지합니다. 유효기간과 사용 횟수는 발급 시 명시해야 하며 이 초안에서 임의로 정하지 않습니다.</p></section>
+<section><h2 id="ko-3">3. 캐릭터와 작품</h2><p>창작자는 OC, 모델, 이미지, 음성 등 기존 권리를 유지합니다. 제안하는 이용 허락은 요청한 저장·렌더링·생성·전송에 필요한 범위로 한정되며 소유권 이전이 아닙니다. 홍보, 재배포 및 AI 학습은 별도 적절한 허락이 필요합니다.</p></section>
+<section><h2 id="ko-4">4. 외부 자산과 출력</h2><p>BOOTH, VRoid, 모형 공유 사이트 및 커미션 작품의 방송·상업·수정·표시·재배포 조건을 확인하세요. 호환이나 데모는 허락·제휴를 뜻하지 않습니다. 권리 미확인 샘플의 소유권을 보장하지 않습니다. AI 출력의 저작권, 독점성 및 자유로운 상업 이용도 보장할 수 없으며 음악·영상·음성 권리를 확인해야 합니다.</p></section>
+<section><h2 id="ko-5">5. 방송과 금지 행위</h2><p>사기, 사칭, 괴롭힘, 개인정보·지식재산 침해, 불법 콘텐츠 및 보안 우회를 금지합니다. 시청자가 AI 참여를 알 수 있게 고지하고 관련 표시 의무와 방송 플랫폼 규칙을 준수하세요. 나이 등 필요한 정보를 사실대로 제공하고 계정을 보호하며 업로드 권리·공개 콘텐츠·행동에 대해 적용법상 책임을 집니다. 미성년자의 법정 취소·환불·개인정보 권리나 Echuu의 면제 불가능한 안전·고지·보호 의무를 없애지 않습니다.</p></section>
+<section><h2 id="ko-6">6. 결제와 선물</h2><p>데모 선물은 유료 판매 제안이 아닙니다. 유료화 시 가격, 통화, 갱신, 해지, 환불을 결제 전에 고지하고 필요한 확인을 받아야 합니다. 본 초안은 자동 갱신이나 일괄 환불 불가를 정하지 않으며 법정 권리를 제한하지 않습니다.</p></section>
+<section><h2 id="ko-7">7. 개인정보와 학습</h2><p>웹사이트와 제품의 처리 범위는 다릅니다. 필요한 서비스 처리를 학습 허락으로 간주하지 않고 학습에는 별도 명시적 선택 동의를 요구하는 제안입니다. 실제 공급자의 보관·학습 설정은 확인해야 합니다.</p></section>
+<section><h2 id="ko-8">8. 제한과 삭제</h2><p>안전·권리 침해 등의 합리적 위험에는 필요한 비례적 제한을 적용하고 긴급하거나 법으로 금지된 경우 외에는 이유와 이의 방법을 알려야 합니다. 이용 중단, 데이터 삭제, 제한 재검토를 이메일로 요청할 수 있습니다. 베타는 변경·중단될 수 있으므로 원본을 보관하세요.</p></section>
+<section><h2 id="ko-9">9. 책임과 분쟁</h2><p>임의의 책임 상한, 강제 중재 또는 외국 전속 관할을 정하지 않습니다. 이메일로 해결을 요청하고 법정 구제 및 관할 법원을 이용할 수 있습니다. 중요한 변경은 적용 전에 알리고 필요한 재동의를 받아야 합니다.</p></section>
+<section><h2 id="ko-10">10. 신고 방법</h2><p>콘텐츠 위치, 문제, 연락처 및 필요한 권리 증거를 이메일로 보내세요. 비밀번호나 불필요한 신분증은 보내지 마세요. 최소한의 확인 후 관련 법에 따라 처리합니다. 일반 문의 창구이며 등록된 DMCA 대리인이라는 뜻은 아닙니다.</p></section>
+<footer><h2>문의 및 권리 요청</h2><p>Anngel LLC; c/o NORTHWEST REGISTERED AGENT, LLC; 732 S 6th ST, STE N, Las Vegas, NV 89101, USA</p><a href="mailto:cory@anngel.live">cory@anngel.live</a><nav>
+<a href="./privacy.html?lang=ko">개인정보처리방침</a>
+<a href="./minors.html?lang=ko">미성년자 이용 안내</a>
+<a href="./ai-content-disclosure.html?lang=ko">AI 콘텐츠 고지</a>
+<a href="../website/ko/">웹사이트로</a></nav></footer></article>
+</main><script>(()=>{const langs=['zh','en','ja','ko'];const p=new URLSearchParams(location.search);let stored;try{stored=localStorage.getItem('echuu-legal-lang')}catch{}const hashLang=location.hash.slice(1).split('-')[0];let lang=p.get('lang')|| (langs.includes(hashLang)?hashLang:stored)||'zh';if(!langs.includes(lang))lang='zh';function apply(l){document.querySelectorAll('[data-doc]').forEach(e=>e.classList.toggle('active',e.dataset.doc===l));document.querySelectorAll('[data-lang]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.lang===l)));document.documentElement.lang=l;document.title='Echuu · '+document.querySelector('article.active h1').textContent;try{localStorage.setItem('echuu-legal-lang',l)}catch{}const u=new URL(location.href);u.searchParams.set('lang',l);history.replaceState(null,'',u);if(location.hash){const el=document.getElementById(location.hash.slice(1));if(el&&el.closest('article.active'))el.scrollIntoView()}}document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{history.replaceState(null,'',location.pathname+'?lang='+b.dataset.lang);apply(b.dataset.lang)}));apply(lang)})();</script></body></html>

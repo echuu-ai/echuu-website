@@ -160,7 +160,7 @@ export const en: Dict = {
     social: 'Social',
     contact: 'Contact',
     rights: 'Echuu. Character rights belong to their creators.',
-    draftNotice: 'The terms of service still contain draft and placeholder items. The document itself is authoritative.',
+    draftNotice: 'Legal documents are review drafts. Operator and data-processing details still require confirmation.',
   },
 
   feedbackPage: {
@@ -217,8 +217,36 @@ export const en: Dict = {
   },
 
   journalPage: {
-    title: 'Journal',
+    title: 'Notes',
     lede: 'Product notes and research notes.',
+  },
+
+  blogPage: {
+    title: 'Journal',
+    lede: 'Product thinking, character performance design and AI VTuber craft.',
+    readMore: 'Read more',
+    backToList: 'Back to all posts',
+    note: 'Chinese is the source text; the Japanese, English and Korean versions are working drafts, not yet reviewed by native speakers.',
+  },
+
+  teamPage: {
+    title: 'Team',
+    lede: 'A small team bringing original characters on stage.',
+    coreTitle: 'Core team',
+    advisorTitle: 'Technical advisor',
+    aboutTitle: 'About Echuu',
+    facts: [
+      ['Name', 'Echuu / エチュウゥ / 爱啾'],
+      ['Developer', 'Echuu (Anngel LLC, Nevada, USA), founded and led by Cory Yihua Li'],
+      ['Founded', '2025'],
+      ['Based in', 'Shanghai, China / Nevada, USA'],
+      ['Platforms', 'Web and desktop, with output to Twitch, YouTube and Bilibili'],
+      ['Press contact', 'cory@anngel.live'],
+    ],
+    thanks: 'Built on Qwen (Alibaba Cloud), LiveKit, VRoid, three-vrm and the open VRM ecosystem. Special thanks to the 215 creators on the waitlist, who let us meet their characters before anyone else.',
+    source: 'Kept in sync with the Notion press kit (last updated 2026-08-28).',
+    github: 'GitHub',
+    website: 'Website',
   },
 
   legal: {
@@ -235,7 +263,9 @@ export const en: Dict = {
     },
     gallery: { title: 'Characters — Echuu', description: 'Demo material and creator credits from Echuu.' },
     creators: { title: 'Creator partnerships — Echuu', description: 'Notes for illustrators, rigging artists, and 3D modellers.' },
-    journal: { title: 'Journal — Echuu', description: 'Product notes and research notes from Echuu.' },
+    journal: { title: 'Notes — Echuu', description: 'Product notes and research notes from Echuu.' },
+    blog: { title: 'Journal — Echuu', description: 'Product thinking, character performance design and AI VTuber craft from Echuu.' },
+    team: { title: 'Team — Echuu', description: 'The Echuu team and technical advisor bringing original characters on stage.' },
     feedback: { title: 'Feedback — Echuu', description: 'Report a problem, or tell us what you want.' },
     doodle: { title: 'Doodle corner — Echuu', description: 'Leave a small doodle for your Original Character.' },
   },

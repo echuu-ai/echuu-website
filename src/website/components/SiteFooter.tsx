@@ -33,7 +33,7 @@ export function SiteFooter() {
                 <Link to={websitePath(locale, 'creators')}>{t.footer.creatorLinks.partner}</Link>
               </li>
               <li>
-                <a href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">
+                <a href={`${LEGAL_DOCS.terms}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
                   {t.footer.creatorLinks.rights}
                 </a>
               </li>
@@ -59,17 +59,17 @@ export function SiteFooter() {
             <h2>{t.footer.legal}</h2>
             <ul>
               <li>
-                <a href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">
+                <a href={`${LEGAL_DOCS.terms}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
                   {t.footer.legalLinks.terms}
                 </a>
               </li>
               <li>
-                <a href={LEGAL_DOCS.privacy} target="_blank" rel="noreferrer noopener">
+                <a href={`${LEGAL_DOCS.privacy}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
                   {t.footer.legalLinks.privacy}
                 </a>
               </li>
               <li>
-                <a href={LEGAL_DOCS.ai} target="_blank" rel="noreferrer noopener">
+                <a href={`${LEGAL_DOCS.ai}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
                   {t.footer.legalLinks.ai}
                 </a>
               </li>

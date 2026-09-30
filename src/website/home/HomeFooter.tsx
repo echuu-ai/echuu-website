@@ -39,20 +39,22 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
         <div className="hv-footer__col">
           <h3>{h.footer.creators}</h3>
           <Link to={websitePath(locale, 'creators')}>{h.footer.creatorLinks.partner}</Link>
-          <a href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">{h.footer.creatorLinks.rights}</a>
+          <a href={`${LEGAL_DOCS.terms}?lang=${locale}`} target="_blank" rel="noreferrer noopener">{h.footer.creatorLinks.rights}</a>
         </div>
         <div className="hv-footer__col">
           <h3>{h.footer.community}</h3>
           <Link to={websitePath(locale, 'feedback')}>{h.footer.communityLinks.feedback}</Link>
           <Link to={websitePath(locale, 'doodle')}>{h.footer.communityLinks.doodle}</Link>
+          <Link to={websitePath(locale, 'blog')}>{h.footer.communityLinks.blog}</Link>
+          <Link to={websitePath(locale, 'team')}>{h.footer.communityLinks.team}</Link>
           <Link to={websitePath(locale, 'journal')}>{h.footer.communityLinks.journal}</Link>
         </div>
         <div className="hv-footer__col">
           <h3>{h.footer.legal}</h3>
-          <a href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.terms}</a>
-          <a href={LEGAL_DOCS.privacy} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.privacy}</a>
-          <a href={LEGAL_DOCS.terms} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.minors}</a>
-          <a href={LEGAL_DOCS.ai} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.ai}</a>
+          <a href={`${LEGAL_DOCS.terms}?lang=${locale}`} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.terms}</a>
+          <a href={`${LEGAL_DOCS.privacy}?lang=${locale}`} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.privacy}</a>
+          <a href={`${LEGAL_DOCS.minors}?lang=${locale}`} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.minors}</a>
+          <a href={`${LEGAL_DOCS.ai}?lang=${locale}`} target="_blank" rel="noreferrer noopener">{h.footer.legalLinks.ai}</a>
         </div>
         <div className="hv-footer__col">
           <h3>{h.footer.social}</h3>

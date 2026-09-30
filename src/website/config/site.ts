@@ -1,4 +1,4 @@
-import { LEGAL_AI, LEGAL_PRIVACY, LEGAL_TERMS } from '../assets';
+import { LEGAL_AI, LEGAL_MINORS, LEGAL_PRIVACY, LEGAL_TERMS } from '../assets';
 
 /**
  * 站点配置。正式域名、报名接口、社交地址等都从这里读取，
@@ -59,6 +59,7 @@ export const LEGAL_DOCS = {
   terms: LEGAL_TERMS,
   privacy: LEGAL_PRIVACY,
   ai: LEGAL_AI,
+  minors: LEGAL_MINORS,
 } as const;
 
 /**

@@ -161,7 +161,7 @@ export const zh = {
     social: '社交',
     contact: '联系我们',
     rights: 'Echuu。角色权利属于各自创作者。',
-    draftNotice: '用户协议仍有草案和占位项，以文件内标注为准。',
+    draftNotice: '法律文件为审阅稿，运营与数据处理信息仍待确认。',
   },
 
   feedbackPage: {
@@ -218,8 +218,36 @@ export const zh = {
   },
 
   journalPage: {
-    title: '创作日志',
+    title: '短记录',
     lede: '产品记录与研究记录。',
+  },
+
+  blogPage: {
+    title: '创作日志',
+    lede: '产品思考、角色表演设计与 AI VTuber 创作实践。',
+    readMore: '阅读全文',
+    backToList: '返回全部文章',
+    note: '中文为源文；日文、英文、韩文为执行初稿，尚未母语审校。',
+  },
+
+  teamPage: {
+    title: '团队',
+    lede: '一支把原创角色带上舞台的小团队。',
+    coreTitle: '核心成员',
+    advisorTitle: '技术顾问',
+    aboutTitle: '关于 Echuu',
+    facts: [
+      ['名称', 'Echuu / エチュウゥ / 爱啾'],
+      ['开发商', 'Echuu（Anngel LLC，美国内华达州），由 Cory Yihua Li 创立并领导'],
+      ['成立', '2025'],
+      ['总部', '中国上海 / 美国内华达州'],
+      ['平台', '网页版、桌面版，支持输出至 Twitch、YouTube、哔哩哔哩'],
+      ['媒体联系', 'cory@anngel.live'],
+    ],
+    thanks: '本项目基于 Qwen（阿里云）、LiveKit、VRoid、three-vrm 以及开放的 VRM 生态系统构建。特别感谢候补名单上的 215 位创作者，是他们让我们比任何人都更早地见到了他们的角色。',
+    source: '内容与 Notion 媒体资料包保持一致（最后更新 2026.8.28）。',
+    github: 'GitHub',
+    website: '个人网站',
   },
 
   legal: {
@@ -236,7 +264,9 @@ export const zh = {
     },
     gallery: { title: '角色展示 — Echuu', description: 'Echuu 的角色演示素材与创作者署名。' },
     creators: { title: '创作者合作 — Echuu', description: '原画师、皮套画师与 3D 建模师的合作说明。' },
-    journal: { title: '创作日志 — Echuu', description: 'Echuu 的产品记录与研究记录。' },
+    journal: { title: '短记录 — Echuu', description: 'Echuu 的产品记录与研究记录。' },
+    blog: { title: '创作日志 — Echuu', description: 'Echuu 的产品思考、角色表演设计与 AI VTuber 创作实践。' },
+    team: { title: '团队 — Echuu', description: '把原创角色带上舞台的 Echuu 团队与技术顾问。' },
     feedback: { title: '意见箱 — Echuu', description: '报个问题，或者告诉我们你想要什么。' },
     doodle: { title: '涂鸦小角落 — Echuu', description: '给你的 Original Character 留个小涂鸦。' },
   },

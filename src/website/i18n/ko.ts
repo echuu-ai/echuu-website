@@ -160,7 +160,7 @@ export const ko: Dict = {
     social: '소셜',
     contact: '문의',
     rights: 'Echuu. 캐릭터 권리는 각 제작자에게 있습니다.',
-    draftNotice: '이용약관에는 초안과 미기재 항목이 남아 있습니다. 문서에 표시된 내용을 확인해 주세요.',
+    draftNotice: '법률 문서는 검토 초안입니다. 운영자 및 데이터 처리 정보는 확인이 필요합니다.',
   },
 
   feedbackPage: {
@@ -217,8 +217,36 @@ export const ko: Dict = {
   },
 
   journalPage: {
-    title: '작업 기록',
+    title: '짧은 기록',
     lede: '제품 기록과 연구 기록.',
+  },
+
+  blogPage: {
+    title: '제작 노트',
+    lede: '제품에 대한 생각, 캐릭터 연기 설계, AI VTuber 제작 실천.',
+    readMore: '더 읽기',
+    backToList: '전체 글로 돌아가기',
+    note: '원문은 중국어입니다. 일본어·영어·한국어 판은 작업 중인 초안으로, 아직 원어민 검수를 거치지 않았습니다.',
+  },
+
+  teamPage: {
+    title: '팀',
+    lede: '오리지널 캐릭터를 무대에 올리는 작은 팀입니다.',
+    coreTitle: '핵심 멤버',
+    advisorTitle: '기술 고문',
+    aboutTitle: 'Echuu 소개',
+    facts: [
+      ['이름', 'Echuu / エチュウゥ / 爱啾'],
+      ['개발사', 'Echuu (Anngel LLC, 미국 네바다주). Cory Yihua Li가 설립하고 이끕니다'],
+      ['설립', '2025'],
+      ['거점', '중국 상하이 / 미국 네바다주'],
+      ['플랫폼', '웹과 데스크톱. Twitch, YouTube, bilibili 송출 지원'],
+      ['미디어 문의', 'cory@anngel.live'],
+    ],
+    thanks: 'Qwen(Alibaba Cloud), LiveKit, VRoid, three-vrm, 그리고 열린 VRM 생태계 위에 만들었습니다. 대기 명단의 215명 크리에이터께 특별히 감사드립니다. 누구보다 먼저 여러분의 캐릭터를 만나게 해 주셨습니다.',
+    source: 'Notion 미디어 키트(최종 갱신 2026.8.28)와 내용을 맞추고 있습니다.',
+    github: 'GitHub',
+    website: '웹사이트',
   },
 
   legal: {
@@ -235,7 +263,9 @@ export const ko: Dict = {
     },
     gallery: { title: '캐릭터 — Echuu', description: 'Echuu의 데모 자료와 크레딧.' },
     creators: { title: '크리에이터 협업 — Echuu', description: '원화, 리깅, 3D 모델링 작가를 위한 안내.' },
-    journal: { title: '작업 기록 — Echuu', description: 'Echuu의 제품 기록과 연구 기록.' },
+    journal: { title: '짧은 기록 — Echuu', description: 'Echuu의 제품 기록과 연구 기록.' },
+    blog: { title: '제작 노트 — Echuu', description: 'Echuu의 제품에 대한 생각, 캐릭터 연기 설계, AI VTuber 제작 실천.' },
+    team: { title: '팀 — Echuu', description: '오리지널 캐릭터를 무대에 올리는 Echuu 팀과 기술 고문.' },
     feedback: { title: '의견 보내기 — Echuu', description: '문제를 알려 주시거나, 원하는 기능을 이야기해 주세요.' },
     doodle: { title: '낙서 코너 — Echuu', description: '당신의 Original Character에게 낙서를 하나 남겨 보세요.' },
   },

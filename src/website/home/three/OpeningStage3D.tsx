@@ -1,3 +1,5 @@
+import { FingertipGlint } from './FingertipGlint';
+import { debutEnvelope } from '../debutHighlight';
 import { SkyEdgeEffect } from './SkyEdgeEffect';
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
@@ -473,16 +475,24 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
   });
 
   return (
+    <>
     <group position={HERO_ACTOR?.position ?? [0, 0, 0]} rotation={HERO_ACTOR?.rotation ?? [0, 0, 0]} scale={HERO_ACTOR?.scale ?? 1}>
       <group position={normalization.offset}>
         <primitive object={vrm.scene} />
       </group>
     </group>
+    <FingertipGlint vrm={vrm} clock={clock} />
+    </>
   );
 }
 
 /** 场景文件里的三盏灯：与 SceneEditorLights 同一套参数，去掉编辑手柄 */
-function HeroLights({ lighting }: { lighting: SceneLighting }) {
+const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: SceneLighting; clock: OpeningClock }) {
+  const debutRim = useRef<THREE.DirectionalLight>(null);
+  useFrame(() => {
+    if (debutRim.current) debutRim.current.intensity = clock.ready
+      ? 0.35 * debutEnvelope(openingTime(clock, performance.now()) - OPENING_TOTAL) : 0;
+  });
   const target = useMemo(() => new THREE.Object3D(), []);
   useEffect(() => {
     target.position.fromArray(lighting.target);
@@ -492,13 +502,14 @@ function HeroLights({ lighting }: { lighting: SceneLighting }) {
     <>
       <primitive object={target} />
       <ambientLight color={lighting.ambientColor} intensity={lighting.ambientIntensity} />
+      <directionalLight ref={debutRim} position={lighting.rim.position} target={target} color="#b8eaff" intensity={0} />
       {(['key', 'fill', 'rim'] as const).map((id) => {
         const light = lighting[id];
         return <directionalLight key={id} position={light.position} color={light.color} intensity={light.enabled ? light.intensity : 0} target={target} />;
       })}
     </>
   );
-}
+});
 
 /**
  * 黑场手机窗画在 3D 里：一块贴着相机、位于角色之后 / 天空之前的黑色幕布，中间按 DOM 窗口开洞。
@@ -606,7 +617,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
           fogDensity={HERO_LIGHTING.fogDensity}
         />
       </Suspense>
-      <HeroLights lighting={HERO_LIGHTING} />
+      <HeroLights lighting={HERO_LIGHTING} clock={clock} />
       <BlackFrame hole={hole} />
       <Suspense fallback={null}>
         <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} />

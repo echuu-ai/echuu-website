@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+import { DEBUT_SECONDS } from './debutHighlight';
 import { createPortal } from 'react-dom';
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useProgress } from '@react-three/drei';
@@ -5,6 +7,9 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { LangSwitch } from '../components/LangSwitch';
+import { LangInline } from '../components/LangInline';
+import { Link } from '../components/Link';
+import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
 import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
@@ -40,6 +45,7 @@ const MENU_ANCHORS = [
   ['steps', '#steps'],
   ['agent', '#feature'],
   ['creators', '#creators'],
+  ['blog', '#blog'],
   ['beta', '#beta'],
 ] as const;
 
@@ -60,6 +66,13 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const [phase, setPhase] = useState<OpeningPhase>('loading');
   const [stillShot, setStillShot] = useState<'back' | 'front'>('back');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [debut, setDebut] = useState(false);
+  useEffect(() => {
+    if (phase !== 'hero' || reduced) { setDebut(false); return; }
+    setDebut(true);
+    const timer = window.setTimeout(() => setDebut(false), DEBUT_SECONDS * 1000);
+    return () => window.clearTimeout(timer);
+  }, [phase, reduced]);
   const [running, setRunning] = useState(true);
   const [ready, setReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
@@ -286,7 +299,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
         </div>
       ) : null}
 
-      <div className="hv-chrome" data-visible={phase === 'hero'}>
+      <div className="hv-chrome" data-visible={phase === 'hero'} data-debut={debut && !reduced}>
         <header className="hv-header">
           <div className="hv-header__left">
             <span className="hv-header__tagline" lang="en">{h.header.tagline}</span>
@@ -299,6 +312,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           <p className="hv-header__lede">{h.header.lede}</p>
           <div className="hv-header__right">
             <span className="hv-header__brand" lang="en">{h.header.brand}</span>
+            <LangInline locale={locale} label={h.header.language} />
             <button
               type="button"
               className="hv-header__menu"
@@ -318,10 +332,14 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           {MENU_ANCHORS.map(([key, href]) => (
             <a key={key} href={href}>{h.menu[key]}</a>
           ))}
+          <Link to={websitePath(locale, 'team')}>{h.menu.team}</Link>
         </nav>
 
         <div className="hv-title">
-          <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={344} height={155} />
+          <div className="hv-title__logo-wrap" style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}>
+            <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={344} height={155} />
+            
+          </div>
           <p className="hv-title__slogan">
             {h.hero.slogan.pre}
             <mark className="hv-title__hl hv-title__hl--yellow">{h.hero.slogan.hl1}</mark>
@@ -360,6 +378,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             {MENU_ANCHORS.map(([key, href]) => (
               <a key={key} href={href} onClick={() => setMenuOpen(false)}>{h.menu[key]}</a>
             ))}
+            <Link to={websitePath(locale, 'team')} onClick={() => setMenuOpen(false)}>{h.menu.team}</Link>
           </nav>
           <div className="hv-menu-overlay__lang">
             <LangSwitch locale={locale} label={h.header.language} />

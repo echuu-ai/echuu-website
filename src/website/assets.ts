@@ -22,6 +22,7 @@ export const GIFT_ENVELOPE = publicUrl('assets/stream-gifts/sealed-envelope.png'
 export const GIFT_PEBBLE = publicUrl('assets/stream-gifts/white-pebble.png');
 export const LEGAL_TERMS = publicUrl('legal/terms.html');
 export const LEGAL_PRIVACY = publicUrl('legal/privacy.html');
+export const LEGAL_MINORS = publicUrl('legal/minors.html');
 export const LEGAL_AI = publicUrl('legal/ai-content-disclosure.html');
 
 /** 派生：为官网重新处理过 */

@@ -216,18 +216,18 @@
   },
   {
     "path": "legal/ai-content-disclosure.html",
-    "bytes": 11873,
-    "sha256": "4287a04254dde350e3b6fbf785ed582461cdd61cd409f7f41aea9471fdaf98a6"
+    "bytes": 14178,
+    "sha256": "05704aa1ba7b25b68f3f2babb8eb68f621e8ca5aaad5a1bd57a45e2fd0ab4bdd"
   },
   {
     "path": "legal/privacy.html",
-    "bytes": 109501,
-    "sha256": "6168c82f0751d300ffe84c78a4444484eaf3b8abdcc6c5bb26d6b1864c25da73"
+    "bytes": 27943,
+    "sha256": "3fcbd57fa3491fc85a5842b0b3a6d4bf61b2e393e5945d0ff00bdfbb01e819ab"
   },
   {
     "path": "legal/terms.html",
-    "bytes": 64223,
-    "sha256": "70b57b4c9ea081f72539735cbaaab5becdc53f27f0b0bbfee8af966b64c71e5d"
+    "bytes": 28868,
+    "sha256": "9d40dc7624823c8806d844166f99d0f9b8420cbfeae5d58dba0d3c29059fa43d"
   },
   {
     "path": "website/angel-deco.png",
@@ -540,5 +540,10 @@
     "bytes": 102348,
     "sha256": "29a9a7ca875ec11954481f1a943ae62b05dd4c6d8b13bdd6188c11077fe7251e",
     "source": "User supplied WeChat contact QR, 2026-09-29"
+  },
+  {
+    "path": "legal/minors.html",
+    "bytes": 15520,
+    "sha256": "062b6cb4dd735ce93ccc7fa53fb74170b0a8c6173b9246ef9348c30007338d3a"
   }
 ]

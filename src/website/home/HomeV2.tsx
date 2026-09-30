@@ -7,6 +7,7 @@ import { useHomeDict } from './useHomeDict';
 import { OpeningHero } from './OpeningHero';
 import { CreatorsSection, FeatureSection, IntroSection, ModesSection, StepsSection } from './HomeSections';
 import { HomeFooter } from './HomeFooter';
+import { BlogSection } from './BlogSection';
 import '../styles/home.css';
 
 /**
@@ -37,6 +38,7 @@ export function HomeV2() {
         <FeatureSection />
         <ModesSection />
         <CreatorsSection />
+        <BlogSection />
       </div>
       <HomeFooter onBeta={() => openAccess('signup')} />
       <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />

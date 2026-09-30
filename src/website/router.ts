@@ -5,34 +5,42 @@ import { DEFAULT_WEBSITE_LOCALE, isWebsiteLocale, type Locale } from './i18n';
 export const WEBSITE_BASE = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;
 
 export type WebsitePage =
-  | 'home' | 'gallery' | 'creators' | 'journal' | 'feedback' | 'doodle' | 'moodboard' | 'not-found';
+  | 'home' | 'gallery' | 'creators' | 'journal' | 'blog' | 'team' | 'feedback' | 'doodle' | 'moodboard' | 'not-found';
 
 const PAGES: Record<string, WebsitePage> = {
   '': 'home',
   gallery: 'gallery',
   creators: 'creators',
   journal: 'journal',
+  blog: 'blog',
+  team: 'team',
   feedback: 'feedback',
   doodle: 'doodle',
   moodboard: 'moodboard',
 };
 
-export type WebsiteLocation = { locale: Locale; page: WebsitePage; hash: string };
+/** 只有这些页面接受第三段 slug（例如 /website/zh/blog/{slug}） */
+const PAGES_WITH_SLUG: ReadonlySet<WebsitePage> = new Set(['blog']);
 
-/** 从 /website/{locale}/{page} 解析；locale 缺失或非法时回落到默认语言。 */
+export type WebsiteLocation = { locale: Locale; page: WebsitePage; hash: string; slug?: string };
+
+/** 从 /website/{locale}/{page}[/{slug}] 解析；locale 缺失或非法时回落到默认语言。 */
 export function parseWebsiteLocation(pathname: string, hash: string): WebsiteLocation {
   const rest = pathname.replace(/\/+$/, '').slice(WEBSITE_BASE.length).replace(/^\/+/, '');
-  const [maybeLocale, maybePage = ''] = rest.split('/');
+  const [maybeLocale, maybePage = '', maybeSlug] = rest.split('/');
   if (!isWebsiteLocale(maybeLocale)) {
     return { locale: DEFAULT_WEBSITE_LOCALE, page: 'home', hash };
   }
   const page = PAGES[maybePage] ?? 'not-found';
-  return { locale: maybeLocale, page, hash };
+  if (maybeSlug && !PAGES_WITH_SLUG.has(page)) return { locale: maybeLocale, page: 'not-found', hash };
+  const slug = maybeSlug ? decodeURIComponent(maybeSlug) : undefined;
+  return { locale: maybeLocale, page, hash, slug };
 }
 
-export function websitePath(locale: Locale, page: WebsitePage | '' = ''): string {
-  const slug = !page || page === 'home' ? '' : `/${page}`;
-  return `${WEBSITE_BASE}/${locale}${slug}`;
+export function websitePath(locale: Locale, page: WebsitePage | '' = '', slug?: string): string {
+  const segment = !page || page === 'home' ? '' : `/${page}`;
+  const tail = slug && page && PAGES_WITH_SLUG.has(page) ? `/${encodeURIComponent(slug)}` : '';
+  return `${WEBSITE_BASE}/${locale}${segment}${tail}`;
 }
 
 /** 站内跳转，复用 app 既有的过渡与 popstate 处理。 */
