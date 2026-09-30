@@ -33,7 +33,7 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
       <div className="hv-footer__grid">
         <div className="hv-footer__col">
           <h3>{h.footer.product}</h3>
-          <a href="#feature">{h.footer.productLinks.demo}</a>
+          <Link to={`${home}#feature`}>{h.footer.productLinks.demo}</Link>
           <a href={BETA_DOC_URL} target="_blank" rel="noreferrer noopener">{h.footer.productLinks.guide}</a>
         </div>
         <div className="hv-footer__col">

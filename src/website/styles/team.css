@@ -1,0 +1,60 @@
+/* Team shares the home sky asset; route-scoped chrome keeps other pages intact. */
+.echuu-website[data-page='team'] { position: relative; isolation: isolate; background: #277eba; color: #fff; --shell: min(1180px, 100% - 64px); }
+.echuu-website[data-page='team'] .team-world { position: fixed; inset: -40px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, #1268a529, #07508b80), var(--team-sky) center / cover; filter: blur(22px) saturate(.9); }
+.echuu-website[data-page='team'] .team-page { padding-bottom: 100px; }
+.echuu-website[data-page='team'] .team-heading { position: relative; padding: clamp(64px, 9vw, 130px) 0 clamp(64px, 8vw, 110px); }
+.echuu-website[data-page='team'] .team-heading h1 { color: white; font-family: 'PuguaXianyunsong Home', 'Songti SC', serif; font-weight: 200; font-size: clamp(66px, 9vw, 124px); letter-spacing: -.045em; line-height: 1.15; -webkit-text-stroke: 1pt white; paint-order: stroke fill; }
+.echuu-website[data-locale='en'] .team-heading h1 { font-family: var(--font-brand); -webkit-text-stroke: .25px white; }
+.echuu-website[data-locale='ja'] .team-heading h1 { font-family: 'Shippori Mincho', serif; font-weight: 700; -webkit-text-stroke: .2px white; }
+.echuu-website[data-locale='ko'] .team-heading h1 { font-family: 'Maru Buri', serif; font-weight: 600; -webkit-text-stroke: 0; }
+.echuu-website[data-page='team'] .team-heading > p { margin-top: 24px; max-width: 32em; color: #fff; font-size: clamp(17px, 2vw, 23px); line-height: 1.65; }
+.echuu-website[data-page='team'] .team-heading__mark { position: absolute; right: 4%; top: 25%; font-size: clamp(80px, 13vw, 180px); font-weight: 200; color: #d7f7ff; text-shadow: 0 0 45px #d1f4ff70; transform: rotate(12deg); }
+.echuu-website[data-page='team'] .team-section { margin-bottom: 64px; }
+.echuu-website[data-page='team'] .team-section__title { color: #fff; font: 500 clamp(20px, 2.3vw, 28px)/1.4 var(--font-ui); margin-bottom: 24px; letter-spacing: .035em; }
+.echuu-website[data-page='team'] .team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.echuu-website[data-page='team'] .team-grid > .reveal:first-child:nth-last-child(7) { grid-column: span 2; }
+.echuu-website[data-page='team'] .team-grid > .reveal { min-width: 0; }
+.echuu-website[data-page='team'] .team-card { position: relative; height: 100%; min-height: 196px; display: flex; padding: clamp(24px, 3vw, 38px); border-radius: 28px; border: 1px solid #e6f8ff70; background: linear-gradient(130deg, #f5fcffed, #d8f2ffe3); box-shadow: inset 0 1px 0 #ffffffd9, 0 12px 30px #06416a12; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease; }
+.echuu-website[data-page='team'] .team-card__body { position: relative; min-width: 0; padding-right: 12px; }
+.echuu-website[data-page='team'] .team-card__spark { position: absolute; right: 20px; top: 17px; color: #71b7d0; font-size: 23px; }
+.echuu-website[data-page='team'] .team-card__name { font: 500 clamp(21px, 2vw, 27px)/1.4 var(--font-ui); color: #163f61; overflow-wrap: anywhere; }
+.echuu-website[data-page='team'] .team-card__role { font-size: 14px; font-weight: 500; color: #326582; margin-top: 10px; }
+.echuu-website[data-page='team'] .team-card__bio { margin-top: 22px; max-width: 44em; color: #355772; font-size: 15px; line-height: 1.9; }
+.echuu-website[data-page='team'] .team-card__links { margin-top: 22px; gap: 12px; flex-wrap: wrap; }
+.echuu-website[data-page='team'] .team-card__links a { display: inline-flex; align-items: center; gap: 22px; min-height: 44px; padding: 8px 18px; border-radius: 100px; color: #174e73; background: #fff9; text-decoration: none; box-shadow: inset 0 1px 0 #fff; }
+.echuu-website[data-page='team'] .team-card__links a:hover { background: #fff; }
+.echuu-website[data-page='team'] section[aria-labelledby='team-advisor'] .team-grid { grid-template-columns: 1fr; }
+.echuu-website[data-page='team'] section[aria-labelledby='team-advisor'] .team-card { min-height: 0; }
+.echuu-website[data-page='team'] .team-about-panel { padding: clamp(24px, 4vw, 52px); border-radius: 30px; background: #e7f7ffed; box-shadow: inset 0 1px 0 white; color: #214c6b; }
+.echuu-website[data-page='team'] .team-facts { gap: 22px; }
+.echuu-website[data-page='team'] .team-facts__row { grid-template-columns: 120px minmax(0, 1fr); gap: 32px; font-size: 15px; line-height: 1.85; }
+.echuu-website[data-page='team'] .team-facts__row dt { color: #456a80; }
+.echuu-website[data-page='team'] .team-facts__row dd { color: #163f61; }
+.echuu-website[data-page='team'] .team-thanks { color: #315e78; margin-top: 40px; }
+.echuu-website[data-page='team'] .team-source { margin-top: 18px; font-size: 12px; color: #496c80; }
+@media (hover:hover) { .echuu-website[data-page='team'] .team-card:hover { transform: translateY(-4px); box-shadow: inset 0 1px 0 #fff, 0 18px 38px #063b6326; } }
+@media (max-width: 900px) { .echuu-website[data-page='team'] .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .echuu-website[data-page='team'] { --shell: calc(100% - 36px); }
+  .echuu-website[data-page='team'] .team-heading { padding: 64px 0 52px; }
+  .echuu-website[data-page='team'] .team-heading__mark { top: 42px; right: 8px; font-size: 68px; }
+  .echuu-website[data-page='team'] .team-heading > p { max-width: 17em; padding-right: 12px; }
+  .echuu-website[data-page='team'] .team-grid { grid-template-columns: 1fr; gap: 14px; }
+  .echuu-website[data-page='team'] .team-grid > .reveal:first-child:nth-last-child(7) { grid-column: auto; }
+  .echuu-website[data-page='team'] .team-card { min-height: 140px; border-radius: 24px; }
+  .echuu-website[data-page='team'] .team-section { margin-bottom: 42px; }
+  .echuu-website[data-page='team'] .team-facts__row { grid-template-columns: 1fr; gap: 4px; }
+  .echuu-website[data-page='team'] .team-page { padding-bottom: 24px; }
+}
+@media (prefers-reduced-motion:reduce) { .echuu-website[data-page='team'] .team-card { transition: none; } .echuu-website[data-page='team'] .team-card:hover { transform: none; } }
+/* Homepage chrome is shared, not recolored legacy SiteHeader/SiteFooter. */
+.echuu-website .hv.team-chrome { background: transparent; overflow: visible; isolation: auto; }
+.echuu-website .team-chrome > .hv-header { position: relative; height: 152px; z-index: 5; }
+.echuu-website .team-chrome .team-heading { padding-top: 48px; }
+.echuu-website .team-chrome .hv-footer { --hv-footer-sky: transparent; }
+.echuu-website .team-chrome .hv-footer__wings { filter: saturate(.72) blur(8px); }
+.echuu-website .team-menu-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media(max-width:900px) {
+  .echuu-website .team-chrome > .hv-header { height: 80px; }
+  .echuu-website .team-chrome .team-heading { padding-top: 36px; }
+}

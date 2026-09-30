@@ -47,7 +47,15 @@ npm run build -- --base=/echuu-website-preview/
 node scripts/prepare-pages.mjs
 ```
 
-`prepare-pages.mjs` 为四语页面生成静态入口，支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
+`prepare-pages.mjs` 为四语页面生成静态入口（含 blog / team 与每篇文章），支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
+
+同步 `dist/` 时**不要删除**预览仓库里的 `.github/`（Pages 部署工作流）、`.preview-parts/`（`app-build` 大文件的分片与 manifest）、`app-build/` 与 `README.md`。用 rsync 的话：
+
+```sh
+rsync -a --delete --exclude .git --exclude .github --exclude .preview-parts --exclude app-build --exclude README.md dist/ ../echuu-website-preview/
+```
+
+2026-09-30 起官网自身的大资源（VRM、HDR、字体）以完整文件提交到预览仓库，不再分片；manifest 只剩 `app-build` 一项。
 
 ## 博客、团队与语言切换（2026-09-30）
 

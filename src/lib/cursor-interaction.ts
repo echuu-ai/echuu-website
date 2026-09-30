@@ -1,6 +1,7 @@
 /** Native editing and controls always win over decorative cursor gestures. */
 export const CURSOR_UI_SELECTOR = [
   'button', 'a', 'input', 'textarea', 'select', 'label', 'summary',
+  'iframe', 'video[controls]', 'audio[controls]', '[tabindex]:not([tabindex="-1"])',
   '[contenteditable]:not([contenteditable="false"])', '[draggable="true"]',
   '[role="button"]', '[role="link"]', '[role="textbox"]', '[role="slider"]',
   '[role="checkbox"]', '[role="switch"]', '[role="radio"]', '[role="tab"]',
@@ -19,5 +20,6 @@ export function isCursorUi(target: EventTarget | null) {
 export function canStartCursorFlight(event: PointerEvent, selection = window.getSelection()) {
   return event.pointerType === 'mouse' && event.button === 0 && !event.defaultPrevented
     && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey
-    && !isCursorUi(event.target) && (!selection || selection.isCollapsed);
+    && !event.composedPath().some(isCursorUi) && !isCursorUi(event.target)
+    && (!selection || selection.isCollapsed);
 }

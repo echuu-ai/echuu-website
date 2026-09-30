@@ -1,6 +1,5 @@
 import { canStartCursorFlight, isCursorUi, CURSOR_EDITOR_SELECTOR } from '../lib/cursor-interaction';
 import { readUiFlightRoute, sampleUiFlightRoute } from '../lib/ui-cursor-flight';
-import { createCursorMotion, stepCursorMotion } from '../lib/cursor-motion';
 import { useEffect, useRef, useState } from 'react';
 import { sceneCursorFlight, startSceneCursorFlight, moveSceneCursorTarget, releaseSceneCursorFlight, cancelSceneCursorFlight } from '../lib/scene-cursor-flight';
 import { MetalPlaneCursor, type MetalPlaneCursorHandle } from './MetalPlaneCursor';
@@ -196,9 +195,6 @@ export default function BlendCursor() {
     let my = window.innerHeight / 2;
     let previousX = mx;
     let previousY = my;
-    const movement = createCursorMotion();
-    let bank = 0;
-    let pitch = 0;
     let lastFrame = performance.now();
     let hasPointer = false;
     let pressed = false;
@@ -246,7 +242,6 @@ export default function BlendCursor() {
       pointer.style.opacity = '0';
       document.documentElement.classList.remove('cursor-hidden', 'cursor-native-editing');
       hasPointer = false;
-      stepCursorMotion(movement, 0, 0, 16, true);
       pressed = false;
       flightX = flightY = flightHeading = 0;
       flight = null;
@@ -340,6 +335,9 @@ export default function BlendCursor() {
       strokeArmed = false;
       flightX = flightY = flightHeading = 0;
       flight = null;
+      wingRoll = flightDepth = 0;
+      wingRoll = flightDepth = 0;
+      size.current = targetSize.current;
     };
     const onSelection = () => {
       if (!window.getSelection()?.isCollapsed) cancelGesture();
@@ -356,7 +354,6 @@ export default function BlendCursor() {
       if (!hasPointer) {
         previousX = mx;
         previousY = my;
-        bank = pitch = 0;
         hasPointer = true;
       }
       document.documentElement.classList.add('cursor-hidden');
@@ -411,7 +408,6 @@ export default function BlendCursor() {
       const hit = event.target as Element | null;
       pressX = event.clientX;
       pressY = event.clientY;
-      stepCursorMotion(movement, 0, 0, 16, true);
       if (!flight && !sceneCursorFlight.active) pointer.style.transform = `translate3d(${mx - TIP_X}px, ${my - TIP_Y}px, 0)`;
       pressed = true;
       pressedAt = performance.now();
@@ -459,11 +455,10 @@ export default function BlendCursor() {
       const vy = (my - previousY) * 16.67 / dt;
       previousX = mx;
       previousY = my;
-      // Bank gently with velocity, then settle; the click hotspot never trails.
-      const targetBank = reduced ? 0 : Math.max(-6, Math.min(6, vx * 0.25 + vy * 0.1));
-      const targetPitch = reduced ? 0 : Math.max(-0.08, Math.min(0.08, vy * 0.004));
-      bank += (targetBank - bank) * blend;
-      pitch += (targetPitch - pitch) * blend;
+      // Controls can appear beneath a stationary pointer (e.g. opening a dialog).
+      // Recheck the hit surface before starting or continuing any decorative flight.
+      const overUi = hasPointer && isCursorUi(document.elementFromPoint(mx, my));
+      if (overUi) cancelGesture();
       if (pressed && !reduced && !launched && now - pressedAt >= HOLD_DELAY_MS) {
         launched = true;
         const uiRoute = readUiFlightRoute(mx, my);
@@ -539,11 +534,9 @@ export default function BlendCursor() {
       }
       pointer.style.opacity = hasPointer && !pointerHiddenForPanel && !(sceneCursorFlight.active && sceneCursorFlight.inside) ? '1' : '0';
       const flying = flight !== null || sceneCursorFlight.active;
-      stepCursorMotion(movement, vx, vy, dt, reduced || flying || pressed || !hasPointer || pointerHiddenForPanel);
       if (!flying) {
-        desiredHeading = movement.heading;
-        flightX = Math.max(TIP_X - mx + 2, Math.min(innerWidth - mx - BASE, movement.offsetX));
-        flightY = Math.max(TIP_Y - my + 2, Math.min(innerHeight - my - BASE, movement.offsetY));
+        // Ordinary cursor motion is 1:1, with no release glide or residual steering.
+        desiredHeading = flightHeading = flightX = flightY = wingRoll = flightDepth = 0;
       }
       const headingDelta = ((desiredHeading - flightHeading + 540) % 360 + 360) % 360 - 180;
       const headingStep = headingDelta * (reduced ? 1 : 1 - Math.exp(-dt / 65));
@@ -557,7 +550,7 @@ export default function BlendCursor() {
       // Banking changes the wing silhouette, rather than merely spinning a flat icon.
       const targetRoll = reduced ? 0 : flying
         ? Math.max(-18, Math.min(18, headingDelta * .65))
-        : movement.glide > 0 ? 0 : Math.max(-6, Math.min(6, vx * .3));
+        : 0;
       wingRoll += (targetRoll - wingRoll) * blend;
       flightDepth += ((reduced ? 0 : depth) - flightDepth) * blend;
       if (Math.abs(wingRoll) < 0.01) wingRoll = 0;
@@ -565,9 +558,9 @@ export default function BlendCursor() {
       const scale = size.current / BASE * (1 - flightDepth * 0.23);
       const wingTransform = wingRoll === 0 ? '' : ` perspective(240px) rotateY(${wingRoll}deg) rotateX(${wingRoll * 0.3}deg)`;
       const rendered3d = hasPointer && !pointerHiddenForPanel
-        && metalRef.current?.draw(reduced ? 0 : wingRoll, reduced ? 0 : pitch + movement.pitch, bank + flightHeading, reduced || !hasPointer || pointerHiddenForPanel ? 0 : Math.min(1, Math.hypot(vx, vy) / 12 + (flying || movement.glide > 0 ? .6 : 0)), movement.blurX, movement.blurY);
+        && metalRef.current?.draw(reduced ? 0 : wingRoll, 0, flightHeading, reduced || overUi || !hasPointer || pointerHiddenForPanel ? 0 : Math.min(1, Math.hypot(vx, vy) / 12 + (flying ? .6 : 0)), 0, 0);
       plane.style.transform = rendered3d ? `scale(${scale})`
-        : `rotate(${bank + flightHeading}deg)${wingTransform} scale(${scale}, ${scale * (1 + pitch)})`;
+        : `rotate(${flightHeading}deg)${wingTransform} scale(${scale})`;
 
       for (let i = 0; i < chips.length; i += 1) {
         const slot = chips[i];

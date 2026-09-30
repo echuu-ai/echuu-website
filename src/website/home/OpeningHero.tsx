@@ -7,7 +7,7 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { LangSwitch } from '../components/LangSwitch';
-import { LangInline } from '../components/LangInline';
+import { HomeHeader } from './HomeHeader';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
@@ -300,33 +300,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       ) : null}
 
       <div className="hv-chrome" data-visible={phase === 'hero'} data-debut={debut && !reduced}>
-        <header className="hv-header">
-          <div className="hv-header__left">
-            <span className="hv-header__tagline" lang="en">{h.header.tagline}</span>
-            <p className="hv-header__quote" lang="en">
-              {h.header.quote}
-              <br />
-              {h.header.quoteBy}
-            </p>
-          </div>
-          <p className="hv-header__lede">{h.header.lede}</p>
-          <div className="hv-header__right">
-            <span className="hv-header__brand" lang="en">{h.header.brand}</span>
-            <LangInline locale={locale} label={h.header.language} />
-            <button
-              type="button"
-              className="hv-header__menu"
-              aria-expanded={menuOpen}
-              aria-controls="hv-menu"
-              aria-label={menuOpen ? h.header.close : h.header.menu}
-              onClick={() => setMenuOpen((value) => !value)}
-            >
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-        </header>
+        <HomeHeader menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((value) => !value)} />
 
         <nav className="hv-menu" aria-label={h.header.menu}>
           {MENU_ANCHORS.map(([key, href]) => (

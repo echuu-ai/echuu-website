@@ -12,6 +12,7 @@ import { CreatorsPage } from './pages/CreatorsPage';
 import { JournalPage } from './pages/JournalPage';
 import { BlogPage } from './pages/BlogPage';
 import { TeamPage } from './pages/TeamPage';
+import { TeamChrome } from './home/TeamChrome';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { DoodlePage } from './pages/DoodlePage';
 import { MoodboardPage } from './pages/MoodboardPage';
@@ -88,13 +89,13 @@ export default function EchuuWebsite() {
 
   return (
     <LocaleContext.Provider value={{ locale, t }}>
-      <div className="echuu-website" data-locale={locale}>
+      <div className="echuu-website" data-locale={locale} data-page={page}>
         <a className="skip-link" href="#main">
           {t.nav.skipToContent}
         </a>
-        {page === 'home' ? null : <SiteHeader />}
-        <main id="main">{body}</main>
-        {page === 'home' ? null : <SiteFooter />}
+        {page === 'home' || page === 'team' ? null : <SiteHeader />}
+        {page === 'team' ? <TeamChrome><main id="main">{body}</main></TeamChrome> : <main id="main">{body}</main>}
+        {page === 'home' || page === 'team' ? null : <SiteFooter />}
       </div>
     </LocaleContext.Provider>
   );

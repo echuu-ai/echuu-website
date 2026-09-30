@@ -3,9 +3,12 @@ import { useLocale } from '../locale-context';
 import { websitePath } from '../router';
 import { BETA_DOC_URL, LEGAL_DOCS, SOCIAL_LINKS, CONTACT_EMAIL, LEGAL_FINALIZED } from '../config/site';
 import { WING_DECO } from '../assets';
+import { HOME_DICTS } from '../i18n/home';
 
 export function SiteFooter() {
   const { locale, t } = useLocale();
+  // 社交账号显示名按语言取（小红书在非中文下不能直接显示中文名）
+  const socialLabels: Record<string, string> = { xiaohongshu: HOME_DICTS[locale].footer.socialLinks.xiaohongshu };
 
   return (
     <footer className="site-footer">
@@ -82,7 +85,7 @@ export function SiteFooter() {
               {SOCIAL_LINKS.map((social) => (
                 <li key={social.id}>
                   <a href={social.href} target="_blank" rel="noreferrer noopener">
-                    {social.label}
+                    {socialLabels[social.id] ?? social.label}
                   </a>
                 </li>
               ))}

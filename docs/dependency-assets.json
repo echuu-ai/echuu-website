@@ -221,13 +221,13 @@
   },
   {
     "path": "legal/privacy.html",
-    "bytes": 27943,
-    "sha256": "3fcbd57fa3491fc85a5842b0b3a6d4bf61b2e393e5945d0ff00bdfbb01e819ab"
+    "bytes": 45518,
+    "sha256": "29d4a0f89cf51cb9b34a6f1db398707f7378e9bdc7ed9ea91510d557ed5fe707"
   },
   {
     "path": "legal/terms.html",
-    "bytes": 28868,
-    "sha256": "9d40dc7624823c8806d844166f99d0f9b8420cbfeae5d58dba0d3c29059fa43d"
+    "bytes": 52941,
+    "sha256": "735365886e066e0cd2a494ff40a501affa078e60d379cd5afcf62d95bfa6a408"
   },
   {
     "path": "website/angel-deco.png",
@@ -543,7 +543,7 @@
   },
   {
     "path": "legal/minors.html",
-    "bytes": 15520,
-    "sha256": "062b6cb4dd735ce93ccc7fa53fb74170b0a8c6173b9246ef9348c30007338d3a"
+    "bytes": 15193,
+    "sha256": "7441efb1a5b0b96ce92e3b70b73e2bd39e54f8289b97fbf972ccf74a5b5484c8"
   }
 ]
