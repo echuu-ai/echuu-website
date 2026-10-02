@@ -421,6 +421,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-body {
   position: relative; color: #fff; overflow: clip;
   background: transparent;
+  /* 正文顶部钻到首屏下面，让 3D 画布和撕纸切口往下多盖一段（开发时用 ?tune=seam 调） */
+  margin-top: calc(-1 * var(--hv-seam-extend, 0px));
 }
 .echuu-website .hv::before {
   content: ''; position: absolute; inset: -28px; z-index: -1; pointer-events: none;

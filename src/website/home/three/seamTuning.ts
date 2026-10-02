@@ -4,6 +4,8 @@
  */
 
 export type SeamTuning = {
+  /** 3D 画布往下盖住正文顶部多少 px（正文上移钻到首屏下面）；正式值写在 home.css 的 --hv-seam-extend */
+  extendPx: number;
   /** 静止时切口平均高度：首屏高度的百分比（0 = 最底边） */
   restPct: number;
   /** 滚动时最多再抬起多少：首屏高度的百分比 */
@@ -29,6 +31,7 @@ export type SeamTuning = {
 };
 
 export const SEAM_DEFAULTS: SeamTuning = {
+  extendPx: 0,
   restPct: 1.6,
   liftPct: 3,
   swell: 0.04,
@@ -43,7 +46,8 @@ export const SEAM_DEFAULTS: SeamTuning = {
 };
 
 export const SEAM_RANGES: Record<keyof SeamTuning, { min: number; max: number; step: number; label: string }> = {
-  restPct: { min: -1, max: 8, step: 0.1, label: '静止高度（首屏 %）' },
+  extendPx: { min: 0, max: 240, step: 2, label: '画布往下延伸（px）' },
+  restPct: { min: 0, max: 8, step: 0.1, label: '切口离画布底边（首屏 %）' },
   liftPct: { min: 0, max: 10, step: 0.1, label: '滚动抬起（首屏 %）' },
   swell: { min: 0, max: 0.15, step: 0.005, label: '大波浪起伏' },
   grain: { min: 0, max: 3, step: 0.05, label: '中等纹理' },
@@ -62,7 +66,10 @@ function load(): SeamTuning {
   if (!import.meta.env.DEV) return { ...SEAM_DEFAULTS };
   try {
     const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}') as Partial<SeamTuning>;
-    return { ...SEAM_DEFAULTS, ...saved };
+    const merged = { ...SEAM_DEFAULTS, ...saved };
+    // 切口低于画布底边只会被切成一条直线，最低就到底边
+    merged.restPct = Math.max(0, merged.restPct);
+    return merged;
   } catch {
     return { ...SEAM_DEFAULTS };
   }
@@ -71,13 +78,23 @@ function load(): SeamTuning {
 /** 当前生效的参数（可变对象，着色器每帧读） */
 export const seamTuning: SeamTuning = load();
 
+/** 画布延伸是排版（CSS 变量），不是着色器参数 */
+function applyExtend() {
+  if (!import.meta.env.DEV || typeof document === 'undefined') return;
+  if (seamTuning.extendPx === SEAM_DEFAULTS.extendPx) document.documentElement.style.removeProperty('--hv-seam-extend');
+  else document.documentElement.style.setProperty('--hv-seam-extend', `${seamTuning.extendPx}px`);
+}
+applyExtend();
+
 export function setSeamTuning(patch: Partial<SeamTuning>) {
   Object.assign(seamTuning, patch);
+  applyExtend();
   try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seamTuning)); } catch { /* ignore */ }
 }
 
 export function resetSeamTuning() {
   Object.assign(seamTuning, SEAM_DEFAULTS);
+  applyExtend();
   try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
 }
 
