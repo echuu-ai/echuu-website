@@ -941,3 +941,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-langpop__list a[aria-current='true'] { color: #fff; font-weight: 600; background: rgba(255, 255, 255, 0.16); }
 @keyframes hv-langpop-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) { .echuu-website .hv-langpop__list { animation: none; } }
+
+/* --- 底部栏随文案宽度自适应（日文、英文的「参与内测」更长），不超出屏幕 ------------------- */
+.echuu-website .hv-cta { width: auto; max-width: calc(100% - 24px); }
+.echuu-website .hv-cta__beta { white-space: nowrap; flex-shrink: 0; }
+/* 窄屏时「重播开场」挪到底部栏上方右侧，不和底部栏叠在一起 */
+@media (max-width: 900px) {
+  .echuu-website .hv-replay { bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px + 12px); right: 12px; }
+}
