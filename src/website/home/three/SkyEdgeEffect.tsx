@@ -13,13 +13,11 @@ import type { HoleRect } from './OpeningStage3D';
  * 色散参考 igloo.inc 的场景合成：5 次采样光谱加权 + 桶形畸变，只出现在切口上方一条带里，
  * 滚动时整个 3D 画面也按速度出现色散（中段强、四边收），停下后回落，只留切口上方一层很轻的彩边。
  * 切口以下输出透明，露出页面主体共用的 DOM 天空。
- * 静止时切口贴着首屏底部；往下滚，切口跟着往上推。只在定格（hole.open）后生效。
+ * 切口固定贴着首屏底部，随页面一起滚走（不随滚动上推）。只在定格（hole.open）后生效。
  */
 
 /** 静止时的切口进度：切口贴着首屏最底边，只露出一道撕纸边 */
 const SEAM_REST = 0.072;
-/** 滚过首屏高度的这个比例时 3D 完全被切掉（大于 1：首屏离开视口时还有余量） */
-const SEAM_FULL_SCROLL = 1.6;
 /** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
 const CA_BAND = 0.22;
 /** 滚动时整个 3D 画面的色散上限（桶形畸变强度，igloo 原值约 12，这里收敛一些） */
@@ -146,8 +144,9 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React
     if (!hole.current.open) return;
     uniforms.get('seamTime')!.value += Math.min(delta, 0.05);
     (uniforms.get('seamResolution')!.value as THREE.Vector2).set(size.width, size.height);
-    const scrolled = Math.min(1, Math.max(0, window.scrollY / Math.max(1, size.height * SEAM_FULL_SCROLL)));
-    uniforms.get('seamProgress')!.value = SEAM_REST + (1 - SEAM_REST) * scrolled;
+    // 切口固定在首屏底边，不随滚动上推：3D 与标题、按钮作为一个整体滚走，
+    // 否则往下滚时 3D 先被切掉，标题会被留在蓝底上
+    uniforms.get('seamProgress')!.value = SEAM_REST;
 
     // 滚动速度（每帧滚过的首屏高度比例）驱动色散强度：滚得越快越强，停下后约半秒回落
     const m = motion.current;
