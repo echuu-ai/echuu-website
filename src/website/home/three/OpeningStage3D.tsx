@@ -1,6 +1,7 @@
 import { FingertipGlint } from './FingertipGlint';
 import { debutEnvelope } from '../debutHighlight';
 import { SkyEdgeEffect } from './SkyEdgeEffect';
+import { INTRO_TOTAL_SECONDS, applyIntroTimeline, attachIntroWire, createIntroCage, createIntroMaterializeUniforms, measureBindHeight, patchIntroMaterialize } from './introMaterialize';
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Bloom, DepthOfField, EffectComposer, ToneMapping } from '@react-three/postprocessing';
@@ -195,6 +196,14 @@ function readHoldTime(): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/** DEV 调试：?opmat=1.8 把出场时间线冻结在第 1.8 秒（0–5.2） */
+function readMaterializeHold(): number | null {
+  if (!import.meta.env.DEV) return null;
+  const raw = new URLSearchParams(window.location.search).get('opmat');
+  const value = raw == null ? NaN : Number(raw);
+  return Number.isFinite(value) ? Math.max(0, value) : null;
+}
+
 /** DEV 调试：?opfx=0 关掉剪影；?opcam=x,y,z,lx,ly,lz,fov 覆盖当前关键帧的相机偏移 */
 function readDebugOverrides() {
   if (!import.meta.env.DEV) return { fxOff: false, cam: null as number[] | null };
@@ -205,9 +214,9 @@ function readDebugOverrides() {
 
 type CameraStateRef = React.MutableRefObject<SceneCamera>;
 
-type AvatarProps = { clock: OpeningClock; onReady: () => void; onFail: (error: unknown) => void; cameraState: CameraStateRef };
+type AvatarProps = { clock: OpeningClock; onReady: () => void; onFail: (error: unknown) => void; cameraState: CameraStateRef; hole: React.MutableRefObject<HoleRect> };
 
-function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
+function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProps) {
   const gltf = useLoader(GLTFLoader, HOME_OPENING_MODEL, (loader) => {
     loader.register((parser) => new VRMLoaderPlugin(parser));
   });
@@ -234,12 +243,35 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     effect: 'none' as SceneEffectMode,
     restoreEffect: () => {},
     lastT: -1,
+    materializeStart: -1,
+    materializeHold: readMaterializeHold(),
     ready: false,
     holdTime: readHoldTime(),
     debug: readDebugOverrides(),
   });
 
   // 动作加载并烘焙到这份 VRM 后才开始计时：观众看到的第一帧就是睡着的角色。
+  // igloo 式出场（线稿 + 笼子 + 主体物化）：所有材质共用一组 uniform
+  const materialize = useMemo(createIntroMaterializeUniforms, []);
+  const introCage = useMemo(() => createIntroCage(materialize), [materialize]);
+  const introWire = useRef<ReturnType<typeof attachIntroWire> | null>(null);
+  useEffect(() => {
+    const { top, bottom } = measureBindHeight(vrm.scene);
+    materialize.uIntroTop.value = top;
+    materialize.uIntroBottom.value = bottom;
+    patchIntroMaterialize(vrm.scene, materialize);
+    const wire = attachIntroWire(vrm.scene, materialize);
+    introWire.current = wire;
+    return () => {
+      wire.dispose();
+      introWire.current = null;
+    };
+  }, [materialize, vrm]);
+  useEffect(() => () => {
+    introCage.geometry.dispose();
+    (introCage.material as THREE.Material).dispose();
+  }, [introCage]);
+
   useEffect(() => {
     let cancelled = false;
     loadOpeningMotions()
@@ -387,6 +419,34 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
     const jumped = s.lastT >= 0 && Math.abs(t - s.lastT) > 1;
     s.lastT = t;
 
+    // 出场：第一次出现时开始；跳过 / 重播（时间跳变）时重新播一次。笼子以出场那一刻的髋部为中心
+    if (s.materializeStart < 0 || jumped) {
+      s.materializeStart = t;
+      vrm.scene.updateMatrixWorld(true);
+      boneWorld('hips', introCage.position);
+    }
+    const introSeconds = s.materializeHold ?? t - s.materializeStart;
+    applyIntroTimeline(materialize, introSeconds);
+    const introRunning = introSeconds < INTRO_TOTAL_SECONDS;
+    introWire.current?.setVisible(introRunning);
+    introCage.visible = introRunning;
+    materialize.uIntroTime.value += delta;
+    // 开场手机窗：出场效果只画在窗里（黑框本身不写深度，挡不住发光层）
+    const rect = hole.current;
+    materialize.uHoleOn.value = introRunning && !rect.open ? 1 : 0;
+    if (materialize.uHoleOn.value) {
+      const bounds = frame.gl.domElement.getBoundingClientRect();
+      const sx = frame.gl.domElement.width / Math.max(1, bounds.width);
+      const sy = frame.gl.domElement.height / Math.max(1, bounds.height);
+      const bottom = bounds.height - (rect.y + rect.h - bounds.top);
+      materialize.uHoleRect.value.set(
+        (rect.x - bounds.left) * sx,
+        bottom * sy,
+        (rect.x + rect.w - bounds.left) * sx,
+        (bottom + rect.h) * sy,
+      );
+    }
+
     // 先清掉手动表情再采样动作，回到动作模式时动作自己的表情才会恢复
     const actorActive = heroActorActive(t);
     if (vrm.expressionManager && HERO_ACTOR?.expression) for (const key of FACE_CHANNELS) vrm.expressionManager.setValue(key, 0);
@@ -482,6 +542,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState }: AvatarProps) {
       </group>
     </group>
     <FingertipGlint vrm={vrm} clock={clock} />
+    <primitive object={introCage} />
     </>
   );
 }
@@ -620,7 +681,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       <HeroLights lighting={HERO_LIGHTING} clock={clock} />
       <BlackFrame hole={hole} />
       <Suspense fallback={null}>
-        <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} />
+        <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} hole={hole} />
       </Suspense>
       <EffectComposer enableNormalPass={false} multisampling={0}>
         <>

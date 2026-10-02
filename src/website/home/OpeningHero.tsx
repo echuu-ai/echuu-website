@@ -8,6 +8,7 @@ import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { LangSwitch } from '../components/LangSwitch';
 import { HomeHeader } from './HomeHeader';
+import { HeroGuideLines } from './HeroGuideLines';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
@@ -300,6 +301,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       ) : null}
 
       <div className="hv-chrome" data-visible={phase === 'hero'} data-debut={debut && !reduced}>
+        <HeroGuideLines />
         <HomeHeader menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((value) => !value)} />
 
         <nav className="hv-menu" aria-label={h.header.menu}>
