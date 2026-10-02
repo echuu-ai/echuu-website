@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 /**
  * 首页构图辅助线（参考 Shopify Editions Winter '26 的 davinci-lines）。
- * 黄金分割竖线 / 横线、中线、对角线与两段大圆弧，0.5px 白色细线，固定在视口上。
+ * 黄金分割竖线 / 横线、中线、对角线与两个居中的同心圆，0.5px 白色细线，固定在视口上。
  * 每一屏显示其中一组：当前所在区块决定 data-active；第一次到达某一屏时那组线先亮后暗（line-fade）。
  * 首屏出现时依次描出来（pathLength=1 + stroke-dashoffset）。纯装饰，不可交互。
  */
@@ -29,9 +29,9 @@ function buildLines(w: number, h: number): Line[] {
     { d: `M0 ${y2}H${w}`, groups: [0, 1, 3, 5] },
     { d: `M0 0L${w} ${h}`, groups: [2, 4] },
     { d: `M${w} 0L0 ${h}`, groups: [2, 4] },
-    // 两段大圆弧：一段托住左下的标题区，一段绕过右上的角色
-    { cx: x1, cy: y2, r: h * MINOR, groups: [0, 3, 7] },
-    { cx: x2, cy: y1, r: h * (1 - MINOR), groups: [0, 4, 5, 7] },
+    // 两个以视口中心为圆心的同心圆：大圆贴住短边，小圆是它的 1/φ（横屏、竖屏都居中）
+    { cx: w / 2, cy: h / 2, r: Math.min(w, h) * 0.5 * (1 / PHI), groups: [0, 3, 7] },
+    { cx: w / 2, cy: h / 2, r: Math.min(w, h) * 0.5, groups: [0, 4, 5, 7] },
   ];
 }
 

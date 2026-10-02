@@ -581,7 +581,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   display: grid; grid-template-columns: 38% 1fr; align-items: center; gap: 10px;
   padding: clamp(16px, 2vw, 28px);
   border-radius: 14px; background: rgba(151, 241, 245, 0.92);
-  backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 20px 50px rgba(10, 70, 130, 0.18);
+  /* 不加外投影：.hv-fcards 是 overflow 裁切的滚动带，投影会在底边被切成一条硬线 */
+  backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   color: var(--hv-ink);
 }
 .echuu-website .hv-fcard__art { display: block; max-width: 100%; height: auto; }
