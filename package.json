@@ -11,6 +11,8 @@
     "check:assets": "node scripts/check-assets.mjs"
   },
   "dependencies": {
+    "@liquidglassjs/core": "^0.6.0",
+    "@liquidglassjs/react": "^0.6.0",
     "@openpanel/web": "1.4.1",
     "@pixiv/three-vrm": "3.5.2",
     "@pixiv/three-vrm-animation": "3.5.3",
@@ -18,6 +20,7 @@
     "@react-three/drei": "9.122.0",
     "@react-three/fiber": "8.18.0",
     "@react-three/postprocessing": "2.19.1",
+    "lenis": "^1.3.26",
     "lucide-react": "0.536.0",
     "motion": "^13.4.4",
     "postprocessing": "6.36.6",

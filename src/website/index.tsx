@@ -4,6 +4,7 @@ import { LocaleContext } from './locale-context';
 import { useI18nStore } from '../hooks/use-i18n';
 import { useWebsiteLocation, WEBSITE_BASE } from './router';
 import { SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
+import { useSmoothScroll } from './lib/useSmoothScroll';
 import { HomeV2 } from './home/HomeV2';
 import { GalleryPage } from './pages/GalleryPage';
 import { CreatorsPage } from './pages/CreatorsPage';
@@ -59,6 +60,7 @@ export default function EchuuWebsite() {
   }, [locale, storeLocale, setLocale]);
 
   useScrollManager(page, hash);
+  useSmoothScroll(page);
 
   // 产品 app 的全局样式给 body 设了 overflow: hidden（直播舞台不滚动）；官网是普通长页，必须能滚
   useEffect(() => {

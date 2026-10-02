@@ -1,0 +1,104 @@
+/* 首页按屏入场（useSceneReveal）。参考 Shopify Editions：逐屏的节奏主要来自「钉住一屏」，
+   入场只保留标题揭开、导语与配图淡入，不做卡片逐个飞入。
+   只动 opacity / translate / scale / clip-path；用独立的 translate、scale 属性，
+   不覆盖各元素已有的 transform（旋转、视差、键盘开合等）。播一次，之后不再有动画开销。 */
+
+/* 钉住一屏：不到一屏高的区块整块停在视口中间，再被下一屏推走。只在桌面宽屏启用 */
+@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+  .echuu-website .hv-section--hold { min-height: 150svh; }
+  .echuu-website .hv-section--hold > .hv-hold {
+    position: sticky; top: 0; min-height: 100svh;
+    display: grid; align-content: center;
+  }
+}
+
+.echuu-website .hv [data-scene] :is(
+  .hv-h2, .hv-intro__kicker, .hv-beta__title, .hv-creators__zh, .hv-footer__giant,
+  .hv-lede, .hv-intro__body, .hv-beta__body, .hv-creators__en, .hv-blog__all, .hv-creators__actions,
+  .hv-steps__girl, .hv-steps__three, .hv-modes__runner, .hv-feature__jagged, .hv-creators__art, .hv-intro__art, .hv-footer__wings
+) {
+  transition:
+    opacity 760ms var(--hv-ease),
+    translate 900ms var(--hv-ease),
+    scale 1100ms var(--hv-ease),
+    clip-path 950ms var(--hv-ease);
+}
+
+/* ① 标题：自下而上揭开（留出发光与描边的余量） */
+.echuu-website .hv [data-scene='pending'] :is(.hv-h2, .hv-intro__kicker, .hv-beta__title, .hv-creators__zh, .hv-footer__giant) {
+  clip-path: inset(0 -8% 100% -8%);
+  translate: 0 0.45em;
+}
+.echuu-website .hv [data-scene='in'] :is(.hv-h2, .hv-intro__kicker, .hv-beta__title, .hv-creators__zh, .hv-footer__giant) {
+  clip-path: inset(-30% -8% -30% -8%);
+  translate: 0 0;
+  transition-delay: 60ms;
+}
+
+/* ② 导语与按钮：标题之后上浮淡入 */
+.echuu-website .hv [data-scene='pending'] :is(.hv-lede, .hv-intro__body, .hv-beta__body, .hv-creators__en, .hv-blog__all, .hv-creators__actions) {
+  opacity: 0;
+  translate: 0 18px;
+}
+.echuu-website .hv [data-scene='in'] :is(.hv-lede, .hv-intro__body, .hv-beta__body, .hv-creators__en, .hv-blog__all, .hv-creators__actions) {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 260ms;
+}
+
+/* ③ 配图与装饰：轻微放大归位 */
+.echuu-website .hv [data-scene='pending'] :is(.hv-steps__girl, .hv-steps__three, .hv-modes__runner, .hv-feature__jagged, .hv-creators__art, .hv-intro__art, .hv-footer__wings) {
+  opacity: 0;
+  scale: 0.94;
+}
+.echuu-website .hv [data-scene='in'] :is(.hv-steps__girl, .hv-steps__three, .hv-modes__runner, .hv-feature__jagged, .hv-creators__art, .hv-intro__art, .hv-footer__wings) {
+  opacity: 1;
+  scale: 1;
+  transition-delay: 140ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv [data-scene] * { transition: none !important; }
+}
+
+/* --- 构图辅助线（HeroGuideLines）：固定在视口，按当前区块切换线组 ---------------------- */
+.echuu-website .hv-guides {
+  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 4;
+  pointer-events: none; overflow: visible;
+  transition: opacity 600ms var(--hv-ease);
+}
+/* 开场期间不显示，首屏定格后才描出来 */
+.echuu-website .hv:has(.hv-hero:not([data-phase='hero'])) .hv-guides { opacity: 0; }
+.echuu-website .hv-guides path, .echuu-website .hv-guides circle {
+  fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 0.5px; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  opacity: 0; transition: opacity 900ms var(--hv-ease);
+}
+.echuu-website .hv-guides [data-dashed] { stroke-dasharray: 0.004 0.006; stroke-dashoffset: 0; }
+.echuu-website .hv:has(.hv-hero[data-phase='hero']) .hv-guides :is(path, circle):not([data-dashed]) {
+  animation: hv-guide-draw 1.8s var(--hv-ease) calc(0.25s + var(--i) * 0.08s) forwards;
+}
+/* 当前区块的线组显示；第一次到达时先亮后暗（Shopify 的 line-fade） */
+.echuu-website .hv-guides[data-active='0'] [data-groups~='0'],
+.echuu-website .hv-guides[data-active='1'] [data-groups~='1'],
+.echuu-website .hv-guides[data-active='2'] [data-groups~='2'],
+.echuu-website .hv-guides[data-active='3'] [data-groups~='3'],
+.echuu-website .hv-guides[data-active='4'] [data-groups~='4'],
+.echuu-website .hv-guides[data-active='5'] [data-groups~='5'],
+.echuu-website .hv-guides[data-active='6'] [data-groups~='6'],
+.echuu-website .hv-guides[data-active='7'] [data-groups~='7'] { opacity: 1; }
+.echuu-website .hv-guides[data-animating='1'] [data-groups~='1'],
+.echuu-website .hv-guides[data-animating='2'] [data-groups~='2'],
+.echuu-website .hv-guides[data-animating='3'] [data-groups~='3'],
+.echuu-website .hv-guides[data-animating='4'] [data-groups~='4'],
+.echuu-website .hv-guides[data-animating='5'] [data-groups~='5'],
+.echuu-website .hv-guides[data-animating='6'] [data-groups~='6'],
+.echuu-website .hv-guides[data-animating='7'] [data-groups~='7'] {
+  stroke-dashoffset: 0;
+  animation: hv-guide-flash 4s ease-out forwards;
+}
+@keyframes hv-guide-draw { to { stroke-dashoffset: 0; } }
+@keyframes hv-guide-flash { 0% { stroke: rgba(255, 255, 255, 0.75); } 100% { stroke: rgba(255, 255, 255, 0.26); } }
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv-guides :is(path, circle) { animation: none !important; stroke-dashoffset: 0; transition: none; }
+}

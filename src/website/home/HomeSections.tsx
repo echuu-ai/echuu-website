@@ -10,7 +10,8 @@ import { Reveal } from '../components/Reveal';
 export function IntroSection() {
   const { h } = useHomeDict();
   return (
-    <section className="hv-section hv-intro" id="intro" aria-labelledby="hv-intro-kicker">
+    <section className="hv-section hv-section--hold hv-intro" id="intro" aria-labelledby="hv-intro-kicker">
+      <div className="hv-hold">
       <Reveal className="hv-intro__card">
         <div className="hv-intro__panel">
           <h2 className="hv-intro__kicker" id="hv-intro-kicker" lang="en">
@@ -24,6 +25,7 @@ export function IntroSection() {
           <img src={HOME_ASSETS.icons.sparkle} alt="" className="hv-intro__sparkle" />
         </figure>
       </Reveal>
+      </div>
     </section>
   );
 }

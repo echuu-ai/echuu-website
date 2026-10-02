@@ -273,31 +273,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-chrome[data-visible='true'] { opacity: 1; animation: hv-rise 1s var(--hv-ease); }
 .echuu-website .hv-chrome > * { pointer-events: auto; }
 
-/* 构图辅助线（HeroGuideLines）：黄金分割细线，首屏出现时依次描出来 */
-.echuu-website .hv-chrome > .hv-guides {
-  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
-  pointer-events: none; overflow: visible;
-  /* 底部淡出，不在首屏下沿留下一条截断线 */
-  -webkit-mask-image: linear-gradient(#000 72%, transparent 96%);
-  mask-image: linear-gradient(#000 72%, transparent 96%);
-}
-.echuu-website .hv-guides path, .echuu-website .hv-guides circle {
-  fill: none; stroke: rgba(255, 255, 255, 0.32); stroke-width: 0.5px; vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1; stroke-dashoffset: 1;
-}
-.echuu-website .hv-guides [data-dashed] { stroke-dasharray: 0.004 0.006; stroke-dashoffset: 0; opacity: 0; }
-.echuu-website .hv-chrome[data-visible='true'] .hv-guides path,
-.echuu-website .hv-chrome[data-visible='true'] .hv-guides circle {
-  animation: hv-guide-draw 1.8s var(--hv-ease) calc(0.25s + var(--i) * 0.08s) forwards;
-}
-.echuu-website .hv-chrome[data-visible='true'] .hv-guides [data-dashed] {
-  animation: hv-guide-fade 1.2s var(--hv-ease) 0.2s forwards;
-}
-@keyframes hv-guide-draw { to { stroke-dashoffset: 0; } }
-@keyframes hv-guide-fade { to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .echuu-website .hv-guides path, .echuu-website .hv-guides circle { animation: none !important; stroke-dashoffset: 0; opacity: 1; }
-}
 @keyframes hv-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 .echuu-website .hv-header {

@@ -9,7 +9,8 @@ export function BlogSection() {
   const { h, locale } = useHomeDict();
   const posts = BLOG_POSTS.slice(0, 3);
   return (
-    <section className="hv-section hv-blog" id="blog" aria-labelledby="hv-blog-title">
+    <section className="hv-section hv-section--hold hv-blog" id="blog" aria-labelledby="hv-blog-title">
+      <div className="hv-hold">
       <div className="hv-blog__head">
         <div>
           <h2 className="hv-h2" id="hv-blog-title">{h.blog.title}</h2>
@@ -34,6 +35,7 @@ export function BlogSection() {
           </li>
         ))}
       </ul>
+      </div>
     </section>
   );
 }

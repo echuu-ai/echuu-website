@@ -70,7 +70,8 @@
   font-size: 16px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* clip 而不是 hidden：hidden 会让 overflow-y 变成 auto，使这里成为滚动容器，子元素的 position: sticky 失效 */
+  overflow-x: clip;
 }
 
 .echuu-website img, .echuu-website svg, .echuu-website video { max-width: 100%; height: auto; display: block; }

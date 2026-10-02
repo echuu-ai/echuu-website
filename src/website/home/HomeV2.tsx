@@ -8,7 +8,10 @@ import { OpeningHero } from './OpeningHero';
 import { CreatorsSection, FeatureSection, IntroSection, ModesSection, StepsSection } from './HomeSections';
 import { HomeFooter } from './HomeFooter';
 import { BlogSection } from './BlogSection';
+import { useSceneReveal } from './useSceneReveal';
+import { HeroGuideLines } from './HeroGuideLines';
 import '../styles/home.css';
+import '../styles/home-scenes.css';
 
 /**
  * 官网首页 v2：Figma「Echuu-Website」(2038:1044)。
@@ -23,8 +26,11 @@ export function HomeV2() {
   const openAccess = (mode: AccessMode) => { accessTrigger.current = document.activeElement as HTMLElement; setAccessMode(mode); };
   const { h } = useHomeDict();
   const style = { '--hv-sky-bg': `url(${HOME_ASSETS.skyBg})` } as CSSProperties;
+  // 首屏以下按屏入场（标题揭开 → 导语配图 → 卡片错开）
+  const rootRef = useRef<HTMLDivElement>(null);
+  useSceneReveal(rootRef);
   return (
-    <div className="hv" style={style}>
+    <div className="hv" style={style} ref={rootRef}>
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
         <defs><filter id="hv-cool-art" colorInterpolationFilters="sRGB">
           <feColorMatrix type="matrix" values="1.04 0 0 0 0   0 1.09 0 0 0   0 0 1.18 0 0   0 0 0 1 0" />
@@ -41,6 +47,8 @@ export function HomeV2() {
         <BlogSection />
       </div>
       <HomeFooter onBeta={() => openAccess('signup')} />
+      {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
+      <HeroGuideLines />
       <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
