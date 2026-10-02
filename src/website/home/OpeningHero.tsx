@@ -313,7 +313,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
         <div className="hv-title">
           <div className="hv-title__logo-wrap" style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}>
-            <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={344} height={155} />
+            <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={808} height={620} />
             
           </div>
           <p className="hv-title__slogan">

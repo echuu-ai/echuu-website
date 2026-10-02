@@ -55,7 +55,7 @@ export const HOME_ASSETS = {
     wing: FIG('deco-wing.webp'),
     plane: FIG('deco-plane.webp'),
   },
-  logo3d: FIG('logo-figma.png'),
+  logo3d: FIG('logo-pugua.png'),
   brooch: FIG('brooch.webp'),
   steps: [FIG('step-01.webp'), FIG('step-02.webp'), FIG('step-03.webp')],
   silhouetteGirl: FIG('silhouette-girl.svg'),
