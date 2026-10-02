@@ -330,7 +330,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.2vw, 16px);
 }
 .echuu-website .hv-title__logo-wrap { width:100%; }
-.echuu-website .hv-title__logo { width: 100%; height: auto; aspect-ratio: 808 / 620; filter: drop-shadow(0 6px 20px rgba(0, 40, 90, 0.2)); }
+.echuu-website .hv-title__logo { width: 100%; height: auto; aspect-ratio: 808 / 620; }
+/* 标语单独调色时叠在上面的那张（只露出标语区域，见 LogoTone.tsx） */
+.echuu-website .hv-title__logo-wrap > .hv-title__logo--tagline { position: absolute; inset: 0 auto auto 0; }
 .echuu-website .hv-title__slogan {
   margin: 0; color: #000; font-size: clamp(15px, 1.7vw, 24px); line-height: 1.2; letter-spacing: -0.1em;
   white-space: nowrap; text-align: center;

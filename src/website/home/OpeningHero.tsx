@@ -1,3 +1,4 @@
+import { HeroLogo } from './LogoTone';
 import type { CSSProperties } from 'react';
 import { DEBUT_SECONDS } from './debutHighlight';
 import { createPortal } from 'react-dom';
@@ -313,7 +314,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
         <div className="hv-title">
           <div className="hv-title__logo-wrap" style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}>
-            <img className="hv-title__logo" src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} width={808} height={620} />
+            <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />
             
           </div>
           <p className="hv-title__slogan">

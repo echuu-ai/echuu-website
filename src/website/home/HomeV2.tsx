@@ -13,9 +13,11 @@ import { HeroGuideLines } from './HeroGuideLines';
 import '../styles/home.css';
 import '../styles/home-scenes.css';
 
-// 开发用切口调节面板：只在 dev 且地址带 ?tune=seam 时加载，正式构建里整段被裁掉
+// 开发用调节面板：只在 dev 且地址带 ?tune=seam（切口）或 ?tune=logo（logo 调色）时加载，正式构建里整段被裁掉
 const SeamTuningPanel = import.meta.env.DEV ? lazy(() => import('./SeamTuningPanel')) : null;
-const showSeamTuning = () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tune') === 'seam';
+const LogoTuningPanel = import.meta.env.DEV ? lazy(() => import('./LogoTuningPanel')) : null;
+const tuneParam = () => (typeof window === 'undefined' ? null : new URLSearchParams(window.location.search).get('tune'));
+const showSeamTuning = () => tuneParam() === 'seam';
 
 /**
  * 官网首页 v2：Figma「Echuu-Website」(2038:1044)。
@@ -54,6 +56,7 @@ export function HomeV2() {
       {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
       <HeroGuideLines />
       {SeamTuningPanel && showSeamTuning() && <Suspense fallback={null}><SeamTuningPanel /></Suspense>}
+      {LogoTuningPanel && tuneParam() === 'logo' && <Suspense fallback={null}><LogoTuningPanel /></Suspense>}
       <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
