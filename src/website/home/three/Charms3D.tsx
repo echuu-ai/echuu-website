@@ -1,7 +1,9 @@
 import { Suspense, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { Bloom, EffectComposer } from '@react-three/postprocessing';
+import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
+import { ToneMappingMode } from 'postprocessing';
+import { AppColorGradeLutPass } from '../../../components/ColorGradeLutPass';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { publicUrl } from '../../../lib/publicUrl';
@@ -25,7 +27,8 @@ const BRAIN_UPRIGHT = new THREE.Euler(0, 0, -Math.PI / 2);
 /** 别针本体最需要亮银的观感，反射给得最足 */
 const ENV_INTENSITY: Partial<Record<ModelName, number>> = { pin: 2.6 };
 /** Tripo 给别针烘的底色偏深灰；金属的反射颜色就是底色，整体乘亮成银色 */
-const BASE_TINT: Partial<Record<ModelName, string>> = { pin: '#f2f5fa' };
+// 中性偏暖的银：之前的 #f2f5fa 偏蓝，再叠上全站调色会更蓝
+const BASE_TINT: Partial<Record<ModelName, string>> = { pin: '#f7f3ee' };
 
 function useModel(name: ModelName) {
   const gltf = useGLTF(MODEL(name), false, true);
@@ -381,16 +384,25 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
         </Suspense>
         {/* 暖灰阴影；别针在浅色底上不加 Bloom（高反射金属会整块泛白），闪光点本身是叠加发光 */}
         <ShadowCatcher color="#b28d7c" z={-0.32} />
+        <Sparkle bloom={false} />
       </Canvas>
     </div>
   );
 }
 
 /** 金属高光与闪光点泛出辉光。透明画布按预乘 alpha 合成，辉光会以叠加光透到页面上 */
-function Sparkle({ threshold = 0.72, intensity = 0.9 }: { threshold?: number; intensity?: number }) {
+/**
+ * 后期：与首屏主场景同一条调色链（线性色调映射 + 全站 LUT 调色），饰物和角色色调一致；
+ * bloom 为 false 时只调色（别针在浅色卡片上加辉光会整块泛白）。
+ */
+function Sparkle({ bloom = true, threshold = 0.72, intensity = 0.9 }: { bloom?: boolean; threshold?: number; intensity?: number }) {
   return (
     <EffectComposer multisampling={0} enableNormalPass={false}>
-      <Bloom mipmapBlur intensity={intensity} luminanceThreshold={threshold} luminanceSmoothing={0.12} radius={0.55} />
+      <>
+        {bloom ? <Bloom mipmapBlur intensity={intensity} luminanceThreshold={threshold} luminanceSmoothing={0.12} radius={0.55} /> : null}
+        <ToneMapping mode={ToneMappingMode.LINEAR} />
+        <AppColorGradeLutPass forceWebGl includeTone />
+      </>
     </EffectComposer>
   );
 }
