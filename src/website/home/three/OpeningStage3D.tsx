@@ -1,6 +1,7 @@
 import { FingertipGlint } from './FingertipGlint';
 import { debutEnvelope } from '../debutHighlight';
 import { SkyEdgeEffect } from './SkyEdgeEffect';
+import { useSceneTuning } from './sceneTuning';
 import { FrostSim, pointerOnAvatar } from './mouseFrost';
 import { armFrostAudio, playFrostBeep, updateFrostAudio } from '../../lib/frostAudio';
 import { INTRO_TOTAL_SECONDS, applyIntroTimeline, attachIntroWire, createIntroCage, createIntroMaterializeUniforms, measureBindHeight, patchIntroMaterialize } from './introMaterialize';
@@ -740,6 +741,9 @@ type OpeningStage3DProps = {
 export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onFail, running, hole }: OpeningStage3DProps) {
   const [look] = useState(() => loadVrmLookSettings(LIVE_VRM_LOOK_STORAGE_KEY, DEFAULT_LIVE_VRM_LOOK));
   const cameraState = useRef<SceneCamera>({ ...HERO_CAMERA, ...NO_DOF, target: HERO_CAMERA.target });
+  // 场景光倍率（开发时 ?tune=grade 调，正式构建恒为 1）
+  const scene = useSceneTuning();
+  const bloom = liveBloom(look);
   return (
     <FlightCanvas
       className="hv-stage__canvas"
@@ -752,8 +756,8 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
         <LiveRotatableHdrSky
           url={publicUrl(WEBSITE_SKY_HDR)}
           hdrRotationYDeg={SKY_ROTATION_DEG}
-          environmentIntensity={HERO_LIGHTING.environmentIntensity}
-          backgroundIntensity={HERO_LIGHTING.backgroundIntensity}
+          environmentIntensity={HERO_LIGHTING.environmentIntensity * scene.env}
+          backgroundIntensity={HERO_LIGHTING.backgroundIntensity * scene.sky}
           fogDensity={HERO_LIGHTING.fogDensity}
         />
       </Suspense>
@@ -766,7 +770,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       <EffectComposer enableNormalPass={false} multisampling={0}>
         <>
           <HeroDepthOfField cameraState={cameraState} />
-          <Bloom {...liveBloom(look)} mipmapBlur />
+          <Bloom {...bloom} intensity={bloom.intensity * scene.bloom} luminanceThreshold={bloom.luminanceThreshold * scene.bloomThreshold} mipmapBlur />
           <ToneMapping mode={ToneMappingMode.LINEAR} />
           <AppColorGradeLutPass forceWebGl includeTone />
           <SkyEdgeEffect hole={hole} />

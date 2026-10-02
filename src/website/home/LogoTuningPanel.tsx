@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TUNE_PANEL_CSS } from './tunePanelStyles';
+import { TuneTabs } from './TuneTabs';
 import { LOGO_DEFAULTS, LOGO_TONE_RANGES, resetLogoTuning, setLogoTuning, useLogoTuning, type LogoTone, type LogoTuning } from './logoTuning';
 
 /** 上次截图对比里的「方案 A 压深一档」，标语再深一些 */
@@ -46,6 +47,7 @@ export default function LogoTuningPanel() {
 
   return (
     <div className="seam-tune seam-tune--compact" data-lenis-prevent>
+      <TuneTabs active="logo" />
       <button type="button" className="seam-tune__head" onClick={() => setOpen((v) => !v)}>
         Logo 调色 {open ? '−' : '+'}
       </button>

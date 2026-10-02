@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TUNE_PANEL_CSS } from './tunePanelStyles';
+import { TuneTabs } from './TuneTabs';
 import { SEAM_DEFAULTS, SEAM_RANGES, resetSeamTuning, seamTuning, setSeamTuning, type SeamTuning } from './three/seamTuning';
 
 /**
@@ -28,6 +29,7 @@ export default function SeamTuningPanel() {
 
   return (
     <div className="seam-tune" data-lenis-prevent>
+      <TuneTabs active="seam" />
       <button type="button" className="seam-tune__head" onClick={() => setOpen((v) => !v)}>
         切口调节 {open ? '−' : '+'}
       </button>

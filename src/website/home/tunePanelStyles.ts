@@ -17,6 +17,9 @@ export const TUNE_PANEL_CSS = `
         .seam-tune--compact .seam-tune__label { grid-column: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .seam-tune--compact .seam-tune__num { width: 52px; }
         .seam-tune--compact .seam-tune__actions { flex-wrap: wrap; }
+        .seam-tune__tabs { display: flex; gap: 4px; margin-bottom: 6px; }
+        .seam-tune__tabs button { flex: 1; padding: 4px 0 !important; opacity: 0.7; }
+        .seam-tune__tabs button[data-active] { opacity: 1; background: rgba(159, 208, 255, 0.35) !important; }
         .seam-tune__section { margin: 12px 0 2px; font-weight: 600; color: #cfe6ff; }
         .seam-tune__hint { margin: 8px 0; opacity: 0.6; }
         .seam-tune__actions { display: flex; gap: 8px; justify-content: flex-end; }
