@@ -7,7 +7,8 @@
  * 底部栏有静音开关（setFrostMuted），状态存在 localStorage。
  */
 
-const MASTER = 0.32;
+/** 总音量（音效与夏日氛围共用；整体压低，作为背景存在） */
+const MASTER = 0.2;
 const MUTE_KEY = 'echuu-sound-muted';
 const BEEP_NOTES = [1318.5, 1567.98, 2093];
 const SPARKLE_NOTES = [2349.3, 2637, 3136, 3520, 4186];
@@ -39,11 +40,28 @@ export function subscribeFrostMuted(listener: () => void) {
   return () => { muteListeners.delete(listener); };
 }
 
+const unlockListeners = new Set<() => void>();
+
 function unlock() {
   unlocked = true;
   window.removeEventListener('pointerdown', unlock);
   window.removeEventListener('keydown', unlock);
   voice?.ctx.resume().catch(() => {});
+  unlockListeners.forEach((listener) => listener());
+  unlockListeners.clear();
+}
+
+/** 第一次点击 / 按键后回调（已解锁则立即回调） */
+export function onAudioUnlocked(listener: () => void) {
+  if (unlocked) { listener(); return () => {}; }
+  unlockListeners.add(listener);
+  return () => { unlockListeners.delete(listener); };
+}
+
+/** 共用的音频上下文与总音量节点（受静音开关控制）；未解锁时为 null */
+export function getAudioBus(): { ctx: AudioContext; master: GainNode } | null {
+  const v = ensureVoice();
+  return v ? { ctx: v.ctx, master: v.master } : null;
 }
 
 /** 只登记解锁监听，不创建 AudioContext */
