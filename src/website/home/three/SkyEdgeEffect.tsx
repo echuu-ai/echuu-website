@@ -17,7 +17,7 @@ import type { HoleRect } from './OpeningStage3D';
  */
 
 /** 静止时的切口进度：切口贴着首屏最底边，只露出一道撕纸边 */
-const SEAM_REST = 0.09;
+const SEAM_REST = 0.072;
 /** 滚过首屏高度的这个比例时 3D 完全被切掉（大于 1：首屏离开视口时还有余量） */
 const SEAM_FULL_SCROLL = 1.6;
 /** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
@@ -76,7 +76,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   float grain = seamSample(uv * vec2(aspect, 1.0) * 2.0 + 0.37) * mix(0.3, 0.6, 0.5 + 0.5 * sin(seamTime - uv.x * 10.0)) * 0.1;
 
   float threshold = uv.y * 2.0 - 1.0;
-  threshold = threshold / 1.2 + swell * 0.1 + grain;
+  // 起伏收小：切口贴底时，最高处也不超过首屏底部约 3%
+  threshold = threshold / 1.2 + swell * 0.055 + grain * 0.6;
   threshold = threshold * 0.5 + 0.5;
 
   // 抗锯齿的切口：edge > 0 的部分被切掉

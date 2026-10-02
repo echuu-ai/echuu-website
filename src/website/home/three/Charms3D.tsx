@@ -1,6 +1,7 @@
 import { Suspense, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
+import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { publicUrl } from '../../../lib/publicUrl';
@@ -60,6 +61,58 @@ function useModel(name: ModelName) {
 }
 
 /** 打开投影；调亮环境反射（RoomEnvironment 有暗角，高光泽金属会映出发黑的面），镜面金属留一点粗糙度 */
+// --- 闪光点：在模型表面随机取点挂四芒星，跟着模型一起动，轮流闪 ---------------------------
+
+const glintMaterialCache = new WeakMap<THREE.Texture, THREE.SpriteMaterial>();
+
+/** 在 object 的网格顶点里随机取 count 个点，挂上四芒星精灵；返回每帧调用的更新函数 */
+function attachGlints(object: THREE.Object3D, texture: THREE.Texture, count: number, size: number, seed: number) {
+  let s = seed;
+  const rand = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const meshes: THREE.Mesh[] = [];
+  object.traverse((child) => { if ((child as THREE.Mesh).isMesh) meshes.push(child as THREE.Mesh); });
+  if (!meshes.length) return () => {};
+  let base = glintMaterialCache.get(texture);
+  if (!base) {
+    base = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, color: new THREE.Color('#fff6e8') });
+    glintMaterialCache.set(texture, base);
+  }
+  object.updateMatrixWorld(true);
+  const sprites: Array<{ sprite: THREE.Sprite; phase: number; speed: number }> = [];
+  const local = new THREE.Vector3();
+  for (let i = 0; i < count; i++) {
+    const mesh = meshes[Math.floor(rand() * meshes.length)];
+    const position = mesh.geometry.getAttribute('position');
+    local.fromBufferAttribute(position, Math.floor(rand() * position.count));
+    const sprite = new THREE.Sprite(base.clone());
+    sprite.position.copy(local);
+    sprite.renderOrder = 20;
+    // 精灵挂在网格下，网格自身的缩放会把尺寸一起缩掉，这里按网格世界缩放反算
+    const scale = new THREE.Vector3();
+    mesh.getWorldScale(scale);
+    sprite.userData.size = size / Math.max(scale.x, 1e-4);
+    sprite.scale.setScalar(0);
+    mesh.add(sprite);
+    sprites.push({ sprite, phase: rand() * Math.PI * 2, speed: 0.6 + rand() * 0.9 });
+  }
+  return (time: number, boost = 0) => {
+    for (const g of sprites) {
+      // sin^12：大部分时间暗着，偶尔一闪
+      const wave = Math.max(0, Math.sin(time * g.speed + g.phase));
+      const k = Math.min(1, wave ** 12 + boost);
+      g.sprite.scale.setScalar(g.sprite.userData.size * (0.35 + k * 0.85));
+      (g.sprite.material as THREE.SpriteMaterial).opacity = k;
+      g.sprite.material.rotation = time * 0.4 + g.phase;
+    }
+  };
+}
+
+function useGlints(object: THREE.Object3D, count: number, size: number, seed: number) {
+  const texture = useStarTexture();
+  const update = useMemo(() => attachGlints(object, texture, count, size, seed), [object, texture, count, size, seed]);
+  return update;
+}
+
 function withShadows(object: THREE.Object3D, envIntensity = 1.7) {
   object.traverse((child) => {
     const mesh = child as THREE.Mesh;
@@ -186,10 +239,13 @@ function Chain({ length }: { length: number }) {
 
 type Swing = { theta: number; omega: number; phi: number; nu: number };
 
-const Charm = memo(function Charm({ spec, swing }: { spec: (typeof CHARMS)[number]; swing: Swing }) {
+const Charm = memo(function Charm({ spec, swing, index }: { spec: (typeof CHARMS)[number]; swing: Swing; index: number }) {
   const model = useModel(spec.name);
   const pivot = useRef<THREE.Group>(null);
-  useFrame(() => {
+  const twinkle = useGlints(model, 4, 0.26, 11 + index * 7);
+  useFrame(({ clock }) => {
+    // 晃得越厉害闪得越多
+    twinkle(clock.elapsedTime, Math.min(0.6, Math.abs(swing.omega) * 0.25 + Math.abs(swing.nu) * 0.2));
     const g = pivot.current;
     if (!g) return;
     g.rotation.z = swing.theta;
@@ -207,6 +263,7 @@ const Charm = memo(function Charm({ spec, swing }: { spec: (typeof CHARMS)[numbe
 
 function Brooch() {
   const pin = useModel('pin');
+  const pinTwinkle = useGlints(pin, 7, 0.17, 3);
   const tilt = useRef<THREE.Group>(null);
   const swings = useMemo<Swing[]>(() => CHARMS.map(() => ({ theta: 0, omega: 0, phi: 0, nu: 0 })), []);
   const scroll = useScrollVelocity();
@@ -220,6 +277,7 @@ function Brooch() {
     const s = state.current;
     s.time += dt;
     const p = pointer.current;
+    pinTwinkle(s.time);
 
     // 别针整体跟随鼠标微倾，带一点呼吸；倾斜的角速度传给吊坠（惯性）
     const targetRy = p.nx * 0.22 + Math.sin(s.time * 0.6) * 0.04;
@@ -268,7 +326,7 @@ function Brooch() {
           <primitive object={pin} />
         </group>
         {CHARMS.map((spec, i) => (
-          <Charm key={spec.name} spec={spec} swing={swings[i]} />
+          <Charm key={spec.name} spec={spec} swing={swings[i]} index={i} />
         ))}
       </group>
     </group>
@@ -279,7 +337,7 @@ function ShadowCatcher({ color, z }: { color: string; z: number }) {
   return (
     <mesh position={[0, 0, z]} receiveShadow>
       <planeGeometry args={[8, 8]} />
-      <shadowMaterial color={color} opacity={0.32} transparent />
+      <shadowMaterial color={color} opacity={0.3} transparent />
     </mesh>
   );
 }
@@ -288,7 +346,8 @@ function KeyLight({ position }: { position: [number, number, number] }) {
   return (
     <directionalLight
       position={position}
-      intensity={1.5}
+      color="#fff0dc"
+      intensity={1.6}
       castShadow
       shadow-mapSize={[1024, 1024]}
       shadow-camera-left={-2.5}
@@ -320,9 +379,19 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
           <Brooch />
           <ReadySignal onReady={onReady} />
         </Suspense>
-        <ShadowCatcher color="#7fb6d6" z={-0.32} />
+        {/* 暖灰阴影；别针在浅色底上不加 Bloom（高反射金属会整块泛白），闪光点本身是叠加发光 */}
+        <ShadowCatcher color="#b28d7c" z={-0.32} />
       </Canvas>
     </div>
+  );
+}
+
+/** 金属高光与闪光点泛出辉光。透明画布按预乘 alpha 合成，辉光会以叠加光透到页面上 */
+function Sparkle({ threshold = 0.72, intensity = 0.9 }: { threshold?: number; intensity?: number }) {
+  return (
+    <EffectComposer multisampling={0} enableNormalPass={false}>
+      <Bloom mipmapBlur intensity={intensity} luminanceThreshold={threshold} luminanceSmoothing={0.12} radius={0.55} />
+    </EffectComposer>
   );
 }
 
@@ -364,6 +433,8 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
   const right = useModel('key_right');
   const leftRef = useRef<THREE.Group>(null);
   const rightRef = useRef<THREE.Group>(null);
+  const leftTwinkle = useGlints(left, 6, 0.09, 5);
+  const rightTwinkle = useGlints(right, 6, 0.09, 9);
   const star = useRef<THREE.Sprite>(null);
   const starTexture = useStarTexture();
   const pointer = useCanvasPointer();
@@ -403,9 +474,10 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
     const persp = camera as THREE.PerspectiveCamera;
     const worldH = 2 * persp.position.z * Math.tan(THREE.MathUtils.degToRad(persp.fov / 2));
     const pxToWorld = worldH / size.height;
-    const keyScale = (size.height * 0.7) * pxToWorld; // 钥匙高 ≈ 画布高 70%
+    const keyScale = (size.height * 0.74) * pxToWorld; // 钥匙高 ≈ 画布高 74%
     const joinedY = worldH / 2 - keyScale / 2 - 0.04 * worldH;
-    const openX = Math.min(size.width * 0.2, 340) * pxToWorld;
+    // 打开后两把钥匙分在标题两侧
+    const openX = Math.min(size.width * 0.29, 470) * pxToWorld;
     const halfW = 0.085 * keyScale;
 
     const idle = Math.sin(s.time * 0.7) * 0.18 * (1 - open * 0.6) + pointer.current.nx * 0.25;
@@ -427,6 +499,8 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
     if (joinedNow && !s.joined) s.flash = 1;
     s.joined = joinedNow;
     s.flash = Math.max(0, s.flash - dt * 1.6);
+    leftTwinkle(s.time, s.flash);
+    rightTwinkle(s.time + 1.3, s.flash);
     for (const m of emissives) m.emissiveIntensity = s.flash * 0.9;
     if (star.current) {
       const k = s.flash;
@@ -470,7 +544,8 @@ export function KeysStage({ sectionRef, onReady, onReveal }: { sectionRef: RefOb
           <Keys sectionRef={sectionRef} onReveal={onReveal} />
           <ReadySignal onReady={onReady} />
         </Suspense>
-        <ShadowCatcher color="#0b4f86" z={-0.6} />
+        <ShadowCatcher color="#7a5266" z={-0.6} />
+        <Sparkle />
       </Canvas>
     </div>
   );
