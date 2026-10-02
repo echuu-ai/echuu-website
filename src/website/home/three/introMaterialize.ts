@@ -26,6 +26,10 @@ export type IntroMaterializeUniforms = {
   /** 开场手机窗（绘制缓冲像素坐标 x0, y0, x1, y1）；uHoleOn = 1 时窗外的出场效果全部裁掉 */
   uHoleRect: THREE.IUniform<THREE.Vector4>;
   uHoleOn: THREE.IUniform<number>;
+  /** 悬停结霜（mouseFrost.ts）：屏幕空间缓冲，R = 结霜程度，G = 扩散前沿；uFrostOn = 0 时不采样 */
+  uFrostTex: THREE.IUniform<THREE.Texture | null>;
+  uFrostOn: THREE.IUniform<number>;
+  uFrostResolution: THREE.IUniform<THREE.Vector2>;
 };
 
 /** igloo 前沿带宽约为模型高度的 35%（1.5 / 4.35），换算到 1.7m 的角色 */
@@ -48,6 +52,9 @@ export function createIntroMaterializeUniforms(): IntroMaterializeUniforms {
     uCageAlpha: { value: 0 },
     uHoleRect: { value: new THREE.Vector4(0, 0, 1e6, 1e6) },
     uHoleOn: { value: 0 },
+    uFrostTex: { value: null },
+    uFrostOn: { value: 0 },
+    uFrostResolution: { value: new THREE.Vector2(1, 1) },
   };
 }
 
@@ -93,6 +100,9 @@ varying vec3 vIntroObj;
 uniform float uIntroProgress;
 uniform float uIntroTop;
 uniform float uIntroBottom;
+uniform sampler2D uFrostTex;
+uniform float uFrostOn;
+uniform vec2 uFrostResolution;
 ${HOLE_GLSL}
 // igloo 用 triangles_tiling 贴图；这里程序生成三角网格线（0° / 60° / 120° 三组），fwidth 抗锯齿
 float introTriangles(vec2 p) {
@@ -113,6 +123,16 @@ const BODY_FRAGMENT_APPLY = /* glsl */ `
     float introTri = introTriangles(vec2(vIntroObj.x + vIntroObj.z, vIntroObj.y) * 22.0);
     introEmissive += clamp(introEmissive * introTri * 13.0, 0.0, 1.0);
     col += introEmissive * vec3(0.5, 0.7, 1.0);
+  }
+  // 悬停结霜（igloo：emissive += rim * frostColor；igloo 另有前沿三角网，这里按设计去掉，只留冰色与发光前沿）
+  if (uFrostOn > 0.5) {
+    vec2 frostData = texture2D(uFrostTex, gl_FragCoord.xy / uFrostResolution).rg;
+    float frost = frostData.r;
+    float frostRim = max(frostData.g, 0.0);
+    vec3 frostColor = vec3(0.62, 0.86, 1.0);
+    // 克制一点：冰色只轻轻罩一层，前沿发光减弱
+    col = mix(col, col * 0.88 + frostColor * 0.14, frost * 0.4);
+    col += frostColor * frostRim * 5.0;
   }
 `;
 

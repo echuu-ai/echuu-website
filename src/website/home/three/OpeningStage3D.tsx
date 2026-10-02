@@ -1,6 +1,8 @@
 import { FingertipGlint } from './FingertipGlint';
 import { debutEnvelope } from '../debutHighlight';
 import { SkyEdgeEffect } from './SkyEdgeEffect';
+import { FrostSim, pointerOnAvatar } from './mouseFrost';
+import { armFrostAudio, playFrostBeep, updateFrostAudio } from '../../lib/frostAudio';
 import { INTRO_TOTAL_SECONDS, applyIntroTimeline, attachIntroWire, createIntroCage, createIntroMaterializeUniforms, measureBindHeight, patchIntroMaterialize } from './introMaterialize';
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
@@ -272,6 +274,25 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     (introCage.material as THREE.Material).dispose();
   }, [introCage]);
 
+  // igloo 式悬停结霜 + 音效：只在桌面精确指针、未开减少动态效果时启用
+  const frost = useMemo(() => new FrostSim(), []);
+  const frostPointer = useRef({ x: 0, y: 0, inside: false, hovering: false, enabled: false });
+  useEffect(() => {
+    const p = frostPointer.current;
+    p.enabled = !!window.matchMedia?.('(pointer: fine)').matches && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!p.enabled) return;
+    armFrostAudio();
+    const onMove = (event: PointerEvent) => { p.x = event.clientX; p.y = event.clientY; p.inside = event.pointerType === 'mouse' || event.pointerType === 'pen'; };
+    const onLeave = () => { p.inside = false; };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      document.documentElement.removeEventListener('pointerleave', onLeave);
+    };
+  }, []);
+  useEffect(() => () => frost.dispose(), [frost]);
+
   useEffect(() => {
     let cancelled = false;
     loadOpeningMotions()
@@ -532,6 +553,38 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     view.focusDistance = THREE.MathUtils.lerp(dofA.focusDistance ?? 4, dofB.focusDistance ?? 4, u) + extraFocusDistance;
     view.focusMode = (u < 0.5 ? dofA : dofB).focusMode ?? 'target';
     view.target = (u < 0.5 ? dofA : dofB).target;
+  });
+
+  // 结霜在相机与骨骼本帧更新之后计算（同优先级按注册顺序，排在上面的主循环之后）
+  const frostPoint = useMemo(() => new THREE.Vector2(), []);
+  const frostUv = useMemo(() => new THREE.Vector2(), []);
+  useFrame(({ gl, camera: cam }) => {
+    const p = frostPointer.current;
+    const now = performance.now() / 1000;
+    const active = p.enabled && hole.current.open && state.current.ready;
+    let hovering = false;
+    if (active && p.inside && document.visibilityState === 'visible') {
+      const rect = gl.domElement.getBoundingClientRect();
+      frostPoint.set(p.x - rect.left, p.y - rect.top);
+      if (frostPoint.x >= 0 && frostPoint.y >= 0 && frostPoint.x <= rect.width && frostPoint.y <= rect.height) {
+        hovering = pointerOnAvatar(vrm, cam as THREE.PerspectiveCamera, frostPoint, rect);
+        if (hovering) {
+          if (!p.hovering) { frost.hoverStart(); playFrostBeep(now); }
+          frostUv.set(frostPoint.x / rect.width, 1 - frostPoint.y / rect.height);
+          frost.move(frostUv, now);
+        }
+      }
+    }
+    p.hovering = hovering;
+    const sampling = active && frost.isActive(now);
+    if (sampling) {
+      frost.resize(gl.domElement.width / Math.max(1, gl.domElement.height));
+      frost.update(gl, now);
+      materialize.uFrostTex.value = frost.texture;
+      materialize.uFrostResolution.value.set(gl.domElement.width, gl.domElement.height);
+    }
+    materialize.uFrostOn.value = sampling ? 1 : 0;
+    updateFrostAudio(frost.soundVelocity, now, !sampling || document.visibilityState !== 'visible');
   });
 
   return (

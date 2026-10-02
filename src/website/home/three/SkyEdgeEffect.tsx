@@ -16,8 +16,8 @@ import type { HoleRect } from './OpeningStage3D';
  * 静止时切口贴着首屏底部；往下滚，切口跟着往上推。只在定格（hole.open）后生效。
  */
 
-/** 静止时的切口进度：切口平均落在首屏底部约 2.5% 高度处 */
-const SEAM_REST = 0.104;
+/** 静止时的切口进度：切口贴着首屏最底边，只露出一道撕纸边 */
+const SEAM_REST = 0.09;
 /** 滚过首屏高度的这个比例时 3D 完全被切掉（大于 1：首屏离开视口时还有余量） */
 const SEAM_FULL_SCROLL = 1.6;
 /** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
@@ -103,7 +103,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
   // 3D 一侧：贴近切口的地方轻微提亮
   float rim = 1.0 - smoothstep(0.0, 0.02, abs(edge));
-  color.rgb *= 1.0 + rim * 0.35 * (1.0 - cut);
+  color.rgb *= 1.0 + rim * 0.2 * (1.0 - cut);
 
   // 画布按预乘 alpha 合成：切掉的部分整体透明
   color *= 1.0 - cut;

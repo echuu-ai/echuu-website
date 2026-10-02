@@ -166,8 +166,8 @@
   },
   {
     "path": "fonts/pugua-qianyun-song-home.woff2",
-    "bytes": 148228,
-    "sha256": "547f738c7c458de377dec7fbacf54d4d7b62fb82b41b3cee2739bb7e9ad7079d"
+    "bytes": 217660,
+    "sha256": "c96ef1b96714efd27c9dfc88b0e9a0b9caeca5e060714606e78ccae5cbb94e39"
   },
   {
     "path": "fonts/pugua-qianyun-song.woff2",
@@ -545,5 +545,41 @@
     "path": "legal/minors.html",
     "bytes": 15193,
     "sha256": "7441efb1a5b0b96ce92e3b70b73e2bd39e54f8289b97fbf972ccf74a5b5484c8"
+  },
+  {
+    "path": "website/models/charms/pin.glb",
+    "bytes": 317800,
+    "sha256": "9a8c4996391fefbddc08875dc59493d752fac89b302aa9c20b8269c2d9dd2dc5",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/models/charms/angel.glb",
+    "bytes": 322904,
+    "sha256": "6fe5f81e7f54adfe861bb131dcf91a068d3d3d970a4e5a21643deb68f5dcdec6",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/models/charms/brain.glb",
+    "bytes": 239104,
+    "sha256": "5045ae9c88b250e2205b0de0c0cfdcc0f80df8e007e4f680794e500683733b01",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/models/charms/clapper.glb",
+    "bytes": 349616,
+    "sha256": "cef87b715ffc04d57ad4da7b72c854037391d96a234f1d07deb60c87ae7d0619",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/models/charms/key_left.glb",
+    "bytes": 188892,
+    "sha256": "0a59d318f94bf15469b17b41fc4e43dc4c673cffe312d2fd42b39a846a4a021c",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/key-left.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/models/charms/key_right.glb",
+    "bytes": 184332,
+    "sha256": "ca693f7211c5e752f54cb0ef181fc0d9cde7ff60264a721fbb7707a8ffeb81de",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/key-right.webp; meshopt + 1024px WebP via gltf-transform"
   }
 ]

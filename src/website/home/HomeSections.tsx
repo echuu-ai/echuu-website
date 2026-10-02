@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
@@ -6,9 +6,42 @@ import { buildMailto } from '../lib/cta';
 import { VrmGuide } from '../components/VrmGuide';
 import { Reveal } from '../components/Reveal';
 
-/** 简介卡：左蓝色说明面板 + 右侧别针吊饰 */
+const BroochStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.BroochStage })));
+const KeysStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.KeysStage })));
+
+/** 3D 饰物：有 WebGL2、没开减少动态效果时才启用；否则保持原图 */
+function useCharms3D() {
+  const [enabled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
+    try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
+  });
+  return enabled;
+}
+
+/** 区块离视口还有约一屏时才挂载 3D（开始下载模型），不和首屏角色抢带宽 */
+function useNearViewport(ref: RefObject<HTMLElement>, enabled: boolean) {
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const node = ref.current;
+    if (!enabled || !node || near || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setNear(true); observer.disconnect(); }
+    }, { rootMargin: '100% 0px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ref, enabled, near]);
+  return near;
+}
+
+/** 简介卡：左蓝色说明面板 + 右侧别针吊饰（可用时换成会晃的 3D 别针） */
 export function IntroSection() {
   const { h } = useHomeDict();
+  const artRef = useRef<HTMLElement>(null);
+  const charms = useCharms3D();
+  const near = useNearViewport(artRef, charms);
+  const [ready, setReady] = useState(false);
+  const onReady = useCallback(() => setReady(true), []);
   return (
     <section className="hv-section hv-section--hold hv-intro" id="intro" aria-labelledby="hv-intro-kicker">
       <div className="hv-hold">
@@ -20,9 +53,11 @@ export function IntroSection() {
           </h2>
           <p className="hv-intro__body">{h.intro.body}</p>
         </div>
-        <figure className="hv-intro__art">
+        <figure className={`hv-intro__art${ready ? ' is-3d' : ''}`} ref={artRef}>
           <img src={HOME_ASSETS.brooch} alt={h.intro.brooch} width={433} height={518} loading="lazy" decoding="async" />
           <img src={HOME_ASSETS.icons.sparkle} alt="" className="hv-intro__sparkle" />
+          {/* 放在原图之后：原图的 :first-child 样式与 is-3d 隐藏规则都依赖它是第一个子元素 */}
+          {near ? <Suspense fallback={null}><BroochStage onReady={onReady} /></Suspense> : null}
         </figure>
       </Reveal>
       </div>
@@ -179,6 +214,11 @@ export function ModesSection() {
   const { h } = useHomeDict();
   const sectionRef = useRef<HTMLElement>(null);
   useScrollReveal(sectionRef, '--key-open');
+  const charms = useCharms3D();
+  const near = useNearViewport(sectionRef, charms);
+  // 3D 钥匙画出来后接管：隐藏原图，标题跟着钥匙打开浮现（--keys-reveal 由 3D 逐帧写入）
+  const onKeysReady = useCallback(() => { if (sectionRef.current) sectionRef.current.dataset.keys3d = 'ready'; }, []);
+  const onKeysReveal = useCallback((amount: number) => { sectionRef.current?.style.setProperty('--keys-reveal', String(amount)); }, []);
   const cards = [
     { ...h.modes.cards[2], src: HOME_ASSETS.modes.talk, id: 'talk' },
     { ...h.modes.cards[0], src: HOME_ASSETS.modes.reaction, id: 'reaction' },
@@ -190,6 +230,7 @@ export function ModesSection() {
       <div className="hv-modes__keys" aria-hidden="true">
         <img className="hv-modes__key hv-modes__key--left" src={HOME_ASSETS.keyLeft} alt="" loading="lazy" />
         <img className="hv-modes__key hv-modes__key--right" src={HOME_ASSETS.keyRight} alt="" loading="lazy" />
+        {near ? <Suspense fallback={null}><KeysStage sectionRef={sectionRef} onReady={onKeysReady} onReveal={onKeysReveal} /></Suspense> : null}
       </div>
       <div className="hv-modes__head">
         <img className="hv-modes__runner" src={HOME_ASSETS.runningSilhouette} alt="" width={130} height={190} loading="lazy" />

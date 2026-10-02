@@ -8,6 +8,8 @@ import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { LangSwitch } from '../components/LangSwitch';
 import { HomeHeader } from './HomeHeader';
+import { SoundToggle } from './SoundToggle';
+import { LangPopover } from './LangPopover';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
@@ -333,9 +335,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
       {phase === 'hero' && !menuOpen ? createPortal(
         <div className="hv-cta">
-          <button type="button" className="hv-cta__icon" aria-label={h.header.language} onClick={() => setMenuOpen(true)}>
-            <img src={HOME_ASSETS.icons.language} alt="" />
-          </button>
+          <LangPopover locale={locale} label={h.header.language} />
+          <SoundToggle label={h.header.sound} />
           <span className="hv-cta__group"><SocialLinks compact /></span>
           <button type="button" className="hv-cta__beta" onClick={onBeta}>
             {h.hero.beta}

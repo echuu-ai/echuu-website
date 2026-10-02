@@ -23,6 +23,7 @@ export const homeZh = {
     menu: '菜单',
     close: '关闭',
     language: '语言',
+    sound: '声音',
   },
   menu: {
     intro: '简介',
@@ -145,6 +146,7 @@ export const homeEn: HomeDict = {
     menu: 'Menu',
     close: 'Close',
     language: 'Language',
+    sound: 'Sound',
   },
   menu: {
     intro: 'Intro',
@@ -263,6 +265,7 @@ export const homeJa: HomeDict = {
     menu: 'メニュー',
     close: '閉じる',
     language: '言語',
+    sound: 'サウンド',
   },
   menu: {
     intro: '紹介',
@@ -381,6 +384,7 @@ export const homeKo: HomeDict = {
     menu: '메뉴',
     close: '닫기',
     language: '언어',
+    sound: '사운드',
   },
   menu: {
     intro: '소개',
