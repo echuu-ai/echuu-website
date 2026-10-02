@@ -336,6 +336,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-title__slogan {
   margin: 0; color: #000; font-size: clamp(15px, 1.7vw, 24px); line-height: 1.2; letter-spacing: -0.1em;
   white-space: nowrap; text-align: center;
+  /* 蒲瓜纤云宋（日 / 韩走各自的宋体）。同色描边把细笔画加粗一点，压在亮背景上也看得清；颜色跟深色 logo 一致 */
+  font-family: var(--hv-serif); letter-spacing: -0.04em;
+  color: #0b2a50; -webkit-text-stroke: 0.05em currentColor;
 }
 .echuu-website .hv-title__hl { padding: 0.12em 0.08em; }
 .echuu-website .hv-title__hl--yellow { background: var(--hv-yellow); }
