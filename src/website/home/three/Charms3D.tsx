@@ -503,8 +503,8 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
           <ReadySignal onReady={onReady} />
           <CursorProxy depth={-0.28} />
         </Suspense>
-        {/* 暖灰阴影；别针在浅色底上不加 Bloom（高反射金属会整块泛白），闪光点本身是叠加发光 */}
-        <ShadowCatcher color="#b28d7c" z={-0.32} />
+        {/* 蓝色阴影；别针在浅色底上不加 Bloom（高反射金属会整块泛白），闪光点本身是叠加发光 */}
+        <ShadowCatcher color="#6f9fd0" z={-0.32} />
         <Sparkle bloom={false} />
       </Canvas>
     </div>
@@ -596,22 +596,29 @@ const segment = (x: number, a: number, b: number) => clamp01((x - a) / (b - a));
 /** 四芒星闪光贴图（画布生成） */
 function useStarTexture() {
   return useMemo(() => {
+    // 纯十字光：只留极小的核心，没有圆形光晕（缩小时不会变成圆斑）
     const c = document.createElement('canvas');
     c.width = c.height = 256;
     const g = c.getContext('2d')!;
-    const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.18, 'rgba(220,240,255,0.55)');
-    grad.addColorStop(1, 'rgba(220,240,255,0)');
-    g.fillStyle = grad;
-    g.fillRect(0, 0, 256, 256);
     g.globalCompositeOperation = 'lighter';
-    for (const [w, h] of [[256, 10], [10, 256]]) {
-      const ray = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-      ray.addColorStop(0, 'rgba(255,255,255,0.95)');
+    g.filter = 'blur(1.5px)';
+    const core = g.createRadialGradient(128, 128, 0, 128, 128, 14);
+    core.addColorStop(0, 'rgba(255,255,255,0.9)');
+    core.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = core;
+    g.fillRect(100, 100, 56, 56);
+    // 两道光芒：中间亮、两端细尖并渐隐
+    for (const vertical of [false, true]) {
+      const ray = vertical ? g.createLinearGradient(128, 0, 128, 256) : g.createLinearGradient(0, 128, 256, 128);
+      ray.addColorStop(0, 'rgba(255,255,255,0)');
+      ray.addColorStop(0.5, 'rgba(255,255,255,1)');
       ray.addColorStop(1, 'rgba(255,255,255,0)');
       g.fillStyle = ray;
-      g.fillRect(128 - w / 2, 128 - h / 2, w, h);
+      g.beginPath();
+      if (vertical) { g.moveTo(128, 0); g.lineTo(132, 128); g.lineTo(128, 256); g.lineTo(124, 128); }
+      else { g.moveTo(0, 128); g.lineTo(128, 132); g.lineTo(256, 128); g.lineTo(128, 124); }
+      g.closePath();
+      g.fill();
     }
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -736,7 +743,7 @@ export function KeysStage({ sectionRef, onReady, onReveal }: { sectionRef: RefOb
           <ReadySignal onReady={onReady} />
           <CursorProxy depth={-0.4} />
         </Suspense>
-        <ShadowCatcher color="#7a5266" z={-0.6} />
+        <ShadowCatcher color="#2f6aa8" z={-0.6} />
         <Sparkle />
       </Canvas>
     </div>
