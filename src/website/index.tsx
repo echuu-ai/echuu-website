@@ -4,8 +4,6 @@ import { LocaleContext } from './locale-context';
 import { useI18nStore } from '../hooks/use-i18n';
 import { useWebsiteLocation, WEBSITE_BASE } from './router';
 import { SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
-import { SiteHeader } from './components/SiteHeader';
-import { SiteFooter } from './components/SiteFooter';
 import { HomeV2 } from './home/HomeV2';
 import { GalleryPage } from './pages/GalleryPage';
 import { CreatorsPage } from './pages/CreatorsPage';
@@ -13,6 +11,7 @@ import { JournalPage } from './pages/JournalPage';
 import { BlogPage } from './pages/BlogPage';
 import { TeamPage } from './pages/TeamPage';
 import { TeamChrome } from './home/TeamChrome';
+import { SubpageChrome } from './home/SubpageChrome';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { DoodlePage } from './pages/DoodlePage';
 import { MoodboardPage } from './pages/MoodboardPage';
@@ -89,13 +88,20 @@ export default function EchuuWebsite() {
 
   return (
     <LocaleContext.Provider value={{ locale, t }}>
-      <div className="echuu-website" data-locale={locale} data-page={page}>
+      <div className="echuu-website" data-locale={locale} data-page={page} data-shell={page === 'home' ? 'home' : 'subpage'}>
         <a className="skip-link" href="#main">
           {t.nav.skipToContent}
         </a>
-        {page === 'home' || page === 'team' ? null : <SiteHeader />}
-        {page === 'team' ? <TeamChrome><main id="main">{body}</main></TeamChrome> : <main id="main">{body}</main>}
-        {page === 'home' || page === 'team' ? null : <SiteFooter />}
+        {/* 首页自带开场与页头页脚；其余页面一律走官网子页外壳，不再有未包装的页面 */}
+        {page === 'home' ? (
+          <main id="main">{body}</main>
+        ) : page === 'team' ? (
+          <TeamChrome><main id="main">{body}</main></TeamChrome>
+        ) : (
+          <SubpageChrome className="subpage-chrome" world>
+            <main id="main" className="subpage-sheet">{body}</main>
+          </SubpageChrome>
+        )}
       </div>
     </LocaleContext.Provider>
   );

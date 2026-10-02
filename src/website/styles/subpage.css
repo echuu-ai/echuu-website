@@ -1,0 +1,57 @@
+/* 官网子页统一外壳（SubpageChrome）：首页同款页头与页脚 + 固定模糊天空 + 浅色纸面。
+   旧版内容排版（.shell / .section / 卡片 / 表单）按浅底深字设计，放在纸面上保持对比度。 */
+
+/* 外壳共用：首页 .hv 的天空伪元素在长页面上会被拉伸，子页改用固定的 .subpage-world */
+.echuu-website .hv.subpage-chrome,
+.echuu-website .hv.team-chrome { background: transparent; overflow: visible; isolation: auto; }
+.echuu-website .hv.subpage-chrome::before { display: none; }
+.echuu-website .subpage-chrome > .hv-header,
+.echuu-website .team-chrome > .hv-header { position: relative; height: 152px; z-index: 5; }
+.echuu-website .subpage-chrome .hv-footer,
+.echuu-website .team-chrome .hv-footer { --hv-footer-sky: transparent; }
+.echuu-website .subpage-chrome .hv-footer__wings,
+.echuu-website .team-chrome .hv-footer__wings { filter: saturate(.72) blur(8px); }
+.echuu-website .team-menu-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+.echuu-website[data-shell='subpage'] { position: relative; isolation: isolate; background: #277eba; }
+.echuu-website .subpage-world {
+  position: fixed; inset: -40px; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, #1268a529, #07508b80), var(--hv-sky-bg) center / cover;
+  filter: blur(22px) saturate(.9);
+}
+
+/* 纸面：内容区。--shell 收窄，旧版 .shell 在纸面里自带内边距 */
+.echuu-website .subpage-sheet {
+  --shell: calc(100% - clamp(40px, 8vw, 112px));
+  width: min(1180px, 100% - 64px);
+  margin: 0 auto clamp(64px, 8vw, 110px);
+  padding: clamp(8px, 1.5vw, 20px) 0 clamp(28px, 4vw, 56px);
+  border-radius: 30px;
+  background: #f1f9ffed;
+  box-shadow: inset 0 1px 0 #fff, 0 18px 50px #06416a24;
+  color: var(--ink);
+  overflow: hidden;
+}
+.echuu-website .subpage-sheet .section { padding-block: clamp(24px, 3.5vw, 44px); }
+.echuu-website .subpage-sheet .section:last-child { padding-bottom: 0; }
+
+/* 页面标题：官网展示字体（与团队页标题同一组），深色以配合浅色纸面 */
+.echuu-website .subpage-sheet .page-head h1,
+.echuu-website .subpage-sheet .blog-post__title,
+.echuu-website .subpage-sheet .section > .shell > h1.section__title {
+  font-family: 'PuguaXianyunsong Home', 'Songti SC', serif;
+  font-weight: 400; letter-spacing: -.03em; line-height: 1.2; color: #163f61;
+  font-size: clamp(34px, 5vw, 60px);
+}
+.echuu-website[data-locale='en'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: var(--font-brand); }
+.echuu-website[data-locale='ja'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: 'Shippori Mincho', serif; font-weight: 700; }
+.echuu-website[data-locale='ko'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: 'Maru Buri', serif; font-weight: 600; }
+.echuu-website .subpage-sheet .page-head { padding-top: clamp(28px, 4vw, 48px); }
+
+@media (max-width: 900px) {
+  .echuu-website .subpage-chrome > .hv-header,
+  .echuu-website .team-chrome > .hv-header { height: 80px; }
+}
+@media (max-width: 600px) {
+  .echuu-website .subpage-sheet { width: calc(100% - 24px); border-radius: 22px; --shell: calc(100% - 36px); }
+}
