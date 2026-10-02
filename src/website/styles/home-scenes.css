@@ -142,7 +142,8 @@
   .echuu-website .hv-chrome[data-visible='true'] .hv-replay { animation: hv-chrome-fade 0.6s ease-out 1.5s both; }
 
   /* 底部栏：从中间向两侧展开，图标随后依次浮现 */
-  .echuu-website .hv-cta { animation: hv-bar-open 0.75s cubic-bezier(.65, 0, .2, 1) 0.6s both; }
+  /* 只保留开始前的状态（backwards）：播完撤掉 clip-path，否则会把弹在栏上方的语言列表一起裁掉 */
+  .echuu-website .hv-cta { animation: hv-bar-open 0.75s cubic-bezier(.65, 0, .2, 1) 0.6s backwards; }
   .echuu-website .hv-cta > *, .echuu-website .hv-cta__group > * { animation: hv-bar-item 0.45s var(--hv-ease) both; animation-delay: 1.05s; }
   .echuu-website .hv-cta__group > :nth-child(1) { animation-delay: 1.1s; }
   .echuu-website .hv-cta__group > :nth-child(2) { animation-delay: 1.15s; }
