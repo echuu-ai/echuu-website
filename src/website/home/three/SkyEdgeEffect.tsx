@@ -16,8 +16,10 @@ import type { HoleRect } from './OpeningStage3D';
  * 切口固定贴着首屏底部，随页面一起滚走（不随滚动上推）。只在定格（hole.open）后生效。
  */
 
-/** 静止时的切口进度：0.0833 对应首屏最底边；0.11 ≈ 切口平均在底部 3.5% 处（约 20px），撕纸纹理看得清又不显高 */
-const SEAM_REST = 0.11;
+/** 静止时的切口进度：0.0833 对应首屏最底边；0.097 ≈ 平均在底部 1.6% 处（约 10px），只露撕纸锯齿 */
+const SEAM_REST = 0.097;
+/** 滚动时切口最多抬起多少（约首屏 3%），停下后回落 */
+const SEAM_SCROLL_LIFT = 0.025;
 /** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
 const CA_BAND = 0.22;
 /** 滚动时整个 3D 画面的色散上限（桶形畸变强度，igloo 原值约 12，这里收敛一些） */
@@ -73,7 +75,9 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   // 小尺度细纹：替代 Shopify 的泥纹法线贴图，给边缘一点纸纤维感
   float grain = seamSample(uv * vec2(aspect, 1.0) * 2.0 + 0.37) * mix(0.3, 0.6, 0.5 + 0.5 * sin(seamTime - uv.x * 10.0)) * 0.1;
   // 纸纤维：更细更碎的锯齿，让贴底的切口一眼看得出是撕开的
-  float fiber = seamSample(uv * vec2(aspect, 1.0) * 9.0 + 1.7) * 0.022 + seamSample(uv * vec2(aspect, 1.0) * 23.0 + 4.1) * 0.009;
+  // 纤维随 seamTime 横向流动：滚动时 seamTime 加速，边缘跟着翻涌
+  float fiber = seamSample(uv * vec2(aspect, 1.0) * 9.0 + vec2(1.7 + seamTime * 0.035, 1.7)) * 0.022
+    + seamSample(uv * vec2(aspect, 1.0) * 23.0 + vec2(4.1 - seamTime * 0.06, 4.1)) * 0.009;
 
   float threshold = uv.y * 2.0 - 1.0;
   // 起伏收小：切口贴底时，最高处也不超过首屏底部约 3%
@@ -145,19 +149,20 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React
     const uniforms = effect.uniforms;
     uniforms.get('seamEnabled')!.value = hole.current.open ? 1 : 0;
     if (!hole.current.open) return;
-    uniforms.get('seamTime')!.value += Math.min(delta, 0.05);
     (uniforms.get('seamResolution')!.value as THREE.Vector2).set(size.width, size.height);
-    // 切口固定在首屏底边，不随滚动上推：3D 与标题、按钮作为一个整体滚走，
-    // 否则往下滚时 3D 先被切掉，标题会被留在蓝底上
-    uniforms.get('seamProgress')!.value = SEAM_REST;
 
-    // 滚动速度（每帧滚过的首屏高度比例）驱动色散强度：滚得越快越强，停下后约半秒回落
+    // 滚动速度（每帧滚过的首屏高度比例）：滚得越快越强，停下后约半秒回落
     const m = motion.current;
     const y = window.scrollY;
     const speed = m.lastY < 0 ? 0 : Math.abs(y - m.lastY) / Math.max(1, size.height);
     m.lastY = y;
     m.value = Math.min(1, Math.max(speed * 14, m.value * Math.exp(-Math.min(delta, 0.05) * 4)));
     uniforms.get('seamMotion')!.value = m.value;
+
+    // 切口跟着滚动「速度」动，而不是滚动位置：滚动时边缘加速流动、翻涌并稍微抬起，停下后落回底边。
+    // 不按位置上推，3D 与标题、按钮作为一个整体滚走，标题不会被留在蓝底上
+    uniforms.get('seamTime')!.value += Math.min(delta, 0.05) * (1 + m.value * 9);
+    uniforms.get('seamProgress')!.value = SEAM_REST + SEAM_SCROLL_LIFT * m.value;
     // 抖动只在彩边变化时刷新，静止时不闪
     if (m.value > 0.01) (uniforms.get('seamJitter')!.value as THREE.Vector2).set(Math.random() * 100, Math.random() * 100);
   });
