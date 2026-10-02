@@ -4,6 +4,7 @@ import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import * as THREE from 'three';
 import { createEdgeNoise } from './edgeNoise';
 import type { HoleRect } from './OpeningStage3D';
+import { pctToProgress, seamTuning } from './seamTuning';
 
 /**
  * 首屏 3D 与下方天空的衔接切口。
@@ -16,14 +17,7 @@ import type { HoleRect } from './OpeningStage3D';
  * 切口固定贴着首屏底部，随页面一起滚走（不随滚动上推）。只在定格（hole.open）后生效。
  */
 
-/** 静止时的切口进度：0.0833 对应首屏最底边；0.097 ≈ 平均在底部 1.6% 处（约 10px），只露撕纸锯齿 */
-const SEAM_REST = 0.097;
-/** 滚动时切口最多抬起多少（约首屏 3%），停下后回落 */
-const SEAM_SCROLL_LIFT = 0.025;
-/** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
-const CA_BAND = 0.22;
-/** 滚动时整个 3D 画面的色散上限（桶形畸变强度，igloo 原值约 12，这里收敛一些） */
-const SCROLL_CA = 4;
+// 所有可调参数在 seamTuning.ts（开发环境有调节面板 SeamTuningPanel）
 
 const fragment = /* glsl */ `
 uniform float seamEnabled;
@@ -32,6 +26,15 @@ uniform float seamTime;
 uniform vec2 seamResolution;
 uniform sampler2D seamNoise;
 uniform float seamMotion;
+uniform float seamSwellAmp;
+uniform float seamGrainAmp;
+uniform float seamFiberAmp;
+uniform float seamRim;
+uniform float seamLineWidth;
+uniform float seamLineAlpha;
+uniform float seamBandHeight;
+uniform float seamBandAmount;
+uniform float seamSceneCA;
 uniform vec2 seamJitter;
 
 #define SEAM_CA_ITER 5
@@ -82,7 +85,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   float threshold = uv.y * 2.0 - 1.0;
   // 起伏收小：切口贴底时，最高处也不超过首屏底部约 3%
   // 平均位置压低，起伏适中，主要靠细碎锯齿体现撕纸感
-  threshold = threshold / 1.2 + swell * 0.04 + grain + fiber;
+  threshold = threshold / 1.2 + swell * seamSwellAmp + grain * seamGrainAmp + fiber * seamFiberAmp;
   threshold = threshold * 0.5 + 0.5;
 
   // 抗锯齿的切口：edge > 0 的部分被切掉
@@ -94,11 +97,11 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
   // 色散带：切口上方逐渐减弱；左右两端收掉，避免屏幕边缘被拉扯
   float above = max(-edge, 0.0);
-  float band = (1.0 - smoothstep(0.0, ${CA_BAND.toFixed(3)}, above)) * smoothstep(1.0, 0.75, abs(uv.x * 2.0 - 1.0));
-  float bandAmount = 1.1 * band * mix(0.45, 1.0, seamMotion);
+  float band = (1.0 - smoothstep(0.0, max(seamBandHeight, 1e-4), above)) * smoothstep(1.0, 0.75, abs(uv.x * 2.0 - 1.0));
+  float bandAmount = seamBandAmount * band * mix(0.45, 1.0, seamMotion);
   // 整个 3D 画面的色散（igloo 的 modulator）：画面中段最强，四边收到 0；只在滚动时出现
   float vignette = smoothstep(1.0, 0.7, abs(uv.x * 2.0 - 1.0)) * smoothstep(1.0, 0.7, abs(uv.y * 2.0 - 1.0));
-  float sceneAmount = ${SCROLL_CA.toFixed(2)} * vignette * seamMotion;
+  float sceneAmount = seamSceneCA * vignette * seamMotion;
   float amount = max(bandAmount, sceneAmount);
   vec4 color = inputColor;
   if (amount > 0.002 && cut < 1.0) {
@@ -109,13 +112,13 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
   // 3D 一侧：贴近切口的地方轻微提亮
   float rim = 1.0 - smoothstep(0.0, 0.02, abs(edge));
-  color.rgb *= 1.0 + rim * 0.2 * (1.0 - cut);
+  color.rgb *= 1.0 + rim * seamRim * (1.0 - cut);
 
   // 画布按预乘 alpha 合成：切掉的部分整体透明
   color *= 1.0 - cut;
 
   // 切口亮线：很窄，亮度随时间与横向位置轻微起伏
-  float line = 1.0 - smoothstep(0.0, 0.004, abs(edge));
+  float line = (1.0 - smoothstep(0.0, max(seamLineWidth, 1e-5), abs(edge))) * seamLineAlpha;
   float flicker = mix(0.55, 0.95, 0.5 + 0.5 * swell * sin(seamTime + uv.x * 10.0));
   color = mix(color, vec4(0.9, 0.97, 1.0, 1.0), line * flicker);
 
@@ -131,12 +134,14 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React
     attributes: EffectAttribute.CONVOLUTION,
     uniforms: new Map<string, THREE.Uniform>([
       ['seamEnabled', new THREE.Uniform(0)],
-      ['seamProgress', new THREE.Uniform(SEAM_REST)],
+      ['seamProgress', new THREE.Uniform(pctToProgress(seamTuning.restPct))],
       ['seamTime', new THREE.Uniform(0)],
       ['seamResolution', new THREE.Uniform(new THREE.Vector2(1, 1))],
       ['seamNoise', new THREE.Uniform(createEdgeNoise())],
       ['seamMotion', new THREE.Uniform(0)],
       ['seamJitter', new THREE.Uniform(new THREE.Vector2())],
+      ...(['seamSwellAmp', 'seamGrainAmp', 'seamFiberAmp', 'seamRim', 'seamLineWidth', 'seamLineAlpha', 'seamBandHeight', 'seamBandAmount', 'seamSceneCA']
+        .map((name) => [name, new THREE.Uniform(0)] as [string, THREE.Uniform])),
     ]),
   }), []);
   const motion = useRef({ lastY: -1, value: 0 });
@@ -162,7 +167,17 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React
     // 切口跟着滚动「速度」动，而不是滚动位置：滚动时边缘加速流动、翻涌并稍微抬起，停下后落回底边。
     // 不按位置上推，3D 与标题、按钮作为一个整体滚走，标题不会被留在蓝底上
     uniforms.get('seamTime')!.value += Math.min(delta, 0.05) * (1 + m.value * 9);
-    uniforms.get('seamProgress')!.value = SEAM_REST + SEAM_SCROLL_LIFT * m.value;
+    const t = seamTuning;
+    uniforms.get('seamProgress')!.value = pctToProgress(t.restPct + t.liftPct * m.value);
+    uniforms.get('seamSwellAmp')!.value = t.swell;
+    uniforms.get('seamGrainAmp')!.value = t.grain;
+    uniforms.get('seamFiberAmp')!.value = t.fiber;
+    uniforms.get('seamRim')!.value = t.rim;
+    uniforms.get('seamLineWidth')!.value = t.lineWidth;
+    uniforms.get('seamLineAlpha')!.value = t.lineAlpha;
+    uniforms.get('seamBandHeight')!.value = t.bandHeight;
+    uniforms.get('seamBandAmount')!.value = t.bandAmount;
+    uniforms.get('seamSceneCA')!.value = t.sceneCA;
     // 抖动只在彩边变化时刷新，静止时不闪
     if (m.value > 0.01) (uniforms.get('seamJitter')!.value as THREE.Vector2).set(Math.random() * 100, Math.random() * 100);
   });

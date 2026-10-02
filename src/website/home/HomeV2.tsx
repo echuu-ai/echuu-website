@@ -1,4 +1,4 @@
-import { useState, useRef, type CSSProperties } from 'react';
+import { lazy, Suspense, useState, useRef, type CSSProperties } from 'react';
 import { AccessDialog, type AccessMode } from '../auth/AccessDialog';
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
@@ -12,6 +12,10 @@ import { useSceneReveal } from './useSceneReveal';
 import { HeroGuideLines } from './HeroGuideLines';
 import '../styles/home.css';
 import '../styles/home-scenes.css';
+
+// 开发用切口调节面板：只在 dev 且地址带 ?tune=seam 时加载，正式构建里整段被裁掉
+const SeamTuningPanel = import.meta.env.DEV ? lazy(() => import('./SeamTuningPanel')) : null;
+const showSeamTuning = () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tune') === 'seam';
 
 /**
  * 官网首页 v2：Figma「Echuu-Website」(2038:1044)。
@@ -49,6 +53,7 @@ export function HomeV2() {
       <HomeFooter onBeta={() => openAccess('signup')} />
       {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
       <HeroGuideLines />
+      {SeamTuningPanel && showSeamTuning() && <Suspense fallback={null}><SeamTuningPanel /></Suspense>}
       <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
