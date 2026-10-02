@@ -35,7 +35,7 @@ const BASE_TINT: Partial<Record<ModelName, string>> = { pin: '#f7f3ee' };
  * 卡通材质不吃环境贴图，用自发光把整体亮度托回来。
  */
 const TOON_GRADIENT = (() => {
-  const tex = new THREE.DataTexture(new Uint8Array([206, 206, 206, 255, 255, 255, 255, 255]), 2, 1, THREE.RGBAFormat);
+  const tex = new THREE.DataTexture(new Uint8Array([224, 224, 224, 255, 255, 255, 255, 255]), 2, 1, THREE.RGBAFormat);
   tex.minFilter = THREE.NearestFilter;
   tex.magFilter = THREE.NearestFilter;
   tex.needsUpdate = true;
@@ -52,16 +52,16 @@ function toonify(root: THREE.Object3D) {
       gradientMap: TOON_GRADIENT,
       emissive: new THREE.Color('#ffffff'),
       emissiveMap: source.map,
-      emissiveIntensity: 0.32,
+      emissiveIntensity: 0.55,
     });
     toon.onBeforeCompile = (shader) => {
       shader.fragmentShader = shader.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
         float rim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 3.0);
-        gl_FragColor.rgb += rim * vec3(0.72, 0.88, 1.0) * 0.32;`);
+        gl_FragColor.rgb += rim * vec3(0.72, 0.88, 1.0) * 0.4;`);
     };
     mesh.material = toon;
     // 反面外扩的描边壳
-    const outline = new THREE.Mesh(mesh.geometry, new THREE.MeshBasicMaterial({ color: '#6d7894', side: THREE.BackSide }));
+    const outline = new THREE.Mesh(mesh.geometry, new THREE.MeshBasicMaterial({ color: '#8b95ad', side: THREE.BackSide }));
     (outline.material as THREE.MeshBasicMaterial).onBeforeCompile = (shader) => {
       shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  transformed += normalize(normal) * 0.0045;');
     };
@@ -491,7 +491,7 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
         dpr={[1, 1.75]}
         shadows
         frameloop={inView ? 'always' : 'never'}
-        camera={{ fov: 30, position: [0, 0, 5.4], near: 0.1, far: 20 }}
+        camera={{ fov: 30, position: [0, 0, 4.7], near: 0.1, far: 20 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
       >
         <RoomEnv />
