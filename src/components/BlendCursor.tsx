@@ -2,6 +2,7 @@ import { canStartCursorFlight, isCursorUi, CURSOR_EDITOR_SELECTOR } from '../lib
 import { readUiFlightRoute, sampleUiFlightRoute } from '../lib/ui-cursor-flight';
 import { useEffect, useRef, useState } from 'react';
 import { sceneCursorFlight, startSceneCursorFlight, moveSceneCursorTarget, releaseSceneCursorFlight, cancelSceneCursorFlight } from '../lib/scene-cursor-flight';
+import { updateCursorDepth } from '../lib/cursorDepth';
 import { MetalPlaneCursor, type MetalPlaneCursorHandle } from './MetalPlaneCursor';
 import { publicUrl } from '../lib/publicUrl';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -336,7 +337,6 @@ export default function BlendCursor() {
       flightX = flightY = flightHeading = 0;
       flight = null;
       wingRoll = flightDepth = 0;
-      wingRoll = flightDepth = 0;
       size.current = targetSize.current;
     };
     const onSelection = () => {
@@ -545,6 +545,12 @@ export default function BlendCursor() {
       flightHeading = ((flightHeading + 180) % 360 + 360) % 360 - 180;
       if (!flying && Math.abs(flightHeading) < 0.1) flightHeading = 0;
       pointer.style.transform = `translate3d(${mx + flightX - TIP_X}px, ${my + flightY - TIP_Y}px, 0)`;
+      // 前后层级：被实心表面遮挡，或交给 3D 画布在场景里画（见 lib/cursorDepth.ts）
+      const tipX = mx + flightX;
+      const tipY = my + flightY;
+      const handedTo3d = updateCursorDepth(pointer, tipX, tipY, tipX - TIP_X, tipY - TIP_Y, flightHeading,
+        !reduced && hasPointer && !pointerHiddenForPanel && !flying);
+      if (handedTo3d) pointer.style.opacity = '0';
       const target = reduced ? BASE : flying ? BASE : pressed ? BASE * 0.92 : targetSize.current;
       size.current += (target - size.current) * blend;
       // Banking changes the wing silhouette, rather than merely spinning a flat icon.

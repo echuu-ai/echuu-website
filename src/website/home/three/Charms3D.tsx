@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { AppColorGradeLutPass } from '../../../components/ColorGradeLutPass';
+import { cursorDepth, registerCursorProxyHost } from '../../../lib/cursorDepth';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { publicUrl } from '../../../lib/publicUrl';
@@ -500,6 +501,7 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
         <Suspense fallback={null}>
           <Brooch />
           <ReadySignal onReady={onReady} />
+          <CursorProxy depth={-0.28} />
         </Suspense>
         {/* 暖灰阴影；别针在浅色底上不加 Bloom（高反射金属会整块泛白），闪光点本身是叠加发光 */}
         <ShadowCatcher color="#b28d7c" z={-0.32} />
@@ -524,6 +526,64 @@ function Sparkle({ bloom = true, threshold = 0.72, intensity = 0.9 }: { bloom?: 
       </>
     </EffectComposer>
   );
+}
+
+// --- 光标代理：纸飞机进入画布时，由场景里的这架飞机接管，和模型共用深度 -----------------
+
+const CURSOR_MODEL = publicUrl('assets/cursor/crystal-arrow.glb');
+/** 光标飞机在屏幕上的尺寸（与 paper-plane-cursor-renderer 的 28px 一致） */
+const CURSOR_PX = 28;
+
+/** depth = 飞机所在的 z（场景坐标），放在模型后面，模型按真实轮廓挡住它 */
+function CursorProxy({ depth }: { depth: number }) {
+  const { gl, camera, size } = useThree();
+  const gltf = useGLTF(CURSOR_MODEL);
+  const holder = useRef<THREE.Group>(null);
+  const plane = useMemo(() => {
+    // 与 2D 光标同样的展示角度：先绕 X 0.34π、再绕 Z -π/4；机头落在 pivot 原点
+    const model = gltf.scene.clone(true);
+    const material = new THREE.MeshStandardMaterial({ color: '#eef2f7', metalness: 1, roughness: 0.18, envMapIntensity: 1.8 });
+    model.traverse((node) => {
+      const mesh = node as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.geometry = mesh.geometry.clone();
+      mesh.geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI * 0.34));
+      mesh.geometry.applyMatrix4(new THREE.Matrix4().makeRotationZ(-Math.PI / 4));
+      mesh.material = material;
+      mesh.castShadow = false;
+    });
+    const bounds = new THREE.Box3().setFromObject(model);
+    const extent = bounds.getSize(new THREE.Vector3());
+    const unit = 1 / Math.max(extent.x, extent.y);
+    const nose = new THREE.Vector3(-0.95, 0.11, 0)
+      .applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI * 0.34)
+      .applyAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 4);
+    model.position.copy(nose).multiplyScalar(-unit);
+    model.scale.setScalar(unit);
+    const pivot = new THREE.Group();
+    pivot.add(model);
+    return pivot;
+  }, [gltf]);
+  useEffect(() => registerCursorProxyHost(gl.domElement), [gl]);
+  const tmp = useMemo(() => ({ ray: new THREE.Raycaster(), ndc: new THREE.Vector2(), plane: new THREE.Plane(new THREE.Vector3(0, 0, 1), -depth), hit: new THREE.Vector3() }), [depth]);
+  useFrame(() => {
+    const g = holder.current;
+    if (!g) return;
+    const active = cursorDepth.proxyHost === gl.domElement;
+    g.visible = active;
+    if (!active) return;
+    const rect = gl.domElement.getBoundingClientRect();
+    tmp.ndc.set(((cursorDepth.x - rect.left) / rect.width) * 2 - 1, -((cursorDepth.y - rect.top) / rect.height) * 2 + 1);
+    tmp.ray.setFromCamera(tmp.ndc, camera);
+    if (!tmp.ray.ray.intersectPlane(tmp.plane, tmp.hit)) return;
+    g.position.copy(tmp.hit);
+    const persp = camera as THREE.PerspectiveCamera;
+    const distance = persp.position.z - depth;
+    const worldPerPx = (2 * distance * Math.tan(THREE.MathUtils.degToRad(persp.fov / 2))) / size.height;
+    g.scale.setScalar(CURSOR_PX * worldPerPx);
+    g.rotation.set(0, 0, -cursorDepth.heading * Math.PI / 180);
+  });
+  return <group ref={holder} visible={false}><primitive object={plane} /></group>;
 }
 
 // --- 钥匙 -------------------------------------------------------------------------
@@ -674,6 +734,7 @@ export function KeysStage({ sectionRef, onReady, onReveal }: { sectionRef: RefOb
         <Suspense fallback={null}>
           <Keys sectionRef={sectionRef} onReveal={onReveal} />
           <ReadySignal onReady={onReady} />
+          <CursorProxy depth={-0.4} />
         </Suspense>
         <ShadowCatcher color="#7a5266" z={-0.6} />
         <Sparkle />
