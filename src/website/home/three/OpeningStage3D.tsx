@@ -679,6 +679,32 @@ function BlackFrame({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
   );
 }
 
+/**
+ * 画布比首屏高出一截（切口藏在首屏下面）。取景仍按首屏可见高度：
+ * aspect 用可见区域，setViewOffset 把视锥往下延长，上面那部分画面和原来完全一样。
+ * 在主循环之后、渲染之前跑；R3F 改尺寸时会重置 aspect，所以每帧检查。
+ */
+function HeroViewExtend() {
+  const { camera, gl, size } = useThree();
+  const chrome = useRef<HTMLElement | null>(null);
+  useFrame(() => {
+    const persp = camera as THREE.PerspectiveCamera;
+    chrome.current ??= gl.domElement.closest('.hv-hero')?.querySelector<HTMLElement>('.hv-chrome') ?? null;
+    const visible = Math.min(size.height, chrome.current?.clientHeight || size.height);
+    const width = size.width;
+    const view = persp.view;
+    if (visible >= size.height - 0.5) {
+      if (view?.enabled) persp.clearViewOffset();
+      return;
+    }
+    const aspect = width / visible;
+    if (view?.enabled && view.fullHeight === visible && view.height === size.height && view.fullWidth === width && persp.aspect === aspect) return;
+    persp.aspect = aspect;
+    persp.setViewOffset(width, visible, 0, 0, width, size.height);
+  });
+  return null;
+}
+
 /** 与 /scene-editor-lab 的 EditorDepthOfField 相同：每帧从相机状态取对焦 */
 function HeroDepthOfField({ cameraState }: { cameraState: CameraStateRef }) {
   const effect = useRef<DepthOfFieldEffect>(null);
@@ -736,6 +762,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       <Suspense fallback={null}>
         <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} hole={hole} />
       </Suspense>
+      <HeroViewExtend />
       <EffectComposer enableNormalPass={false} multisampling={0}>
         <>
           <HeroDepthOfField cameraState={cameraState} />

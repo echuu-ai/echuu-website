@@ -197,7 +197,9 @@ const offset = new THREE.Vector3();
 export function pointerOnAvatar(vrm: VRM, camera: THREE.PerspectiveCamera, pointer: THREE.Vector2, size: { width: number; height: number }) {
   const humanoid = vrm.humanoid;
   if (!humanoid) return false;
-  const pxPerUnitAt = (depth: number) => size.height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.max(depth, 1e-3));
+  // 画布比首屏高时（setViewOffset 往下延伸），fov 只对应可见那一段的高度
+  const fovHeight = camera.view?.enabled ? size.height * camera.view.fullHeight / camera.view.height : size.height;
+  const pxPerUnitAt = (depth: number) => fovHeight / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.max(depth, 1e-3));
   for (const [from, to, radius] of CAPSULES) {
     const a = humanoid.getRawBoneNode(from);
     const b = humanoid.getRawBoneNode(to);

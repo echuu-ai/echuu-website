@@ -34,7 +34,9 @@ export const FingertipGlint = memo(function FingertipGlint({ vrm, clock }: { vrm
     pool.tip.addScaledVector(pool.direction, .7);
     pool.view.copy(pool.tip).applyMatrix4(camera.matrixWorldInverse);
     if (pool.view.z >= 0) { node.style.display = 'none'; return; }
-    const unitsPerPixel = 2 * -pool.view.z * Math.tan(THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov / 2)) / size.height;
+    const persp = camera as THREE.PerspectiveCamera;
+    const fovHeight = persp.view?.enabled ? size.height * persp.view.fullHeight / persp.view.height : size.height;
+    const unitsPerPixel = 2 * -pool.view.z * Math.tan(THREE.MathUtils.degToRad(persp.fov / 2)) / fovHeight;
     const arrive = smoothstep(0, .32, t);
     pool.right.setFromMatrixColumn(camera.matrixWorld, 0);
     pool.up.setFromMatrixColumn(camera.matrixWorld, 1);

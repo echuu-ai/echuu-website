@@ -4,8 +4,9 @@
  */
 
 export type SeamTuning = {
-  /** 3D 画布往下盖住正文顶部多少 px（正文上移钻到首屏下面）；正式值写在 home.css 的 --hv-seam-extend */
-  extendPx: number;
+  /** 3D 画布比首屏多出来的高度（vh），撕纸切口藏在这段里：首屏满屏是 3D，往下滚才看到切口。
+   *  正式值写在 home.css 的 --hv-seam-extend 默认值里，两边要一致 */
+  extendVh: number;
   /** 静止时切口最低点的高度：首屏高度的百分比（0 = 贴着画布底边，撕口只往上长） */
   restPct: number;
   /** 滚动时最多再抬起多少：首屏高度的百分比 */
@@ -31,7 +32,7 @@ export type SeamTuning = {
 };
 
 export const SEAM_DEFAULTS: SeamTuning = {
-  extendPx: 0,
+  extendVh: 13,
   restPct: 0,
   liftPct: 3,
   swell: 0.04,
@@ -46,9 +47,9 @@ export const SEAM_DEFAULTS: SeamTuning = {
 };
 
 export const SEAM_RANGES: Record<keyof SeamTuning, { min: number; max: number; step: number; label: string }> = {
-  extendPx: { min: 0, max: 240, step: 2, label: '画布往下延伸（px）' },
-  restPct: { min: 0, max: 8, step: 0.1, label: '切口最低点离画布底边（首屏 %）' },
-  liftPct: { min: 0, max: 10, step: 0.1, label: '滚动抬起（首屏 %）' },
+  extendVh: { min: 0, max: 30, step: 0.5, label: '画布超出首屏（vh）' },
+  restPct: { min: 0, max: 8, step: 0.1, label: '切口最低点离画布底边（画布 %）' },
+  liftPct: { min: 0, max: 10, step: 0.1, label: '滚动抬起（画布 %）' },
   swell: { min: 0, max: 0.15, step: 0.005, label: '大波浪起伏' },
   grain: { min: 0, max: 3, step: 0.05, label: '中等纹理' },
   fiber: { min: 0, max: 3, step: 0.05, label: '纸纤维锯齿' },
@@ -65,7 +66,8 @@ const STORAGE_KEY = 'echuu-seam-tuning';
 function load(): SeamTuning {
   if (!import.meta.env.DEV) return { ...SEAM_DEFAULTS };
   try {
-    const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}') as Partial<SeamTuning>;
+    const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}') as Partial<SeamTuning> & { extendPx?: number };
+    delete saved.extendPx;
     const merged = { ...SEAM_DEFAULTS, ...saved };
     // 切口低于画布底边只会被切成一条直线，最低就到底边
     merged.restPct = Math.max(0, merged.restPct);
@@ -81,8 +83,8 @@ export const seamTuning: SeamTuning = load();
 /** 画布延伸是排版（CSS 变量），不是着色器参数 */
 function applyExtend() {
   if (!import.meta.env.DEV || typeof document === 'undefined') return;
-  if (seamTuning.extendPx === SEAM_DEFAULTS.extendPx) document.documentElement.style.removeProperty('--hv-seam-extend');
-  else document.documentElement.style.setProperty('--hv-seam-extend', `${seamTuning.extendPx}px`);
+  if (seamTuning.extendVh === SEAM_DEFAULTS.extendVh) document.documentElement.style.removeProperty('--hv-seam-extend');
+  else document.documentElement.style.setProperty('--hv-seam-extend', `${seamTuning.extendVh}vh`);
 }
 applyExtend();
 

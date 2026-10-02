@@ -110,6 +110,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   isolation: isolate;
 }
 .echuu-website .hv-stage { position: absolute; inset: 0; z-index: 0; }
+/* 3D 首屏比视口高出一截，撕纸切口藏在首屏下面：满屏都是 3D，往下滚才露出切口。
+   文字和按钮仍按视口排版（.hv-chrome 底边让出多出来的部分）；相机取景按可见高度算，见 HeroViewExtend。
+   默认值要和 seamTuning.ts 的 extendVh 一致，开发时用 ?tune=seam 调 */
+.echuu-website .hv-hero--3d { min-height: calc(100svh + var(--hv-seam-extend, 13vh)); }
+.echuu-website .hv-hero--3d .hv-chrome { bottom: var(--hv-seam-extend, 13vh); }
 /* 画布出第一帧之前先是黑场，不让蓝色底色从窗口外漏出来 */
 .echuu-website .hv-hero--3d:not([data-phase='hero']) { background: #000; }
 .echuu-website .hv-stage__canvas { width: 100% !important; height: 100% !important; }
@@ -421,8 +426,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-body {
   position: relative; color: #fff; overflow: clip;
   background: transparent;
-  /* 正文顶部钻到首屏下面，让 3D 画布和撕纸切口往下多盖一段（开发时用 ?tune=seam 调） */
-  margin-top: calc(-1 * var(--hv-seam-extend, 0px));
 }
 .echuu-website .hv::before {
   content: ''; position: absolute; inset: -28px; z-index: -1; pointer-events: none;
@@ -768,6 +771,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 }
 @media (max-width: 1023px) {
   .echuu-website .hv-hero { min-height: max(640px, 100svh); }
+  .echuu-website .hv-hero--3d { min-height: calc(max(640px, 100svh) + var(--hv-seam-extend, 13vh)); }
   .echuu-website .hv-title { bottom: 178px; left: 24px; right: 24px; gap: 14px; }
   .echuu-website .hv-title__logo, .echuu-website .hv-title__logo-wrap { width: clamp(190px, 36vw, 280px); }
   .echuu-website .hv-title__slogan { max-width: 28em; font-size: clamp(17px, 2.8vw, 22px); line-height: 1.65; letter-spacing: -0.04em; text-wrap: balance; }
