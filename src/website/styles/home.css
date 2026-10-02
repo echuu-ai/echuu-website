@@ -330,6 +330,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.2vw, 16px);
 }
 .echuu-website .hv-title__logo-wrap { width:100%; }
+/* logo 图底部有约 51px（808 宽里）的透明留白，抵掉它，标语贴近外环底部 */
+.echuu-website .hv-title__logo-wrap { margin-bottom: -6%; }
 .echuu-website .hv-title__logo { width: 100%; height: auto; aspect-ratio: 808 / 620; }
 /* 标语单独调色时叠在上面的那张（只露出标语区域，见 LogoTone.tsx） */
 .echuu-website .hv-title__logo-wrap > .hv-title__logo--tagline { position: absolute; inset: 0 auto auto 0; }
