@@ -908,7 +908,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 /* --- 3D 饰物（three/Charms3D.tsx）：画面出来后隐藏原图；之前与降级时保持原图 ----------- */
 .echuu-website .hv-charm-stage { position: absolute; pointer-events: none; z-index: 1; }
 .echuu-website .hv-charm-stage canvas { display: block; }
-.echuu-website .hv-charm-stage--brooch { inset: 0; }
+.echuu-website .hv-charm-stage--brooch { inset: 0; pointer-events: auto; touch-action: pan-y; }
+/* 拖拽吊坠时整页不选中文字 */
+html.hv-charm-dragging, html.hv-charm-dragging * { user-select: none !important; cursor: grabbing !important; }
 /* 3D 别针收在卡片右栏里，不压到卡片外 */
 .echuu-website .hv-intro__art.is-3d { overflow: hidden; }
 .echuu-website .hv-intro__art.is-3d > img:first-child { visibility: hidden; }

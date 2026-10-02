@@ -30,6 +30,46 @@ const ENV_INTENSITY: Partial<Record<ModelName, number>> = { pin: 2.6 };
 // 中性偏暖的银：之前的 #f2f5fa 偏蓝，再叠上全站调色会更蓝
 const BASE_TINT: Partial<Record<ModelName, string>> = { pin: '#f7f3ee' };
 
+/**
+ * 小天使：动漫风格（参照首屏角色的 MToon）。两段明暗（暗面只压一点点）、冷色边缘光、细描边。
+ * 卡通材质不吃环境贴图，用自发光把整体亮度托回来。
+ */
+const TOON_GRADIENT = (() => {
+  const tex = new THREE.DataTexture(new Uint8Array([206, 206, 206, 255, 255, 255, 255, 255]), 2, 1, THREE.RGBAFormat);
+  tex.minFilter = THREE.NearestFilter;
+  tex.magFilter = THREE.NearestFilter;
+  tex.needsUpdate = true;
+  return tex;
+})();
+
+function toonify(root: THREE.Object3D) {
+  const meshes: THREE.Mesh[] = [];
+  root.traverse((child) => { if ((child as THREE.Mesh).isMesh) meshes.push(child as THREE.Mesh); });
+  for (const mesh of meshes) {
+    const source = mesh.material as THREE.MeshStandardMaterial;
+    const toon = new THREE.MeshToonMaterial({
+      map: source.map,
+      gradientMap: TOON_GRADIENT,
+      emissive: new THREE.Color('#ffffff'),
+      emissiveMap: source.map,
+      emissiveIntensity: 0.32,
+    });
+    toon.onBeforeCompile = (shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+        float rim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 3.0);
+        gl_FragColor.rgb += rim * vec3(0.72, 0.88, 1.0) * 0.32;`);
+    };
+    mesh.material = toon;
+    // 反面外扩的描边壳
+    const outline = new THREE.Mesh(mesh.geometry, new THREE.MeshBasicMaterial({ color: '#6d7894', side: THREE.BackSide }));
+    (outline.material as THREE.MeshBasicMaterial).onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  transformed += normalize(normal) * 0.0045;');
+    };
+    outline.castShadow = false;
+    mesh.add(outline);
+  }
+}
+
 function useModel(name: ModelName) {
   const gltf = useGLTF(MODEL(name), false, true);
   const env = ENV_INTENSITY[name] ?? 1.7;
@@ -48,6 +88,7 @@ function useModel(name: ModelName) {
     const outer = new THREE.Group();
     outer.rotation.copy(FACE_CAMERA);
     outer.add(root);
+    if (name === 'angel') toonify(root);
     if (tint) {
       root.traverse((child) => {
         const mesh = child as THREE.Mesh;
@@ -240,25 +281,47 @@ function Chain({ length }: { length: number }) {
   );
 }
 
-type Swing = { theta: number; omega: number; phi: number; nu: number };
+/**
+ * 弹簧摆：吊坠是挂在弹簧末端的质点（别针平面内的 x、y 偏移），另有一个出平面的摆角 phi。
+ * dragging 时有一个强弹簧把它拉向鼠标；松手后靠重力、弹簧与阻尼回弹。
+ */
+type Swing = { x: number; y: number; vx: number; vy: number; phi: number; nu: number; tx: number; ty: number; dragging: boolean };
 
 const Charm = memo(function Charm({ spec, swing, index }: { spec: (typeof CHARMS)[number]; swing: Swing; index: number }) {
   const model = useModel(spec.name);
   const pivot = useRef<THREE.Group>(null);
   const twinkle = useGlints(model, 4, 0.26, 11 + index * 7);
+  const chain = useRef<THREE.Group>(null);
+  const charm = useRef<THREE.Group>(null);
+  const rest = spec.chain + spec.half;
   useFrame(({ clock }) => {
     // 晃得越厉害闪得越多
-    twinkle(clock.elapsedTime, Math.min(0.6, Math.abs(swing.omega) * 0.25 + Math.abs(swing.nu) * 0.2));
+    twinkle(clock.elapsedTime, Math.min(0.6, Math.hypot(swing.vx, swing.vy) * 0.35 + Math.abs(swing.nu) * 0.2));
     const g = pivot.current;
-    if (!g) return;
-    g.rotation.z = swing.theta;
+    if (!g || !chain.current || !charm.current) return;
+    const length = Math.hypot(swing.x, swing.y);
+    g.rotation.z = Math.atan2(swing.x, -swing.y);
     g.rotation.x = swing.phi;
+    // 链子跟着伸缩：链长 = 总长 - 吊坠半高
+    chain.current.scale.y = Math.max(0.4, (length - spec.half) / spec.chain);
+    charm.current.position.y = -length;
   });
   return (
     <group ref={pivot} position={[spec.hook[0], spec.hook[1], spec.depth]}>
-      <Chain length={spec.chain} />
-      <group position={[0, -spec.chain - spec.half, 0]} scale={spec.scale}>
-        <primitive object={model} />
+      <group ref={chain}><Chain length={spec.chain} /></group>
+      <group ref={charm} position={[0, -rest, 0]}>
+        <group
+          position={[0, 0, 0]}
+          scale={spec.scale}
+          onPointerDown={(event) => {
+            event.stopPropagation();
+            (event.target as Element | null)?.setPointerCapture?.(event.pointerId);
+            swing.dragging = true;
+            document.documentElement.classList.add('hv-charm-dragging');
+          }}
+        >
+          <primitive object={model} />
+        </group>
       </group>
     </group>
   );
@@ -268,7 +331,23 @@ function Brooch() {
   const pin = useModel('pin');
   const pinTwinkle = useGlints(pin, 7, 0.17, 3);
   const tilt = useRef<THREE.Group>(null);
-  const swings = useMemo<Swing[]>(() => CHARMS.map(() => ({ theta: 0, omega: 0, phi: 0, nu: 0 })), []);
+  const swings = useMemo<Swing[]>(() => CHARMS.map((spec) => ({ x: 0, y: -(spec.chain + spec.half), vx: 0, vy: 0, phi: 0, nu: 0, tx: 0, ty: 0, dragging: false })), []);
+  const inner = useRef<THREE.Group>(null);
+  const ray = useMemo(() => ({ caster: new THREE.Raycaster(), plane: new THREE.Plane(), ndc: new THREE.Vector2(), hit: new THREE.Vector3(), normal: new THREE.Vector3(), point: new THREE.Vector3() }), []);
+  // 松手：任何地方抬起都算
+  useEffect(() => {
+    const release = () => {
+      swings.forEach((w) => { w.dragging = false; });
+      document.documentElement.classList.remove('hv-charm-dragging');
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    return () => {
+      window.removeEventListener('pointerup', release);
+      window.removeEventListener('pointercancel', release);
+      release();
+    };
+  }, [swings]);
   const scroll = useScrollVelocity();
   const pointer = useCanvasPointer();
   const { camera, size } = useThree();
@@ -297,34 +376,74 @@ function Brooch() {
     }
 
     const scrollPush = scroll.current.velocity * 0.0016;
+    const group = inner.current;
+    const anyDragging = swings.some((w) => w.dragging);
+    if (anyDragging && group) {
+      // 鼠标射线与别针平面求交，换成别针局部坐标
+      ray.ndc.set((p.x / size.width) * 2 - 1, -(p.y / size.height) * 2 + 1);
+      ray.caster.setFromCamera(ray.ndc, camera);
+      group.updateMatrixWorld();
+      ray.normal.set(0, 0, 1).transformDirection(group.matrixWorld);
+      ray.point.setFromMatrixPosition(group.matrixWorld);
+      ray.plane.setFromNormalAndCoplanarPoint(ray.normal, ray.point);
+      if (ray.caster.ray.intersectPlane(ray.plane, ray.hit)) group.worldToLocal(ray.hit);
+    }
+    // 子步积分：拖拽时弹簧很硬，单步会不稳
+    const steps = 3;
+    const h = dt / steps;
     CHARMS.forEach((spec, i) => {
       const w = swings[i];
-      // 鼠标划过吊坠：按划动速度拨一下
-      tmp.set(spec.hook[0], spec.hook[1] - spec.chain - spec.half, 0);
-      tmp.y += BROOCH_OFFSET_Y;
-      tmp.applyEuler(new THREE.Euler(s.rx, s.ry, 0)).project(camera);
+      const rest = spec.chain + spec.half;
+      // 鼠标快速划过吊坠：按划动速度拨一下
+      tmp.set(spec.hook[0] + w.x, spec.hook[1] + w.y + BROOCH_OFFSET_Y, 0).applyEuler(new THREE.Euler(s.rx, s.ry, 0)).project(camera);
       const sx = (tmp.x * 0.5 + 0.5) * size.width;
       const sy = (1 - (tmp.y * 0.5 + 0.5)) * size.height;
       const radius = spec.half * 2 * (size.height / 2.6) * 0.75;
-      let fTheta = -s.wy * 1.2;
+      // 别针倾斜的惯性 + 微风
+      let kickX = (-s.wy * 0.6 + Math.sin(s.time * (0.9 + i * 0.23) + i) * 0.04) * dt;
+      let kickY = 0;
       let fPhi = s.wx * 1.2 + scrollPush;
-      if (Math.hypot(p.x - sx, p.y - sy) < radius && performance.now() - p.t < 80) {
-        fTheta += THREE.MathUtils.clamp(p.vx, -2500, 2500) * 0.012;
+      if (!w.dragging && Math.hypot(p.x - sx, p.y - sy) < radius && performance.now() - p.t < 80) {
+        // 拨动是一次性的速度冲量（单位/秒），划得快也只是轻轻一荡
+        kickX += THREE.MathUtils.clamp(p.vx, -2500, 2500) * 0.0006;
+        kickY -= THREE.MathUtils.clamp(p.vy, -2500, 2500) * 0.0003;
         fPhi += THREE.MathUtils.clamp(p.vy, -2500, 2500) * 0.006;
       }
-      // 微风：吊坠永远有一点点晃
-      fTheta += Math.sin(s.time * (0.9 + i * 0.23) + i) * 0.08;
-      const damping = 1.5;
-      w.omega += (-spec.stiffness * Math.sin(w.theta) - damping * w.omega + fTheta) * dt;
-      w.nu += (-spec.stiffness * Math.sin(w.phi) - damping * w.nu + fPhi) * dt;
-      w.theta = THREE.MathUtils.clamp(w.theta + w.omega * dt, -0.9, 0.9);
+      if (w.dragging) {
+        w.tx = ray.hit.x - spec.hook[0];
+        w.ty = ray.hit.y - spec.hook[1];
+        // 最多拉到原长的 2.4 倍
+        const len = Math.hypot(w.tx, w.ty);
+        const max = rest * 2.4;
+        if (len > max) { w.tx *= max / len; w.ty *= max / len; }
+      }
+      for (let n = 0; n < steps; n++) {
+        const len = Math.max(1e-4, Math.hypot(w.x, w.y));
+        // 弹簧：沿链方向，越拉越紧。自然长度扣掉重力下垂，静止时刚好是原长
+        const k = spec.stiffness * 2.2;
+        const gravity = 9.8 * 0.35;
+        const stretch = len - (rest - gravity / k);
+        let ax = (-k * stretch * w.x) / len;
+        let ay = (-k * stretch * w.y) / len - gravity;
+        if (w.dragging) {
+          ax += (w.tx - w.x) * 140;
+          ay += (w.ty - w.y) * 140;
+        }
+        const damping = w.dragging ? 14 : 1.4;
+        w.vx += (ax - damping * w.vx) * h + kickX;
+        w.vy += (ay - damping * w.vy) * h + kickY;
+        w.x += w.vx * h;
+        w.y += w.vy * h;
+        kickX = 0; kickY = 0;
+      }
+      w.nu += (-spec.stiffness * Math.sin(w.phi) - 1.5 * w.nu + fPhi) * dt;
       w.phi = THREE.MathUtils.clamp(w.phi + w.nu * dt, -0.7, 0.7);
     });
   });
 
   return (
     <group ref={tilt}>
-      <group position={[0, BROOCH_OFFSET_Y, 0]}>
+      <group ref={inner} position={[0, BROOCH_OFFSET_Y, 0]}>
         <group scale={PIN_SCALE}>
           <primitive object={pin} />
         </group>
