@@ -38,7 +38,7 @@ export const LOGO_TONE_RANGES: Record<keyof LogoTone, { min: number; max: number
   opacity: { min: 0, max: 1, step: 0.01, label: '不透明度' },
 };
 
-/** 标语在 logo 图里的位置（logo-pugua.png 808×620，按透明度量出来的） */
+/** 标语在 logo 图里的位置（808×620 的 logo 图，按带标语的 logo-pugua 版量出来的；现在的深色版没有标语，这块是空的） */
 export const TAGLINE_CLIP = { top: 77.5, right: 6.5, bottom: 7, left: 39 };
 
 const STORAGE_KEY = 'echuu-logo-tuning';

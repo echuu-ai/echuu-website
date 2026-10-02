@@ -536,10 +536,10 @@
     "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2038:1070, MCP asset e5db6.png, retrieved 2026-09-28 (unaltered)"
   },
   {
-    "path": "website/figma/logo-pugua.png",
-    "bytes": 103375,
-    "sha256": "a4d3c8ef9e919fd826607d53323b51098e094ed853338d6b533a28ccf8b37ab9",
-    "source": "User supplied hero logo with Pugua Qianyun Song tagline, 2026-10-03 (unaltered)"
+    "path": "website/figma/logo-dark.png",
+    "bytes": 26298,
+    "sha256": "0b35f3b1bb3f1fa389337b12f69b77b80b6521bb5f78e7afc674eced8bc7e438",
+    "source": "User supplied dark navy hero logo, 2026-10-03 (unaltered)"
   },
   {
     "path": "website/social/wechat-contact.jpg",
