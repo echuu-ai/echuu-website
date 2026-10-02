@@ -85,7 +85,10 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   float threshold = uv.y * 2.0 - 1.0;
   // 起伏收小：切口贴底时，最高处也不超过首屏底部约 3%
   // 平均位置压低，起伏适中，主要靠细碎锯齿体现撕纸感
-  threshold = threshold / 1.2 + swell * seamSwellAmp + grain * seamGrainAmp + fiber * seamFiberAmp;
+  // 噪声整体减去它的上限：切口只往上撕，最低点落在 seamProgress，不会被画布底边切成直线
+  // （fbm 实际很少超过 ±0.7；grain 最大 0.06，fiber 最大 0.031）
+  float tearRange = 0.7 * (seamSwellAmp + 0.06 * seamGrainAmp + 0.031 * seamFiberAmp);
+  threshold = threshold / 1.2 + swell * seamSwellAmp + grain * seamGrainAmp + fiber * seamFiberAmp - tearRange;
   threshold = threshold * 0.5 + 0.5;
 
   // 抗锯齿的切口：edge > 0 的部分被切掉

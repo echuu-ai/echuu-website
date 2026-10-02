@@ -45,7 +45,7 @@ export default function SeamTuningPanel() {
               </label>
             );
           })}
-          <p className="seam-tune__hint">想让 3D 更往下：调「画布往下延伸」。切口最低贴着画布底边（0），再往下会被切成直线。滚动页面可以看到抬起和色散。</p>
+          <p className="seam-tune__hint">切口只往上撕：0 = 最低点贴着画布底边。想让 3D 更往下就调「画布往下延伸」；嫌撕口太高就调小三个起伏。滚动页面可以看到抬起和色散。</p>
           <div className="seam-tune__actions">
             <button type="button" onClick={reset}>恢复默认</button>
             <button type="button" onClick={copy}>{copied ? '已复制' : '复制数值'}</button>

@@ -6,7 +6,7 @@
 export type SeamTuning = {
   /** 3D 画布往下盖住正文顶部多少 px（正文上移钻到首屏下面）；正式值写在 home.css 的 --hv-seam-extend */
   extendPx: number;
-  /** 静止时切口平均高度：首屏高度的百分比（0 = 最底边） */
+  /** 静止时切口最低点的高度：首屏高度的百分比（0 = 贴着画布底边，撕口只往上长） */
   restPct: number;
   /** 滚动时最多再抬起多少：首屏高度的百分比 */
   liftPct: number;
@@ -32,7 +32,7 @@ export type SeamTuning = {
 
 export const SEAM_DEFAULTS: SeamTuning = {
   extendPx: 0,
-  restPct: 1.6,
+  restPct: 0,
   liftPct: 3,
   swell: 0.04,
   grain: 1,
@@ -47,7 +47,7 @@ export const SEAM_DEFAULTS: SeamTuning = {
 
 export const SEAM_RANGES: Record<keyof SeamTuning, { min: number; max: number; step: number; label: string }> = {
   extendPx: { min: 0, max: 240, step: 2, label: '画布往下延伸（px）' },
-  restPct: { min: 0, max: 8, step: 0.1, label: '切口离画布底边（首屏 %）' },
+  restPct: { min: 0, max: 8, step: 0.1, label: '切口最低点离画布底边（首屏 %）' },
   liftPct: { min: 0, max: 10, step: 0.1, label: '滚动抬起（首屏 %）' },
   swell: { min: 0, max: 0.15, step: 0.005, label: '大波浪起伏' },
   grain: { min: 0, max: 3, step: 0.05, label: '中等纹理' },
