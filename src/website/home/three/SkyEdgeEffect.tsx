@@ -16,8 +16,8 @@ import type { HoleRect } from './OpeningStage3D';
  * 切口固定贴着首屏底部，随页面一起滚走（不随滚动上推）。只在定格（hole.open）后生效。
  */
 
-/** 静止时的切口进度：切口贴着首屏最底边，只露出一道撕纸边 */
-const SEAM_REST = 0.072;
+/** 静止时的切口进度：0.0833 对应首屏最底边；0.11 ≈ 切口平均在底部 3.5% 处（约 20px），撕纸纹理看得清又不显高 */
+const SEAM_REST = 0.11;
 /** 色散带高度（首屏高度比例）：切口上方这一段有彩边 */
 const CA_BAND = 0.22;
 /** 滚动时整个 3D 画面的色散上限（桶形畸变强度，igloo 原值约 12，这里收敛一些） */
@@ -72,10 +72,13 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   float swell = seamSample(aspectUv * 0.375 - seamTime * 0.00625);
   // 小尺度细纹：替代 Shopify 的泥纹法线贴图，给边缘一点纸纤维感
   float grain = seamSample(uv * vec2(aspect, 1.0) * 2.0 + 0.37) * mix(0.3, 0.6, 0.5 + 0.5 * sin(seamTime - uv.x * 10.0)) * 0.1;
+  // 纸纤维：更细更碎的锯齿，让贴底的切口一眼看得出是撕开的
+  float fiber = seamSample(uv * vec2(aspect, 1.0) * 9.0 + 1.7) * 0.022 + seamSample(uv * vec2(aspect, 1.0) * 23.0 + 4.1) * 0.009;
 
   float threshold = uv.y * 2.0 - 1.0;
   // 起伏收小：切口贴底时，最高处也不超过首屏底部约 3%
-  threshold = threshold / 1.2 + swell * 0.055 + grain * 0.6;
+  // 平均位置压低，起伏适中，主要靠细碎锯齿体现撕纸感
+  threshold = threshold / 1.2 + swell * 0.04 + grain + fiber;
   threshold = threshold * 0.5 + 0.5;
 
   // 抗锯齿的切口：edge > 0 的部分被切掉
