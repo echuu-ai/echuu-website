@@ -1,3 +1,4 @@
+import { PLANNED_ORIGIN } from '../seo/siteSeo';
 import { LEGAL_AI, LEGAL_MINORS, LEGAL_PRIVACY, LEGAL_TERMS } from '../assets';
 
 /**
@@ -5,9 +6,8 @@ import { LEGAL_AI, LEGAL_MINORS, LEGAL_PRIVACY, LEGAL_TERMS } from '../assets';
  * 没有确认的项保持 null，页面据此降级，不猜测。
  */
 
-/** 正式域名未确认：canonical / hreflang 需要真实域名才输出。 */
-export const CANONICAL_ORIGIN: string | null =
-  (import.meta.env.VITE_SITE_ORIGIN as string | undefined) ?? null;
+/** Cory 确认未来迁移到 echuu.ai；索引需 VITE_SITE_INDEXABLE=1 显式启用。 */
+export const CANONICAL_ORIGIN = new URL(import.meta.env.VITE_SITE_ORIGIN?.trim() || PLANNED_ORIGIN).origin;
 
 /** 官网挂载路径。与 src/website/router.ts 的 WEBSITE_BASE 一致。 */
 export const BASE_PATH = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;

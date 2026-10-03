@@ -70,7 +70,7 @@
 /* 开场期间不显示，首屏定格后才描出来 */
 .echuu-website .hv:has(.hv-hero:not([data-phase='hero'])) .hv-guides { opacity: 0; }
 .echuu-website .hv-guides path, .echuu-website .hv-guides circle {
-  fill: none; stroke: rgba(255, 255, 255, 0.26); stroke-width: 0.5px; vector-effect: non-scaling-stroke;
+  fill: none; stroke: rgba(255, 255, 255, 0.10); stroke-width: 0.5px; vector-effect: non-scaling-stroke;
   stroke-dasharray: 1; stroke-dashoffset: 1;
   opacity: 0; transition: opacity 900ms var(--hv-ease);
 }
@@ -98,7 +98,7 @@
   animation: hv-guide-flash 4s ease-out forwards;
 }
 @keyframes hv-guide-draw { to { stroke-dashoffset: 0; } }
-@keyframes hv-guide-flash { 0% { stroke: rgba(255, 255, 255, 0.75); } 100% { stroke: rgba(255, 255, 255, 0.26); } }
+@keyframes hv-guide-flash { 0% { stroke: rgba(255, 255, 255, 0.22); } 100% { stroke: rgba(255, 255, 255, 0.10); } }
 @media (prefers-reduced-motion: reduce) {
   .echuu-website .hv-guides :is(path, circle) { animation: none !important; stroke-dashoffset: 0; transition: none; }
 }

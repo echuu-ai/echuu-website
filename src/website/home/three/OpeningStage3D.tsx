@@ -28,7 +28,7 @@ import { groundOpeningClips, type GroundResult } from './openingGround';
 import { PAPER_HEIGHT, PAPER_RATIO, PAPER_WIDTH, paperPlacement } from './paperFrame';
 import { PAPER_TEXTURE_HEIGHT, PAPER_TEXTURE_WIDTH, captureSleepOutline, type SketchOutline } from './captureOutline';
 import { createFoldingPaper } from './foldingPaper';
-import { CinematicLayer, hermite, lerpFPS } from './cameraRig';
+import { CinematicLayer, hermite } from './cameraRig';
 import { WEBSITE_SKY_HDR } from '../../sky';
 import heroSceneJson from '../heroScene.json';
 import {
@@ -148,7 +148,7 @@ const CAMERA_KEYS: CameraKey[] = [
   { t: OPENING_MOTION.introEndStart, anchor: 'hips', pos: [1.9, 1.0, -1.1], look: 'head', lookOff: [0, -0.05, 0], fov: 34 },
   // 04 定格：场景文件里的相机（含景深）
   // 绕到她右前方再落到定格镜头：直线过去会穿过头发
-  { t: OPENING_MOTION.lockStart + 0.35, anchor: 'head', pos: [1.25, 0.2, 0.85], look: 'head', lookOff: [0, -0.05, 0], fov: 32 },
+  { t: OPENING_MOTION.lockStart - 0.25, anchor: 'head', pos: [1.25, 0.2, 0.85], look: 'head', lookOff: [0, -0.05, 0], fov: 32 },
   { t: OPENING_MOTION.lockStart + 0.9, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
   { t: OPENING_TOTAL, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
 ];
@@ -169,6 +169,28 @@ function blinkWeight(now: number): number {
   if (x < 0.08) return x / 0.08;
   if (x < 0.22) return 1 - (x - 0.08) / 0.14;
   return 0;
+}
+
+/**
+ * 苏醒的表情（blendshape），时间是开场绝对时间（秒）。动作本身不带表情，这里补上脸：
+ *   睡着：闭眼 + 一点放松（睡得很香）→ 翻身前眼皮动一下 → 翻身后半睁、迷糊 → 两次慢眨 → 完全睁开
+ *   → 翅膀展开时轻轻一惊 → 英雄停顿与折纸时浅浅笑、正常眨眼 → 进窗前淡出，交给定格场景的表情。
+ */
+const S = OPENING.standStart;
+const WAKE_FACE: Record<'blink' | 'relaxed' | 'surprised' | 'happy', Array<[number, number]>> = {
+  blink: [[0, 1], [S - 0.7, 1], [S - 0.5, 0.72], [S - 0.3, 1], [S + 0.5, 1], [S + 1.1, 0.4], [S + 1.6, 0.42],
+    [S + 1.75, 1], [S + 1.95, 0.32], [S + 2.5, 0.3], [S + 2.62, 1], [S + 2.8, 0.15], [S + 3.4, 0]],
+  relaxed: [[0, 0.4], [S + 0.4, 0.4], [S + 1.2, 0.55], [S + 3.2, 0.35], [S + 4.6, 0]],
+  surprised: [[S + 4.9, 0], [S + 5.25, 0.45], [S + 5.9, 0.1], [S + 6.3, 0]],
+  happy: [[S + 5.8, 0], [S + 6.6, 0.42], [OPENING.openStart - 0.6, 0.42], [OPENING.openStart + 0.2, 0]],
+};
+function curveAt(keys: Array<[number, number]>, t: number) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i += 1) {
+    const [t1, v1] = keys[i];
+    if (t <= t1) { const [t0, v0] = keys[i - 1]; return v0 + (v1 - v0) * smoothstep(t0, t1, t); }
+  }
+  return keys[keys.length - 1][1];
 }
 
 let motionCache: Promise<Record<MotionKey, LoadedMotion>> | null = null;
@@ -348,20 +370,17 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     anchor: new THREE.Vector3(), look: new THREE.Vector3(),
     posA: new THREE.Vector3(), posB: new THREE.Vector3(), lookA: new THREE.Vector3(), lookB: new THREE.Vector3(),
     targetPos: new THREE.Vector3(), targetLook: new THREE.Vector3(), smoothedLook: new THREE.Vector3(),
-    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), prevPos: new THREE.Vector3(), snapped: false,
+    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), snapped: false,
   }), []);
 
   // 相机曲线的工作区：每帧把各关键帧解析成世界坐标，再按通道做 Hermite 插值
   const rig = useMemo(() => ({
     times: CAMERA_KEYS.map((key) => key.t),
-    /** 开窗之前用 Hermite；开窗之后保持原来的分段运镜（R9：那段镜头不改） */
-    preTimes: CAMERA_KEYS.filter((key) => key.t <= OPENING.openStart).map((key) => key.t),
     fov: CAMERA_KEYS.map((key) => key.fov),
     channels: Array.from({ length: 6 }, () => new Array<number>(CAMERA_KEYS.length).fill(0)),
     pos: CAMERA_KEYS.map(() => new THREE.Vector3()),
     look: CAMERA_KEYS.map(() => new THREE.Vector3()),
     layer: new CinematicLayer(),
-    speed: 0,
     focus: [0, 0, 0] as [number, number, number],
   }), []);
 
@@ -464,7 +483,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
 
     // 出场：第一次出现时开始；跳过 / 重播（时间跳变）时重新播一次。笼子以出场那一刻的髋部为中心
     if (s.materializeStart < 0 || jumped) {
-      s.materializeStart = t;
+      s.materializeStart = t >= OPENING_TOTAL ? t - INTRO_TOTAL_SECONDS : t;
       vrm.scene.updateMatrixWorld(true);
       boneWorld('hips', introCage.position);
     }
@@ -496,6 +515,16 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     if (vrm.expressionManager && HERO_ACTOR?.expression) for (const key of FACE_CHANNELS) vrm.expressionManager.setValue(key, 0);
     sampleMotion(t);
     applyActorFace(actorActive, now);
+    // 苏醒表情：只在开场分镜里（进窗前）生效；苏醒后（S + 3.4 s 起）叠上自然眨眼
+    if (vrm.expressionManager && t < OPENING.openStart + 0.25) {
+      const manager = vrm.expressionManager;
+      for (const key of Object.keys(WAKE_FACE) as Array<keyof typeof WAKE_FACE>) {
+        if (!manager.getExpression(key)) continue;
+        let value = curveAt(WAKE_FACE[key], t);
+        if (key === 'blink' && t > S + 3.4) value = Math.max(value, blinkWeight(now));
+        manager.setValue(key, value);
+      }
+    }
     vrm.update(delta);
     vrm.scene.updateMatrixWorld(true);
     if (import.meta.env.DEV && (frame.clock.elapsedTime * 4 | 0) % 2 === 0) {
@@ -528,17 +557,11 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     const a = keys[index];
     const b = keys[Math.min(index + 1, keys.length - 1)];
     const u = smoothstep(a.t, b.t, t);
-    let fov: number;
-    if (t < OPENING.openStart) {
-      const T = rig.preTimes;
-      pool.targetPos.set(hermite(T, rig.channels[0], t), hermite(T, rig.channels[1], t), hermite(T, rig.channels[2], t));
-      pool.targetLook.set(hermite(T, rig.channels[3], t), hermite(T, rig.channels[4], t), hermite(T, rig.channels[5], t));
-      fov = hermite(T, rig.fov, t);
-    } else {
-      pool.targetPos.copy(rig.pos[index]).lerp(rig.pos[Math.min(index + 1, keys.length - 1)], u);
-      pool.targetLook.copy(rig.look[index]).lerp(rig.look[Math.min(index + 1, keys.length - 1)], u);
-      fov = THREE.MathUtils.lerp(a.fov, b.fov, u);
-    }
+    // 全程使用同一条保形曲线：开窗与环绕不再逐段停顿，也不越过相邻机位。
+    const T = rig.times;
+    pool.targetPos.set(hermite(T, rig.channels[0], t), hermite(T, rig.channels[1], t), hermite(T, rig.channels[2], t));
+    pool.targetLook.set(hermite(T, rig.channels[3], t), hermite(T, rig.channels[4], t), hermite(T, rig.channels[5], t));
+    let fov = hermite(T, rig.fov, t);
     if (s.debug.cam) {
       const c = s.debug.cam;
       pool.targetPos.copy(pool.targetLook).add(pool.anchor.set(c[0], c[1], c[2]));
@@ -556,16 +579,9 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     pool.targetPos.y -= portraitLift;
     pool.targetLook.y -= portraitLift;
 
-    // 速度感：机位移动越快 fov 略微张开（igloo 按滚动速度加宽）
-    const speed = pool.snapped && !jumped && delta > 0 ? pool.prevPos.distanceTo(pool.targetPos) / delta : 0;
-    rig.speed = lerpFPS(rig.speed, Math.min(speed, 4), 0.08, delta);
-    pool.prevPos.copy(pool.targetPos);
     pool.snapped = true;
-    fov += Math.min(4, rig.speed * 1.4);
-
-    // 活力：交接帧与大运动时只有基础层；英雄停顿与定格后手持 / 视差全开
-    const life = t >= OPENING_TOTAL ? 1
-      : 0.55 * smoothstep(0.35, 2.0, t) + 0.45 * smoothstep(A + 5.5, A + 6.0, t) * (1 - smoothstep(W + 0.6, W + 1.2, t));
+    // 运镜期间保持稳定镜头；落定后渐入交互，不在 hero 边界突然加大手持幅度。
+    const life = smoothstep(OPENING_TOTAL, OPENING_TOTAL + 1.8, t);
     rig.layer.apply(perspective, pool.targetPos, pool.targetLook, frame.pointer, life, delta, lying.current?.headDir);
     if (Math.abs(perspective.fov - fov) > 1e-3 || Math.abs(perspective.near - near) > 1e-4) {
       perspective.fov = fov;
@@ -1036,7 +1052,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
           <Bloom {...bloom} intensity={bloom.intensity * scene.bloom} luminanceThreshold={bloom.luminanceThreshold * scene.bloomThreshold} mipmapBlur />
           <ToneMapping mode={ToneMappingMode.LINEAR} />
           <AppColorGradeLutPass forceWebGl includeTone />
-          <SkyEdgeEffect hole={hole} />
+          <SkyEdgeEffect hole={hole} clock={clock} />
         </>
       </EffectComposer>
     </FlightCanvas>

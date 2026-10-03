@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   OPENING,
   OPENING_TOTAL,
+  OPENING_RATE,
   createOpeningClock,
   markOpeningReady,
   openingStarted,
@@ -40,7 +41,15 @@ describe('openingTimeline', () => {
     expect(openingTime(clock, 50_000)).toBe(0);
     startOpeningClock(clock, 60_000);
     expect(openingStarted(clock)).toBe(true);
-    expect(openingTime(clock, 62_500)).toBeCloseTo(2.5);
+    expect(openingTime(clock, 62_500)).toBeCloseTo(2.5 * OPENING_RATE);
+  });
+
+  it('finishes sooner without accelerating the hero idle', () => {
+    const clock = createOpeningClock();
+    startOpeningClock(clock, 1000);
+    const finish = 1000 + OPENING_TOTAL / OPENING_RATE * 1000;
+    expect(openingTime(clock, finish)).toBeCloseTo(OPENING_TOTAL);
+    expect(openingTime(clock, finish + 1000)).toBeCloseTo(OPENING_TOTAL + 1);
   });
 
   it('skips from the drawing straight to the hero and replays from wake', () => {

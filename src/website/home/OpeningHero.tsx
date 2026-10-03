@@ -20,6 +20,7 @@ import type { SketchOutline } from './three/captureOutline';
 import type { SketchStroke } from './sketchStrokes';
 import {
   OPENING,
+  OPENING_RATE,
   createOpeningClock,
   openingStarted,
   openingTime,
@@ -29,6 +30,7 @@ import {
   startOpeningClock,
   type OpeningPhase,
 } from './openingTimeline';
+import { EXPERIENCE_COPY } from './experienceCopy';
 import { DrawWingsPaper } from './DrawWingsPaper';
 import { updateOpeningSound } from '../lib/openingSound';
 
@@ -76,6 +78,10 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const { h, locale } = useHomeDict();
   const reduced = usePrefersReducedMotion();
   const clock = useMemo(createOpeningClock, []);
+  const controls = EXPERIENCE_COPY[locale];
+  const returning = useRef((() => {
+    try { return sessionStorage.getItem('echuu-opening-seen') === '1'; } catch { return false; }
+  })());
   const [mode, setMode] = useState<StageMode>('pending');
   const [phase, setPhase] = useState<OpeningPhase>('loading');
   const [stillShot, setStillShot] = useState<'back' | 'front'>('back');
@@ -127,11 +133,18 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     if (next === 'still') {
       startOpeningClock(clock, performance.now());
       setReady(true);
-      if (reduced) skipOpening(clock, performance.now());
+      skipOpening(clock, performance.now());
+      setPhase('hero');
     }
   }, [clock, reduced]);
 
-  const handleReady = useCallback(() => setReady(true), []);
+  const handleReady = useCallback(() => {
+    setReady(true);
+    if (returning.current) {
+      skipOpening(clock, performance.now());
+      setPhase('hero');
+    }
+  }, [clock]);
 
   // 模型 / 动作加载失败，或超时仍未就绪：退回静态分镜，绝不把页面锁死在黑场
   const fallbackToStill = useCallback(() => {
@@ -139,6 +152,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       if (current !== '3d') return current;
       startOpeningClock(clock, performance.now());
       setReady(true);
+      skipOpening(clock, performance.now());
+      setPhase('hero');
       return 'still';
     });
   }, [clock]);
@@ -241,18 +256,23 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   }, []);
 
   const skip = useCallback(() => {
-    if (!clock.ready) {
-      fallbackToStill();
-      startOpeningClock(clock, performance.now());
-    }
+    returning.current = true;
+    setPendingWake(false);
+    // Skipping selects the final pose; it must never downgrade a loading 3D stage.
+    if (!clock.ready) return;
     skipOpening(clock, performance.now());
     setPhase('hero');
-  }, [clock, fallbackToStill]);
+  }, [clock]);
 
   useEffect(() => {
-    if (phase === 'hero' || phase === 'loading') return;
+    if (phase !== 'hero') return;
+    try { sessionStorage.setItem('echuu-opening-seen', '1'); } catch { /* Optional storage. */ }
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === 'hero') return;
     const onKey = (event: KeyboardEvent) => {
-      // 开场不提供跳过按钮、也不点哪儿都跳过；只留 Esc 作为无障碍的退出口
+      // 可见跳过按钮的键盘快捷方式。
       if (event.key === 'Escape') skip();
     };
     window.addEventListener('keydown', onKey);
@@ -275,7 +295,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const stageStill = mode === 'still';
 
   return (
-    <section className={`hv-hero hv-hero--${mode}`} ref={heroRef} data-phase={phase} aria-label={h.header.brand}>
+    <section className={`hv-hero hv-hero--${mode}`} ref={heroRef} style={{ '--opening-window-duration': `${OPENING.windowOpenSeconds / OPENING_RATE}s` } as CSSProperties} data-phase={phase} aria-label={h.header.brand}>
       <div className="hv-stage" aria-hidden="true">
         {mode === '3d' ? (
           <Suspense fallback={null}>
@@ -295,6 +315,16 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       </div>
 
       {showOpening ? (
+        <div className="hv-opening-controls" data-no-doodle>
+          <SoundToggle label={h.header.sound} />
+          {drawing && mode === '3d' ? <button type="button" onClick={beginWake} disabled={pendingWake}>
+            {pendingWake ? h.opening.loading : controls.wake}
+          </button> : null}
+          <button type="button" onClick={skip}>{h.opening.skip}</button>
+        </div>
+      ) : null}
+
+      {showOpening ? (
         <div className="hv-opening" role="presentation">
           {mode === '3d' && (drawing || phase === 'wake') ? (
             <DrawWingsPaper
@@ -309,7 +339,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             />
           ) : null}
           <div className="hv-opening__frame">
-            <h1 className="hv-opening__title" lang="en">
+            <p className="hv-opening__title" lang="en">
               <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
               <span>{h.opening.title.pre}</span>
               <mark className="hv-opening__hl hv-opening__hl--yellow">{h.opening.title.hl1}</mark>
@@ -317,7 +347,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               <i className="hv-opening__dot" aria-hidden="true" />
               <mark className="hv-opening__hl hv-opening__hl--blue">{h.opening.title.hl2}</mark>
               <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
-            </h1>
+            </p>
 
             <img className="hv-opening__deco hv-opening__deco--wing" src={HOME_ASSETS.opening.wing} alt="" />
             <img className="hv-opening__deco hv-opening__deco--sword" src={HOME_ASSETS.opening.sword} alt="" />
@@ -365,12 +395,12 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               : <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}
             
           </div>
-          <p className="hv-title__slogan">
+          <h1 className="hv-title__slogan">
             {h.hero.slogan.pre}
             <mark className="hv-title__hl hv-title__hl--yellow">{h.hero.slogan.hl1}</mark>
             {h.hero.slogan.mid}
             <mark className="hv-title__hl hv-title__hl--blue">{h.hero.slogan.hl2}</mark>
-          </p>
+          </h1>
           <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
           <BetaCount />
         </div>

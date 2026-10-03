@@ -1,3 +1,4 @@
+import { armSummerAmbience } from './lib/summerAmbience';
 import { useEffect } from 'react';
 import { DICTS, WEBSITE_LOCALES, type Locale } from './i18n';
 import { LocaleContext } from './locale-context';
@@ -5,7 +6,6 @@ import { useI18nStore } from '../hooks/use-i18n';
 import { useWebsiteLocation, WEBSITE_BASE } from './router';
 import { SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
 import { useSmoothScroll } from './lib/useSmoothScroll';
-import { armSummerAmbience } from './lib/summerAmbience';
 import { HomeV2 } from './home/HomeV2';
 import { GalleryPage } from './pages/GalleryPage';
 import { CreatorsPage } from './pages/CreatorsPage';
@@ -62,8 +62,7 @@ export default function EchuuWebsite() {
 
   useScrollManager(page, hash);
   useSmoothScroll(page);
-  // 夏日氛围声：第一次点击或按键后淡入，共用底部栏的静音开关
-  useEffect(() => { armSummerAmbience(); }, []);
+  useEffect(() => { if (page === 'home') return armSummerAmbience(); }, [page]);
 
   // 产品 app 的全局样式给 body 设了 overflow: hidden（直播舞台不滚动）；官网是普通长页，必须能滚
   useEffect(() => {

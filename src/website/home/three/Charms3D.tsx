@@ -1,3 +1,4 @@
+import { playInteractionSound } from '../../lib/interactionSound';
 import { Suspense, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
@@ -13,7 +14,7 @@ import { publicUrl } from '../../../lib/publicUrl';
  * 首页两处 3D 饰物（模型由 Tripo 图生 3D 生成，见 docs/dependency-assets.json）：
  *   - BroochStage：Echuu 别针。别针固定，三个吊坠挂在程序生成的链环上做带阻尼的双轴摆锤，
  *     鼠标划过吊坠、页面滚动、别针跟随鼠标倾斜都会把吊坠「拨」起来。
- *   - KeysStage：心形双钥匙。滚动驱动：两侧旋转飞入 → 合成一颗心并闪光 → 向两侧打开，露出标题。
+ *   - KeysStage：心形双钥匙。滚动驱动：一开始合拢成一颗心（进视口闪一下）→ 随滚动慢慢向两侧打开 → 标题在下面浮现。
  * 两处都只在可见时渲染；首帧画出来之前与降级时，页面上仍显示原图。
  */
 
@@ -317,6 +318,7 @@ const Charm = memo(function Charm({ spec, swing, index }: { spec: (typeof CHARMS
           onPointerDown={(event) => {
             event.stopPropagation();
             (event.target as Element | null)?.setPointerCapture?.(event.pointerId);
+            playInteractionSound('charm', 0.65);
             swing.dragging = true;
             document.documentElement.classList.add('hv-charm-dragging');
           }}
@@ -405,6 +407,7 @@ function Brooch() {
       let kickY = 0;
       let fPhi = s.wx * 1.2 + scrollPush;
       if (!w.dragging && Math.hypot(p.x - sx, p.y - sy) < radius && performance.now() - p.t < 80) {
+        if (Math.hypot(p.vx, p.vy) > 90) playInteractionSound('charm', Math.min(1, Math.hypot(p.vx, p.vy) / 1200));
         // 拨动是一次性的速度冲量（单位/秒），划得快也只是轻轻一荡
         kickX += THREE.MathUtils.clamp(p.vx, -2500, 2500) * 0.0006;
         kickY -= THREE.MathUtils.clamp(p.vy, -2500, 2500) * 0.0003;
@@ -588,7 +591,6 @@ function CursorProxy({ depth }: { depth: number }) {
 
 // --- 钥匙 -------------------------------------------------------------------------
 
-const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const segment = (x: number, a: number, b: number) => clamp01((x - a) / (b - a));
@@ -663,16 +665,17 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
     if (!section || !leftRef.current || !rightRef.current) return;
     const rect = section.getBoundingClientRect();
     const vh = window.innerHeight || 1;
-    // 区块顶边从视口底进入到走过 1.1 屏：0 → 1
+    // 区块顶边从视口底进入到走过 1.1 屏：0 → 1。
+    // 一开始就是合拢的一颗心；进入视口时闪一下，随滚动慢慢分开，标题在下面浮现
     const p = clamp01((vh - rect.top) / (vh * 1.1));
-    const fly = easeOutCubic(segment(p, 0.0, 0.42));
-    const open = easeInOutCubic(segment(p, 0.55, 0.85));
+    // p≈0.45 时钥匙才完整露出：先让观众看清合拢的心，0.5 之后再慢慢打开
+    const open = easeInOutCubic(segment(p, 0.5, 1));
 
     // 画布像素 → 世界单位（透视相机，在 z=0 平面上）
     const persp = camera as THREE.PerspectiveCamera;
     const worldH = 2 * persp.position.z * Math.tan(THREE.MathUtils.degToRad(persp.fov / 2));
     const pxToWorld = worldH / size.height;
-    const keyScale = (size.height * 0.74) * pxToWorld; // 钥匙高 ≈ 画布高 74%
+    const keyScale = (size.height * 0.9) * pxToWorld; // 钥匙高 ≈ 画布高 90%
     const joinedY = worldH / 2 - keyScale / 2 - 0.04 * worldH;
     // 打开后两把钥匙分在标题两侧
     const openX = Math.min(size.width * 0.29, 470) * pxToWorld;
@@ -682,20 +685,14 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
     for (const [ref, side] of [[leftRef, -1], [rightRef, 1]] as const) {
       const g = ref.current!;
       g.scale.setScalar(keyScale);
-      // ① 飞入：从两侧外、前方旋转着进来
-      const flyX = side * (1 - fly) * worldH * 0.9;
-      const flyZ = (1 - fly) * 1.4;
-      const spin = side * (1 - fly) * Math.PI * 2.2;
-      // ③ 打开：向两侧平移并外倾
+      // 打开：从合拢的心向两侧平移、略下沉并外倾
       const openShift = side * open * openX;
-      g.position.set(side * halfW + flyX + openShift, joinedY + (1 - fly) * 0.35 - open * 0.08 * worldH, flyZ);
-      g.rotation.set((1 - fly) * 0.6, spin + idle, side * (1 - fly) * 0.9 + side * open * THREE.MathUtils.degToRad(7));
+      g.position.set(side * halfW + openShift, joinedY - open * 0.08 * worldH, 0);
+      g.rotation.set(0, idle, side * open * THREE.MathUtils.degToRad(7));
     }
 
-    // ② 合拢的一瞬：闪光 + 金属泛白
-    const joinedNow = fly > 0.985 && open < 0.02;
-    if (joinedNow && !s.joined) s.flash = 1;
-    s.joined = joinedNow;
+    // ② 合拢的心第一次进入视口时闪一下：闪光 + 金属泛白（只闪一次）
+    if (!s.joined && p > 0.08 && open < 0.02) { s.flash = 1; s.joined = true; }
     s.flash = Math.max(0, s.flash - dt * 1.6);
     leftTwinkle(s.time, s.flash);
     rightTwinkle(s.time + 1.3, s.flash);
@@ -707,8 +704,8 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
       (star.current.material as THREE.SpriteMaterial).opacity = k;
     }
 
-    // 标题跟着打开浮现
-    const reveal = Math.round(open * 100) / 100;
+    // 标题在钥匙打开三分之一后从下面浮现
+    const reveal = Math.round(segment(open, 0.35, 1) * 100) / 100;
     if (reveal !== s.lastReveal) { s.lastReveal = reveal; onReveal(reveal); }
   });
 

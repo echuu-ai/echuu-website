@@ -1,3 +1,4 @@
+import { playInteractionSound } from '../lib/interactionSound';
 import { useEffect, useRef } from 'react';
 
 /**
@@ -102,6 +103,7 @@ export function PageDoodle() {
     const pagePoint = (event: PointerEvent): Point => ({ x: event.clientX + window.scrollX, y: event.clientY + window.scrollY });
 
     const onDown = (event: PointerEvent) => {
+      swallowClick = false;
       if (event.button !== 0 || (event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return;
       if (!allowedTarget(event.target)) return;
       pending = { id: event.pointerId, x: event.clientX, y: event.clientY };
@@ -118,6 +120,7 @@ export function PageDoodle() {
       const p = pagePoint(event);
       const last = active.points[active.points.length - 1];
       if (Math.hypot(p.x - last.x, p.y - last.y) < 1.5) return;
+      playInteractionSound('pencil', Math.min(1, Math.hypot(p.x - last.x, p.y - last.y) / 24));
       active.points.push(p);
       schedule();
     };
@@ -134,7 +137,7 @@ export function PageDoodle() {
     };
     // 画完那一下松手会触发 click：吞掉，不触发纸飞机光标的点击飞行或别的点击效果
     const onClick = (event: MouseEvent) => {
-      if (!swallowClick) return;
+      if (!swallowClick || !allowedTarget(event.target) || event.detail === 0) { swallowClick = false; return; }
       swallowClick = false;
       event.stopPropagation();
       event.preventDefault();

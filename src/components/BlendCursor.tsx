@@ -1,3 +1,4 @@
+import { playInteractionSound } from '../website/lib/interactionSound';
 import { canStartCursorFlight, isCursorUi, CURSOR_EDITOR_SELECTOR } from '../lib/cursor-interaction';
 import { readUiFlightRoute, sampleUiFlightRoute } from '../lib/ui-cursor-flight';
 import { useEffect, useRef, useState } from 'react';
@@ -461,6 +462,7 @@ export default function BlendCursor() {
       if (overUi) cancelGesture();
       if (pressed && !reduced && !launched && now - pressedAt >= HOLD_DELAY_MS) {
         launched = true;
+        playInteractionSound('plane');
         const uiRoute = readUiFlightRoute(mx, my);
         if (uiRoute) {
           cancelSceneCursorFlight();

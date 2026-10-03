@@ -7,6 +7,7 @@ import { buildMailto } from '../lib/cta';
 import { VrmGuide } from '../components/VrmGuide';
 import { Reveal } from '../components/Reveal';
 import { LoopArt } from '../components/LoopArt';
+import { burstGifts } from './giftBurst';
 
 const BroochStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.BroochStage })));
 const KeysStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.KeysStage })));
@@ -125,20 +126,40 @@ function FeatureVideo() {
 }
 
 /** 直播间体验：标题 + LIVE + 视频 + 三张横向循环的功能卡 */
+const Gifts3D = lazy(() => import('./three/Gifts3D'));
+
+/** 礼物：卡片进入视口才挂 3D（滚动带里有两份卡片，出视口就卸载）；没 WebGL / 减少动态效果时是静态拼图 */
+function GiftArt() {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const [live, setLive] = useState(false);
+  const [can3d] = useState(() => {
+    if (typeof window === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
+    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
+  });
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !can3d) return;
+    const observer = new IntersectionObserver(([entry]) => setLive(entry.isIntersecting), { rootMargin: '120px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [can3d]);
+  const still = HOME_ASSETS.gifts.map((gift) => <img key={gift} src={gift} alt="" loading="lazy" />);
+  return (
+    <span ref={ref} className="hv-fcard__art hv-fcard__art--gifts" data-live={live || undefined}>
+      {live ? <Suspense fallback={still}><Gifts3D /></Suspense> : still}
+    </span>
+  );
+}
+
+type FeatureCard = { title: string; body: string; art: React.ReactNode; onClick?: React.MouseEventHandler<HTMLElement> };
+
 export function FeatureSection() {
   const { h } = useHomeDict();
-  const cards = [
-    { ...h.feature.cards[0], art: <img className="hv-fcard__art hv-fcard__art--mocap" src={HOME_ASSETS.mocapFigure} alt="" loading="lazy" /> },
-    {
-      ...h.feature.cards[1],
-      art: (
-        <span className="hv-fcard__art hv-fcard__art--gifts">
-          {HOME_ASSETS.gifts.map((gift) => (
-            <img key={gift} src={gift} alt="" loading="lazy" />
-          ))}
-        </span>
-      ),
-    },
+  const cards: FeatureCard[] = [
+    // 动捕：直播间同一段动捕小人动画（透明底，循环）
+    { ...h.feature.cards[0], art: <LoopArt className="hv-fcard__art hv-fcard__art--mocap" poster={HOME_ASSETS.mocapLoop.poster} webm={HOME_ASSETS.mocapLoop.webm} hevc={HOME_ASSETS.mocapLoop.hevc} width={384} height={384} /> },
+    // 礼物：点一下，礼物从点击处炸满屏幕
+    { ...h.feature.cards[1], art: <GiftArt />, onClick: (event) => burstGifts(event.clientX, event.clientY, HOME_ASSETS.gifts) },
     { ...h.feature.cards[2], art: <img className="hv-fcard__art hv-fcard__art--stamp" src={HOME_ASSETS.snapshotStamp} alt="" loading="lazy" /> },
   ];
   const loop = [...cards, ...cards];
@@ -158,7 +179,8 @@ export function FeatureSection() {
           {loop.map((card, index) => (
             <article
               key={`${card.title}-${index}`}
-              className="hv-fcard"
+              className={card.onClick ? 'hv-fcard hv-fcard--burst' : 'hv-fcard'}
+              onClick={card.onClick}
               role={index < cards.length ? 'listitem' : undefined}
               aria-hidden={index >= cards.length ? true : undefined}
             >

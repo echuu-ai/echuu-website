@@ -5,13 +5,15 @@ import { ArrowRight, Check, Eye, EyeOff, X } from 'lucide-react';
 import { useLocale } from '../locale-context';
 import { authCopy } from './copy';
 import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta } from './api';
+import { isWellFormedInviteCode, normalizeInviteCode } from './inviteCode';
+import { CONTACT_EMAIL } from '../config/site';
 import './access.css';
 
 export type AccessMode = 'invite' | 'signup';
 export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   returnFocusRef: RefObject<HTMLElement>; mode: AccessMode | null; onClose: () => void; onModeChange: (mode: AccessMode) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const c = authCopy[locale];
   const reduced = useReducedMotion();
   const [code, setCode] = useState('');
@@ -24,6 +26,7 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   const request = useRef<AbortController | null>(null);
   const invite = mode === 'invite';
   const configured = Boolean(invite ? INVITE_ENDPOINT : SIGNUP_ENDPOINT);
+  const mailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.apply.emailSubject)}&body=${encodeURIComponent(t.apply.emailBody)}`;
   useEffect(() => {
     request.current?.abort();
     setCode(''); setPassword(''); setEmail(''); setError(''); setBusy(false); setSuccess(false); setShowPassword(false);
@@ -32,13 +35,15 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (busy || !configured) return;
+    // 邀请码先在本地查格式与校验位：抄错一位直接提示，不打到服务端
+    if (invite && !isWellFormedInviteCode(code)) { setError(c.format); return; }
     const controller = new AbortController();
     request.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), 15000);
     setBusy(true); setError('');
     try {
       if (invite) {
-        const destination = await redeemInvite(code, controller.signal);
+        const destination = await redeemInvite(normalizeInviteCode(code), controller.signal);
         if (!controller.signal.aborted) window.location.assign(destination);
       } else {
         await registerBeta(email, password, locale, controller.signal);
@@ -61,13 +66,20 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
           animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: reduced ? 0 : .24, ease: [.23, 1, .32, 1] }}>
           <Dialog.Close className="echuu-access__close" aria-label={c.close}><X size={20} /></Dialog.Close>
           <Dialog.Title className="echuu-access__title">{success ? c.successTitle : invite ? c.inviteTitle : c.signupTitle}</Dialog.Title>
-          <Dialog.Description className="echuu-access__description">{success ? c.successBody : invite ? c.inviteBody : c.signupBody}</Dialog.Description>
+          <Dialog.Description className="echuu-access__description">{success ? c.successBody : !configured ? t.apply.body : invite ? c.inviteBody : c.signupBody}</Dialog.Description>
           {success ? <div className="echuu-access__body"><div className="echuu-access__actions">
             <button className="echuu-access__submit" onClick={onClose}>{c.done}<Check size={18} /></button>
-          </div></div> : <>
+          </div></div> : !configured ? (
+            <div className="echuu-access__body">
+              <p role="status">{c.unavailable}</p>
+              <p>{t.apply.mailNote}</p>
+              <a className="echuu-access__submit" href={mailHref}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
+              <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+            </div>
+          ) : <>
             <form onSubmit={submit} className="echuu-access__form echuu-access__body">
               {invite ? <label>{c.code}<input autoFocus name="invitation" value={code} onChange={(e) => setCode(e.target.value)} required maxLength={256}
-                placeholder={c.codePlaceholder} autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} disabled={busy} /></label> : <>
+                placeholder="ECHU-XXXX-XXXX-X" aria-description={c.codePlaceholder} autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} disabled={busy} /></label> : <>
                 <label>{c.email}<input autoFocus type="email" name="email" autoComplete="email" placeholder="you@example.com" value={email}
                   onChange={(e) => setEmail(e.target.value)} required maxLength={254} disabled={busy} /></label>
                 <label>{c.password}<span className="echuu-access__password"><input type={showPassword ? 'text' : 'password'} name="password"

@@ -49,6 +49,8 @@ export const OPENING = {
 } as const;
 
 export const OPENING_TOTAL = OPENING.openEnd;
+/** 20.2s authored sequence plays in ~15.5s; hero idle stays at normal speed. */
+export const OPENING_RATE = 1.3;
 
 /** 3D 动作切换点（秒）；introStart 之后的间隔与旧版一致（+3.6 s INTRO_END，+5.0 s target_locked） */
 export const OPENING_MOTION = {
@@ -105,14 +107,17 @@ export function startOpeningClock(clock: OpeningClock, now: number) {
 
 export function openingTime(clock: OpeningClock, now: number): number {
   if (!clock.ready || clock.startedAt <= 0) return 0;
-  return (now - clock.startedAt) / 1000 + clock.offset;
+  const elapsed = (now - clock.startedAt) / 1000 + clock.offset;
+  const duration = OPENING_TOTAL / OPENING_RATE;
+  return elapsed <= duration ? elapsed * OPENING_RATE : OPENING_TOTAL + elapsed - duration;
 }
 
 /** 直接跳到定格（draw 阶段跳过时先把时钟启动） */
 export function skipOpening(clock: OpeningClock, now: number) {
   if (!clock.ready) return;
   if (clock.startedAt <= 0) clock.startedAt = now;
-  clock.offset += OPENING_TOTAL - openingTime(clock, now);
+  clock.startedAt = now;
+  clock.offset = OPENING_TOTAL / OPENING_RATE;
 }
 
 export function replayOpening(clock: OpeningClock, now: number) {

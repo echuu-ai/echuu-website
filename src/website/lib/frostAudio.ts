@@ -7,8 +7,10 @@
  * 底部栏有静音开关（setFrostMuted），状态存在 localStorage。
  */
 
-/** 总音量（音效与夏日氛围共用；整体压低，作为背景存在） */
+/** 总音量（所有交互音效共用；整体压低，作为背景存在） */
 const MASTER = 0.2;
+/** 角色扩散音单独衰减，保留蝉鸣、风铃和其他交互的原有音量。 */
+const FROST_GAIN = 0.25;
 const MUTE_KEY = 'echuu-sound-muted';
 const BEEP_NOTES = [1318.5, 1567.98, 2093];
 const SPARKLE_NOTES = [2349.3, 2637, 3136, 3520, 4186];
@@ -21,7 +23,7 @@ let shardVolume = 0;
 let lastBeep = 0;
 let lastSparkle = 0;
 let muted = (() => {
-  try { return window.localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
+  try { return window.localStorage.getItem(MUTE_KEY) !== '0'; } catch { return true; }
 })();
 const muteListeners = new Set<() => void>();
 
@@ -30,6 +32,10 @@ export function isFrostMuted() {
   return muted;
 }
 export function setFrostMuted(next: boolean) {
+  if (!next) {
+    unlock();
+    ensureVoice()?.ctx.resume().catch(() => {});
+  }
   muted = next;
   try { window.localStorage.setItem(MUTE_KEY, next ? '1' : '0'); } catch { /* 隐私模式下不持久化 */ }
   if (voice) voice.master.gain.setTargetAtTime(next ? 0 : MASTER, voice.ctx.currentTime, 0.05);
@@ -111,7 +117,7 @@ function ping(v: Voice, frequency: number, gain: number, duration: number, type:
   osc.type = type;
   osc.frequency.value = frequency;
   env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(gain, now + 0.005);
+  env.gain.linearRampToValueAtTime(gain * FROST_GAIN, now + 0.005);
   env.gain.exponentialRampToValueAtTime(0.0001, now + duration);
   osc.connect(env).connect(v.master);
   osc.start(now);
@@ -140,7 +146,7 @@ export function updateFrostAudio(target: number, nowSeconds: number, hidden: boo
   const v = ensureVoice();
   if (!v) return;
   const t = v.ctx.currentTime;
-  v.shard.gain.setTargetAtTime(shardVolume * 0.5, t, 0.03);
+  v.shard.gain.setTargetAtTime(shardVolume * 0.5 * FROST_GAIN, t, 0.03);
   v.band.frequency.setTargetAtTime(5200 + Math.sin(nowSeconds * 1.7) * 1400 + shardVolume * 1800, t, 0.08);
   // 划得越快，高音「叮」越密
   if (shardVolume > 0.05 && nowSeconds - lastSparkle > 0.16 - shardVolume * 0.11) {

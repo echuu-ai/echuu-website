@@ -14,6 +14,7 @@ export function BlogPage() {
     return (
       <section className="section">
         <div className="shell">
+          <Head locale={locale} htmlLang={t.htmlLang} title={`${t.common.notFound} — Echuu`} description="" path="not-found" noindex />
           <h1 className="section__title">{t.common.notFound}</h1>
           <p className="section__foot">
             <Link className="btn btn--quiet btn--small" to={websitePath(locale, 'blog')}>{t.blogPage.backToList}</Link>

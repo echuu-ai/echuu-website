@@ -68,8 +68,8 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
           <span>{h.footer.contact}</span>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
+        <Link to={home} className="hv-footer__home"><img src={HOME_ASSETS.logoWhite} alt="Echuu" width={679} height={569} loading="lazy" decoding="async" /></Link>
         <p>
-          <Link to={home} className="hv-footer__home"><img src={HOME_ASSETS.logoWhite} alt="Echuu" width={679} height={569} loading="lazy" decoding="async" /></Link>
           <span>{fill(h.footer.copyright, { year: new Date().getFullYear() })}</span>
         </p>
       </div>

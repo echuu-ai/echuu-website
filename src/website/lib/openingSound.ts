@@ -1,4 +1,4 @@
-import { getAudioBus } from './frostAudio';
+import { getAudioBus, isFrostMuted } from './frostAudio';
 import { OPENING, OPENING_ACT2 } from '../home/openingTimeline';
 
 /**
@@ -103,6 +103,7 @@ export function updateOpeningSound(t: number, started: boolean) {
   const from = lastT;
   lastT = t;
   if (from < 0 || t - from > 1.5) return;
+  if (isFrostMuted() || document.hidden) return;
   const bus = getAudioBus();
   if (!bus || bus.ctx.state !== 'running') return;
   for (const cue of CUES) {

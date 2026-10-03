@@ -1,4 +1,6 @@
 import { type CSSProperties } from 'react';
+import { LiquidGlass } from '@liquidglassjs/react';
+import '@liquidglassjs/core/css';
 import { HOME_ASSETS } from '../assets';
 import { Reveal } from '../components/Reveal';
 import '../styles/team.css';
@@ -10,8 +12,8 @@ function MemberCard({ member, locale, t }: { member: TeamMember; locale: ReturnT
   const pick = (record?: Record<string, string>) => record?.[locale] ?? record?.en ?? '';
 
   return (
-    <article className={`team-card ${member.id === 'cory' ? 'team-card--founder' : ''}`}>
-      <span className="team-card__spark" aria-hidden="true">✦</span>
+    <LiquidGlass className="team-glass" radius={20} strength={12} blur={8} tint={65} chroma={0} glow={0} spec={0.2}>
+    <article className="team-card ps-glass__content">
       <div className="team-card__body">
         <h3 className="team-card__name">{pick(member.name)}</h3>
         <p className="team-card__role">{pick(member.role)}</p>
@@ -19,15 +21,16 @@ function MemberCard({ member, locale, t }: { member: TeamMember; locale: ReturnT
         {member.links?.website || member.links?.github ? (
           <p className="team-card__links">
             {member.links.website ? (
-              <a href={member.links.website} target="_blank" rel="noreferrer noopener">{t.teamPage.website} <span aria-hidden="true">↗</span></a>
+              <a href={member.links.website} target="_blank" rel="noreferrer noopener">{t.teamPage.website}</a>
             ) : null}
             {member.links.github ? (
-              <a href={member.links.github} target="_blank" rel="noreferrer noopener">{t.teamPage.github} <span aria-hidden="true">↗</span></a>
+              <a href={member.links.github} target="_blank" rel="noreferrer noopener">{t.teamPage.github}</a>
             ) : null}
           </p>
         ) : null}
       </div>
     </article>
+    </LiquidGlass>
   );
 }
 
@@ -42,7 +45,6 @@ export function TeamPage() {
       <div className="team-world" style={{ '--team-sky': `url(${HOME_ASSETS.skyBg})` } as CSSProperties} aria-hidden="true" />
       <div className="team-page">
       <div className="shell team-heading">
-        <span className="team-heading__mark" aria-hidden="true">✦</span>
         <h1>{t.teamPage.title}</h1>
         <p>{t.teamPage.lede}</p>
       </div>
@@ -68,7 +70,8 @@ export function TeamPage() {
       <section className="team-section" aria-labelledby="team-about">
         <div className="shell">
           <h2 className="team-section__title" id="team-about">{t.teamPage.aboutTitle}</h2>
-          <div className="team-about-panel">
+          <LiquidGlass className="team-glass" radius={20} strength={12} blur={8} tint={65} chroma={0} glow={0} spec={0.2}>
+          <div className="team-about-panel ps-glass__content">
           <dl className="team-facts">
             {t.teamPage.facts.map(([label, value]) => (
               <div className="team-facts__row" key={label}>
@@ -80,6 +83,7 @@ export function TeamPage() {
           <p className="team-thanks">{t.teamPage.thanks}</p>
           <p className="team-source">{t.teamPage.source}</p>
           </div>
+          </LiquidGlass>
         </div>
       </section>
       </div>

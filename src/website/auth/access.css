@@ -91,3 +91,6 @@
 
 @media (prefers-reduced-motion: reduce) { .echuu-access * { transition: none !important; } }
 @supports not (backdrop-filter: blur(1px)) { .echuu-access__glass { background: rgba(10, 36, 53, .92); } }
+.echuu-access__body > p { line-height: 1.65; }
+.echuu-access__body > p a { color: inherit; text-underline-offset: 4px; }
+.echuu-access__body > a.echuu-access__submit { text-decoration: none; margin: 18px 0; }

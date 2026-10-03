@@ -1,84 +1,48 @@
 import { useEffect } from 'react';
-import { WEBSITE_LOCALES, type Locale } from '../i18n';
-import { CANONICAL_ORIGIN, BASE_PATH } from '../config/site';
+import type { Locale } from '../i18n';
+import { CANONICAL_ORIGIN } from '../config/site';
+import { seoDocument } from '../seo/siteSeo';
 
-function upsert(selector: string, attrs: Record<string, string>) {
-  let el = document.head.querySelector(selector) as HTMLMetaElement | HTMLLinkElement | null;
-  if (!el) {
-    const tag = selector.startsWith('link') ? 'link' : 'meta';
-    el = document.createElement(tag) as HTMLMetaElement | HTMLLinkElement;
-    document.head.appendChild(el);
-  }
-  for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
-  return el;
-}
+type Props = { locale: Locale; htmlLang: string; title: string; description: string; path: string; noindex?: boolean };
 
-function removeAll(selector: string) {
-  document.head.querySelectorAll(selector).forEach((node) => node.remove());
-}
-
-type Props = {
-  locale: Locale;
-  htmlLang: string;
-  title: string;
-  description: string;
-  /** 相对路径，例如 '' 或 'gallery' */
-  path: string;
-  noindex?: boolean;
-};
-
-/**
- * 语义化 head：title/description、OG、hreflang。
- * html.lang 由 app 的 i18n store 统一维护（zh → zh-CN），这里不重复设置。
- * canonical 域名未配置时不输出假的绝对地址。
- */
+/** Replace only managed head entries; initial HTML and SPA navigation share the same metadata. */
 export function Head({ locale, htmlLang, title, description, path, noindex }: Props) {
   useEffect(() => {
+    const indexingEnabled = import.meta.env.PROD && import.meta.env.VITE_SITE_INDEXABLE === '1'
+      && window.location.origin === CANONICAL_ORIGIN;
+    const seo = seoDocument(locale, path, {
+      origin: CANONICAL_ORIGIN, base: import.meta.env.BASE_URL, indexable: indexingEnabled,
+    }, { title, description, noindex });
     document.title = title;
-    upsert('meta[name="description"]', { name: 'description', content: description });
-    upsert('meta[property="og:title"]', { property: 'og:title', content: title });
-    upsert('meta[property="og:description"]', { property: 'og:description', content: description });
-    upsert('meta[property="og:type"]', { property: 'og:type', content: 'website' });
-    upsert('meta[property="og:locale"]', { property: 'og:locale', content: htmlLang.replace('-', '_') });
-    upsert('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
-
-    removeAll('meta[name="robots"][data-managed="1"]');
-    if (noindex) {
-      upsert('meta[name="robots"]', { name: 'robots', content: 'noindex, nofollow' }).setAttribute(
-        'data-managed',
-        '1',
-      );
-    } else {
-      document.head.querySelector('meta[name="robots"]')?.remove();
+    document.documentElement.lang = htmlLang;
+    document.head.querySelectorAll('[data-seo], [data-managed="1"], meta[name="description"], meta[name="robots"], meta[name^="twitter:"], meta[property^="og:"], link[rel="canonical"], link[rel="alternate"][hreflang]').forEach((el) => el.remove());
+    const add = (tag: string, attrs: Record<string, string>, text?: string) => {
+      const el = document.createElement(tag);
+      el.setAttribute('data-seo', '1');
+      for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+      if (text) el.textContent = text;
+      document.head.appendChild(el);
+    };
+    add('meta', { name: 'description', content: description });
+    add('meta', { name: 'robots', content: seo.indexable ? 'index,follow,max-image-preview:large' : 'noindex,follow' });
+    for (const [property, content] of Object.entries({
+      'og:title': title, 'og:description': description, 'og:type': seo.article ? 'article' : 'website',
+      'og:locale': htmlLang.replace('-', '_'), 'og:site_name': 'Echuu',
+      'og:url': seo.indexable ? seo.url : window.location.href,
+      'og:image': seo.indexable ? seo.image : new URL(`${import.meta.env.BASE_URL}website/figma/hero-shot.webp`, window.location.origin).href,
+      'og:image:alt': HOME_IMAGE_ALT,
+    })) add('meta', { property, content });
+    add('meta', { name: 'twitter:card', content: 'summary_large_image' });
+    add('meta', { name: 'twitter:title', content: title });
+    add('meta', { name: 'twitter:description', content: description });
+    add('meta', { name: 'twitter:image', content: seo.indexable ? seo.image : new URL(`${import.meta.env.BASE_URL}website/figma/hero-shot.webp`, window.location.origin).href });
+    if (seo.indexable) {
+      add('link', { rel: 'canonical', href: seo.url });
+      for (const item of seo.alternates) add('link', { rel: 'alternate', hreflang: item.lang, href: item.url });
+      add('link', { rel: 'alternate', hreflang: 'x-default', href: seo.xDefault });
     }
-
-    removeAll('link[rel="alternate"][data-managed="1"]');
-    removeAll('link[rel="canonical"][data-managed="1"]');
-    // 没有确认的正式域名时不输出 canonical / hreflang，避免指向错误的站点。
-    if (CANONICAL_ORIGIN && !noindex) {
-      const suffix = path ? `/${path}` : '';
-      const canonical = upsert('link[rel="canonical"]', {
-        rel: 'canonical',
-        href: `${CANONICAL_ORIGIN}${BASE_PATH}/${locale}${suffix}`,
-      });
-      canonical.setAttribute('data-managed', '1');
-      const hrefLangOf = (item: Locale) => (item === 'zh' ? 'zh-CN' : item);
-      for (const other of WEBSITE_LOCALES) {
-        const link = document.createElement('link');
-        link.rel = 'alternate';
-        link.hreflang = hrefLangOf(other);
-        link.href = `${CANONICAL_ORIGIN}${BASE_PATH}/${other}${suffix}`;
-        link.setAttribute('data-managed', '1');
-        document.head.appendChild(link);
-      }
-      const x = document.createElement('link');
-      x.rel = 'alternate';
-      x.hreflang = 'x-default';
-      x.href = `${CANONICAL_ORIGIN}${BASE_PATH}/en${suffix}`;
-      x.setAttribute('data-managed', '1');
-      document.head.appendChild(x);
-    }
+    add('script', { type: 'application/ld+json' }, JSON.stringify(seo.schema));
   }, [locale, htmlLang, title, description, path, noindex]);
-
   return null;
 }
+const HOME_IMAGE_ALT = 'Echuu — Original characters on stage';

@@ -166,8 +166,8 @@
   },
   {
     "path": "fonts/pugua-qianyun-song-home.woff2",
-    "bytes": 230400,
-    "sha256": "f1fcc98cc0e57f128a5c54b0823ffec9fad6bd67414847d9cc37ff2b59e093bb"
+    "bytes": 230644,
+    "sha256": "3c59b4eede81cc8d11a3747249099cf62956904d9bfd797abc4bbe4244dcd622"
   },
   {
     "path": "fonts/pugua-qianyun-song.woff2",
@@ -677,5 +677,47 @@
     "bytes": 121928,
     "sha256": "95813238312ddbb0ed2a32fabf7713a942f9ea179278da4f9d18444282cec07c",
     "source": "Colour texture cropped from the same logo, colours bled outward for bevel edges, 2026-10-03"
+  },
+  {
+    "path": "website/feature/mocap.webm",
+    "bytes": 829515,
+    "sha256": "766ea929b383b918874faab53382ef54b5723b13097527b19f64a2392a286a4f",
+    "source": "echuu-ux-r3f-vite/public/figma/stream-room/animations/mocap.webm scaled to 384 px (VP9 alpha), 2026-10-03"
+  },
+  {
+    "path": "website/feature/mocap.mov",
+    "bytes": 489168,
+    "sha256": "7d2029a3f1c6f23f8dd4858ad81e18e99833cf9c325eaa22e3496759973742b6",
+    "source": "Same clip as HEVC alpha for Safari, 2026-10-03"
+  },
+  {
+    "path": "website/feature/mocap-poster.webp",
+    "bytes": 58620,
+    "sha256": "3897783c146ba2b0a906d9e5b0c87537a2b2998397826fb58041ac1d0cffc5be",
+    "source": "First frame of the mocap clip, 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/white-pebble.glb",
+    "bytes": 199504,
+    "sha256": "9b4d90a480807b90a87838925a62b3c25a5022e97d67066fb72365fbc712df2b",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/white-pebble.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/sealed-envelope.glb",
+    "bytes": 69192,
+    "sha256": "8245eb524a4ddcc4237503e2e5ead4deb4951d7eae445978fdd870164b180d90",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/sealed-envelope.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/baozi.glb",
+    "bytes": 140780,
+    "sha256": "31aa964baf723b4c93926bc2d0a2579e97f81fa0a68312ad313f26136eee1664",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/baozi.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/golden-croissant.glb",
+    "bytes": 195392,
+    "sha256": "bb6a01eeb50692ab7594f8fb976d476f0a259a3e12a7b86027c3cc21782085e4",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/golden-croissant.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
   }
 ]

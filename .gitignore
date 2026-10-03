@@ -9,3 +9,6 @@ artifacts/
 
 # Kling 循环视频的中间文件
 scripts/loops/work/
+
+# 内测邀请码批次（就是登录凭据，不进仓库）
+invite-codes-*.csv

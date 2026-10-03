@@ -4,6 +4,7 @@ import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import * as THREE from 'three';
 import { createEdgeNoise } from './edgeNoise';
 import type { HoleRect } from './OpeningStage3D';
+import { OPENING, openingTime, smoothstep, type OpeningClock } from '../openingTimeline';
 import { pctToProgress, seamTuning } from './seamTuning';
 
 /**
@@ -20,6 +21,7 @@ import { pctToProgress, seamTuning } from './seamTuning';
 // 所有可调参数在 seamTuning.ts（开发环境有调节面板 SeamTuningPanel）
 
 const fragment = /* glsl */ `
+uniform float portalStrength;
 uniform float seamEnabled;
 uniform float seamProgress;
 uniform float seamTime;
@@ -69,7 +71,20 @@ float seamSample(vec2 st) {
 }
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-  if (seamEnabled < 0.5) { outputColor = inputColor; return; }
+  if (seamEnabled < 0.5) {
+    outputColor = inputColor;
+    if (portalStrength > 0.001) {
+      vec2 radial = uv - 0.5;
+      float edge = smoothstep(0.12, 0.65, length(radial));
+      // Two extra taps, only during the portal. Keep the face and frame centre crisp.
+      vec2 offset = radial * edge * portalStrength * 0.003;
+      outputColor.r = mix(inputColor.r, texture2D(inputBuffer, clamp(uv + offset, 0.0, 1.0)).r, edge);
+      outputColor.b = mix(inputColor.b, texture2D(inputBuffer, clamp(uv - offset, 0.0, 1.0)).b, edge);
+      outputColor.rgb *= 1.0 - edge * portalStrength * 0.045;
+      outputColor.rgb += vec3(0.012, 0.025, 0.032) * edge * portalStrength * inputColor.a;
+    }
+    return;
+  }
 
   float aspect = seamResolution.x / seamResolution.y;
   vec2 aspectUv = vec2(uv.x * aspect, uv.y) + vec2(0.0, seamTime * 0.02);
@@ -129,13 +144,14 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 }
 `;
 
-export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
+export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole: React.MutableRefObject<HoleRect>; clock: OpeningClock }) {
   const { size } = useThree();
   const effect = useMemo(() => new Effect('EchuuSkyEdge', fragment, {
     blendFunction: BlendFunction.SET,
     // 色散会读取 inputBuffer 的偏移位置，必须独占一个 EffectPass
     attributes: EffectAttribute.CONVOLUTION,
     uniforms: new Map<string, THREE.Uniform>([
+      ['portalStrength', new THREE.Uniform(0)],
       ['seamEnabled', new THREE.Uniform(0)],
       ['seamProgress', new THREE.Uniform(pctToProgress(seamTuning.restPct))],
       ['seamTime', new THREE.Uniform(0)],
@@ -155,6 +171,9 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole }: { hole: React
 
   useFrame((_, delta) => {
     const uniforms = effect.uniforms;
+    const openingSeconds = openingTime(clock, performance.now());
+    uniforms.get('portalStrength')!.value = smoothstep(OPENING.openStart, OPENING.openStart + 0.55, openingSeconds)
+      * (1 - smoothstep(OPENING.openStart + 0.65, OPENING.openStart + 2.0, openingSeconds));
     uniforms.get('seamEnabled')!.value = hole.current.open ? 1 : 0;
     if (!hole.current.open) return;
     (uniforms.get('seamResolution')!.value as THREE.Vector2).set(size.width, size.height);

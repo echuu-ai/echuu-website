@@ -11,7 +11,7 @@ import { BLOG_POSTS } from '../data/blog';
  * 卡片是真的液态玻璃（@liquidglassjs，和团队页同一套）：边缘折射背后的天空，没有描边和白色厚底；
  * 文字放在 ps-glass__content 里，仍是可选中、可点击的普通 DOM。
  */
-const GLASS = { radius: 19, strength: 18, blur: 3, tint: 8, chroma: 0.25, glow: 0.15, spec: 0.6, vibrancy: 0.2 } as const;
+import { HOME_GLASS as GLASS } from './glass';
 export function BlogSection() {
   const { h, locale } = useHomeDict();
   const posts = BLOG_POSTS.slice(0, 3);

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 /**
  * 开场相机（参照 igloo.inc 的线上源码结构）：
  *
- *   基础层：分镜关键帧之间用三次 Hermite 曲线插值（Catmull-Rom 切线），经过关键帧时速度连续——
+ *   基础层：分镜关键帧之间用三次 Hermite 曲线插值（保形切线），经过关键帧时速度连续——
  *           镜头不会「到点减速停下再起步」。相邻两帧数值相同即为 hold（切线为 0）。
  *   附加层：以注视点为中心的球面指针视差 + 注视点正弦噪声抖动 + 指针速度带来的滚转，
  *           全部用帧率无关的 lerpFPS 跟随（igloo：系数 0.02–0.035，约半秒）。
@@ -17,7 +17,7 @@ export function lerpFPS(from: number, to: number, coef: number, delta: number) {
 }
 
 /**
- * 一维三次 Hermite：times 递增，values 与之等长；切线取 Catmull-Rom（非均匀时间）。
+ * 一维三次 Hermite：times 递增，values 与之等长；切线取非均匀时间的保形调和均值，避免短段拐弯时过冲。
  * 首尾切线为 0；相邻两个值相等的段（hold）切线也强制为 0。
  */
 export function hermite(times: number[], values: number[], t: number): number {
@@ -34,7 +34,14 @@ export function hermite(times: number[], values: number[], t: number): number {
     if (k <= 0 || k >= n - 1) return 0;
     // hold 的两端不带速度进出
     if (values[k] === values[k - 1] || values[k] === values[k + 1]) return 0;
-    return (values[k + 1] - values[k - 1]) / (times[k + 1] - times[k - 1]);
+    const left = times[k] - times[k - 1];
+    const right = times[k + 1] - times[k];
+    const before = (values[k] - values[k - 1]) / left;
+    const after = (values[k + 1] - values[k]) / right;
+    if (before * after <= 0) return 0;
+    const w1 = 2 * right + left;
+    const w2 = right + 2 * left;
+    return (w1 + w2) / (w1 / before + w2 / after);
   };
   const h = t1 - t0;
   const s = (t - t0) / h;

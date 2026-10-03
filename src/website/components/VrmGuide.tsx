@@ -34,7 +34,6 @@ export function VrmGuide({ label }: { label: string }) {
             <header className="hv-vrm-guide__head">
               <span className="hv-vrm-guide__icon" aria-hidden="true">{icons[i] ? <img src={icons[i]} alt="" width={32} height={32} /> : <Brush size={18} strokeWidth={1.8} />}</span>
               <h3>{name}</h3>
-              <span className="hv-vrm-guide__number">0{i + 1}</span>
             </header>
             <p>{c.descriptions[i]}</p>
             {urls[i]

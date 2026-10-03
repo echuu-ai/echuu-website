@@ -66,6 +66,8 @@ export const HOME_ASSETS = {
   videoPoster: FIG('video-poster.webp'),
   jaggedShape: FIG('jagged-shape.svg'),
   mocapFigure: FIG('mocap-figure.webp'),
+  /** 动捕卡片的循环动画（直播间 stream-room/animations/mocap.webm，缩到 384 px；mov 给 Safari） */
+  mocapLoop: { webm: publicUrl('website/feature/mocap.webm'), hevc: publicUrl('website/feature/mocap.mov'), poster: publicUrl('website/feature/mocap-poster.webp') },
   gifts: [FIG('gift-onigiri.webp'), FIG('gift-envelope.webp'), FIG('gift-bun.webp'), FIG('gift-croissant.webp')],
   snapshotStamp: FIG('snapshot-stamp.webp'),
   key: FIG('key.webp'),

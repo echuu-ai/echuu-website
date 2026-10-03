@@ -2,7 +2,7 @@
    之前 app 的 599 字形子集缺 83 个所需字形，首页不再用它。 */
 @font-face {
   font-family: 'PuguaXianyunsong Home';
-  src: url('/fonts/pugua-qianyun-song-home.woff2') format('woff2');
+  src: url('/fonts/pugua-qianyun-song-home.woff2?v=3c59b4eede') format('woff2');
   font-weight: 200;
   font-display: swap;
 }
@@ -17,7 +17,7 @@
   position: relative; isolation: isolate; overflow: clip;
   --hv-blue: #72d5fe;
   --hv-handoff: #7cd9ff;
-  --hv-footer-sky: #149fdb;
+  --hv-footer-sky: #006bce;
   --hv-blue-deep: #3ebeff;
   --hv-yellow: #fffa00;
   --hv-ink: #616161;
@@ -237,9 +237,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   left: 26.25%; top: 33.8%; width: 47.5%; height: 28.7%;
   /* 3D 模式：黑幕与蓝框都在场景里 / SVG 里，这里只留内发光；静态分镜才用 box-shadow 铺黑 */
   box-shadow: inset 0 0 clamp(18px, 4.8vw, 70px) rgba(114, 213, 254, 0);
-  transition: left 1.6s cubic-bezier(0.65, 0, 0.35, 1), top 1.6s cubic-bezier(0.65, 0, 0.35, 1),
-    width 1.6s cubic-bezier(0.65, 0, 0.35, 1), height 1.6s cubic-bezier(0.65, 0, 0.35, 1),
-    box-shadow 1.6s var(--hv-ease);
+  transition: left var(--opening-window-duration, 1.6s) cubic-bezier(0.65, 0, 0.35, 1), top var(--opening-window-duration, 1.6s) cubic-bezier(0.65, 0, 0.35, 1),
+    width var(--opening-window-duration, 1.6s) cubic-bezier(0.65, 0, 0.35, 1), height var(--opening-window-duration, 1.6s) cubic-bezier(0.65, 0, 0.35, 1),
+    box-shadow var(--opening-window-duration, 1.6s) var(--hv-ease);
 }
 .echuu-website .hv-opening__window[data-loaded='true'] { box-shadow: inset 0 0 clamp(18px, 4.8vw, 70px) rgba(114, 213, 254, 0.85); }
 .echuu-website .hv-hero--still .hv-opening__window { box-shadow: 0 0 0 200vmax #000, inset 0 0 clamp(18px, 4.8vw, 70px) rgba(114, 213, 254, 0.85); }
@@ -508,6 +508,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 /* --- 页面主体：天空底 --------------------------------------------------- */
 .echuu-website .hv-body {
   position: relative; color: #fff; overflow: clip;
+  /* Contain margins without isolating screen/soft-light art from the sky backdrop. */
+  display: flow-root;
   background: transparent;
 }
 .echuu-website .hv::before {
@@ -671,8 +673,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-fcards:hover .hv-fcards__track, .echuu-website .hv-fcards:focus-within .hv-fcards__track { animation-play-state: paused; }
 @keyframes hv-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .echuu-website .hv-fcard {
-  position: relative; flex: 0 0 min(548px, 84vw); min-height: clamp(200px, 20vw, 286px);
-  display: grid; grid-template-columns: 38% 1fr; align-items: center; gap: 10px;
+  /* 卡片收短：宽 ≤ 420、高 ~200（设计稿比例），左边图、右边字 */
+  position: relative; flex: 0 0 min(420px, 82vw); min-height: clamp(170px, 14vw, 210px);
+  display: grid; grid-template-columns: 42% 1fr; align-items: center; gap: 8px;
   padding: clamp(16px, 2vw, 28px);
   border-radius: 14px; background: rgba(151, 241, 245, 0.92);
   /* 不加外投影：.hv-fcards 是 overflow 裁切的滚动带，投影会在底边被切成一条硬线 */
@@ -680,17 +683,34 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   color: var(--hv-ink);
 }
 .echuu-website .hv-fcard__art { display: block; max-width: 100%; height: auto; }
-.echuu-website .hv-fcard__art--mocap { width: 78%; margin-left: -12%; filter: drop-shadow(0 14px 22px rgba(20, 60, 100, 0.25)); }
-.echuu-website .hv-fcard__art--stamp { width: 82%; filter: drop-shadow(0 14px 22px rgba(20, 60, 100, 0.25)); }
+.echuu-website .hv-fcard__art--mocap { width: 112%; height: auto; margin: -6% 0 -6% -10%; filter: drop-shadow(0 14px 22px rgba(20, 60, 100, 0.25)); }
+.echuu-website .hv-fcard__art--stamp {
+  width: 82%;
+  /* 淡黄色剪影（和礼物卡同一种贴纸底色）往左下错开 + 柔和投影；邮票轻轻摇摆 */
+  filter: drop-shadow(-9px 9px 0 #fff3a6) drop-shadow(0 14px 22px rgba(20, 60, 100, 0.22));
+  transform-origin: 50% 8%;
+  animation: hv-stamp-sway 5.5s ease-in-out infinite;
+}
+@keyframes hv-stamp-sway {
+  0%, 100% { transform: rotate(-3deg) translateY(0); }
+  50% { transform: rotate(2.5deg) translateY(-4px); }
+}
+.echuu-website .hv-fcard--burst { cursor: pointer; }
+/* 点击礼物卡炸出来的礼物：固定在视口上的一层，不挡点击 */
+.hv-gift-burst { position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden; }
+.hv-gift-burst img { position: absolute; left: 0; top: 0; height: auto; will-change: transform, opacity; filter: drop-shadow(-5px 5px 0 #fff3a6) drop-shadow(0 8px 12px rgba(20, 60, 100, .25)); }
+@media (prefers-reduced-motion: reduce) { .echuu-website .hv-fcard__art--stamp { animation: none; } }
 .echuu-website .hv-fcard__art--gifts { position: relative; display: block; aspect-ratio: 1; width: 100%; }
+/* 3D 礼物：画布比格子大一圈，礼物转动时不被裁 */
+.echuu-website .hv-fcard__art--gifts > div { position: absolute !important; inset: -12%; width: auto !important; height: auto !important; }
 .echuu-website .hv-fcard__art--gifts img { position: absolute; width: 58%; height: auto; filter: drop-shadow(0 10px 16px rgba(20, 60, 100, 0.22)); }
 .echuu-website .hv-fcard__art--gifts img:nth-child(1) { left: 2%; top: 20%; }
 .echuu-website .hv-fcard__art--gifts img:nth-child(2) { left: 30%; top: 0; width: 66%; }
 .echuu-website .hv-fcard__art--gifts img:nth-child(3) { left: 40%; top: 34%; }
 .echuu-website .hv-fcard__art--gifts img:nth-child(4) { left: 6%; top: 46%; width: 72%; }
 .echuu-website .hv-fcard__text { text-align: center; font-weight: 300; }
-.echuu-website .hv-fcard__text h3 { margin: 0; font-family: var(--hv-sans); font-weight: 300; font-size: var(--t-h1); line-height: 1.2; letter-spacing: 0; }
-.echuu-website .hv-fcard__text p { margin: 6px 0 0; font-size: var(--t-lede); line-height: 1.5; letter-spacing: -0.025em; color: #68623e; }
+.echuu-website .hv-fcard__text h3 { margin: 0; font-family: var(--hv-sans); font-weight: 300; font-size: clamp(22px, 2.2vw, 32px); line-height: 1.2; letter-spacing: 0; }
+.echuu-website .hv-fcard__text p { margin: 6px 0 0; font-size: var(--t-small); line-height: 1.5; letter-spacing: -0.025em; color: #68623e; }
 .echuu-website .hv-fcard__stars { position: absolute; inset: 0; pointer-events: none; }
 .echuu-website .hv-fcard__stars img { position: absolute; width: 43px; height: auto; opacity: 0.95; }
 .echuu-website .hv-fcard__stars img:nth-child(1) { right: 12%; top: 8%; }
@@ -797,15 +817,21 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 /* --- 页脚 ----------------------------------------------------------------- */
 .echuu-website .hv-footer {
   position: relative; overflow: hidden; margin-top: -1px;
-  --wings-width: min(1000px, 90vw);
+  --wings-width: min(1084px, 80vw);
+  --footer-depth: clamp(680px, 68vw, 980px);
   padding: clamp(160px, 17vw, 230px) 0 max(48px, env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, var(--hv-footer-sky) 0%, #2162c8 16%, #102f66 45%, #031923 82%, #02121b 100%);
+  /* Figma 2038:1048/1049: saturated blue layers sinking into black.
+     A viewport-scaled depth keeps mobile link columns from stretching the fade. */
+  background-color: #000;
+  background-image: linear-gradient(180deg, var(--hv-footer-sky) 0%, #264ece 15%, #102965 38%, #03101f 64%, #000 90%);
+  background-size: 100% var(--footer-depth);
+  background-repeat: no-repeat;
   color: #fff;
 }
 .echuu-website .hv-footer__wings {
   /* The source has 484px transparent padding above the head (1000px wide). */
-  position: absolute; left: 50%; top: calc(32px - var(--wings-width) * .484); width: var(--wings-width); height: auto; transform: translateX(-50%);
-  opacity: .92; filter: url(#hv-cool-art) saturate(.72) blur(8px); pointer-events: none;
+  position: absolute; left: 50%; top: calc(32px - var(--wings-width) * .484); width: var(--wings-width); max-width: none; height: auto; transform: translateX(-50%);
+  opacity: .94; filter: blur(clamp(2px, .35vw, 5px)); pointer-events: none;
   -webkit-mask-image: linear-gradient(#000 65%, rgba(0,0,0,.8) 83%, transparent 100%);
   mask-image: linear-gradient(#000 65%, rgba(0,0,0,.8) 83%, transparent 100%);
 }
@@ -833,13 +859,18 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   font-size: var(--t-small); letter-spacing: -0.1em;
 }
 .echuu-website .hv-footer__bottom p { margin: 0; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.echuu-website .hv-footer__home { display: inline-flex; font-weight: 800; }
-/* 白色 logo（679 × 569）：高 76px，副标题「你的OC出道舞台」还读得清 */
-.echuu-website .hv-footer__home img { display: block; height: 76px; width: auto; }
+.echuu-website .hv-footer__bottom { align-items: center; }
+/* 白色 logo（679 × 569）：和「联系我们」「版权」同一行，居中；高 52px */
+.echuu-website .hv-footer__home { display: flex; }
+.echuu-website .hv-footer__home img { display: block; height: 52px; width: auto; }
+@media (max-width: 700px) {
+  /* 窄屏一行放不下：logo 单独一行放在最下面居中 */
+  .echuu-website .hv-footer__home { order: 3; flex-basis: 100%; justify-content: center; margin-top: 20px; }
+}
 @media (max-width: 900px) {
   .echuu-website .hv-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .echuu-website .hv-footer { --wings-width: min(780px, 110vw); }
-  .echuu-website .hv-footer__wings { opacity: .78; }
+  .echuu-website .hv-footer__wings { opacity: .94; }
 }
 @media (max-width: 520px) {
   .echuu-website .hv-footer { padding-top: clamp(140px, 40vw, 200px); }
@@ -982,7 +1013,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-cta__icon svg { color: white; width:22px; height:22px; }
 
 .echuu-website .hv-title__beta-count { display:flex; align-items:center; justify-content:center; gap:6px; margin:0; color:#215775; font:400 12px/1.5 system-ui,sans-serif; text-shadow:0 1px 8px rgba(255,255,255,.8); }
-.echuu-website .hv-title__beta-count > span { width:5px; height:5px; border-radius:50%; background:#2789ab; }
 
 .echuu-website .hv-vrm-trigger { border:0; cursor:pointer; }
 .hv-vrm-guide.echuu-access { width: min(760px, calc(100vw - 32px)); height: auto; max-height: calc(100dvh - 32px); }
@@ -999,7 +1029,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 }
 .hv-vrm-guide__icon img { width: 100%; height: 100%; object-fit: cover; }
 .hv-vrm-guide__card h3 { flex: 1; margin: 0; font: 600 17px/1.35 '42dot Sans', system-ui, sans-serif; }
-.hv-vrm-guide__number { font-size: 11px; letter-spacing: .12em; color: rgba(255, 255, 255, .5); font-variant-numeric: tabular-nums; }
 .hv-vrm-guide__card p { margin: 0; font: 400 14px/1.7 '42dot Sans', system-ui, sans-serif; color: rgba(255, 255, 255, .78); }
 .hv-vrm-guide__card a, .hv-vrm-guide__card summary {
   margin-top: auto; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start;
@@ -1093,3 +1122,60 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   text-wrap: balance;
 }
 .echuu-website .hv :is(.hv-steps__body, .hv-fcard__text p, .hv-beta__body, .hv-bcard__excerpt) { text-wrap: pretty; }
+
+/* The intro remains optional and fully operable without drawing. */
+.echuu-website .hv-opening-controls {
+  position: fixed; top: max(16px, env(safe-area-inset-top)); right: 16px;
+  z-index: 120; display: flex; align-items: center; gap: 6px;
+  color: #fff; background: rgba(16, 38, 58, .58); border-radius: 18px; padding: 2px 6px;
+  width: max-content; max-width: calc(100vw - 24px);
+}
+.echuu-website .hv-opening-controls button {
+  min-height: 44px; border: 0; background: transparent; color: inherit;
+  font: inherit; font-size: 12px; padding: 8px 10px; cursor: pointer;
+}
+/* Small visual controls; invisible hit area preserves comfortable touch targets. */
+.echuu-website .hv .hv-opening-controls button {
+  position: relative; min-width: 0; min-height: 28px; height: 28px;
+  padding: 3px 7px; font-size: 11px; line-height: 20px;
+}
+.echuu-website .hv .hv-opening-controls button::after {
+  content: ''; position: absolute; top: -8px; bottom: -8px; left: 0; right: 0;
+}
+.echuu-website .hv .hv-opening-controls .hv-cta__sound { width: 28px; padding: 4px; }
+.echuu-website .hv .hv-opening-controls .hv-cta__sound svg { width: 16px; height: 16px; }
+.echuu-website .hv-opening-controls button:focus-visible,
+.echuu-website .hv-cta button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.echuu-website .hv-opening-controls button:disabled { opacity: .6; cursor: wait; }
+.echuu-website .hv-title__slogan { font-weight: inherit; }
+@media (max-width: 560px) {
+  .echuu-website .hv-cta__group { display: none; }
+  .echuu-website .hv-opening-controls { right: 8px; left: 8px; width: fit-content; margin-left: auto; }
+}
+/* Reuse the homepage shell, type scale and liquid-glass surface. Padding keeps
+   the final section inside the body's sky-to-footer gradient (no collapsed margin). */
+.echuu-website .hv-answers { padding-block: var(--section-y); }
+.echuu-website .hv-answers > .hv-h2 { margin-bottom: var(--sp-7); }
+.echuu-website .hv-answers__glass { height: auto; }
+.echuu-website .hv-answers__content { padding: var(--card-pad); }
+.echuu-website .hv-answers details + details { border-top: 1px solid rgba(255,255,255,.24); }
+.echuu-website .hv-answers summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-5);
+  min-height: var(--btn-h-md); padding-block: var(--sp-5); list-style: none;
+  cursor: pointer; font-family: var(--hv-sans); font-size: var(--t-lede); line-height: 1.55;
+}
+.echuu-website .hv-answers summary::-webkit-details-marker { display: none; }
+.echuu-website .hv-answers summary svg { flex: none; transition: transform .2s var(--hv-ease); }
+.echuu-website .hv-answers details[open] summary svg { transform: rotate(180deg); }
+.echuu-website .hv-answers details p {
+  max-width: 70ch; margin: 0 0 var(--sp-5); font-family: var(--hv-sans);
+  font-size: var(--t-body); line-height: 1.85; text-wrap: pretty;
+}
+.echuu-website .hv-answers__links {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+  padding-top: var(--sp-5); border-top: 1px solid rgba(255,255,255,.24);
+  font-size: var(--t-meta);
+}
+.echuu-website .hv-answers__links a { display: inline-flex; align-items: center; min-height: var(--btn-h-md); }
+.echuu-website .hv-answers__links a:hover { text-decoration: underline; text-underline-offset: .25em; }
+@media (prefers-reduced-motion: reduce) { .echuu-website .hv-answers summary svg { transition: none; } }

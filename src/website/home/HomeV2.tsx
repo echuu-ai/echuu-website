@@ -7,6 +7,7 @@ import { useHomeDict } from './useHomeDict';
 import { OpeningHero } from './OpeningHero';
 import { CreatorsSection, FeatureSection, IntroSection, ModesSection, StepsSection } from './HomeSections';
 import { HomeFooter } from './HomeFooter';
+import { AnswersSection } from './AnswersSection';
 import { BlogSection } from './BlogSection';
 import { useSceneReveal } from './useSceneReveal';
 import { HeroGuideLines } from './HeroGuideLines';
@@ -53,6 +54,7 @@ export function HomeV2() {
         <ModesSection />
         <CreatorsSection />
         <BlogSection />
+        <AnswersSection />
       </div>
       <HomeFooter onBeta={() => openAccess('signup')} />
       {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}

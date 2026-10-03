@@ -5,7 +5,7 @@
 只增不减，加了新文案后重跑一次即可，不会把旧页面用到的字删掉。
 
 用法：python3 scripts/subset-pugua.py "/path/to/蒲瓜纤云宋 商用免费.ttf"
-完整字体（约 19 MB）不进仓库；跑完记得更新 docs/dependency-assets.json 的 sha256。
+完整字体（约 19 MB）不进仓库。跑完会自动更新 home.css 里字体地址的 ?v= 版本号和 docs/dependency-assets.json 的 sha256。
 """
 import pathlib
 import re
@@ -41,3 +41,22 @@ subsetter.subset(font)
 font.flavor = 'woff2'
 font.save(str(OUT))
 print(f'{len(keep)} glyphs → {OUT.relative_to(ROOT)} ({OUT.stat().st_size // 1024} KB)')
+
+# 字体地址带内容版本号：浏览器会长期缓存同名字体，不带版本号时新加的字会一直回落成别的字体
+import hashlib
+version = hashlib.sha256(OUT.read_bytes()).hexdigest()[:10]
+css = ROOT / 'src/website/styles/home.css'
+text = css.read_text(encoding='utf-8')
+text = re.sub(r"url\('/fonts/pugua-qianyun-song-home\.woff2(\?v=[0-9a-f]+)?'\)", f"url('/fonts/pugua-qianyun-song-home.woff2?v={version}')", text)
+css.write_text(text, encoding='utf-8')
+print(f'home.css → ?v={version}')
+
+# 同步 docs/dependency-assets.json 里这份字体的大小与 sha256
+import json
+manifest = ROOT / 'docs/dependency-assets.json'
+entries = json.loads(manifest.read_text(encoding='utf-8'))
+for entry in entries:
+    if entry['path'] == 'fonts/pugua-qianyun-song-home.woff2':
+        entry['bytes'] = OUT.stat().st_size
+        entry['sha256'] = hashlib.sha256(OUT.read_bytes()).hexdigest()
+manifest.write_text(json.dumps(entries, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')

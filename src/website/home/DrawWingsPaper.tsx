@@ -1,3 +1,4 @@
+import { playInteractionSound } from '../lib/interactionSound';
 import { useEffect, useRef, useState, type MutableRefObject, type PointerEvent as ReactPointerEvent } from 'react';
 import { HOME_ASSETS } from '../assets';
 import { drawStrokes, type SketchStroke } from './sketchStrokes';
@@ -178,6 +179,7 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
     const { x, y, scale } = pointAt(event);
     const dist = Math.hypot(x - s.x, y - s.y);
     if (dist < 1.5) return;
+    playInteractionSound('pencil', Math.min(1, dist / 24));
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     // 铅笔质感：一道主线 + 一道错位的浅线，宽度与深浅随手速微变

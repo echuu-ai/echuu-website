@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { VRM, VRMHumanBoneName } from '@pixiv/three-vrm';
 import { PAPER_HEIGHT, PAPER_RATIO, PAPER_WIDTH, type PaperPlacement } from './paperFrame';
-import { drawStrokes, traceStrokes, type SketchStroke } from '../sketchStrokes';
+import { drawStrokes, traceContours, type SketchStroke } from '../sketchStrokes';
 
 /** 只留最大的一块（翅膀模型在俯视下会碎成几片，引导只要那一片大的） */
 function largestComponent(mask: Uint8Array): Uint8Array {
@@ -180,18 +180,6 @@ function renderMask(gl: THREE.WebGLRenderer, vrm: VRM, camera: THREE.Camera, sel
   return mask;
 }
 
-function edgesOf(mask: Uint8Array) {
-  const edge = new Uint8Array(mask.length);
-  const at = (x: number, y: number) => (x >= 0 && y >= 0 && x < MASK_WIDTH && y < MASK_HEIGHT ? mask[y * MASK_WIDTH + x] : 0);
-  for (let y = 0; y < MASK_HEIGHT; y += 1) {
-    for (let x = 0; x < MASK_WIDTH; x += 1) {
-      if (!at(x, y)) continue;
-      if (!at(x - 1, y) || !at(x + 1, y) || !at(x, y - 1) || !at(x, y + 1)) edge[y * MASK_WIDTH + x] = 1;
-    }
-  }
-  return edge;
-}
-
 export function captureSleepOutline(gl: THREE.WebGLRenderer, vrm: VRM, paper: PaperPlacement): SketchOutline {
   // 正交相机：视野正好是整张纸，画面上方 = 图片上方
   const camera = new THREE.OrthographicCamera(-PAPER_WIDTH / 2, PAPER_WIDTH / 2, PAPER_HEIGHT / 2, -PAPER_HEIGHT / 2, 0.01, 20);
@@ -203,7 +191,7 @@ export function captureSleepOutline(gl: THREE.WebGLRenderer, vrm: VRM, paper: Pa
 
   // 身体轮廓 → 笔画 → 整幅贴图
   const body = renderMask(gl, vrm, camera, (mesh) => mesh.name !== 'wings');
-  const strokes = traceStrokes(edgesOf(body), MASK_WIDTH, MASK_HEIGHT);
+  const strokes = traceContours(body, MASK_WIDTH, MASK_HEIGHT);
   const canvas = document.createElement('canvas');
   canvas.width = PAPER_TEXTURE_WIDTH;
   canvas.height = PAPER_TEXTURE_HEIGHT;

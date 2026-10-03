@@ -4,10 +4,10 @@ import { useLocale } from '../locale-context';
 // Verified from Sheet1 on 2026-09-29: 105 valid email rows, 104 unique emails.
 const snapshot = { count: 104, updatedAt: '2026-09-29' };
 const labels = {
-  zh: (n: string) => `${n} 人已加入内测`,
-  en: (n: string) => `${n} people have joined the beta`,
-  ja: (n: string) => `${n} 人がベータテストに参加`,
-  ko: (n: string) => `${n}명이 베타 테스트에 참여했어요`,
+  zh: (n: string) => `${n} 人已申请内测`,
+  en: (n: string) => `${n} people have requested beta access`,
+  ja: (n: string) => `${n} 人がベータテストに応募`,
+  ko: (n: string) => `${n}명이 베타 테스트를 신청했어요`,
 };
 
 export function BetaCount() {
@@ -33,6 +33,6 @@ export function BetaCount() {
     return () => { controller.abort(); window.clearTimeout(timeout); };
   }, []);
   return <p className="hv-title__beta-count" title={new Date(data.updatedAt).toLocaleDateString(locale)}>
-    <span aria-hidden="true" />{labels[locale](data.count.toLocaleString(locale))}
+    {labels[locale](data.count.toLocaleString(locale))}
   </p>;
 }

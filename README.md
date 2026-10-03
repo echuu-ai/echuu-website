@@ -47,7 +47,7 @@ npm run build -- --base=/echuu-website-preview/
 node scripts/prepare-pages.mjs
 ```
 
-`prepare-pages.mjs` 为四语页面生成静态入口（含 blog / team 与每篇文章），支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
+`npm run build` 已生成四语页面的独立正文与元数据（含 blog / team 与每篇文章）；`prepare-pages.mjs` 只验证入口，不会覆盖正文。支持刷新和深链接。将 `dist/` 内容发布到预览仓库 main 根目录（推送前先同步该仓库远端）。本地开发仍使用 `/website/zh`；预览路径为 `/echuu-website-preview/website/zh/`。
 
 同步 `dist/` 时**不要删除**预览仓库里的 `.github/`（Pages 部署工作流）、`.preview-parts/`（`app-build` 大文件的分片与 manifest）、`app-build/` 与 `README.md`。用 rsync 的话：
 
@@ -66,4 +66,23 @@ rsync -a --delete --exclude .git --exclude .github --exclude .preview-parts --ex
 
 ## 邀请码与内测申请（2026-09-29）
 
-首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备中并禁用提交。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产沿用 `https://echuu.app`。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
+首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产沿用 `https://echuu.app`。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
+
+
+## 搜索与交互音效（2026-10-03）
+
+计划正式域名为 `https://echuu.ai`，待迁移。默认 `VITE_SITE_INDEXABLE=0`，所有构建页面携带 noindex，sitemap 无条目。仅在正式域名迁移完成后的生产构建设置 `VITE_SITE_ORIGIN=https://echuu.ai`、`VITE_SITE_INDEXABLE=1`，才输出 canonical、四语 hreflang 与正式 sitemap。发布之前确认实际托管返回对应路由 HTML。生产产物不要复用到预览域名；浏览器端 origin 校验不能代替静态 HTML 的索引配置。
+
+`src/website/seo/siteSeo.ts` 是运行时与构建的共同元数据来源；`scripts/static-pages.tsx` 输出可直接读取的正文，问答共用 `src/website/data/answers.ts`。没有设置虚构作者、发布日期、评价或 FAQ 富结果承诺。未知路径仍需托管层正确返回 404（当前 SPA 回退只提供前端 noindex）。
+
+背景配乐已按用户要求移除（2026-10-03）。声音开关控制恢复的蝉鸣、偶发风铃以及交互音效：纸飞机起飞、画笔、挂坠拨动、礼物与开场拍点；默认静音。短音限频、标签页隐藏时不触发，共用 0.2 主音量。
+
+开场新增直接唤醒、可见跳过、同一会话回访跳过开场并进入 3D hero（不切静态图）。减少动态效果及加载失败时直接显示静态首屏。
+
+开场统一时钟以 1.3 倍速播放（约20.2秒 → 15.5秒，不含加载与画画），角色动作、运镜与开场拍点共用时钟，hero 后恢复原速。跳过/唤醒控件可见高度28px，透明触控范围44px。
+
+2026-10-03 补充：恢复原有蝉鸣/风铃合成参数；不恢复旧和弦铺底或新钢琴配乐。环境声开启后渐入，静音、隐藏标签和离开首页时清理节点及定时器。
+
+2026-10-03：按用户要求移除底栏「重播开场」按钮及对应刷新处理。
+
+2026-10-03 修正：回访/跳过只改变开场时间线，保留真实3D；加载期间点击跳过会在模型就绪后直达最终姿态。静态图仅用于减少动态效果、无WebGL或加载失败/超时。
