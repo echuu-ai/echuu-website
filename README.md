@@ -66,12 +66,12 @@ rsync -a --delete --exclude .git --exclude .github --exclude .preview-parts --ex
 
 ## 邀请码与内测申请（2026-09-29）
 
-首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产默认 `https://echuu.live`（2026-10-03 Cory 确认；官网正式域名 echuu.ai）。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
+首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产默认 `https://echuu.live`（2026-10-03 Cory 确认；官网正式地址 https://www.echuu.ai）。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
 
 
 ## 搜索与交互音效（2026-10-03）
 
-计划正式域名为 `https://echuu.ai`，待迁移。默认 `VITE_SITE_INDEXABLE=0`，所有构建页面携带 noindex，sitemap 无条目。仅在正式域名迁移完成后的生产构建设置 `VITE_SITE_ORIGIN=https://echuu.ai`、`VITE_SITE_INDEXABLE=1`，才输出 canonical、四语 hreflang 与正式 sitemap。发布之前确认实际托管返回对应路由 HTML。生产产物不要复用到预览域名；浏览器端 origin 校验不能代替静态 HTML 的索引配置。
+正式地址为 `https://www.echuu.ai`（2026-10-04 已绑到 Vercel；裸域 `echuu.ai` 308 永久跳到 www）。默认 `VITE_SITE_INDEXABLE=0`，所有构建页面携带 noindex，sitemap 无条目。仅在发布闸门通过后的生产构建设置 `VITE_SITE_ORIGIN=https://www.echuu.ai`、`VITE_SITE_INDEXABLE=1`，才输出 canonical、四语 hreflang 与正式 sitemap。发布之前确认实际托管返回对应路由 HTML。生产产物不要复用到预览域名；浏览器端 origin 校验不能代替静态 HTML 的索引配置。
 
 `src/website/seo/siteSeo.ts` 是运行时与构建的共同元数据来源；`scripts/static-pages.tsx` 输出可直接读取的正文，问答共用 `src/website/data/answers.ts`。没有设置虚构作者、发布日期、评价或 FAQ 富结果承诺。未知路径仍需托管层正确返回 404（当前 SPA 回退只提供前端 noindex）。
 

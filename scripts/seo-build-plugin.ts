@@ -10,7 +10,7 @@ export function seoBuild(): Plugin {
     configResolved(value) { config = value; },
     async closeBundle() {
       const env = { ...loadEnv(config.mode, config.root, 'VITE_'), ...process.env };
-      const origin = env.VITE_SITE_ORIGIN?.trim() || 'https://echuu.ai';
+      const origin = env.VITE_SITE_ORIGIN?.trim() || 'https://www.echuu.ai';
       const parsed = new URL(origin);
       if (parsed.protocol !== 'https:' || parsed.pathname !== '/' || parsed.search || parsed.hash || parsed.username || parsed.password) throw Error('VITE_SITE_ORIGIN must be an HTTPS origin without a path or credentials.');
       const indexable = env.VITE_SITE_INDEXABLE === '1';

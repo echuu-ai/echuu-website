@@ -2,7 +2,8 @@ import { DICTS, WEBSITE_LOCALES, type Locale } from '../i18n';
 import { HOME_DICTS } from '../i18n/home';
 import { BLOG_POSTS } from '../data/blog';
 
-export const PLANNED_ORIGIN = 'https://echuu.ai';
+/** 正式主地址：带 www（Cory 2026-10-04 定；echuu.ai 在 Vercel 308 跳到 www） */
+export const PLANNED_ORIGIN = 'https://www.echuu.ai';
 export const SEO_PAGES = ['', 'gallery', 'creators', 'journal', 'blog', 'team', 'feedback', 'doodle'] as const;
 export function publicRoutes() {
   return [...SEO_PAGES, ...BLOG_POSTS.map((post) => `blog/${post.slug}`)];
