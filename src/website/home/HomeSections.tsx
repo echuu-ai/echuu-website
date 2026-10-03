@@ -1,4 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { Clapperboard, MessagesSquare, MicVocal, type LucideIcon } from 'lucide-react';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
@@ -236,9 +237,8 @@ export function ModesSection() {
         <img className="hv-modes__runner" src={HOME_ASSETS.runningSilhouette} alt="" width={130} height={190} loading="lazy" />
         <h2 className="hv-h2 hv-h2--center" id="hv-modes-title">{h.modes.title}</h2>
         <p className="hv-lede hv-lede--center">
-          {lede1}
-          <br />
-          {lede2}
+          <span className="hv-lede__line">{lede1}</span>
+          <span className="hv-lede__line">{lede2}</span>
         </p>
       </div>
       <ul className="hv-mcards">
@@ -246,7 +246,9 @@ export function ModesSection() {
           <li key={card.id} className={`hv-mcard hv-mcard--${card.id}`}>
             <Reveal>
               <header className="hv-mcard__head">
-                <span className="hv-mcard__avatar" aria-hidden="true" />
+                <span className="hv-mcard__avatar" aria-hidden="true">
+                  {(() => { const Icon = MODE_ICONS[card.id]; return Icon ? <Icon strokeWidth={1.6} /> : null; })()}
+                </span>
                 <span className="hv-mcard__name">{card.name}</span>
               </header>
               <img className="hv-mcard__media" src={card.src} alt={card.alt} loading="lazy" decoding="async" />
@@ -267,6 +269,9 @@ export function ModesSection() {
     </section>
   );
 }
+
+/** 直播模式卡片的头像：观影回 = 场记板，歌回 = 麦克风，杂谈回 = 对话气泡 */
+const MODE_ICONS: Record<string, LucideIcon> = { reaction: Clapperboard, song: MicVocal, talk: MessagesSquare };
 
 /** 创作者：宣言、三个玻璃按钮、手拉手剪影图 */
 export function CreatorsSection() {

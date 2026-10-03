@@ -77,7 +77,7 @@ export const homeZh = {
   },
   modes: {
     title: '不止雜談回，下一場更精彩',
-    lede: '杂谈回，观影回，歌回\n更多直播内容开发中',
+    lede: '杂谈回，观影回，歌回\n先从 1–2 分钟的短片段开始，一段段拼成完整的直播世界',
     cards: [
       { name: 'Reaction观影回', alt: '观影回直播画面' },
       { name: '歌回', alt: '歌回直播画面' },
@@ -199,7 +199,7 @@ export const homeEn: HomeDict = {
   },
   modes: {
     title: 'More than chat streams. The next show is better',
-    lede: 'Chat, watch-along, singing\nmore stream formats in development',
+    lede: 'Chat, watch-along, singing\nStarting with 1–2 minute clips, piece by piece into a full live world',
     cards: [
       { name: 'Reaction watch-along', alt: 'Watch-along stream' },
       { name: 'Singing', alt: 'Singing stream' },
@@ -318,7 +318,7 @@ export const homeJa: HomeDict = {
   },
   modes: {
     title: '雑談回だけじゃない。次回はもっと面白い',
-    lede: '雑談回、同時視聴回、歌回\nさらに多くの配信フォーマットを開発中',
+    lede: '雑談回、同時視聴回、歌回\nまずは 1〜2 分のショート体験から、少しずつひとつの配信世界へ',
     cards: [
       { name: 'Reaction 同時視聴回', alt: '同時視聴配信の画面' },
       { name: '歌回', alt: '歌配信の画面' },
@@ -437,7 +437,7 @@ export const homeKo: HomeDict = {
   },
   modes: {
     title: '잡담 방송뿐만이 아니에요. 다음 방송은 더 재밌게',
-    lede: '잡담, 같이 보기, 노래 방송\n더 많은 방송 형식을 개발 중',
+    lede: '잡담, 같이 보기, 노래 방송\n1~2분 짧은 영상으로 시작해, 조금씩 하나의 라이브 세계로',
     cards: [
       { name: 'Reaction 같이 보기', alt: '같이 보기 방송 화면' },
       { name: '노래 방송', alt: '노래 방송 화면' },
