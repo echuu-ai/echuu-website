@@ -30,7 +30,6 @@ import {
   startOpeningClock,
   type OpeningPhase,
 } from './openingTimeline';
-import { EXPERIENCE_COPY } from './experienceCopy';
 import { DrawWingsPaper } from './DrawWingsPaper';
 import { updateOpeningSound } from '../lib/openingSound';
 
@@ -106,10 +105,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const { h, locale } = useHomeDict();
   const reduced = usePrefersReducedMotion();
   const clock = useMemo(createOpeningClock, []);
-  const controls = EXPERIENCE_COPY[locale];
-  const returning = useRef((() => {
-    try { return sessionStorage.getItem('echuu-opening-seen') === '1'; } catch { return false; }
-  })());
   const [mode, setMode] = useState<StageMode>('pending');
   const [phase, setPhase] = useState<OpeningPhase>('loading');
   // logo 出场动画：减少动态效果时直接显示平面 logo
@@ -172,11 +167,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
   const handleReady = useCallback(() => {
     setReady(true);
-    if (returning.current) {
-      skipOpening(clock, performance.now());
-      setPhase('hero');
-    }
-  }, [clock]);
+  }, []);
 
   // 模型 / 动作加载失败，或超时仍未就绪：退回静态分镜，绝不把页面锁死在黑场
   const fallbackToStill = useCallback(() => {
@@ -287,8 +278,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     return () => observer.disconnect();
   }, []);
 
+  // 开场不提供跳过 / 唤醒按钮、回访也照常播放（Cory 2026-10-03 再次确认）；只留 Esc 作为无障碍退出口
   const skip = useCallback(() => {
-    returning.current = true;
     setPendingWake(false);
     // Skipping selects the final pose; it must never downgrade a loading 3D stage.
     if (!clock.ready) return;
@@ -297,14 +288,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   }, [clock]);
 
   useEffect(() => {
-    if (phase !== 'hero') return;
-    try { sessionStorage.setItem('echuu-opening-seen', '1'); } catch { /* Optional storage. */ }
-  }, [phase]);
-
-  useEffect(() => {
     if (phase === 'hero') return;
     const onKey = (event: KeyboardEvent) => {
-      // 可见跳过按钮的键盘快捷方式。
       if (event.key === 'Escape') skip();
     };
     window.addEventListener('keydown', onKey);
@@ -349,10 +334,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       {showOpening ? (
         <div className="hv-opening-controls" data-no-doodle>
           <SoundToggle label={h.header.sound} />
-          {drawing && mode === '3d' ? <button type="button" onClick={beginWake} disabled={pendingWake}>
-            {pendingWake ? h.opening.loading : controls.wake}
-          </button> : null}
-          <button type="button" onClick={skip}>{h.opening.skip}</button>
         </div>
       ) : null}
 

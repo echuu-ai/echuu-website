@@ -851,8 +851,16 @@ function PaperSheet3D({ clock, art, lying, hole }: {
 /** 场景文件里的三盏灯：与 SceneEditorLights 同一套参数，去掉编辑手柄 */
 const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: SceneLighting; clock: OpeningClock }) {
   const debutRim = useRef<THREE.DirectionalLight>(null);
+  const windowLight = useRef<THREE.DirectionalLight>(null);
   useFrame(() => {
     if (!debutRim.current) return;
+    // 开窗「送光」：窗口在她正前方（+Z），暖白光从那边打过来，开窗瞬间最亮，镜头在她身后时就是一圈轮廓光
+    if (windowLight.current) {
+      const tw = openingTime(clock, performance.now());
+      windowLight.current.intensity = clock.ready && openingStarted(clock)
+        ? 0.85 * smoothstep(OPENING.openStart - 0.35, OPENING.openStart + 0.2, tw) * (1 - smoothstep(OPENING.openStart + 0.6, OPENING.openStart + 2.2, tw))
+        : 0;
+    }
     const t = openingTime(clock, performance.now());
     // 苏醒的轮廓光（导演流程 1-3 → 1-4 升起，英雄停顿后收）+ 定格时的一次出场光
     const wake = openingStarted(clock) ? 0.55 * smoothstep(OPENING.standStart + 1.1, OPENING.standStart + 5.0, t) * (1 - smoothstep(OPENING.wakeEnd + 0.4, OPENING.wakeEnd + 1.4, t)) : 0;
@@ -868,6 +876,7 @@ const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: Sce
       <primitive object={target} />
       <ambientLight color={lighting.ambientColor} intensity={lighting.ambientIntensity} />
       <directionalLight ref={debutRim} position={lighting.rim.position} target={target} color="#b8eaff" intensity={0} />
+      <directionalLight ref={windowLight} position={[lighting.target[0], lighting.target[1] + 1.4, lighting.target[2] + 6]} target={target} color="#fff1dc" intensity={0} />
       {(['key', 'fill', 'rim'] as const).map((id) => {
         const light = lighting[id];
         return <directionalLight key={id} position={light.position} color={light.color} intensity={light.enabled ? light.intensity : 0} target={target} />;

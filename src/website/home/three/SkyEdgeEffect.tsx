@@ -23,6 +23,9 @@ import { pctToProgress, seamTuning } from './seamTuning';
 const fragment = /* glsl */ `
 uniform float portalStrength;
 uniform float openingMood;
+uniform vec2 lightOrigin;
+uniform float lightSpread;
+uniform float lightBurst;
 uniform float seamEnabled;
 uniform float seamProgress;
 uniform float seamTime;
@@ -83,11 +86,29 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
       outputColor.rgb *= 1.0 - edge * portalStrength * 0.045;
       outputColor.rgb += vec3(0.012, 0.025, 0.032) * edge * portalStrength * inputColor.a;
     }
+    // 到窗口中心的距离（按宽高比校正），开窗的光从这里来
+    float aspectRatio = seamResolution.x / max(seamResolution.y, 1.0);
+    vec2 fromLight = (uv - lightOrigin) * vec2(aspectRatio, 1.0);
+    float lightDist = length(fromLight);
     if (openingMood > 0.001) {
-      // 苏醒到开窗之前：压暗、略去饱和、偏冷蓝（夜里醒来）；开窗后回到首屏的光
+      // 苏醒到开窗之前：压暗、略去饱和、偏冷蓝（夜里醒来）。
+      // 开窗时「送光」：离窗口近的地方先亮起来，亮区随 lightSpread 向外扩，扩满整屏就回到首屏的光
+      float lit = 1.0 - smoothstep(lightSpread - 0.45, lightSpread, lightDist);
+      float mood = openingMood * (1.0 - lit);
       float lum = dot(outputColor.rgb, vec3(0.299, 0.587, 0.114));
       vec3 cool = mix(outputColor.rgb, vec3(lum), 0.28) * vec3(0.8, 0.92, 1.14) * 0.64;
-      outputColor.rgb = mix(outputColor.rgb, cool, openingMood);
+      outputColor.rgb = mix(outputColor.rgb, cool, mood);
+    }
+    if (lightBurst > 0.001) {
+      // 窗口涌进来的光：暖白光晕 + 缓慢转动的光束
+      float angle = atan(fromLight.y, fromLight.x);
+      float rays = pow(0.5 + 0.5 * sin(angle * 13.0 + seamTime * 0.35), 12.0) * 0.6
+        + pow(0.5 + 0.5 * sin(angle * 7.0 - seamTime * 0.22 + 1.3), 14.0) * 0.4;
+      // 光晕与光束都收着用：是「光漏进来」，不是爆炸；光束离窗口越远衰减越快
+      float glow = exp(-lightDist * 3.2) * 0.3 + rays * exp(-lightDist * 2.4) * 0.16;
+      glow *= lightBurst;
+      outputColor.rgb += vec3(1.0, 0.96, 0.88) * glow;
+      outputColor.a = max(outputColor.a, clamp(glow, 0.0, 1.0));
     }
     return;
   }
@@ -151,7 +172,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 `;
 
 export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole: React.MutableRefObject<HoleRect>; clock: OpeningClock }) {
-  const { size } = useThree();
+  const { size, gl } = useThree();
   const effect = useMemo(() => new Effect('EchuuSkyEdge', fragment, {
     blendFunction: BlendFunction.SET,
     // 色散会读取 inputBuffer 的偏移位置，必须独占一个 EffectPass
@@ -159,6 +180,9 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole
     uniforms: new Map<string, THREE.Uniform>([
       ['portalStrength', new THREE.Uniform(0)],
       ['openingMood', new THREE.Uniform(0)],
+      ['lightOrigin', new THREE.Uniform(new THREE.Vector2(0.5, 0.55))],
+      ['lightSpread', new THREE.Uniform(-1)],
+      ['lightBurst', new THREE.Uniform(0)],
       ['seamEnabled', new THREE.Uniform(0)],
       ['seamProgress', new THREE.Uniform(pctToProgress(seamTuning.restPct))],
       ['seamTime', new THREE.Uniform(0)],
@@ -181,9 +205,22 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole
     const openingSeconds = openingTime(clock, performance.now());
     uniforms.get('portalStrength')!.value = smoothstep(OPENING.openStart - 0.1, OPENING.openStart + 0.45, openingSeconds)
       * (1 - smoothstep(OPENING.openStart + 0.6, OPENING.openStart + 2.0, openingSeconds));
-    // 苏醒光：纸交接完（约 1.4 s）压到最暗最冷，开窗时（openStart 前 0.3 s 到后 0.9 s）回到首屏的光
+    // 苏醒光：纸交接完（约 1.4 s）压到最暗最冷；开窗时光从窗口向外扩（lightSpread），扩满后整体收尾
     uniforms.get('openingMood')!.value = smoothstep(0.2, 1.6, openingSeconds)
-      * (1 - smoothstep(OPENING.openStart - 0.3, OPENING.openStart + 0.9, openingSeconds));
+      * (1 - smoothstep(OPENING.openStart + 1.0, OPENING.openStart + 1.6, openingSeconds));
+    const spread = smoothstep(OPENING.openStart - 0.35, OPENING.openStart + 1.1, openingSeconds);
+    uniforms.get('lightSpread')!.value = spread <= 0 ? -1 : -0.1 + spread * 2.6;
+    uniforms.get('lightBurst')!.value = smoothstep(OPENING.openStart - 0.35, OPENING.openStart + 0.25, openingSeconds)
+      * (1 - smoothstep(OPENING.openStart + 0.55, OPENING.openStart + 1.8, openingSeconds));
+    // 光源 = 手机窗中心（hole 是页面像素，换算到画布 uv，y 朝上）
+    const rect = hole.current;
+    const bounds = gl.domElement.getBoundingClientRect();
+    if (rect.w > 0 && bounds.width > 0) {
+      (uniforms.get('lightOrigin')!.value as THREE.Vector2).set(
+        (rect.x + rect.w / 2 - bounds.left) / bounds.width,
+        1 - (rect.y + rect.h / 2 - bounds.top) / bounds.height,
+      );
+    }
     uniforms.get('seamEnabled')!.value = hole.current.open ? 1 : 0;
     if (!hole.current.open) return;
     (uniforms.get('seamResolution')!.value as THREE.Vector2).set(size.width, size.height);
