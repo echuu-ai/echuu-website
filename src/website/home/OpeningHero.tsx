@@ -19,17 +19,23 @@ import type { HoleRect } from './three/OpeningStage3D';
 import {
   OPENING,
   createOpeningClock,
+  openingStarted,
   openingTime,
   phaseAt,
   replayOpening,
   skipOpening,
+  smoothstep,
   startOpeningClock,
   type OpeningPhase,
 } from './openingTimeline';
+import { DrawWingsPaper } from './DrawWingsPaper';
 
 const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => ({ default: m.OpeningStage3D })));
 
 type StageMode = 'pending' | '3d' | 'still';
+
+/** Figma 上的手写提示语；Cedarville Cursive 只有拉丁字形，所有语言都用这句英文 */
+const DRAW_HINT = 'Draw  the wings to wake it up';
 
 /** 只要有 WebGL 就跑真实 3D（手机也是）；只有无 WebGL 或减少动态效果才走静态分镜。 */
 function decideStageMode(reduced: boolean): StageMode {
@@ -80,8 +86,30 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const [ready, setReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const windowRef = useRef<HTMLDivElement | null>(null);
-  const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false });
+  const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false, reveal: 0 });
+  const paperArt = useRef<HTMLCanvasElement | null>(null);
+  const [pendingWake, setPendingWake] = useState(false);
   const stroke = useStrokeProgress(ready, mode);
+
+  // draw 阶段结束（翅膀画好）：时钟就绪则立刻开始 wake，否则等 3D 就绪后自动开始
+  const beginWake = useCallback(() => {
+    if (openingStarted(clock)) return;
+    if (!clock.ready) {
+      setPendingWake(true);
+      return;
+    }
+    startOpeningClock(clock, performance.now());
+    setPhase('wake');
+  }, [clock]);
+  useEffect(() => {
+    if (ready && pendingWake) beginWake();
+  }, [beginWake, pendingWake, ready]);
+  // DEV：带 ophold / opmat 调试参数时跳过画翅膀，就绪后直接起时钟（沿用旧的调试流程）
+  useEffect(() => {
+    if (!import.meta.env.DEV || !ready || mode !== '3d') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('ophold') || params.has('opmat')) beginWake();
+  }, [beginWake, mode, ready]);
 
   // 决定舞台模式；静态分镜自己起时钟，3D 等模型与动作就绪后再起
   useEffect(() => {
@@ -125,9 +153,9 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     const tick = () => {
       const now = performance.now();
       const t = Number.isFinite(hold) && clock.ready ? hold : openingTime(clock, now);
-      const next = phaseAt(t, clock.ready);
+      const next = phaseAt(t, clock.ready, openingStarted(clock));
       setPhase((current) => (current === next ? current : next));
-      if (mode === 'still') setStillShot(t < OPENING.povEnd + 3.2 ? 'back' : 'front');
+      if (mode === 'still') setStillShot(t < OPENING.openStart + 3.2 ? 'back' : 'front');
     };
     tick();
     const timer = window.setInterval(tick, 80);
@@ -148,11 +176,14 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     const track = () => {
       const el = windowRef.current;
       if (el) {
+        // draw / wake 阶段窗口还没回来：reveal = 0 时 3D 黑幕全黑；fold 里从窗口中心张开
+        const t = openingTime(clock, performance.now());
         const rect = el.getBoundingClientRect();
         hole.current.x = rect.left;
         hole.current.y = rect.top;
         hole.current.w = rect.width;
         hole.current.h = rect.height;
+        hole.current.reveal = mode === '3d' ? smoothstep(OPENING.windowBack, OPENING.windowBack + 0.9, t) : 1;
         hole.current.open = false;
       }
       raf = requestAnimationFrame(track);
@@ -185,7 +216,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       cancelAnimationFrame(raf);
       root.classList.remove('hv-lock');
     };
-  }, [phase]);
+  }, [clock, mode, phase]);
 
   // 首屏离开视口后停掉 3D 渲染循环
   useEffect(() => {
@@ -211,7 +242,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     if (el) el.removeAttribute('style');
     replayOpening(clock, performance.now());
     setStillShot('back');
-    setPhase(mode === 'still' ? 'sleep' : phaseAt(0, true));
+    setPhase('wake');
   }, [clock, mode, reduced]);
 
   useEffect(() => {
@@ -235,6 +266,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   }, [menuOpen]);
 
   const showOpening = phase !== 'hero';
+  const drawing = phase === 'loading' || phase === 'draw';
   const stageStill = mode === 'still';
 
   return (
@@ -242,7 +274,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       <div className="hv-stage" aria-hidden="true">
         {mode === '3d' ? (
           <Suspense fallback={null}>
-            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} />
+            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} paperArt={paperArt} />
           </Suspense>
         ) : null}
         {stageStill ? (
@@ -258,7 +290,18 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       </div>
 
       {showOpening ? (
-        <div className="hv-opening" role="presentation" onClick={skip}>
+        // 画翅膀时不能「点哪儿都跳过」，只留跳过按钮与键盘
+        <div className="hv-opening" role="presentation" onClick={drawing ? undefined : skip}>
+          {mode === '3d' && (drawing || phase === 'wake') ? (
+            <DrawWingsPaper
+              fading={phase === 'wake'}
+              waiting={pendingWake && !ready}
+              artRef={paperArt}
+              onWake={beginWake}
+              hint={DRAW_HINT}
+              loadingLabel={h.opening.loading}
+            />
+          ) : null}
           <div className="hv-opening__frame">
             <h1 className="hv-opening__title" lang="en">
               <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
@@ -292,7 +335,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               ) : null}
               <img className="hv-opening__outline hv-opening__outline--01" src={HOME_ASSETS.opening.outline01} alt="" />
               <img className="hv-opening__outline hv-opening__outline--02" src={HOME_ASSETS.opening.outline02} alt="" />
-              {phase === 'loading' ? <span className="hv-opening__loading">{h.opening.loading}</span> : null}
+              {phase === 'loading' && mode !== '3d' ? <span className="hv-opening__loading">{h.opening.loading}</span> : null}
             </div>
           </div>
           {phase === 'open' ? <div className="hv-opening__flash" aria-hidden="true" /> : null}

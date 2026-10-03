@@ -54,6 +54,9 @@ export const HOME_ASSETS = {
     pegasus: FIG('deco-pegasus.webp'),
     wing: FIG('deco-wing.webp'),
     plane: FIG('deco-plane.webp'),
+    /** draw 阶段：黑场里的笔记本纸 + corynorootbone 铅笔稿（Figma Opening-animation-01 2026-10 版） */
+    paperSheet: FIG('opening-paper/sketch-body.png'),
+    paperOutline: FIG('opening-paper/sketch-outline.svg'),
   },
   logo3d: FIG('logo-dark.png'),
   brooch: FIG('brooch.webp'),
@@ -93,7 +96,7 @@ export const HOME_ASSETS = {
 export const HOME_OPENING_MODEL = `${publicUrl('assets/loading/corynorootbone.loading.vrm')}?scope=website-opening`;
 export const HOME_OPENING_MOTIONS = {
   sleep: publicUrl('assets/animation/mate-engine/PET_SLEEPING_PET_SLEEPING.vrma'),
-  lieDown: publicUrl('assets/animation/vroid/Resources/animations/pv/female/spot_lie_down_1.vrma'),
+  standUp: publicUrl('assets/animation/mixamo/stand-up.fbx'),
   intro: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO.vrma'),
   introEnd: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO_END.vrma'),
   targetLock: publicUrl('assets/animation/vroid/Resources/animations/pv/male/spot_target_locked.vrma'),

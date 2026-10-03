@@ -4,7 +4,7 @@ import { MOTION_KEYS, motionTime, motionWeight, portraitPullback } from './openi
 
 describe('absolute opening animation', () => {
   it('preserves total weight across all transitions, including skip and replay', () => {
-    for (const t of [0, 3.4, 3.7, 4.3, 9.59, 9.6, 13.2, 13.35, 14.6, 14.9, 15.8, 100]) {
+    for (const t of [0, 1.3, 1.6, 2.0, 9.59, 9.6, 13.2, 13.35, 14.6, 14.9, 15.8, 100]) {
       expect(MOTION_KEYS.reduce((sum, key) => sum + motionWeight(key, t), 0)).toBeCloseTo(1);
     }
   });
@@ -27,7 +27,7 @@ describe('absolute opening animation', () => {
       }
       return root.position.x;
     }
-    for (const end of [3.8, 8.5, 13.4, 14.9, 15.8]) {
+    for (const end of [1.8, 5.5, 13.4, 14.9, 15.8]) {
       const direct = sample([end]);
       expect(sample(Array.from({length: Math.ceil(end * 60)}, (_, i) => i / 60).concat(end))).toBeCloseTo(direct);
       expect(sample(Array.from({length: Math.ceil(end * 10)}, (_, i) => i / 10).concat(end))).toBeCloseTo(direct);

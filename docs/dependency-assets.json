@@ -587,5 +587,23 @@
     "bytes": 184332,
     "sha256": "ca693f7211c5e752f54cb0ef181fc0d9cde7ff60264a721fbb7707a8ffeb81de",
     "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/key-right.webp; meshopt + 1024px WebP via gltf-transform"
+  },
+  {
+    "path": "website/figma/opening-paper/sketch-body.png",
+    "bytes": 467261,
+    "sha256": "a9110fc91969674de9bdac372d4392ff07caeb40554813a09337c467bf0c7706",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 (image 1942, notebook paper), retrieved 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/figma/opening-paper/sketch-outline.svg",
+    "bytes": 148592,
+    "sha256": "2ccca07272bb27d9a0dd1b4241f3109f831bb71ecb27b51f17251c272de36275",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21150 (corynorootbone pencil outline), retrieved 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "assets/animation/mixamo/stand-up.fbx",
+    "bytes": 2466576,
+    "sha256": "90fbfff33adc9467b7362275d4fa386e4ed8234f9895faf4179f59582609fae2",
+    "source": "Mixamo \"Stand Up\", copied from echuu-ux-r3f-vite/public/assets/animation/Stand Up.fbx, 2026-10-03 (unaltered)"
   }
 ]

@@ -1,21 +1,28 @@
 /**
  * 官网开场时间线（纯函数 + 一个共享时钟）。
  *
- * 分镜（对应 Figma Opening-animation-01 → 04）：
- *  sleep   ：黑场里的手机窗，corynorootbone 以剪影躺着（PET_SLEEPING 循环）
- *  liedown ：转到 spot_lie_down_1 躺卧姿态，镜头推向角色头部
- *  pov     ：从躺卧角色仰望天空的第一人称，右手抬起触碰「镜子里的自己」（白色外轮廓）
- *  open    ：窗口完全打开，镜头从后方环绕；动作 PET_INTRO → PET_INTRO_END → spot_target_locked
- *  hero    ：在 spot_target_locked 定格，首屏 UI 浮现
+ * 分镜（Figma Opening-animation-01「Draw the wings to wake it up」+ 原 03/04 开窗定格）：
+ *  draw ：黑场里的笔记本纸，纸上是 corynorootbone 的铅笔稿；用户给它补上翅膀
+ *         （不计时：画够并停笔后唤醒；3D 模型与动作在后台加载）
+ *  wake ：铅笔稿物化成 3D（igloo 物化特效），Stand Up 从纸上站起来；镜头从俯视纸面转到正面
+ *  fold ：纸折成纸飞机飞向手机窗，窗口与蓝框回到画面中
+ *  open ：窗口放大到全屏，镜头从后方环绕（PET_INTRO → PET_INTRO_END → spot_target_locked）
+ *  hero ：spot_target_locked 定格，首屏 UI 浮现
  *
+ * open / hero 两段与旧版完全一致。draw 阶段时钟未启动（t 恒为 0）；
+ * 画好翅膀那一刻 startOpeningClock，之后的秒数都是绝对值。
  * DOM 与 3D 都只读同一个时钟，不通过 React state 逐帧同步。
  */
-export type OpeningPhase = 'loading' | 'sleep' | 'liedown' | 'pov' | 'open' | 'hero';
+export type OpeningPhase = 'loading' | 'draw' | 'wake' | 'fold' | 'open' | 'hero';
 
 export const OPENING = {
-  sleepEnd: 3.4,
-  lieEnd: 6.4,
-  povEnd: 9.6,
+  /** wake 内：Stand Up 开始（前面留给物化特效把铅笔稿变成 3D） */
+  standStart: 1.3,
+  wakeEnd: 6.4,
+  /** fold 内：手机窗、蓝框和纸飞机出现 */
+  windowBack: 8.0,
+  /** 从这里开始与旧版一致（旧 povEnd） */
+  openStart: 9.6,
   /** 窗口从手机窗放大到全屏所需秒数（CSS 过渡与 3D 相机同步） */
   windowOpenSeconds: 1.6,
   openEnd: 15.8,
@@ -23,22 +30,19 @@ export const OPENING = {
 
 export const OPENING_TOTAL = OPENING.openEnd;
 
-/** 3D 动作切换点（秒） */
+/** 3D 动作切换点（秒）；introStart 起与旧版完全一致 */
 export const OPENING_MOTION = {
-  lieStart: OPENING.sleepEnd,
-  introStart: OPENING.povEnd,
+  standStart: OPENING.standStart,
+  introStart: OPENING.openStart,
   introEndStart: 13.2,
   lockStart: 14.6,
-  /** 抬手触碰镜子：IK 权重的起止 */
-  reachIn: [6.8, 7.7] as const,
-  reachOut: [9.05, 9.55] as const,
 } as const;
 
-export function phaseAt(t: number, ready: boolean): OpeningPhase {
+export function phaseAt(t: number, ready: boolean, started = true): OpeningPhase {
   if (!ready) return 'loading';
-  if (t < OPENING.sleepEnd) return 'sleep';
-  if (t < OPENING.lieEnd) return 'liedown';
-  if (t < OPENING.povEnd) return 'pov';
+  if (!started) return 'draw';
+  if (t < OPENING.wakeEnd) return 'wake';
+  if (t < OPENING.openStart) return 'fold';
   if (t < OPENING.openEnd) return 'open';
   return 'hero';
 }
@@ -50,19 +54,7 @@ export function smoothstep(edge0: number, edge1: number, x: number): number {
 
 /** 0 = 手机窗；1 = 全屏 */
 export function windowOpenProgress(t: number): number {
-  return smoothstep(OPENING.povEnd, OPENING.povEnd + OPENING.windowOpenSeconds, t);
-}
-
-/** 抬手触碰的 IK 权重 */
-export function reachWeight(t: number): number {
-  const [inA, inB] = OPENING_MOTION.reachIn;
-  const [outA, outB] = OPENING_MOTION.reachOut;
-  return smoothstep(inA, inB, t) * (1 - smoothstep(outA, outB, t));
-}
-
-/** 外轮廓（镜中的自己）的不透明度 */
-export function mirrorOutlineOpacity(t: number): number {
-  return smoothstep(7.0, 7.9, t) * (1 - smoothstep(OPENING.povEnd - 0.2, OPENING.povEnd + 0.5, t));
+  return smoothstep(OPENING.openStart, OPENING.openStart + OPENING.windowOpenSeconds, t);
 }
 
 export type OpeningClock = {
@@ -76,6 +68,15 @@ export function createOpeningClock(): OpeningClock {
   return { startedAt: 0, ready: false, offset: 0 };
 }
 
+/** 模型与动作就绪（draw 阶段可以结束了）；时钟仍未启动 */
+export function markOpeningReady(clock: OpeningClock) {
+  clock.ready = true;
+}
+
+export function openingStarted(clock: OpeningClock): boolean {
+  return clock.startedAt > 0;
+}
+
 export function startOpeningClock(clock: OpeningClock, now: number) {
   clock.ready = true;
   clock.startedAt = now;
@@ -83,13 +84,14 @@ export function startOpeningClock(clock: OpeningClock, now: number) {
 }
 
 export function openingTime(clock: OpeningClock, now: number): number {
-  if (!clock.ready) return 0;
+  if (!clock.ready || clock.startedAt <= 0) return 0;
   return (now - clock.startedAt) / 1000 + clock.offset;
 }
 
-/** 直接跳到定格 */
+/** 直接跳到定格（draw 阶段跳过时先把时钟启动） */
 export function skipOpening(clock: OpeningClock, now: number) {
   if (!clock.ready) return;
+  if (clock.startedAt <= 0) clock.startedAt = now;
   clock.offset += OPENING_TOTAL - openingTime(clock, now);
 }
 

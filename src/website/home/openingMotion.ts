@@ -1,15 +1,15 @@
 import { OPENING_MOTION as M, OPENING_TOTAL, smoothstep } from './openingTimeline';
 
-export type MotionKey = 'sleep' | 'lieDown' | 'intro' | 'introEnd' | 'targetLock';
-export const MOTION_KEYS: MotionKey[] = ['sleep', 'lieDown', 'intro', 'introEnd', 'targetLock'];
-const START = { sleep: 0, lieDown: M.lieStart, intro: M.introStart, introEnd: M.introEndStart, targetLock: M.lockStart };
+export type MotionKey = 'sleep' | 'standUp' | 'intro' | 'introEnd' | 'targetLock';
+export const MOTION_KEYS: MotionKey[] = ['sleep', 'standUp', 'intro', 'introEnd', 'targetLock'];
+const START = { sleep: 0, standUp: M.standStart, intro: M.introStart, introEnd: M.introEndStart, targetLock: M.lockStart };
 
 /** Absolute sampling keeps clips, IK and the camera synchronized after slow frames, seeks and replay. */
 export function motionWeight(key: MotionKey, t: number, lockBlend = 0.6): number {
-  const lie = smoothstep(M.lieStart, M.lieStart + 0.9, t);
+  const stand = smoothstep(M.standStart, M.standStart + 0.7, t);
   const end = smoothstep(M.introEndStart, M.introEndStart + 0.35, t);
   const lock = smoothstep(M.lockStart, M.lockStart + Math.max(0.001, lockBlend), t);
-  if (t < M.introStart) return key === 'sleep' ? 1 - lie : key === 'lieDown' ? lie : 0;
+  if (t < M.introStart) return key === 'sleep' ? 1 - stand : key === 'standUp' ? stand : 0;
   if (key === 'intro') return 1 - end;
   if (key === 'introEnd') return end * (1 - lock);
   return key === 'targetLock' ? lock : 0;
@@ -25,6 +25,7 @@ export function motionTime(key: MotionKey, t: number, duration: number, lockSpee
     const offset = Math.max(0, duration - (OPENING_TOTAL - M.lockStart) * speed);
     return Math.min(duration, offset + elapsed * speed);
   }
+  // standUp / intro / introEnd play once and hold their last frame.
   return Math.min(duration, elapsed);
 }
 

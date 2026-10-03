@@ -16,28 +16,26 @@ import { FlightCanvas } from '../../../components/three/FlightCanvas';
 import { AppColorGradeLutPass } from '../../../components/ColorGradeLutPass';
 import { LiveRotatableHdrSky } from '../../../components/three/WebsiteHdrSky';
 import { loadVrmLookSettings } from '../../../components/vrm-rig/VrmLookPanel';
-import type { SceneEffectMode } from '../../../components/lab/domain/sceneLayer';
 import { computeAvatarNormalization } from '../../../components/lab/viewport/avatarNormalization';
 import { DEFAULT_LIVE_AVATAR_RIG, DEFAULT_LIVE_VRM_LOOK, LIVE_VRM_LOOK_STORAGE_KEY, liveBloom } from '../../../data/liveStagePresets';
 import { bakeMotionForVrm, loadMotion, type LoadedMotion } from '../../../lib/retarget/motionLoader';
-import { solveTwoBoneIk } from '../../../lib/reaction/twoBoneIk';
 import { FACE_CHANNELS } from '../../../lib/scene-expression';
 import { defaultSceneLighting, type SceneLighting } from '../../../lib/scene-lighting';
 import { parseProject, type SceneCamera, type SceneProject } from '../../../lib/scene-editor';
 import { publicUrl } from '../../../lib/publicUrl';
-import { HOME_OPENING_MODEL, HOME_OPENING_MOTIONS } from '../../assets';
+import { HOME_ASSETS, HOME_OPENING_MODEL, HOME_OPENING_MOTIONS } from '../../assets';
+import { PAPER_OUTLINE_BOX, PAPER_TILT_DEG } from '../DrawWingsPaper';
+import { groundOpeningClips, type GroundResult } from './openingGround';
 import { WEBSITE_SKY_HDR } from '../../sky';
 import heroSceneJson from '../heroScene.json';
-import { createReachPose } from './reachPose';
 import {
   OPENING,
   OPENING_MOTION,
   OPENING_TOTAL,
+  markOpeningReady,
+  openingStarted,
   openingTime,
-  reachWeight,
   smoothstep,
-  startOpeningClock,
-  windowOpenProgress,
   type OpeningClock,
 } from '../openingTimeline';
 
@@ -60,9 +58,14 @@ const SKY_ROTATION_DEG = import.meta.env.DEV && new URLSearchParams(window.locat
   : (DEFAULT_LIVE_AVATAR_RIG.hdrRotationY ?? 232) + HERO_SCENE.skyRotation;
 
 /** DOM 手机窗在视口里的位置（px）；3D 黑场按它开洞，打开时跟着一起放大 */
-export type HoleRect = { x: number; y: number; w: number; h: number; open: boolean };
+export type HoleRect = {
+  x: number; y: number; w: number; h: number; open: boolean;
+  /** 0 = 窗口还没回来（黑幕全黑）→ 1 = 窗口完整；fold 阶段从窗口中心张开 */
+  reveal: number;
+};
 
-type Anchor = VRMHumanBoneName | 'origin' | 'world';
+/** paper = 3D 纸面中心（只给开场第一镜用） */
+type Anchor = VRMHumanBoneName | 'origin' | 'world' | 'paper';
 
 type DofState = Pick<SceneCamera, 'dofEnabled' | 'focusMode' | 'focusDistance' | 'focusRange' | 'blur' | 'target'>;
 
@@ -76,6 +79,8 @@ type CameraKey = {
   near?: number;
   shift?: number;
   dof?: DofState;
+  /** 俯视纸面：高度改成刚好让整张纸填满 paperFill 的距离（pos.y 不用） */
+  fitPaper?: boolean;
 };
 
 const NO_DOF: DofState = { dofEnabled: false, focusMode: 'target', focusDistance: 4, focusRange: 0.3, blur: 1.4, target: [0, 1, 0] };
@@ -93,16 +98,19 @@ const HERO_DOF: DofState = {
  * 定格镜头用 `world` 锚点直接取场景文件里的绝对坐标。
  */
 const CAMERA_KEYS: CameraKey[] = [
-  // 01 黑场手机窗：窗口只露出画布中央 47%×29%，所以镜头要拉得很远、视角收窄
-  { t: 0, anchor: 'hips', pos: [5.2, 2.0, 4.6], look: 'hips', lookOff: [0, 0.05, 0], fov: 22 },
-  { t: OPENING.sleepEnd, anchor: 'hips', pos: [4.6, 1.9, 5.2], look: 'hips', lookOff: [0, 0.05, 0], fov: 22 },
-  // 推向头部
-  { t: OPENING.sleepEnd + 1.6, anchor: 'head', pos: [0.9, 0.9, 1.1], look: 'head', lookOff: [0, 0.1, 0], fov: 30 },
-  // 02 第一人称仰望天空
-  { t: OPENING.lieEnd, anchor: 'head', pos: [0, 0.1, 0.05], look: 'head', lookOff: [0.14, 1.2, 0.34], fov: 74, near: 0.24 },
-  { t: OPENING.povEnd, anchor: 'head', pos: [0, 0.1, 0.05], look: 'head', lookOff: [0.14, 1.2, 0.34], fov: 74, near: 0.24 },
-  // 03 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕
-  { t: OPENING.povEnd + 1.3, anchor: 'hips', pos: [-0.5, 1.3, -2.3], look: 'chest', lookOff: [0, 0.1, 0], fov: 40 },
+  // wake 俯视纸面：铅笔稿物化成 3D，像从纸上看它醒来
+  // 头朝 −Z 躺在纸上：相机在正上方略偏 +Z，画面上方就是头的方向；第一帧整张纸占满画面高度，与 DOM 纸衔接
+  { t: 0, anchor: 'paper', pos: [0, 0, 0.02], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
+  { t: OPENING.standStart, anchor: 'hips', pos: [0, 2.6, 0.35], look: 'hips', lookOff: [0, 0, 0.1], fov: 32 },
+  { t: OPENING.standStart + 1.2, anchor: 'hips', pos: [0.3, 2.2, 1.6], look: 'chest', lookOff: [0, 0.05, 0], fov: 33 },
+  // Stand Up：镜头随站起转到正面
+  { t: 4.2, anchor: 'hips', pos: [0.35, 1.5, 2.6], look: 'chest', lookOff: [0, 0.12, 0], fov: 32 },
+  { t: OPENING.wakeEnd, anchor: 'head', pos: [0.18, 0.04, 2.0], look: 'head', lookOff: [0, 0, 0], fov: 28 },
+  // fold：后拉，手机窗与纸飞机回到画面
+  { t: OPENING.windowBack, anchor: 'hips', pos: [0.55, 1.35, 3.1], look: 'chest', lookOff: [0, 0.1, 0], fov: 36 },
+  { t: OPENING.openStart, anchor: 'hips', pos: [0.55, 1.35, 3.1], look: 'chest', lookOff: [0, 0.1, 0], fov: 36 },
+  // open 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕（与旧版一致）
+  { t: OPENING.openStart + 1.3, anchor: 'hips', pos: [-0.5, 1.3, -2.3], look: 'chest', lookOff: [0, 0.1, 0], fov: 40 },
   { t: OPENING_MOTION.introEndStart, anchor: 'hips', pos: [1.9, 1.0, -1.1], look: 'head', lookOff: [0, -0.05, 0], fov: 34 },
   // 04 定格：场景文件里的相机（含景深）
   { t: OPENING_MOTION.lockStart + 0.9, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
@@ -113,12 +121,6 @@ const LOCK_CLIP = HERO_ACTOR?.clips.find((clip) => clip.motionId.includes('spot-
 
 /** 场景文件里的表情 / 注视只在定格阶段生效，开场分镜跟随动作本身 */
 const heroActorActive = (t: number) => t >= OPENING_MOTION.lockStart;
-
-function effectModeAt(t: number): SceneEffectMode {
-  if (t < OPENING.lieEnd - 0.35) return 'silhouette-black';
-  if (t < OPENING.povEnd) return 'silhouette-white';
-  return 'none';
-}
 
 /** 定格后的眨眼：约每 2.8–5 秒一次，闭 0.08 s、开 0.14 s */
 function blinkWeight(now: number): number {
@@ -131,56 +133,6 @@ function blinkWeight(now: number): number {
   if (x < 0.08) return x / 0.08;
   if (x < 0.22) return 1 - (x - 0.08) / 0.14;
   return 0;
-}
-
-type ColorMaterial = THREE.Material & {
-  color?: THREE.Color;
-  emissive?: THREE.Color;
-  emissiveIntensity?: number;
-  shadeColorFactor?: THREE.Color;
-  matcapFactor?: THREE.Color;
-  parametricRimColorFactor?: THREE.Color;
-  outlineColorFactor?: THREE.Color;
-};
-const SILHOUETTE_COLOR_KEYS = ['color', 'emissive', 'shadeColorFactor', 'matcapFactor', 'parametricRimColorFactor', 'outlineColorFactor'] as const;
-
-/**
- * 剪影：直接把 MToon 的各色因子压成纯黑 / 纯白，而不是换成 MeshBasicMaterial。
- * 这样贴图的 alpha 裁切（翅膀、发丝）仍然生效，不会变成一整块黑色四边形。
- */
-function applySilhouette(root: THREE.Object3D, mode: SceneEffectMode): () => void {
-  const saved: Array<{ material: ColorMaterial; colors: Partial<Record<(typeof SILHOUETTE_COLOR_KEYS)[number], THREE.Color>>; emissiveIntensity?: number }> = [];
-  const target = new THREE.Color(mode === 'silhouette-white' ? '#ffffff' : '#000000');
-  const seen = new Set<THREE.Material>();
-  root.traverse((child) => {
-    const mesh = child as THREE.Mesh;
-    if (!mesh.isMesh) return;
-    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-    for (const material of materials as ColorMaterial[]) {
-      if (seen.has(material)) continue;
-      seen.add(material);
-      const entry: (typeof saved)[number] = { material, colors: {}, emissiveIntensity: material.emissiveIntensity };
-      for (const key of SILHOUETTE_COLOR_KEYS) {
-        const value = material[key];
-        if (value instanceof THREE.Color) {
-          entry.colors[key] = value.clone();
-          value.copy(target);
-        }
-      }
-      if (typeof material.emissiveIntensity === 'number') material.emissiveIntensity = mode === 'silhouette-white' ? 4 : 0;
-      saved.push(entry);
-    }
-  });
-  return () => {
-    for (const { material, colors, emissiveIntensity } of saved) {
-      for (const key of SILHOUETTE_COLOR_KEYS) {
-        const original = colors[key];
-        const current = material[key];
-        if (original && current instanceof THREE.Color) current.copy(original);
-      }
-      if (typeof emissiveIntensity === 'number') material.emissiveIntensity = emissiveIntensity;
-    }
-  };
 }
 
 let motionCache: Promise<Record<MotionKey, LoadedMotion>> | null = null;
@@ -217,9 +169,9 @@ function readDebugOverrides() {
 
 type CameraStateRef = React.MutableRefObject<SceneCamera>;
 
-type AvatarProps = { clock: OpeningClock; onReady: () => void; onFail: (error: unknown) => void; cameraState: CameraStateRef; hole: React.MutableRefObject<HoleRect> };
+type AvatarProps = { clock: OpeningClock; onReady: () => void; onFail: (error: unknown) => void; cameraState: CameraStateRef; hole: React.MutableRefObject<HoleRect>; lying: React.MutableRefObject<GroundResult | null> };
 
-function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProps) {
+function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying }: AvatarProps) {
   const gltf = useLoader(GLTFLoader, HOME_OPENING_MODEL, (loader) => {
     loader.register((parser) => new VRMLoaderPlugin(parser));
   });
@@ -243,8 +195,6 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     mixer: null as THREE.AnimationMixer | null,
     actions: {} as Partial<Record<MotionKey, THREE.AnimationAction>>,
     currentKey: null as MotionKey | null,
-    effect: 'none' as SceneEffectMode,
-    restoreEffect: () => {},
     lastT: -1,
     materializeStart: -1,
     materializeHold: readMaterializeHold(),
@@ -312,10 +262,13 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
           action.play();
           actions[key] = action;
         });
+        // Stand Up 落地、睡姿转到同一朝向；纸面按躺姿摆放
+        const sleepDuration = actions.sleep?.getClip().duration ?? 1;
+        lying.current = groundOpeningClips(vrm, mixer, actions, motionTime('sleep', 0, sleepDuration));
         state.current.mixer = mixer;
         state.current.actions = actions;
         state.current.ready = true;
-        startOpeningClock(clock, performance.now());
+        markOpeningReady(clock);
         onReady();
       })
       .catch((error) => {
@@ -323,12 +276,11 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
         onFail(error);
       });
     return () => { cancelled = true; };
-  }, [clock, onFail, onReady, vrm]);
+  }, [clock, lying, onFail, onReady, vrm]);
 
   useEffect(() => {
     const s = state.current;
     return () => {
-      s.restoreEffect();
       s.mixer?.stopAllAction();
       s.mixer?.uncacheRoot(vrm.scene);
       VRMUtils.deepDispose(vrm.scene);
@@ -339,12 +291,12 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     anchor: new THREE.Vector3(), look: new THREE.Vector3(),
     posA: new THREE.Vector3(), posB: new THREE.Vector3(), lookA: new THREE.Vector3(), lookB: new THREE.Vector3(),
     targetPos: new THREE.Vector3(), targetLook: new THREE.Vector3(), smoothedLook: new THREE.Vector3(),
-    ikTarget: new THREE.Vector3(), ikPole: new THREE.Vector3(),
-    head: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), snapped: false,
+    up: new THREE.Vector3(0, 1, 0), snapped: false,
   }), []);
 
-  const boneWorld = (name: Anchor, out: THREE.Vector3) => {
+  const boneWorld = (name: Anchor, out: THREE.Vector3): THREE.Vector3 => {
     if (name === 'origin' || name === 'world') return out.set(0, 0, 0);
+    if (name === 'paper') return lying.current?.paper ? out.copy(lying.current.paper) : boneWorld('hips', out);
     const node = vrm.humanoid?.getRawBoneNode(name) ?? vrm.humanoid?.getNormalizedBoneNode(name);
     if (!node) return out.set(0, 1, 0);
     return node.getWorldPosition(out);
@@ -352,22 +304,16 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
 
   const applyKey = (key: CameraKey, pos: THREE.Vector3, look: THREE.Vector3) => {
     boneWorld(key.anchor, pos).add(pool.anchor.set(key.pos[0], key.pos[1], key.pos[2]));
+    if (key.fitPaper) {
+      // 高度取「整张纸占视口 paperFill」所需的距离，与 DOM 纸同样大
+      const fill = Math.max(0.3, lying.current?.paperFill ?? 1);
+      pos.y = boneWorld('paper', pool.look).y + (PAPER_HEIGHT / fill) / 2 / Math.tan(THREE.MathUtils.degToRad(key.fov) / 2);
+    }
     boneWorld(key.look, look).add(pool.anchor.set(key.lookOff[0], key.lookOff[1], key.lookOff[2]));
   };
 
-  const reachBones = useMemo(() => ({
-    root: vrm.humanoid.getNormalizedBoneNode('rightUpperArm'),
-    mid: vrm.humanoid.getNormalizedBoneNode('rightLowerArm'),
-    tip: vrm.humanoid.getNormalizedBoneNode('rightHand'),
-    head: vrm.humanoid.getNormalizedBoneNode('head'),
-  }), [vrm]);
-  const reachPose = useMemo(() => createReachPose(reachBones.root, reachBones.mid), [reachBones]);
-
   const sampleMotion = (t: number) => {
     const s = state.current;
-    // PropertyMixer can skip unchanged tracks. Undo last frame's IK before sampling,
-    // otherwise a held/clamped animation accumulates the correction every frame.
-    reachPose.restore();
     let dominantWeight = -1;
     for (const key of MOTION_KEYS) {
       const action = s.actions[key];
@@ -380,28 +326,6 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
       if (weight > dominantWeight) { dominantWeight = weight; s.currentKey = key; }
     }
     s.mixer!.update(0);
-  };
-
-  const applyEffect = (mode: SceneEffectMode) => {
-    const s = state.current;
-    if (s.effect === mode) return;
-    s.restoreEffect();
-    s.restoreEffect = mode === 'none' ? () => {} : applySilhouette(vrm.scene, mode);
-    s.effect = mode;
-  };
-
-  const applyReach = (weight: number) => {
-    if (weight <= 0) return;
-    const humanoid = vrm.humanoid;
-    const { root, mid, tip, head } = reachBones;
-    if (!root || !mid || !tip || !head) return;
-    humanoid.normalizedHumanBonesRoot.updateMatrixWorld(true);
-    head.getWorldPosition(pool.head);
-    pool.ikTarget.copy(pool.head).add(pool.anchor.set(0.16, 0.52, 0.3));
-    pool.ikPole.copy(pool.head).add(pool.anchor.set(0.62, 0.12, 0.36));
-    reachPose.capture();
-    solveTwoBoneIk({ root, mid, tip }, pool.ikTarget, pool.ikPole);
-    reachPose.blend(weight);
   };
 
   /** 场景文件里的表情权重、眼镜开关与注视（与编辑器 Actor 同一套顺序）+ 定格后的眨眼 */
@@ -432,9 +356,9 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
 
   useFrame((frame, rawDelta) => {
     const s = state.current;
-    // 动作烘焙完成前不露出模型：否则观众会先看到一帧站着的 T-pose
-    vrm.scene.visible = s.ready;
-    if (!s.ready || !s.mixer) return;
+    // 动作烘焙完成前、以及 draw 阶段（时钟未启动）不露出模型
+    vrm.scene.visible = s.ready && openingStarted(clock);
+    if (!s.ready || !s.mixer || !vrm.scene.visible) return;
     const delta = Math.min(rawDelta, 0.05);
     const now = performance.now();
     const t = s.holdTime ?? openingTime(clock, now);
@@ -455,7 +379,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     materialize.uIntroTime.value += delta;
     // 开场手机窗：出场效果只画在窗里（黑框本身不写深度，挡不住发光层）
     const rect = hole.current;
-    materialize.uHoleOn.value = introRunning && !rect.open ? 1 : 0;
+    materialize.uHoleOn.value = introRunning && !rect.open && rect.reveal > 0.999 ? 1 : 0;
     if (materialize.uHoleOn.value) {
       const bounds = frame.gl.domElement.getBoundingClientRect();
       const sx = frame.gl.domElement.width / Math.max(1, bounds.width);
@@ -473,11 +397,9 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
     const actorActive = heroActorActive(t);
     if (vrm.expressionManager && HERO_ACTOR?.expression) for (const key of FACE_CHANNELS) vrm.expressionManager.setValue(key, 0);
     sampleMotion(t);
-    applyReach(reachWeight(t));
     applyActorFace(actorActive, now);
     vrm.update(delta);
     vrm.scene.updateMatrixWorld(true);
-    applyEffect(s.debug.fxOff ? 'none' : effectModeAt(t));
     if (import.meta.env.DEV && (frame.clock.elapsedTime * 4 | 0) % 2 === 0) {
       const read = (name: VRMHumanBoneName) => boneWorld(name, pool.anchor).toArray().map((v) => Number(v.toFixed(2)));
       (window as Window & { __hvOpening?: unknown }).__hvOpening = {
@@ -601,6 +523,200 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole }: AvatarProp
   );
 }
 
+/**
+ * draw 阶段那张纸的 3D 版：wake 开始时 DOM 纸淡出、这张接上（同一张纸素材 + 同一个铅笔稿位置，
+ * 外加用户画的翅膀笔迹）。角色在它上面物化并站起；fold 阶段它翻卷着飞走，让位给纸飞机。
+ */
+/** 纸宽（米）：铅笔稿长边约 0.86 × 纸宽，与角色躺下的身长（约 1.4 m）对上 */
+const PAPER_WIDTH = 1.65;
+const PAPER_RATIO = 1652 / 1200;
+const PAPER_HEIGHT = PAPER_WIDTH * PAPER_RATIO;
+const PAPER_TILT = THREE.MathUtils.degToRad(PAPER_TILT_DEG);
+/** 铅笔稿与 3D 躺姿只能大致对齐：再按纸面本地坐标（米，y 朝头）微调一点 */
+const OUTLINE_NUDGE = new THREE.Vector2(-0.05, 0.02);
+/** fold：纸先揉折成飞机（FOLD_SECONDS），再飞进手机窗，开窗白闪前一刻钻进去 */
+const FOLD_SECONDS = 0.9;
+const FLY_END = OPENING.openStart + 0.15;
+/** 纸飞机起飞点与弧线控制点（相机空间，米） */
+const FLY_START = new THREE.Vector3(0.32, -0.38, -1.5);
+const FLY_CONTROL = new THREE.Vector3(0.75, 0.42, -2.6);
+const FLY_DEPTH = 7;
+
+/** 经典纸飞机（尖头朝 +Z，方便 lookAt）：两片机翼 + 中间的龙骨，UV 直接取纸面贴图 */
+function createPaperPlaneGeometry() {
+  const L = 0.34;
+  const W = 0.32;
+  const nose = [0, 0, L / 2];
+  const top = [0, 0, -L / 2];
+  const keel = [0, -0.07, -L / 2];
+  const left = [-W / 2, 0.025, -L / 2];
+  const right = [W / 2, 0.025, -L / 2];
+  const tris = [nose, top, left, nose, right, top, nose, keel, top];
+  const position = new Float32Array(tris.flat());
+  const uv = new Float32Array(tris.flatMap(([x, , z]) => [0.5 + x / W, 0.5 + z / L]));
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
+  geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function PaperSheet3D({ clock, art, lying, hole }: {
+  clock: OpeningClock;
+  art: React.MutableRefObject<HTMLCanvasElement | null>;
+  lying: React.MutableRefObject<GroundResult | null>;
+  hole: React.MutableRefObject<HoleRect>;
+}) {
+  const { camera, gl } = useThree();
+  const group = useRef<THREE.Group>(null);
+  const plane = useRef<THREE.Mesh>(null);
+  const [hold] = useState(readHoldTime);
+  const parts = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 880;
+    canvas.height = Math.round(880 * PAPER_RATIO);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 4;
+    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, transparent: true, side: THREE.DoubleSide, fog: false });
+    const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false });
+    return { texture, material, planeMaterial, planeGeometry: createPaperPlaneGeometry(), ctx: canvas.getContext('2d'), loaded: false, stamped: false };
+  }, []);
+  const pool = useMemo(() => ({
+    floor: new THREE.Vector3(), floorQuat: new THREE.Quaternion(), euler: new THREE.Euler(),
+    start: new THREE.Vector3(), control: new THREE.Vector3(), end: new THREE.Vector3(),
+    pos: new THREE.Vector3(), next: new THREE.Vector3(), faceQuat: new THREE.Quaternion(), spin: new THREE.Quaternion(),
+  }), []);
+  // 纸面中心相对铅笔稿中心的偏移（纸面本地坐标，y 朝上）：把铅笔稿中心放到角色躺姿中心
+  const offset = useMemo(() => new THREE.Vector2(
+    -(PAPER_OUTLINE_BOX.cx - 0.5) * PAPER_WIDTH + OUTLINE_NUDGE.x,
+    (PAPER_OUTLINE_BOX.cy - 0.5) * PAPER_WIDTH * PAPER_RATIO + OUTLINE_NUDGE.y,
+  ), []);
+  useEffect(() => {
+    let on = true;
+    const load = (src: string) => new Promise<HTMLImageElement>((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = reject;
+      image.src = src;
+    });
+    Promise.all([load(HOME_ASSETS.opening.paperSheet), load(HOME_ASSETS.opening.paperOutline)]).then(([sheet, outline]) => {
+      const ctx = parts.ctx;
+      if (!on || !ctx) return;
+      const { width, height } = ctx.canvas;
+      ctx.drawImage(sheet, 0, 0, width, height);
+      // 与 DOM 纸同一组几何：铅笔稿绕自身中心旋转后贴在纸面上
+      const box = PAPER_OUTLINE_BOX;
+      ctx.save();
+      ctx.translate(box.cx * width, box.cy * height);
+      ctx.rotate((box.rot * Math.PI) / 180);
+      ctx.drawImage(outline, (-box.w * width) / 2, (-box.h * height) / 2, box.w * width, box.h * height);
+      ctx.restore();
+      parts.loaded = true;
+      parts.texture.needsUpdate = true;
+    }).catch(() => {});
+    return () => { on = false; };
+  }, [parts]);
+  useEffect(() => () => {
+    parts.texture.dispose();
+    parts.material.dispose();
+    parts.planeMaterial.dispose();
+    parts.planeGeometry.dispose();
+  }, [parts]);
+
+  /** 相机空间的点 → 世界坐标 */
+  const fromCamera = (v: THREE.Vector3, out: THREE.Vector3) => out.copy(v).applyMatrix4(camera.matrixWorld);
+  /** 手机窗中心方向上、相机前方 FLY_DEPTH 米的点（窗口还没完全回来也按它的最终位置瞄准） */
+  const windowTarget = (out: THREE.Vector3) => {
+    const rect = hole.current;
+    const bounds = gl.domElement.getBoundingClientRect();
+    const ndcX = ((rect.x + rect.w / 2 - bounds.left) / Math.max(1, bounds.width)) * 2 - 1;
+    const ndcY = 1 - ((rect.y + rect.h / 2 - bounds.top) / Math.max(1, bounds.height)) * 2;
+    out.set(ndcX, ndcY, 0.5).unproject(camera).sub(camera.position).normalize();
+    return out.multiplyScalar(FLY_DEPTH).add(camera.position);
+  };
+  const bezier = (u: number, out: THREE.Vector3) => {
+    const a = (1 - u) * (1 - u);
+    const b = 2 * (1 - u) * u;
+    const c = u * u;
+    return out.set(
+      a * pool.start.x + b * pool.control.x + c * pool.end.x,
+      a * pool.start.y + b * pool.control.y + c * pool.end.y,
+      a * pool.start.z + b * pool.control.z + c * pool.end.z,
+    );
+  };
+
+  useFrame(() => {
+    const g = group.current;
+    const p = plane.current;
+    if (!g || !p) return;
+    const started = openingStarted(clock);
+    const t = hold ?? openingTime(clock, performance.now());
+    const pose = lying.current;
+    if (started && pose && pose.paperFill === undefined && art.current) {
+      // DOM 纸的画布就是纸面大小（clientHeight 不受旋转影响）
+      pose.paperFill = art.current.clientHeight / Math.max(1, window.innerHeight);
+    }
+    if (started && parts.loaded && !parts.stamped && art.current && parts.ctx) {
+      // 用户画的翅膀盖到纸面贴图上（笔迹之后不再变，只盖一次）
+      parts.ctx.drawImage(art.current, 0, 0, parts.ctx.canvas.width, parts.ctx.canvas.height);
+      parts.stamped = true;
+      parts.texture.needsUpdate = true;
+    }
+    const fold = smoothstep(OPENING.wakeEnd, OPENING.wakeEnd + FOLD_SECONDS, t);
+    const swap = OPENING.wakeEnd + FOLD_SECONDS;
+    g.visible = started && !!pose && t < swap;
+    p.visible = started && !!pose && t >= swap && t < FLY_END;
+    if (!pose) return;
+    camera.updateMatrixWorld();
+    fromCamera(FLY_START, pool.start);
+
+    if (g.visible) {
+      // 纸面朝上铺在地上，图片上方朝着角色头的方向；俯视时绕 Z 的正方向在画面上是顺时针，与 CSS 相反，所以倾角取反
+      const heading = Math.atan2(-pose.headDir.x, -pose.headDir.z);
+      pool.floor.set(pose.center.x, 0.004, pose.center.z);
+      pool.floorQuat.setFromEuler(pool.euler.set(-Math.PI / 2, 0, heading - PAPER_TILT, 'XYZ'));
+      // fold：从地上飘起来、翻卷、缩小到起飞点，换成纸飞机
+      pool.faceQuat.copy(camera.quaternion).multiply(pool.spin.set(0, 0, Math.sin(fold * 1.4), Math.cos(fold * 1.4)));
+      g.position.copy(pool.floor).lerp(pool.start, fold);
+      g.position.y += Math.sin(fold * Math.PI) * 0.35;
+      g.quaternion.copy(pool.floorQuat).slerp(pool.faceQuat, fold);
+      if (!pose.paper && fold === 0) {
+        // 纸面中心（世界坐标）：开场第一镜对准它
+        g.updateMatrixWorld(true);
+        pose.paper = new THREE.Vector3(offset.x, offset.y, 0).applyMatrix4(g.matrixWorld);
+      }
+      // 前段就缩小，别让整张纸横在角色前面
+      const shrink = smoothstep(0, 0.55, fold);
+      g.scale.set(Math.max(0.0001, 1 - 0.88 * shrink), Math.max(0.0001, 1 - 0.93 * shrink), 1);
+      parts.material.opacity = 1;
+    }
+    if (p.visible) {
+      const u = smoothstep(swap, FLY_END, t);
+      fromCamera(FLY_CONTROL, pool.control);
+      windowTarget(pool.end);
+      bezier(u, pool.pos);
+      bezier(Math.min(1, u + 0.02), pool.next);
+      p.position.copy(pool.pos);
+      if (pool.next.distanceToSquared(pool.pos) > 1e-8) p.lookAt(pool.next);
+      // 飞行中轻轻侧倾，出手那一下有个小抖动
+      p.rotateZ(Math.sin(u * Math.PI * 2) * 0.35);
+      p.scale.setScalar(1 + 0.25 * Math.sin(Math.min(1, (t - swap) / 0.3) * Math.PI));
+    }
+    if (import.meta.env.DEV) (window as Window & { __hvPaper?: unknown }).__hvPaper = g;
+  });
+  return (
+    <>
+      <group ref={group} visible={false}>
+        <mesh material={parts.material} position={[offset.x, offset.y, 0]}>
+          <planeGeometry args={[PAPER_WIDTH, PAPER_WIDTH * PAPER_RATIO]} />
+        </mesh>
+      </group>
+      <mesh ref={plane} visible={false} geometry={parts.planeGeometry} material={parts.planeMaterial} />
+    </>
+  );
+}
+
 /** 场景文件里的三盏灯：与 SceneEditorLights 同一套参数，去掉编辑手柄 */
 const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: SceneLighting; clock: OpeningClock }) {
   const debutRim = useRef<THREE.DirectionalLight>(null);
@@ -670,7 +786,13 @@ function BlackFrame({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
     const bounds = gl.domElement.getBoundingClientRect();
     const nx = (x: number) => ((x - bounds.left) / Math.max(1, bounds.width)) * 2 - 1;
     const ny = (y: number) => 1 - ((y - bounds.top) / Math.max(1, bounds.height)) * 2;
-    material.uniforms.uRect.value.set(nx(rect.x), ny(rect.y + rect.h), nx(rect.x + rect.w), ny(rect.y));
+    // reveal 从窗口中心张开：0 时洞收成一个点（黑幕全黑）
+    const r = Math.max(0, Math.min(1, rect.reveal));
+    const cx = rect.x + rect.w / 2;
+    const cy = rect.y + rect.h / 2;
+    const hw = (rect.w / 2) * r;
+    const hh = (rect.h / 2) * r;
+    material.uniforms.uRect.value.set(nx(cx - hw), ny(cy + hh), nx(cx + hw), ny(cy - hh));
     material.uniforms.uDistance.value = Math.min(FRAME_DISTANCE, (camera as THREE.PerspectiveCamera).far * 0.5);
   });
   return (
@@ -732,15 +854,18 @@ type OpeningStage3DProps = {
   /** 首屏离开视口后停掉渲染循环 */
   running: boolean;
   hole: React.MutableRefObject<HoleRect>;
+  /** draw 阶段画的翅膀笔迹（DrawWingsPaper 的画布） */
+  paperArt: React.MutableRefObject<HTMLCanvasElement | null>;
 };
 
 /**
  * 首屏 3D 舞台：直播间同款 HDR 天空 + 场景文件的灯光 / 景深 + Bloom + 全局调色（LUT），
  * corynorootbone 开场表演。用 FlightCanvas 挂载，纸飞机光标可以飞进这个场景绕角色一圈。
  */
-export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onFail, running, hole }: OpeningStage3DProps) {
+export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onFail, running, hole, paperArt }: OpeningStage3DProps) {
   const [look] = useState(() => loadVrmLookSettings(LIVE_VRM_LOOK_STORAGE_KEY, DEFAULT_LIVE_VRM_LOOK));
   const cameraState = useRef<SceneCamera>({ ...HERO_CAMERA, ...NO_DOF, target: HERO_CAMERA.target });
+  const lying = useRef<GroundResult | null>(null);
   // 场景光倍率（开发时 ?tune=grade 调，正式构建恒为 1）
   const scene = useSceneTuning();
   const bloom = liveBloom(look);
@@ -763,8 +888,9 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       </Suspense>
       <HeroLights lighting={HERO_LIGHTING} clock={clock} />
       <BlackFrame hole={hole} />
+      <PaperSheet3D clock={clock} art={paperArt} lying={lying} hole={hole} />
       <Suspense fallback={null}>
-        <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} hole={hole} />
+        <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} hole={hole} lying={lying} />
       </Suspense>
       <HeroViewExtend />
       <EffectComposer enableNormalPass={false} multisampling={0}>

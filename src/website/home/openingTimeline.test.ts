@@ -3,10 +3,10 @@ import {
   OPENING,
   OPENING_TOTAL,
   createOpeningClock,
-  mirrorOutlineOpacity,
+  markOpeningReady,
+  openingStarted,
   openingTime,
   phaseAt,
-  reachWeight,
   replayOpening,
   skipOpening,
   startOpeningClock,
@@ -16,38 +16,40 @@ import {
 describe('openingTimeline', () => {
   it('maps time to phases in order', () => {
     expect(phaseAt(0, false)).toBe('loading');
-    expect(phaseAt(0, true)).toBe('sleep');
-    expect(phaseAt(OPENING.sleepEnd, true)).toBe('liedown');
-    expect(phaseAt(OPENING.lieEnd, true)).toBe('pov');
-    expect(phaseAt(OPENING.povEnd, true)).toBe('open');
+    expect(phaseAt(0, true, false)).toBe('draw');
+    expect(phaseAt(0, true)).toBe('wake');
+    expect(phaseAt(OPENING.wakeEnd, true)).toBe('fold');
+    expect(phaseAt(OPENING.openStart, true)).toBe('open');
     expect(phaseAt(OPENING.openEnd, true)).toBe('hero');
     expect(phaseAt(999, true)).toBe('hero');
   });
 
-  it('opens the window right after the pov shot', () => {
-    expect(windowOpenProgress(OPENING.povEnd - 0.1)).toBe(0);
-    expect(windowOpenProgress(OPENING.povEnd + OPENING.windowOpenSeconds)).toBe(1);
-    const mid = windowOpenProgress(OPENING.povEnd + OPENING.windowOpenSeconds / 2);
+  it('keeps the window opening and hero lock exactly where they were', () => {
+    expect(OPENING.openStart).toBe(9.6);
+    expect(OPENING.openEnd).toBe(15.8);
+    expect(windowOpenProgress(OPENING.openStart - 0.1)).toBe(0);
+    expect(windowOpenProgress(OPENING.openStart + OPENING.windowOpenSeconds)).toBe(1);
+    const mid = windowOpenProgress(OPENING.openStart + OPENING.windowOpenSeconds / 2);
     expect(mid).toBeGreaterThan(0.4);
     expect(mid).toBeLessThan(0.6);
   });
 
-  it('raises the hand only inside the pov shot', () => {
-    expect(reachWeight(OPENING.lieEnd)).toBe(0);
-    expect(reachWeight(8.5)).toBe(1);
-    expect(reachWeight(OPENING.povEnd + 1)).toBe(0);
-    expect(mirrorOutlineOpacity(8.5)).toBe(1);
-    expect(mirrorOutlineOpacity(OPENING.povEnd + 1)).toBe(0);
+  it('holds at t=0 while the user draws, then runs from the wake moment', () => {
+    const clock = createOpeningClock();
+    markOpeningReady(clock);
+    expect(openingStarted(clock)).toBe(false);
+    expect(openingTime(clock, 50_000)).toBe(0);
+    startOpeningClock(clock, 60_000);
+    expect(openingStarted(clock)).toBe(true);
+    expect(openingTime(clock, 62_500)).toBeCloseTo(2.5);
   });
 
-  it('clock starts at ready, skips to the end and replays', () => {
+  it('skips from the drawing straight to the hero and replays from wake', () => {
     const clock = createOpeningClock();
-    expect(openingTime(clock, 5000)).toBe(0);
-    startOpeningClock(clock, 1000);
-    expect(openingTime(clock, 3500)).toBeCloseTo(2.5);
+    markOpeningReady(clock);
     skipOpening(clock, 3500);
     expect(openingTime(clock, 3500)).toBeCloseTo(OPENING_TOTAL);
-    expect(phaseAt(openingTime(clock, 3500), clock.ready)).toBe('hero');
+    expect(phaseAt(openingTime(clock, 3500), clock.ready, openingStarted(clock))).toBe('hero');
     replayOpening(clock, 9000);
     expect(openingTime(clock, 9000)).toBe(0);
   });
