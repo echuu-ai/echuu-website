@@ -414,6 +414,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 /* logo 图底部有约 51px（808 宽里）的透明留白，抵掉它，标语贴近外环底部 */
 .echuu-website .hv-title__logo-wrap { margin-bottom: -6%; }
 .echuu-website .hv-title__logo { width: 100%; height: auto; aspect-ratio: 808 / 620; }
+/* 3D 金属 logo（?logo=3d）：和平面 logo 占同样的框，画布比框大一圈，摆动时边缘不被裁掉 */
+.echuu-website .hv-title__logo--3d { position: relative; }
+.echuu-website .hv-title__logo--3d > div { position: absolute !important; inset: -18% -14%; width: auto !important; height: auto !important; }
 /* 标语单独调色时叠在上面的那张（只露出标语区域，见 LogoTone.tsx） */
 .echuu-website .hv-title__logo-wrap > .hv-title__logo--tagline { position: absolute; inset: 0 auto auto 0; }
 .echuu-website .hv-title__slogan {

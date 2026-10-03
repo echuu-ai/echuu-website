@@ -33,6 +33,9 @@ import { DrawWingsPaper } from './DrawWingsPaper';
 import { updateOpeningSound } from '../lib/openingSound';
 
 const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => ({ default: m.OpeningStage3D })));
+/** 3D 金属 logo 试验版：地址带 ?logo=3d 才加载，替换首屏的平面 logo */
+const Logo3D = lazy(() => import('./three/Logo3D'));
+const LOGO_3D = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('logo') === '3d';
 
 type StageMode = 'pending' | '3d' | 'still';
 
@@ -357,7 +360,9 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
         <div className="hv-title">
           <div className="hv-title__logo-wrap" style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}>
-            <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />
+            {LOGO_3D
+              ? <Suspense fallback={<HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}><Logo3D label={h.hero.logoAlt} /></Suspense>
+              : <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}
             
           </div>
           <p className="hv-title__slogan">

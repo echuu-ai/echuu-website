@@ -665,5 +665,17 @@
     "bytes": 20141,
     "sha256": "15e0cb67938a85302146d0ed4d92529df5ebe0ee54e55455dab69a1b01ca0b04",
     "source": "White Echuu logo with tagline: derived from Cory's ~/Downloads/logo-with-text.png (808 px; kaomoji removed, all pixels white, alpha kept) to match ~/Downloads/logo-white-image-text.png at higher resolution, 2026-10-03"
+  },
+  {
+    "path": "website/logo3d/logo-shapes.json",
+    "bytes": 4230,
+    "sha256": "593a51dc3524a3914b382b2cbe25860ad12335dd3f439940e266d93620b0b47b",
+    "source": "Vector outlines traced (skimage contours) from Cory's ~/Downloads/logo-with-text.png with tagline and kaomoji removed; used by the ?logo=3d extruded logo, 2026-10-03"
+  },
+  {
+    "path": "website/logo3d/logo-texture.png",
+    "bytes": 121928,
+    "sha256": "95813238312ddbb0ed2a32fabf7713a942f9ea179278da4f9d18444282cec07c",
+    "source": "Colour texture cropped from the same logo, colours bled outward for bevel edges, 2026-10-03"
   }
 ]
