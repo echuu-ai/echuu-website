@@ -136,10 +136,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   transition: background-color 0.9s var(--hv-ease), opacity 0.9s var(--hv-ease);
 }
 /* wake：DOM 纸淡出，3D 里同一张纸接上（黑底先撤，3D 黑幕兜底） */
-.echuu-website .hv-paper[data-fading] { background: transparent; opacity: 0; pointer-events: none; transition-delay: 0s, 0.35s; }
+.echuu-website .hv-paper[data-fading] { background: transparent; opacity: 0; pointer-events: none; transition-duration: 0.3s, 0.6s; transition-delay: 0s, 0.15s; }
 .echuu-website .hv-paper__frame {
+  /* Figma 1440×1024 画框放大 1.18 倍：纸更大，上下边缘出画一点 */
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(100vw, 100vh * 1.40625); height: min(100vh, 100vw / 1.40625);
+  width: calc(min(100vw, 100vh * 1.40625) * 1.18); height: calc(min(100vh, 100vw / 1.40625) * 1.18);
   container-type: size;
 }
 .echuu-website .hv-paper__board {
@@ -149,18 +150,36 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 @keyframes hv-paper-in { from { opacity: 0; translate: 0 3%; } to { opacity: 1; translate: 0 0; } }
 .echuu-website .hv-paper__sheet { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; pointer-events: none; }
 .echuu-website .hv-paper__outline {
-  position: absolute; max-width: none; user-select: none; pointer-events: none;
+  position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
   transition: filter 0.8s var(--hv-ease);
+}
+/* 画翅膀引导：真实右翼的位置（蓝色点线 + 淡蓝面），轮廓写完后浮现并轻轻呼吸；落笔后变淡，画够了消失 */
+.echuu-website .hv-paper__guide {
+  position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; user-select: none;
+  animation: hv-guide-in 0.8s var(--hv-ease) both, hv-guide-breathe 2.2s 0.8s ease-in-out infinite;
+  transition: opacity 0.6s var(--hv-ease);
+}
+.echuu-website .hv-paper__guide[data-state='drawing'] { animation: none; opacity: 0.3; }
+.echuu-website .hv-paper__guide[data-state='done'] { animation: none; opacity: 0; }
+@keyframes hv-guide-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hv-guide-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv-paper__guide { animation: none; }
+  .echuu-website .hv-paper__hint { animation: none; clip-path: none; }
 }
 /* 画够了：铅笔稿微微发亮，暗示「它要醒了」 */
 .echuu-website .hv-paper__outline[data-inked] { filter: drop-shadow(0 0 6px rgba(114, 213, 254, 0.75)); }
-.echuu-website .hv-paper__ink { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.echuu-website .hv-paper__ink { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: progress; }
+.echuu-website .hv-paper__ink[data-ready] { cursor: crosshair; }
 .echuu-website .hv-paper__hint {
   position: absolute; left: 38.96%; top: 15.14%; margin: 0; pointer-events: none;
   font-family: 'Cedarville Cursive', cursive; font-size: 3.125cqh; line-height: 0.5; letter-spacing: -0.06em;
   color: #6c6c6c; white-space: pre;
-  animation: hv-paper-in 1.1s 0.5s cubic-bezier(.2, .8, .25, 1) both;
+  /* 手写：从左到右一点点写出来（步进的节奏像一个字母一个字母落笔） */
+  clip-path: inset(-40% 100% -40% 0);
+  animation: hv-handwrite 1.9s 0.7s steps(28, end) forwards;
 }
+@keyframes hv-handwrite { to { clip-path: inset(-40% 0 -40% 0); } }
 .echuu-website .hv-paper__loading {
   position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); margin: 0;
   color: #fff; opacity: 0.75; font-family: var(--hv-serif); font-size: 14px; letter-spacing: 0.1em;
@@ -168,12 +187,14 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 }
 @media (max-aspect-ratio: 9/10) {
   /* 竖屏：纸面放大到几乎占满宽度，提示语跟着下移到纸上方 */
-  .echuu-website .hv-paper__frame { width: 140vw; height: calc(140vw / 1.40625); top: 46%; }
+  .echuu-website .hv-paper__frame { width: 168vw; height: calc(168vw / 1.40625); top: 46%; }
   .echuu-website .hv-paper__hint { font-size: 4.2cqh; left: 30%; }
 }
 /* 3D 开场：手机窗等纸折成飞机（fold）后才回来；旧版的标题和装饰不再出现，画面只留窗口这个「入口」 */
 .echuu-website .hv-hero--3d:is([data-phase='loading'], [data-phase='draw'], [data-phase='wake']) .hv-opening__frame { opacity: 0; }
 .echuu-website .hv-hero--3d .hv-opening__frame { transition: opacity 0.9s var(--hv-ease); }
+/* 纸先折，窗口等纸飞机快折好时才回来 */
+.echuu-website .hv-hero--3d[data-phase='fold'] .hv-opening__frame { transition-delay: 1s; }
 .echuu-website .hv-hero--3d :is(.hv-opening__title, .hv-opening__deco, .hv-opening__ui, .hv-opening__stars, .hv-opening__outline) { display: none; }
 
 /* --- 开场覆盖层 --------------------------------------------------------- */

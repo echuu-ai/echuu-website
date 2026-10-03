@@ -21,6 +21,10 @@ export type GroundResult = {
   paper?: THREE.Vector3;
   /** DOM 纸在视口里的高度占比（唤醒那一刻量），3D 第一镜按它定距离，两张纸大小一致 */
   paperFill?: number;
+  /** DOM 纸中心相对视口中心的像素偏移（右、下为正） */
+  paperShift?: THREE.Vector2;
+  /** 从睡姿拍出的铅笔稿与画翅膀引导（captureOutline） */
+  sketch?: import('./captureOutline').SketchOutline;
 };
 
 const LOW_BONES: VRMHumanBoneName[] = ['hips', 'head', 'chest', 'leftFoot', 'rightFoot', 'leftHand', 'rightHand', 'leftLowerLeg', 'rightLowerLeg'];

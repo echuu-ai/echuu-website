@@ -24,9 +24,8 @@ describe('openingTimeline', () => {
     expect(phaseAt(999, true)).toBe('hero');
   });
 
-  it('keeps the window opening and hero lock exactly where they were', () => {
-    expect(OPENING.openStart).toBe(9.6);
-    expect(OPENING.openEnd).toBe(15.8);
+  it('keeps the window opening and hero lock durations exactly as before', () => {
+    expect(OPENING.openEnd - OPENING.openStart).toBeCloseTo(6.2);
     expect(windowOpenProgress(OPENING.openStart - 0.1)).toBe(0);
     expect(windowOpenProgress(OPENING.openStart + OPENING.windowOpenSeconds)).toBe(1);
     const mid = windowOpenProgress(OPENING.openStart + OPENING.windowOpenSeconds / 2);

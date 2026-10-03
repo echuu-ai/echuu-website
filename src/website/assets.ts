@@ -54,9 +54,8 @@ export const HOME_ASSETS = {
     pegasus: FIG('deco-pegasus.webp'),
     wing: FIG('deco-wing.webp'),
     plane: FIG('deco-plane.webp'),
-    /** draw 阶段：黑场里的笔记本纸 + corynorootbone 铅笔稿（Figma Opening-animation-01 2026-10 版） */
+    /** draw 阶段：黑场里的笔记本纸（Figma Opening-animation-01）；铅笔稿由 3D 睡姿实时生成 */
     paperSheet: FIG('opening-paper/sketch-body.png'),
-    paperOutline: FIG('opening-paper/sketch-outline.svg'),
   },
   logo3d: FIG('logo-dark.png'),
   brooch: FIG('brooch.webp'),

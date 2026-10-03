@@ -15,27 +15,33 @@
  */
 export type OpeningPhase = 'loading' | 'draw' | 'wake' | 'fold' | 'open' | 'hero';
 
+/** 物化特效扫完主体（introMaterialize：1.1 s 起 2.25 s）后再站起来：睡姿与铅笔稿重合的那一刻要看得见 */
+const STAND_START = 3.4;
+/** Stand Up 约 6 s：站稳之后纸才开始折 */
+const WAKE_END = STAND_START + 6.0;
+/** open 开窗的起点；open / hero 段内部的时长与旧版（9.6–15.8 s）完全一致，只是整体后移 */
+const OPEN_START = WAKE_END + 3.2;
+
 export const OPENING = {
-  /** wake 内：Stand Up 开始（前面留给物化特效把铅笔稿变成 3D） */
-  standStart: 1.3,
-  wakeEnd: 6.4,
+  /** wake 内：Stand Up 开始 */
+  standStart: STAND_START,
+  wakeEnd: WAKE_END,
   /** fold 内：手机窗、蓝框和纸飞机出现 */
-  windowBack: 8.0,
-  /** 从这里开始与旧版一致（旧 povEnd） */
-  openStart: 9.6,
+  windowBack: WAKE_END + 1.6,
+  openStart: OPEN_START,
   /** 窗口从手机窗放大到全屏所需秒数（CSS 过渡与 3D 相机同步） */
   windowOpenSeconds: 1.6,
-  openEnd: 15.8,
+  openEnd: OPEN_START + 6.2,
 } as const;
 
 export const OPENING_TOTAL = OPENING.openEnd;
 
-/** 3D 动作切换点（秒）；introStart 起与旧版完全一致 */
+/** 3D 动作切换点（秒）；introStart 之后的间隔与旧版一致（+3.6 s INTRO_END，+5.0 s target_locked） */
 export const OPENING_MOTION = {
   standStart: OPENING.standStart,
   introStart: OPENING.openStart,
-  introEndStart: 13.2,
-  lockStart: 14.6,
+  introEndStart: OPEN_START + 3.6,
+  lockStart: OPEN_START + 5.0,
 } as const;
 
 export function phaseAt(t: number, ready: boolean, started = true): OpeningPhase {

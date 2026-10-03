@@ -1,20 +1,24 @@
 import { useEffect, useRef, useState, type MutableRefObject, type PointerEvent as ReactPointerEvent } from 'react';
 import { HOME_ASSETS } from '../assets';
+import { drawStrokes, type SketchStroke } from './sketchStrokes';
 
 /**
  * 开场 draw 阶段：黑场里的笔记本纸 + corynorootbone 铅笔稿（Figma Opening-animation-01）。
  * 用户用「铅笔」给角色补上翅膀；画够并停笔 0.6 秒就算画好，角色随后在 3D 里醒来。
  * 纯 DOM：3D 模型与动作同时在后台加载，所以画画的时间就是加载时间。
  *
- * 几何全部来自 Figma（1440×1024 画框）：
+ * 纸与提示语的几何来自 Figma（1440×1024 画框）：
  *   纸：762×1049，中心 (737.75, 498.8)，旋转 −10.23°
- *   铅笔稿：658×240，中心 (803.8, 540.2)，旋转 65.09°（相对纸面 75.32°）
  *   提示语：左上 (561, 155)，Cedarville Cursive 32px，不随纸旋转
+ * 铅笔稿不用 Figma 的手绘线，而是 3D 就绪后从角色睡姿正上方拍出来的剪影边缘（captureOutline），
+ * 这样 wake 时 3D 角色和纸上的线完全重合。线稿出来之前先不让画。
  */
 
-/** 铅笔稿在纸面（未旋转）坐标里的位置：中心与宽高都是纸面宽 / 高的比例，rot 为相对纸面的角度 */
-export const PAPER_OUTLINE_BOX = { cx: 0.5757, cy: 0.55, w: 0.864, h: 0.2292, rot: 75.32 } as const;
+/** 角色身体中心落在纸面的哪里（纸面宽 / 高的比例）：横向沿用 Figma 铅笔稿，纵向下移一点给手写提示语留出空间 */
+export const PAPER_BODY_ANCHOR = { cx: 0.5757, cy: 0.6 } as const;
 export const PAPER_TILT_DEG = -10.23;
+/** 轮廓「写」出来用多久 */
+const WRITE_SECONDS = 2.4;
 
 /** 画够这些笔迹（累计长度 / 纸宽）就算画好；宽松：在哪儿画都算 */
 const INK_TO_WAKE = 1.1;
@@ -25,7 +29,7 @@ type InkState = { drawing: boolean; x: number; y: number; ink: number; done: boo
 const TILT_COS = Math.cos((-PAPER_TILT_DEG * Math.PI) / 180);
 const TILT_SIN = Math.sin((-PAPER_TILT_DEG * Math.PI) / 180);
 
-export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingLabel }: {
+export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingLabel, sketch, guide }: {
   /** wake 开始后置 true：纸淡出，让位给 3D 里的同一张纸 */
   fading: boolean;
   /** 画好了但 3D 还没就绪：提示加载中 */
@@ -35,11 +39,44 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
   onWake: () => void;
   hint: string;
   loadingLabel: string;
+  /** 从 3D 睡姿拍出的铅笔稿笔画；没就绪前不能画 */
+  sketch: SketchStroke[] | null;
+  /** 右侧翅膀的引导图（dataURL），轮廓写完后出现 */
+  guide: string | null;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const ink = useRef<InkState>({ drawing: false, x: 0, y: 0, ink: 0, done: false, timer: 0 });
   const [inked, setInked] = useState(false);
+  const [touched, setTouched] = useState(false);
+  const [written, setWritten] = useState(false);
+  const outlineRef = useRef<HTMLCanvasElement | null>(null);
+
+  // 轮廓按笔画一笔一笔写出来（与 3D 纸面同一组笔画、同一种抖动）
+  useEffect(() => {
+    const canvas = outlineRef.current;
+    const board = boardRef.current;
+    if (!sketch || !canvas || !board) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(board.offsetWidth * dpr);
+    canvas.height = Math.round(board.offsetHeight * dpr);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    let raf = 0;
+    const start = performance.now();
+    const frame = (now: number) => {
+      const progress = reduced ? 1 : Math.min(1, (now - start) / (WRITE_SECONDS * 1000));
+      // 前快后慢一点，像落笔时的节奏
+      const eased = 1 - (1 - progress) ** 1.6;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStrokes(ctx, sketch, eased);
+      if (progress < 1) raf = requestAnimationFrame(frame);
+      else setWritten(true);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [sketch]);
 
   // 手写提示语用 Cedarville Cursive（与 Figma 一致），只在开场按需加载
   useEffect(() => {
@@ -108,8 +145,9 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
   const onDown = (event: ReactPointerEvent) => {
     event.stopPropagation();
     const s = ink.current;
-    if (s.done) return;
+    if (s.done || !sketch) return;
     const { x, y } = pointAt(event);
+    if (!touched) setTouched(true);
     s.drawing = true;
     s.x = x;
     s.y = y;
@@ -157,26 +195,15 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
     finishSoon();
   };
 
-  const box = PAPER_OUTLINE_BOX;
   return (
     <div className="hv-paper" data-fading={fading || undefined}>
       <div className="hv-paper__frame">
         <div className="hv-paper__board" ref={boardRef} style={{ transform: `rotate(${PAPER_TILT_DEG}deg)` }}>
           <img className="hv-paper__sheet" src={HOME_ASSETS.opening.paperSheet} alt="" draggable={false} />
-          <img
-            className="hv-paper__outline"
-            src={HOME_ASSETS.opening.paperOutline}
-            alt=""
-            draggable={false}
-            data-inked={inked || undefined}
-            style={{
-              left: `${(box.cx - box.w / 2) * 100}%`,
-              top: `${(box.cy - box.h / 2) * 100}%`,
-              width: `${box.w * 100}%`,
-              height: `${box.h * 100}%`,
-              transform: `rotate(${box.rot}deg)`,
-            }}
-          />
+          <canvas className="hv-paper__outline" ref={outlineRef} data-inked={inked || undefined} aria-hidden="true" />
+          {guide && written ? (
+            <img className="hv-paper__guide" src={guide} alt="" draggable={false} data-state={inked ? 'done' : touched ? 'drawing' : 'idle'} />
+          ) : null}
           <canvas
             className="hv-paper__ink"
             ref={canvasRef}
@@ -185,11 +212,12 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
             onPointerUp={onUp}
             onPointerCancel={onUp}
             onClick={(event) => event.stopPropagation()}
+            data-ready={sketch ? true : undefined}
           />
         </div>
-        <p className="hv-paper__hint" lang="en">{hint}</p>
+        <p className="hv-paper__hint" lang="en" data-writing={sketch ? true : undefined}>{hint}</p>
       </div>
-      {waiting ? <p className="hv-paper__loading">{loadingLabel}</p> : null}
+      {waiting || !sketch ? <p className="hv-paper__loading">{loadingLabel}</p> : null}
     </div>
   );
 }

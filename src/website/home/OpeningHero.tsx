@@ -16,6 +16,8 @@ import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
 import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
+import type { SketchOutline } from './three/captureOutline';
+import type { SketchStroke } from './sketchStrokes';
 import {
   OPENING,
   createOpeningClock,
@@ -89,6 +91,11 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false, reveal: 0 });
   const paperArt = useRef<HTMLCanvasElement | null>(null);
   const [pendingWake, setPendingWake] = useState(false);
+  // 3D 就绪后从睡姿拍出的铅笔稿 + 画翅膀引导：DOM 纸换上同一张线稿
+  const [sketch, setSketch] = useState<{ strokes: SketchStroke[]; guide: string } | null>(null);
+  const handleSketch = useCallback((next: SketchOutline) => {
+    setSketch({ strokes: next.strokes, guide: next.guide.toDataURL('image/png') });
+  }, []);
   const stroke = useStrokeProgress(ready, mode);
 
   // draw 阶段结束（翅膀画好）：时钟就绪则立刻开始 wake，否则等 3D 就绪后自动开始
@@ -104,11 +111,10 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   useEffect(() => {
     if (ready && pendingWake) beginWake();
   }, [beginWake, pendingWake, ready]);
-  // DEV：带 ophold / opmat 调试参数时跳过画翅膀，就绪后直接起时钟（沿用旧的调试流程）
+  // DEV：带 ophold（冻结时间线）时跳过画翅膀，就绪后直接起时钟；opmat 不跳过，画翅膀照常
   useEffect(() => {
     if (!import.meta.env.DEV || !ready || mode !== '3d') return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('ophold') || params.has('opmat')) beginWake();
+    if (new URLSearchParams(window.location.search).has('ophold')) beginWake();
   }, [beginWake, mode, ready]);
 
   // 决定舞台模式；静态分镜自己起时钟，3D 等模型与动作就绪后再起
@@ -274,7 +280,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       <div className="hv-stage" aria-hidden="true">
         {mode === '3d' ? (
           <Suspense fallback={null}>
-            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} paperArt={paperArt} />
+            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} paperArt={paperArt} onSketch={handleSketch} />
           </Suspense>
         ) : null}
         {stageStill ? (
@@ -300,6 +306,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               onWake={beginWake}
               hint={DRAW_HINT}
               loadingLabel={h.opening.loading}
+              sketch={sketch?.strokes ?? null}
+              guide={sketch?.guide ?? null}
             />
           ) : null}
           <div className="hv-opening__frame">
