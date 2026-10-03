@@ -110,7 +110,7 @@ const HERO_DOF: DofState = {
  */
 /** 英雄停顿与拉焦的景深（导演流程 1-5、2-1、2-2） */
 const FACE_DOF: DofState = { dofEnabled: true, focusMode: 'target', focusDistance: 2, focusRange: 0.45, blur: 1.1, target: [0, 1.4, 0], focusAnchor: 'head' };
-const FOLD_DOF: DofState = { dofEnabled: true, focusMode: 'target', focusDistance: 1, focusRange: 0.25, blur: 2.2, target: [0, 1, 0], focusAnchor: 'fold' };
+const FOLD_DOF: DofState = { dofEnabled: true, focusMode: 'target', focusDistance: 1, focusRange: 0.35, blur: 1.4, target: [0, 1, 0], focusAnchor: 'fold' };
 
 /**
  * 分镜（docs/website-opening-director.md 第 3 节）。关键帧之间用三次 Hermite 插值（cameraRig），
@@ -137,10 +137,10 @@ const CAMERA_KEYS: CameraKey[] = [
   { t: W + 0.3, anchor: 'head', pos: [0.47, -0.05, 1.48], look: 'head', lookOff: [0, -0.02, 0], fov: 30, dof: FACE_DOF },
   // 2-1 纸从脚下慢慢飘起：镜头从正面绕到她右侧（侧面：人与纸同框），再绕到右肩后
   { t: R.riseStart + 0.7, anchor: 'head', pos: [1.05, 0.02, 0.95], look: 'head', lookOff: [0, -0.15, 0.25], fov: 34, dof: FACE_DOF },
-  { t: R.foldStart, anchor: 'head', pos: [1.65, 0.25, 0.25], look: 'fold', lookOff: [-0.3, 0.75, -0.35], fov: 42, dof: FOLD_DOF },
+  { t: R.foldStart, anchor: 'head', pos: [2.7, 0.45, 0.95], look: 'fold', lookOff: [-0.3, 0.85, -0.35], fov: 46, dof: FOLD_DOF },
   // 2-2 高位 3/4 后侧：越过翅膀与右肩，看她右前方地上的纸一折一折慢慢折成纸飞机；她和纸同框，焦点在纸上
-  { t: R.foldStart + 1.0, anchor: 'head', pos: [0.95, 0.75, -1.5], look: 'fold', lookOff: [-0.3, 0.55, -0.3], fov: 40, dof: FOLD_DOF },
-  { t: R.flyStart, anchor: 'head', pos: [0.85, 0.7, -1.35], look: 'fold', lookOff: [-0.25, 0.5, -0.1], fov: 38, dof: FOLD_DOF },
+  { t: R.foldStart + 1.0, anchor: 'head', pos: [1.1, 0.75, -1.9], look: 'fold', lookOff: [-0.3, 0.85, -0.3], fov: 46, dof: FOLD_DOF },
+  { t: R.flyStart, anchor: 'head', pos: [1.0, 0.7, -1.75], look: 'fold', lookOff: [-0.25, 0.8, -0.1], fov: 44, dof: FOLD_DOF },
   // 2-3 纸飞机越过她飞进窗口：镜头留在她身后、略后退，视线跟着飞机往前
   { t: OPENING.openStart, anchor: 'hips', pos: [-0.25, 1.55, -2.3], look: 'chest', lookOff: [0, 0.15, 1.5], fov: 38 },
   // open 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕（与旧版一致）

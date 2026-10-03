@@ -40,7 +40,7 @@ function largestComponent(mask: Uint8Array): Uint8Array {
 
 /**
  * 画翅膀引导（按 Cory 手绘的样子）：一片卡通小天使翅膀——翅根在右肩胛，前缘一道饱满的弧往上往外长到翅尖，
- * 外缘三片圆滚滚的羽毛往下收回，底边平平地回到翅根。圆点虚线 + 很淡的蓝面 + 两道羽轴 + 翅尖两颗小星星。
+ * 外缘三片圆滚滚的羽毛往下收回，底边平平地回到翅根。圆点虚线 + 很淡的蓝面 + 翅尖两颗小星星（不画羽轴，保持干净）。
  * 方向与大小按身体算：「上」= 髋→头，「外」= 背离脊柱、朝真实右翼所在的一侧，高约为头到髋的 0.8 倍、宽约 0.85 倍（和手绘稿一样往外伸得开，又不出纸边）。
  */
 function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { head: readonly [number, number]; hips: readonly [number, number]; shoulder: readonly [number, number] }) {
@@ -94,13 +94,6 @@ function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { 
   ctx.setLineDash([0.1, 9]);
   ctx.lineWidth = 3.8;
   ctx.strokeStyle = 'rgba(58, 146, 226, 0.95)';
-  ctx.stroke();
-  // 两道羽轴（更淡的点线）
-  ctx.lineWidth = 2.6;
-  ctx.strokeStyle = 'rgba(58, 146, 226, 0.5)';
-  path([[0.3, 0.32, 0.55, 0.5, 0.86, 0.66]], [0.12, 0.12]);
-  ctx.stroke();
-  path([[0.28, 0.2, 0.45, 0.28, 0.66, 0.34]], [0.14, 0.07]);
   ctx.stroke();
   // 翅尖旁两颗小星星（四角星，实线）
   ctx.setLineDash([]);
