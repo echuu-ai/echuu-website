@@ -1,83 +1,41 @@
-# 内测邀请码：生成、记录、发放与推荐（设计稿）
+# 内测码：申请 → 邮件发码 → 输入进入主程序
 
-2026-10-03。前提沿用 [`docs/reviews/2026-09-29-invitation-access.md`](reviews/2026-09-29-invitation-access.md)：**邀请码是登录凭据**，校验、兑换、建会话只能在服务端做；官网静态托管不能自己判定一个码是否有效。本文是方案，标「已落地」的部分已经在仓库里，其余等后端（api.echuu.live）与 Koko 确认。
+2026-10-03 定（Cory：不要做复杂的邀请码 / 推荐体系，就是内测码）。前提沿用 [`docs/reviews/2026-09-29-invitation-access.md`](reviews/2026-09-29-invitation-access.md)：**内测码是登录凭据**，只能在服务端校验、兑换、建会话；官网静态托管不能自己判定码对不对。
 
-## 1. 目标
+## 1. 流程
 
-- 好记录：每个码从哪来、发给了谁、谁用了、带来了谁，一张表看清楚。
-- 好发放：私发、群发、KOL、活动都能用，不用每次找工程师。
-- 能推荐：内测用户可以邀请朋友，推荐关系可追踪、可奖励、防刷。
-- 安全：码不可猜、可撤销、可过期；泄露一个不影响其他。
+1. 官网「参与内测」填邮箱 + 密码 → 服务端记一条申请（`VITE_BETA_ACCOUNT_ENDPOINT`，已有前端）。
+2. 我们挑人通过 → 服务端给这个邮箱生成**一个**内测码，发邮件（模板 `emails/beta-invitation.zh.html`）。
+3. 用户在官网「登录」输入内测码 → 服务端兑换（一码一人、只能用一次）→ 跳进主程序（`VITE_INVITE_REDEEM_ENDPOINT`，已有前端）。
+
+没有渠道码、推荐码、奖励。要统计就看申请表和兑换记录。
 
 ## 2. 码的格式（已落地）
 
-`ECHU-XXXX-XXXX-C`，实现见 [`src/website/auth/inviteCode.ts`](../src/website/auth/inviteCode.ts)，测试 `inviteCode.test.ts`。
+`ECHU-XXXX-XXXX-C`（[`src/website/auth/inviteCode.ts`](../src/website/auth/inviteCode.ts)）：8 位随机（去掉易混的 I L O U）+ 1 位校验位。用户抄错一位、两位写反，官网当场提示，不打到服务端；大小写、空格、连字符随便写。
 
-- 主体 8 位 Crockford Base32（去掉 I / L / O / U），约 40 bit 随机，`crypto.getRandomValues` 生成。
-- 最后 1 位是 mod 37 校验位：抄错一位、相邻两位换位**全部**能在本地发现。
-- 输入容错：大小写、空格、连字符随便写，`O→0`、`I/L→1`。
-- 官网弹窗先在本地查格式与校验位，抄错直接提示「好像抄错了一位」，不打到服务端；通过后把**规范化的 9 位**（不含 `ECHU`、不含连字符）发给兑换接口——服务端按这个形式存与比对。
-- 40 bit 只防「猜」不防「刷」：服务端必须限流（见第 7 节）。
+早期手动发码可以先用 [`scripts/invite-codes.mjs`](../scripts/invite-codes.mjs) 生成一批（CSV：code / email / status / 发送时间 / 兑换时间），但码必须先录进服务端，主程序才认。
 
-## 3. 三种码
+## 3. 后端要做的（两条接口 + 一封邮件）
 
-| 类型 | 用途 | 使用次数 | 归属 |
-|---|---|---|---|
-| `single` 个人码 | 审核通过的申请、私发、邮件 | 1 | 发给谁记在 `issued_to` |
-| `campaign` 渠道码 | 小红书 / 社群 / KOL / 活动 | `max_uses`（如 200），可设过期、可暂停 | `channel` + `owner`（如 KOL 账号） |
-| `referral` 推荐码 | 已激活的内测用户邀请朋友 | 每个 1 次，每人默认 3 个 | `owner` = 推荐人用户 ID |
+- `POST /beta/waitlist {email, password, locale}` → `{status:"pending_invitation"}`
+- `POST /beta/redeem {code}` → `{status:"redeemed", redirect_url}`；码只存哈希；兑换要限流（每 IP / 每码）。
+- 通过申请时生成码并发邮件；可撤销、可设过期。
 
-渠道码方便但风险高（截图一传就是公开码）：只给可信渠道、设上限和过期，看到异常增长立即暂停。
+## 4. 邮箱：echuu.ai（Wix 买的域名）
 
-## 4. 发放流程
+现状（2026-10-03 查）：域名解析在 GoDaddy 的 nameserver（`ns31/32.domaincontrol.com`，Wix 买的域名常见情况），`echuu.ai` 指向一个 Wix 站点；**没有任何 MX / TXT 记录**，所以现在还收不了、也发不了 @echuu.ai 的邮件。
 
-1. **官网申请 → 审核 → 发码**（主流程）：官网「参与内测」提交邮箱 → 进 Waitlist → 运营在表里勾「批准」→ 服务端生成 `single` 码并发邀请邮件（模板 `emails/beta-invitation.zh.html`）。
-2. **渠道**：运营用脚本或后台批量生成 `campaign` 码，配 `?ref=<channel>` 链接投放；每个渠道单独一个码，转化可以分开统计。
-3. **推荐**：用户激活后在主程序「邀请好友」里看到自己的 3 个推荐码 / 链接 `…/website/zh?invite=ECHU-XXXX-XXXX-C`。官网读到 `?invite=` 时自动打开邀请码弹窗并预填（**待做**，前端改动很小）。被邀请人兑换时记录推荐关系；推荐人在被邀请人**完成首次开播**后才得奖励（防刷），并可再获得新的推荐码。
+推荐做法（不转移域名，全在 Wix 后台的 DNS 记录里加）：
 
-## 5. Google Sheet：运营台账，不是数据源
+1. **收信 / 日常邮箱**（如 `hello@echuu.ai`、`cory@echuu.ai`）：开 Google Workspace（Wix 后台可以直接买，也可以在 Google 买再把 MX 加到 Wix）。不想付月费可以用 Zoho Mail 的免费档。
+2. **发内测码**（如 `beta@echuu.ai`）：用事务邮件服务（推荐 Resend，接口简单、免费额度够内测用；也可以 Postmark / Amazon SES）。在服务里添加域名，它会给几条 TXT（SPF、DKIM）和一条 MX，原样加到 Wix 的 DNS 记录里；再加一条 DMARC TXT（`_dmarc` → `v=DMARC1; p=none; rua=mailto:你的邮箱`）。建议用子域名发信（如 `send.echuu.ai`），不影响主域的收信。
+3. 后端发码时用 `beta@echuu.ai` 作发件人，回复地址设成 `hello@echuu.ai`。
 
-数据源在服务端数据库（码只存 `sha256(code + pepper)`、状态、次数）；Sheet 是给运营看和操作的镜像。
+以后官网不放在 Wix 了，可以考虑把 DNS 托管搬到 Cloudflare（免费、改记录快，自带免费的邮件转发）；那时要先把现有记录照抄过去。域名能不能转出、何时能转出以 Wix 后台为准。
 
-| 页签 | 主要列 |
-|---|---|
-| Codes | code（未发放时可见，发放后只留后 4 位）· kind · channel · batch · owner · max_uses · uses · expires_at · status（unissued / issued / redeemed / exhausted / revoked）· created_at · issued_to · issued_at · note |
-| Waitlist | email · locale · source(ref) · applied_at · 批准（勾选框）· code_last4 · invited_at |
-| Redemptions | code_last4 · kind · channel · referrer · user_id · redeemed_at · activated_at（首次开播） |
-| Referrals | referrer · 已发码数 · 已兑换 · 已激活 · 奖励状态 |
-| Dashboard | 每个渠道：发放 → 兑换 → 激活 → 7 日留存（公式汇总上面几页） |
+## 5. 待定
 
-同步方式（推荐 A）：
-
-- **A. 服务端推送**：兑换 / 申请 / 激活时，后端用 Google 服务账号（Sheets API）追加一行。实时、权限集中在后端。
-- **B. Apps Script 拉取**：表格里每 5 分钟调用后台只读接口刷新。不碰后端代码，但有延迟。
-
-运营操作（批准 Waitlist、生成一批渠道码、撤销）用 Apps Script 按钮调用后台管理接口；管理令牌放在 Script Properties，不写在表格里。
-
-**现在就能用（已落地）**：后端上线前，可以用 [`scripts/invite-codes.mjs`](../scripts/invite-codes.mjs) 本地批量生成 CSV，直接导入 Codes 页做发放计划（`invite-codes-*.csv` 已 gitignore，CSV 本身就是凭据，不要发群里）。但**在服务端能兑换之前，这些码还不能登录**——导入后要一次性同步进数据库。
-
-## 6. 需要的后端接口
-
-| 接口 | 说明 |
-|---|---|
-| `POST /beta/redeem {code}` | 已在前端契约里（`VITE_INVITE_REDEEM_ENDPOINT`）：原子兑换，返回主程序一次性会话交换地址 |
-| `POST /beta/waitlist {email, password, locale, ref?}` | 已在前端契约里（`VITE_BETA_ACCOUNT_ENDPOINT`），加 `ref` 记来源 |
-| `POST /admin/invites/mint {kind, count, channel, batch, max_uses, expires_at, owner}` | 管理端生成，返回明文码一次（之后只存哈希） |
-| `POST /admin/invites/{id}/revoke`、`…/pause` | 撤销 / 暂停 |
-| `GET /me/referrals` | 主程序「邀请好友」页：我的推荐码与进度 |
-
-## 7. 安全与防刷
-
-- 兑换限流：每 IP、每设备、每码各自限速；连续失败加冷却。
-- 码可撤销、可过期；渠道码有上限与暂停开关；没有万能码。
-- 推荐奖励只在被邀请人激活后结算；同一邮箱 / 设备不重复计；每人推荐上限。
-- Sheet 只给运营账号；发放后的码只显示后 4 位；导出 CSV 用完即删。
-- 审计日志：谁生成、谁撤销、何时兑换。
-
-## 8. 待确认（Cory / Koko）
-
-1. 推荐奖励给什么（更多推荐名额？专属装扮？优先体验新功能？）——决定是否需要奖励发放逻辑。
-2. 每人推荐码数量（默认 3）与是否随激活人数增加。
-3. 是否开放 `campaign` 多次码，给哪些渠道。
-4. 后端由谁实现、邮件服务商与发件域名。
-5. Sheet 由谁维护、需要哪些人可见。
+1. 后端谁来做（两条接口 + 发信）。
+2. 用 Google Workspace 还是 Zoho 收信；发信服务选哪家。
+3. 内测码要不要设有效期（建议 30 天）。

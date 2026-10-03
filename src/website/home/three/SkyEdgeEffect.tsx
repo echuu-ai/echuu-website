@@ -104,8 +104,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
       float angle = atan(fromLight.y, fromLight.x);
       float rays = pow(0.5 + 0.5 * sin(angle * 13.0 + seamTime * 0.35), 12.0) * 0.6
         + pow(0.5 + 0.5 * sin(angle * 7.0 - seamTime * 0.22 + 1.3), 14.0) * 0.4;
-      // 光晕与光束都收着用：是「光漏进来」，不是爆炸；光束离窗口越远衰减越快
-      float glow = exp(-lightDist * 3.2) * 0.3 + rays * exp(-lightDist * 2.4) * 0.16;
+      // 主角是「对面的世界亮起来」（上面的 mood 从窗口向外退）；光晕与光束只弱弱给一点
+      float glow = exp(-lightDist * 3.6) * 0.1 + rays * exp(-lightDist * 3.0) * 0.045;
       glow *= lightBurst;
       outputColor.rgb += vec3(1.0, 0.96, 0.88) * glow;
       outputColor.a = max(outputColor.a, clamp(glow, 0.0, 1.0));

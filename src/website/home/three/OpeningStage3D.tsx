@@ -858,7 +858,7 @@ const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: Sce
     if (windowLight.current) {
       const tw = openingTime(clock, performance.now());
       windowLight.current.intensity = clock.ready && openingStarted(clock)
-        ? 0.85 * smoothstep(OPENING.openStart - 0.35, OPENING.openStart + 0.2, tw) * (1 - smoothstep(OPENING.openStart + 0.6, OPENING.openStart + 2.2, tw))
+        ? 0.35 * smoothstep(OPENING.openStart - 0.35, OPENING.openStart + 0.2, tw) * (1 - smoothstep(OPENING.openStart + 0.6, OPENING.openStart + 2.2, tw))
         : 0;
     }
     const t = openingTime(clock, performance.now());

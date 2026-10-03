@@ -48,7 +48,13 @@ const LOGO_REVEAL = !LOGO_3D && LOGO_PARAM !== 'static';
 function LogoReveal({ play, onDone }: { play: boolean; onDone: () => void }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const safari = typeof navigator !== 'undefined' && /^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
-  useEffect(() => { if (play) ref.current?.play().catch(onDone); }, [play, onDone]);
+  // 原片 3.8 s 偏慢：1.6 倍速播（约 2.4 s），字母一个个蹦出来更利落
+  useEffect(() => {
+    const video = ref.current;
+    if (!play || !video) return;
+    video.playbackRate = 1.6;
+    video.play().catch(onDone);
+  }, [play, onDone]);
   return (
     <video
       ref={ref}
