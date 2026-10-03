@@ -88,6 +88,8 @@ type CameraKey = {
   dof?: DofState;
   /** 俯视纸面：高度改成刚好让整张纸填满 paperFill 的距离（pos.y 不用） */
   fitPaper?: boolean;
+  /** fitPaper 的距离倍数（<1 = 推近） */
+  fitScale?: number;
 };
 
 const NO_DOF: DofState = { dofEnabled: false, focusMode: 'target', focusDistance: 4, focusRange: 0.3, blur: 1.4, target: [0, 1, 0] };
@@ -116,16 +118,16 @@ const A = OPENING.standStart;
 const W = OPENING.wakeEnd;
 const R = OPENING_ACT2;
 const CAMERA_KEYS: CameraKey[] = [
-  // 0 / 1-1 纸面交接：第一帧与 DOM 纸完全重合，DOM 淡出期间不动
-  { t: 0, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
-  { t: 0.7, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
-  // 1-1 显形：沿身体轴向推到胸口上方（跟着光的前沿从头走下来）
-  { t: 2.0, anchor: 'chest', pos: [0, 2.0, 0.12], look: 'chest', lookOff: [0, 0, 0.02], fov: 32 },
+  // 0 / 1-1 纸面交接与显形：长焦、远机位正俯视（透视视差小，3D 角色与纸上的铅笔稿始终重合）；
+  // DOM 纸淡出期间不动，之后只极慢地推近一点，等身体完全显形再动
+  { t: 0, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 16, fitPaper: true },
+  { t: 0.7, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 16, fitPaper: true },
+  { t: 2.1, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 16, fitPaper: true, fitScale: 0.86 },
   // 1-2 翻身：绕身体转 30° 并降低机位（与翻身同向）
   { t: A + 1.1, anchor: 'hips', pos: [0.95, 1.3, 1.05], look: 'chest', lookOff: [0, 0.02, 0], fov: 38 },
-  // 1-3 坐起：贴地低机位、广角仰拍，向后退让她「升起来」
-  { t: A + 2.7, anchor: 'hips', pos: [0.3, 0.12, 1.9], look: 'head', lookOff: [0, 0.05, 0], fov: 46 },
-  { t: A + 4.1, anchor: 'hips', pos: [0.42, 0.02, 2.5], look: 'head', lookOff: [0, 0.02, 0], fov: 42 },
+  // 1-3 坐起：低机位 3/4 侧面仰拍，镜头跟着她后退升起（不正对双腿）
+  { t: A + 2.7, anchor: 'hips', pos: [1.45, 0.18, 0.95], look: 'head', lookOff: [0, 0.05, 0], fov: 44 },
+  { t: A + 4.1, anchor: 'hips', pos: [1.6, 0.12, 1.45], look: 'head', lookOff: [0, 0.02, 0], fov: 40 },
   // 1-4 站起：升到眼平，同时环绕约 15°，速度不停
   { t: A + 5.5, anchor: 'head', pos: [0.55, -0.05, 1.7], look: 'head', lookOff: [0, -0.02, 0], fov: 34 },
   // 1-5 英雄停顿：静止一拍，再极慢推进
@@ -401,7 +403,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
         .addScaledVector(screenRight, -(pose.paperShift?.x ?? 0) * perPx)
         .addScaledVector(screenUp, (pose.paperShift?.y ?? 0) * perPx);
       pos.copy(look).addScaledVector(screenUp, -0.02);
-      pos.y += (PAPER_HEIGHT / fill) / 2 / Math.tan(THREE.MathUtils.degToRad(key.fov) / 2);
+      pos.y += (key.fitScale ?? 1) * (PAPER_HEIGHT / fill) / 2 / Math.tan(THREE.MathUtils.degToRad(key.fov) / 2);
     }
   };
 
@@ -649,7 +651,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
 
 const FLY_END = OPENING.openStart + 0.15;
 /** 折好的纸飞机相对整张纸的大小（纸长 2.27 m → 机身约 0.45 m） */
-const PLANE_SCALE = 0.17;
+const PLANE_SCALE = 0.145;
 const FLY_DEPTH = 7;
 /** 瞄准手机窗靠右的位置，不从角色身后穿过去 */
 const WINDOW_AIM_X = 0.6;
@@ -670,6 +672,7 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 4;
+    // 交接时与 DOM 纸一样纯白；DOM 淡出后慢慢压到略低于纯白，镜头贴近时不被 bloom 吹成一片白
     const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false, vertexColors: true });
     const paper = createFoldingPaper(material, PAPER_WIDTH, PAPER_HEIGHT);
     return { texture, material, paper, ctx: canvas.getContext('2d'), sheet: null as HTMLImageElement | null, sketched: false, stamped: false };
@@ -764,6 +767,7 @@ function PaperSheet3D({ clock, art, lying, hole }: {
       parts.stamped = true;
       parts.texture.needsUpdate = true;
     }
+    parts.material.color.setScalar(1 - 0.14 * smoothstep(0.8, 2.2, t));
     const F = OPENING_ACT2.riseStart;
     const foldStart = OPENING_ACT2.foldStart;
     const flyStart = OPENING_ACT2.flyStart;

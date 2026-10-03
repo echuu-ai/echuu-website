@@ -37,8 +37,8 @@ const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => (
 
 type StageMode = 'pending' | '3d' | 'still';
 
-/** Figma 上的手写提示语；Cedarville Cursive 只有拉丁字形，所有语言都用这句英文 */
-const DRAW_HINT = 'Draw  the wings to wake it up';
+/** 手写提示语：不加任何 UI，只靠纸上这一句铅笔字引导（字体只有拉丁字形，所有语言都用这句英文） */
+const DRAW_HINT = 'Draw its wings\n   \u2014 make it live';
 
 /** 只要有 WebGL 就跑真实 3D（手机也是）；只有无 WebGL 或减少动态效果才走静态分镜。 */
 function decideStageMode(reduced: boolean): StageMode {

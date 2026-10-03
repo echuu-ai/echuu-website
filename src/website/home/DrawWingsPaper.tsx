@@ -14,8 +14,8 @@ import { drawStrokes, type SketchStroke } from './sketchStrokes';
  * 这样 wake 时 3D 角色和纸上的线完全重合。线稿出来之前先不让画。
  */
 
-/** 角色身体中心落在纸面的哪里（纸面宽 / 高的比例）：横向沿用 Figma 铅笔稿，纵向下移一点给手写提示语留出空间 */
-export const PAPER_BODY_ANCHOR = { cx: 0.5757, cy: 0.6 } as const;
+/** 角色身体中心落在纸面的哪里（纸面宽 / 高的比例）：纸放大后上下出画，人物放在可见区域中间、手写字在头顶 */
+export const PAPER_BODY_ANCHOR = { cx: 0.58, cy: 0.585 } as const;
 export const PAPER_TILT_DEG = -10.23;
 /** 轮廓「写」出来用多久 */
 const WRITE_SECONDS = 2.4;
@@ -78,14 +78,26 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
     return () => cancelAnimationFrame(raf);
   }, [sketch]);
 
-  // 手写提示语用 Cedarville Cursive（与 Figma 一致），只在开场按需加载
+  // 手写提示语用 Reenie Beanie（像铅笔随手写的字），只在开场按需加载
   useEffect(() => {
     if (document.querySelector('link[data-hv-cursive]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap';
     link.setAttribute('data-hv-cursive', '');
     document.head.appendChild(link);
+  }, []);
+
+  // 静止时的涂鸦抖动（line boil）：手绘动画的老办法——每秒换 8 次噪声种子，线条轻轻「沸腾」
+  const boilRef = useRef<SVGFETurbulenceElement | null>(null);
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let seed = 1;
+    const timer = window.setInterval(() => {
+      seed = (seed % 3) + 1;
+      boilRef.current?.setAttribute('seed', String(seed));
+    }, 125);
+    return () => window.clearInterval(timer);
   }, []);
 
   // 画布跟随纸面尺寸（未旋转的本地尺寸）；尺寸变化时保留已画的笔迹
@@ -197,6 +209,12 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
 
   return (
     <div className="hv-paper" data-fading={fading || undefined}>
+      <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
+        <filter id="hv-pencil-boil" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence ref={boilRef} type="fractalNoise" baseFrequency="0.04" numOctaves={2} seed={1} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={2.4} xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
       <div className="hv-paper__frame">
         <div className="hv-paper__board" ref={boardRef} style={{ transform: `rotate(${PAPER_TILT_DEG}deg)` }}>
           <img className="hv-paper__sheet" src={HOME_ASSETS.opening.paperSheet} alt="" draggable={false} />
@@ -214,8 +232,8 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
             onClick={(event) => event.stopPropagation()}
             data-ready={sketch ? true : undefined}
           />
+          <p className="hv-paper__hint" lang="en">{hint}</p>
         </div>
-        <p className="hv-paper__hint" lang="en" data-writing={sketch ? true : undefined}>{hint}</p>
       </div>
       {waiting || !sketch ? <p className="hv-paper__loading">{loadingLabel}</p> : null}
     </div>

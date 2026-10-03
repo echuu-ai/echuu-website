@@ -7,8 +7,8 @@ import type { GroundResult } from './openingGround';
  * 纸面朝上铺在地上，图片上方朝着角色头的方向；角色身体中心落在纸面 PAPER_BODY_ANCHOR 处。
  */
 
-/** 纸宽（米）：身长约 1.4 m 的躺姿占纸面长边的六成多，和 Figma 里人物占纸的比例接近 */
-export const PAPER_WIDTH = 1.65;
+/** 纸宽（米）：身长约 1.4 m 的躺姿占纸面长边一半出头，头顶留给手写提示语、脚下不出画 */
+export const PAPER_WIDTH = 1.95;
 export const PAPER_RATIO = 1652 / 1200;
 export const PAPER_HEIGHT = PAPER_WIDTH * PAPER_RATIO;
 const PAPER_TILT = THREE.MathUtils.degToRad(PAPER_TILT_DEG);
