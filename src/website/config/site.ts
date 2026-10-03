@@ -76,4 +76,4 @@ export const BRAND_FONT_LICENSED =
   (import.meta.env.VITE_BRAND_FONT_LICENSED as string | undefined) === '1';
 
 /** Product sign-up remains on the separately deployed product app. */
-export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.app")).replace(/\/$/, "");
+export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.live")).replace(/\/$/, "");

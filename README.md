@@ -66,7 +66,7 @@ rsync -a --delete --exclude .git --exclude .github --exclude .preview-parts --ex
 
 ## 邀请码与内测申请（2026-09-29）
 
-首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产沿用 `https://echuu.app`。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
+首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产默认 `https://echuu.live`（2026-10-03 Cory 确认；官网正式域名 echuu.ai）。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
 
 
 ## 搜索与交互音效（2026-10-03）

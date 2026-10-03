@@ -8,7 +8,7 @@
 - 从官网挂载入口按静态、动态和 type imports 追踪源码闭包，迁入 95 个源码文件；按本地资源引用迁入 106 个文件，85,700,000 字节左右。所有本地运行资源都在 public，不链接原检出目录。
 - 大型 StreamVrmAvatar 模块只保留所需的相机类型；HDR 天空函数及依赖提取到 WebsiteHdrSky，原实现和常量保留。未复制直播间、后台、编辑器应用入口。
 - 保留原四语深链接、纸飞机、真实 3D、静态/减少动态降级、景深、Bloom、调色、相机与表情参数。保留 YouTube、Google Fonts、Notion 与社交外链。
-- 注册原来指向同站产品路由，改为 VITE_PRODUCT_ORIGIN（默认 https://echuu.app）；官网根路径进入 /website，再按语言状态补齐。
+- 注册原来指向同站产品路由，改为 VITE_PRODUCT_ORIGIN（默认 https://echuu.live）；官网根路径进入 /website，再按语言状态补齐。
 - 修正独立 shell 缺少调色 SVG 隐藏样式造成的顶部空白；修正 moodboard 历史截帧路径，使用既有 PROTOTYPE_FRAME。
 
 ## 安装与验证

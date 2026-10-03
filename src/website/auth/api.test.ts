@@ -3,11 +3,11 @@ import { redeemInvite, registerBeta, validateProductRedirect } from './api';
 afterEach(() => vi.unstubAllGlobals());
 describe('invitation access boundary', () => {
   it('accepts only the configured product origin', () => {
-    expect(validateProductRedirect('https://echuu.app/#invite-exchange=opaque', 'https://echuu.app')).toContain('#invite-exchange=');
-    expect(() => validateProductRedirect('https://echuu.app.evil.test', 'https://echuu.app')).toThrow();
-    expect(() => validateProductRedirect('https://user:secret@echuu.app/', 'https://echuu.app')).toThrow();
-    expect(() => validateProductRedirect('javascript:alert(1)', 'https://echuu.app')).toThrow();
-    expect(() => validateProductRedirect('http://echuu.app/', 'http://echuu.app')).toThrow();
+    expect(validateProductRedirect('https://echuu.live/#invite-exchange=opaque', 'https://echuu.live')).toContain('#invite-exchange=');
+    expect(() => validateProductRedirect('https://echuu.live.evil.test', 'https://echuu.live')).toThrow();
+    expect(() => validateProductRedirect('https://user:secret@echuu.live/', 'https://echuu.live')).toThrow();
+    expect(() => validateProductRedirect('javascript:alert(1)', 'https://echuu.live')).toThrow();
+    expect(() => validateProductRedirect('http://echuu.live/', 'http://echuu.live')).toThrow();
   });
   it('allows the confirmed localhost product for development', () => {
     expect(validateProductRedirect('http://localhost:5173/#invite-exchange=opaque', 'http://localhost:5173')).toContain(':5173');
