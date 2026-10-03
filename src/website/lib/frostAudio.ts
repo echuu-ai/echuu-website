@@ -23,7 +23,8 @@ let shardVolume = 0;
 let lastBeep = 0;
 let lastSparkle = 0;
 let muted = (() => {
-  try { return window.localStorage.getItem(MUTE_KEY) !== '0'; } catch { return true; }
+  // 默认开着（Cory 2026-10-04）：浏览器在第一次点击 / 按键前本来就不会出声；用户点过静音才记成 '1'
+  try { return window.localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
 })();
 const muteListeners = new Set<() => void>();
 
