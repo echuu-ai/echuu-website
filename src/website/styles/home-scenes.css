@@ -133,6 +133,9 @@
     -webkit-mask: var(--logo-mask) center / 100% 100% no-repeat; mask: var(--logo-mask) center / 100% 100% no-repeat;
     animation: hv-logo-shine 1.3s ease-out 1s both;
   }
+  /* 有 logo 出场动画时：字母一个个出现的过程中先不扫光；动画播完、平面 logo 接管时再扫一道（「最后闪光刷一下」） */
+  .echuu-website .hv-chrome[data-visible='true'] .hv-title__logo-wrap[data-reveal='playing']::after { animation: none; opacity: 0; }
+  .echuu-website .hv-chrome[data-visible='true'] .hv-title__logo-wrap[data-reveal='done']::after { animation: hv-logo-shine 1.1s cubic-bezier(.22, .61, .36, 1) 0.12s both; }
 
   .echuu-website .hv-chrome[data-visible='true'] .hv-title__slogan { animation: hv-rise-clip 0.8s var(--hv-ease) 0.7s both; }
   .echuu-website .hv-chrome[data-visible='true'] .hv-title__hl { background-repeat: no-repeat; animation: hv-hl-wipe 0.7s var(--hv-ease) 1.05s both; }

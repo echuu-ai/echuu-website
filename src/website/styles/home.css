@@ -260,6 +260,10 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-opening__flash {
   position: absolute; inset: 0; z-index: 4; background: #fff; pointer-events: none;
   animation: hv-flash 0.7s var(--hv-ease) forwards;
+  /* 色散白闪：中心纯白，四边左青右品红错开，和 3D 里开窗那一下的色散同一个方向 */
+  background: radial-gradient(ellipse at 50% 50%, #fff 0 52%, #f3fbff 78%, #e8f6ff 100%);
+  box-shadow: inset 18px 0 70px rgba(70, 210, 255, 0.55), inset -18px 0 70px rgba(255, 70, 170, 0.45),
+    inset 0 14px 60px rgba(120, 140, 255, 0.35);
 }
 @keyframes hv-flash { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
 .echuu-website .hv-opening__live {
@@ -419,11 +423,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-title__logo-wrap { position: relative; }
 .echuu-website .hv-title__logo--reveal {
   position: absolute; left: -10.354%; top: -12.992%; width: 120.377%; max-width: none; height: auto; aspect-ratio: 4 / 3;
-  pointer-events: none; transition: opacity 0.5s var(--hv-ease);
+  pointer-events: none; transition: opacity 0.3s var(--hv-ease);
 }
 /* 播放时藏起平面 logo；播完平面 logo（带颜文字）淡入、视频淡出 */
 .echuu-website .hv-title__logo-wrap[data-reveal='playing'] > .hv-title__logo { opacity: 0 !important; }
-.echuu-website .hv-title__logo-wrap > .hv-title__logo { transition: opacity 0.5s var(--hv-ease); }
+.echuu-website .hv-title__logo-wrap > .hv-title__logo { transition: opacity 0.3s var(--hv-ease); }
 .echuu-website .hv-title__logo-wrap[data-reveal='done'] > .hv-title__logo--reveal { opacity: 0; }
 /* 3D 金属 logo（?logo=3d）：和平面 logo 占同样的框，画布比框大一圈，摆动时边缘不被裁掉 */
 .echuu-website .hv-title__logo--3d { position: relative; }

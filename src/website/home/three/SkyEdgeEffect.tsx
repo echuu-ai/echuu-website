@@ -22,6 +22,7 @@ import { pctToProgress, seamTuning } from './seamTuning';
 
 const fragment = /* glsl */ `
 uniform float portalStrength;
+uniform float openingMood;
 uniform float seamEnabled;
 uniform float seamProgress;
 uniform float seamTime;
@@ -74,14 +75,19 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   if (seamEnabled < 0.5) {
     outputColor = inputColor;
     if (portalStrength > 0.001) {
+      // 开窗冲进去那一下：igloo 式 5 次光谱采样色散 + 桶形畸变，越靠画面边缘越强，脸和画面中心保持干净
       vec2 radial = uv - 0.5;
-      float edge = smoothstep(0.12, 0.65, length(radial));
-      // Two extra taps, only during the portal. Keep the face and frame centre crisp.
-      vec2 offset = radial * edge * portalStrength * 0.003;
-      outputColor.r = mix(inputColor.r, texture2D(inputBuffer, clamp(uv + offset, 0.0, 1.0)).r, edge);
-      outputColor.b = mix(inputColor.b, texture2D(inputBuffer, clamp(uv - offset, 0.0, 1.0)).b, edge);
+      float edge = smoothstep(0.08, 0.6, length(radial));
+      vec3 split = seamChromatic(uv, portalStrength * 0.16).rgb;
+      outputColor.rgb = mix(inputColor.rgb, split, edge);
       outputColor.rgb *= 1.0 - edge * portalStrength * 0.045;
       outputColor.rgb += vec3(0.012, 0.025, 0.032) * edge * portalStrength * inputColor.a;
+    }
+    if (openingMood > 0.001) {
+      // 苏醒到开窗之前：压暗、略去饱和、偏冷蓝（夜里醒来）；开窗后回到首屏的光
+      float lum = dot(outputColor.rgb, vec3(0.299, 0.587, 0.114));
+      vec3 cool = mix(outputColor.rgb, vec3(lum), 0.28) * vec3(0.8, 0.92, 1.14) * 0.64;
+      outputColor.rgb = mix(outputColor.rgb, cool, openingMood);
     }
     return;
   }
@@ -152,6 +158,7 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole
     attributes: EffectAttribute.CONVOLUTION,
     uniforms: new Map<string, THREE.Uniform>([
       ['portalStrength', new THREE.Uniform(0)],
+      ['openingMood', new THREE.Uniform(0)],
       ['seamEnabled', new THREE.Uniform(0)],
       ['seamProgress', new THREE.Uniform(pctToProgress(seamTuning.restPct))],
       ['seamTime', new THREE.Uniform(0)],
@@ -172,8 +179,11 @@ export const SkyEdgeEffect = memo(function SkyEdgeEffect({ hole, clock }: { hole
   useFrame((_, delta) => {
     const uniforms = effect.uniforms;
     const openingSeconds = openingTime(clock, performance.now());
-    uniforms.get('portalStrength')!.value = smoothstep(OPENING.openStart, OPENING.openStart + 0.55, openingSeconds)
-      * (1 - smoothstep(OPENING.openStart + 0.65, OPENING.openStart + 2.0, openingSeconds));
+    uniforms.get('portalStrength')!.value = smoothstep(OPENING.openStart - 0.1, OPENING.openStart + 0.45, openingSeconds)
+      * (1 - smoothstep(OPENING.openStart + 0.6, OPENING.openStart + 2.0, openingSeconds));
+    // 苏醒光：纸交接完（约 1.4 s）压到最暗最冷，开窗时（openStart 前 0.3 s 到后 0.9 s）回到首屏的光
+    uniforms.get('openingMood')!.value = smoothstep(0.2, 1.6, openingSeconds)
+      * (1 - smoothstep(OPENING.openStart - 0.3, OPENING.openStart + 0.9, openingSeconds));
     uniforms.get('seamEnabled')!.value = hole.current.open ? 1 : 0;
     if (!hole.current.open) return;
     (uniforms.get('seamResolution')!.value as THREE.Vector2).set(size.width, size.height);

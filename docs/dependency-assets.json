@@ -722,21 +722,21 @@
   },
   {
     "path": "website/loops/logo-reveal.webm",
-    "bytes": 985931,
-    "sha256": "ef5851fac9f4f06259918eb5a1236ca09d9643870fc520b1b479c05696bff4e2",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = lone star on chroma green, last frame = Echuu logo (from Cory's logo-with-text.png, tagline/kaomoji removed); keyed with scripts/loops/key.py, 2026-10-03 (VP9 alpha)"
+    "bytes": 131130,
+    "sha256": "5ec1fe11843d9f4f008f12ece11c0a8c3d50df26cd5c71800a28d4838fe4d338",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (VP9 alpha)"
   },
   {
     "path": "website/loops/logo-reveal.mov",
-    "bytes": 2403288,
-    "sha256": "e764c68ca1cbbd0fed97d4810378240722b0fcbc73554db2c1de79c4b41a71c9",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = lone star on chroma green, last frame = Echuu logo (from Cory's logo-with-text.png, tagline/kaomoji removed); keyed with scripts/loops/key.py, 2026-10-03 (HEVC alpha)"
+    "bytes": 1041413,
+    "sha256": "1b531b198b76a02cd60d7be36fa5a715aaa481be9ffc2d6e5cc2e9cd36da7979",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (HEVC alpha)"
   },
   {
     "path": "website/loops/logo-reveal-start.webp",
-    "bytes": 3530,
-    "sha256": "0587638ef942045c5c159c089388a42311e01718854ced2d66921210f7d573db",
-    "source": "First frame of logo-reveal (poster before playback), 2026-10-03"
+    "bytes": 14968,
+    "sha256": "050fb4988beb0f6875c5bdc914ce86b2f8a0320df2a197a0138960b33015ca21",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 — first frame poster"
   },
   {
     "path": "website/figma/logo-pure.png",
