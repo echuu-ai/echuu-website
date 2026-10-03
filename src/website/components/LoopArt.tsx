@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { alphaVideoSource } from '../lib/alphaVideo';
 
 /**
  * 透明底短片（Kling 生成、抠绿后转码），两种放法：
  * - 循环（默认）：静态图打底，进视口才加载、出视口就暂停；
  * - once：划到这里（露出约 40%）播一次，停在最后一帧。最后一帧就是原图（poster），
  *   播之前显示短片第一帧（startPoster），不会先闪原图再跳回开头。
- * 视频格式：Chrome / Firefox / Edge 用 WebM VP9 alpha；Safari 用 HEVC alpha（Safari 的 WebM 没有 alpha，会出黑底），按 UA 选源。
+ * 视频格式：Chrome / Firefox / Edge 用 WebM VP9 alpha；苹果 WebKit（Safari、iPhone 上所有浏览器含微信 / QQ）用 HEVC alpha，选源见 lib/alphaVideo。
  * prefers-reduced-motion、或视频加载失败：一直是静态原图。
  */
 export function LoopArt({ className, poster, startPoster, webm, hevc, once = false, alt = '', width, height }: {
@@ -25,11 +26,7 @@ export function LoopArt({ className, poster, startPoster, webm, hevc, once = fal
   const [near, setNear] = useState(false);
   const [failed, setFailed] = useState(false);
   const [reduced] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-  const [src] = useState(() => {
-    if (typeof navigator === 'undefined') return webm;
-    const safari = /^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
-    return safari ? hevc : webm;
-  });
+  const [src] = useState(() => alphaVideoSource(webm, hevc));
 
   useEffect(() => {
     const video = videoRef.current;

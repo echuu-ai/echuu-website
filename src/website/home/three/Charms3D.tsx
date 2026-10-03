@@ -675,10 +675,13 @@ function Keys({ sectionRef, onReveal }: { sectionRef: RefObject<HTMLElement>; on
     const persp = camera as THREE.PerspectiveCamera;
     const worldH = 2 * persp.position.z * Math.tan(THREE.MathUtils.degToRad(persp.fov / 2));
     const pxToWorld = worldH / size.height;
-    const keyScale = (size.height * 0.9) * pxToWorld; // 钥匙高 ≈ 画布高 90%
+    // 手机上区块很矮：钥匙缩到画布高 60%，不然底边被画布切掉；桌面 90%
+    const narrow = window.innerWidth < 760;
+    const keyScale = (size.height * (narrow ? 0.6 : 0.9)) * pxToWorld;
     const joinedY = worldH / 2 - keyScale / 2 - 0.04 * worldH;
     // 打开后两把钥匙分在标题两侧
-    const openX = Math.min(size.width * 0.29, 470) * pxToWorld;
+    // 手机上画布左右各比屏幕宽 16%：张开距离收小，钥匙停在屏幕里
+    const openX = (narrow ? window.innerWidth * 0.3 : Math.min(size.width * 0.29, 470)) * pxToWorld;
     const halfW = 0.085 * keyScale;
 
     const idle = Math.sin(s.time * 0.7) * 0.18 * (1 - open * 0.6) + pointer.current.nx * 0.25;

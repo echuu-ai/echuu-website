@@ -31,6 +31,7 @@ import {
   type OpeningPhase,
 } from './openingTimeline';
 import { DrawWingsPaper } from './DrawWingsPaper';
+import { alphaVideoSource } from '../lib/alphaVideo';
 import { updateOpeningSound } from '../lib/openingSound';
 
 const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => ({ default: m.OpeningStage3D })));
@@ -47,7 +48,6 @@ const LOGO_REVEAL = !LOGO_3D && LOGO_PARAM !== 'static';
  */
 function LogoReveal({ play, onDone }: { play: boolean; onDone: () => void }) {
   const ref = useRef<HTMLVideoElement | null>(null);
-  const safari = typeof navigator !== 'undefined' && /^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
   // 原片 3.8 s 偏慢：1.6 倍速播（约 2.4 s），字母一个个蹦出来更利落
   useEffect(() => {
     const video = ref.current;
@@ -59,7 +59,7 @@ function LogoReveal({ play, onDone }: { play: boolean; onDone: () => void }) {
     <video
       ref={ref}
       className="hv-title__logo--reveal"
-      src={safari ? HOME_ASSETS.logoReveal.hevc : HOME_ASSETS.logoReveal.webm}
+      src={alphaVideoSource(HOME_ASSETS.logoReveal.webm, HOME_ASSETS.logoReveal.hevc)}
       poster={HOME_ASSETS.logoReveal.startPoster}
       muted
       playsInline
