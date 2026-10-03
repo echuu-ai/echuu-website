@@ -737,5 +737,11 @@
     "bytes": 3530,
     "sha256": "0587638ef942045c5c159c089388a42311e01718854ced2d66921210f7d573db",
     "source": "First frame of logo-reveal (poster before playback), 2026-10-03"
+  },
+  {
+    "path": "website/figma/logo-pure.png",
+    "bytes": 94467,
+    "sha256": "29073b93981b11e96ef84e5bdd2a716f403d4c5bdc9430ba14647217a309e5bb",
+    "source": "Echuu logo, pure-image version (star, ring, eChuu, kaomoji; no tagline) supplied by Cory (~/Downloads/logo-final-pure-image.png), 2026-10-03 (unaltered)"
   }
 ]

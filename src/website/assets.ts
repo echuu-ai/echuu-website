@@ -57,8 +57,9 @@ export const HOME_ASSETS = {
     /** draw 阶段：黑场里的笔记本纸（Figma Opening-animation-01）；铅笔稿由 3D 睡姿实时生成 */
     paperSheet: FIG('opening-paper/sketch-body.png'),
   },
-  logo3d: FIG('logo-chrome.png'),
-  /** Kling 生成的 logo 出场动画（星星闪 → 光环划出 → 像素字拼出，停在完整 logo）；?logo=video 试验 */
+  /** 首屏 logo：纯图版（星星 + 光环 + eChuu + 颜文字，不带副标题），Cory 2026-10-03 定稿 */
+  logo3d: FIG('logo-pure.png'),
+  /** Kling 生成的 logo 出场动画（星星闪 → 光环划出 → 像素字拼出），首屏默认播一次后交给平面 logo */
   logoReveal: { webm: publicUrl('website/loops/logo-reveal.webm'), hevc: publicUrl('website/loops/logo-reveal.mov'), startPoster: publicUrl('website/loops/logo-reveal-start.webp') },
   /** 页脚用的白色 logo（带「你的OC出道舞台」） */
   logoWhite: FIG('logo-white.png'),

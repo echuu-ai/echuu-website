@@ -39,28 +39,30 @@ const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => (
 const Logo3D = lazy(() => import('./three/Logo3D'));
 const LOGO_PARAM = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('logo') : null;
 const LOGO_3D = LOGO_PARAM === '3d';
-/** Kling 生成的 logo 出场动画试验版：?logo=video 打开；首屏出现时播一次，停在完整 logo 上 */
-const LOGO_VIDEO = LOGO_PARAM === 'video';
+/** 首屏 logo 默认用 Kling 出场动画：星星闪 → 光环划出 → 像素字拼出；?logo=static 关掉，?logo=3d 看金属版 */
+const LOGO_REVEAL = !LOGO_3D && LOGO_PARAM !== 'static';
 
-function LogoReveal({ play, fallback }: { play: boolean; fallback: React.ReactNode }) {
+/**
+ * 出场动画叠在平面 logo 正上方、按同一张 808 × 620 画板像素对齐（位置见 home.css .hv-title__logo--reveal）。
+ * 播完后平面 logo（带颜文字）淡入接管，视频淡出——看起来就是最后颜文字「冒」出来。
+ */
+function LogoReveal({ play, onDone }: { play: boolean; onDone: () => void }) {
   const ref = useRef<HTMLVideoElement | null>(null);
-  const [failed, setFailed] = useState(false);
-  const reduced = usePrefersReducedMotion();
   const safari = typeof navigator !== 'undefined' && /^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
-  useEffect(() => { if (play) ref.current?.play().catch(() => setFailed(true)); }, [play]);
-  if (reduced || failed) return <>{fallback}</>;
+  useEffect(() => { if (play) ref.current?.play().catch(onDone); }, [play, onDone]);
   return (
     <video
       ref={ref}
-      className="hv-title__logo hv-title__logo--reveal"
+      className="hv-title__logo--reveal"
       src={safari ? HOME_ASSETS.logoReveal.hevc : HOME_ASSETS.logoReveal.webm}
       poster={HOME_ASSETS.logoReveal.startPoster}
       muted
       playsInline
       preload="auto"
       disablePictureInPicture
-      aria-label="Echuu"
-      onError={() => setFailed(true)}
+      aria-hidden="true"
+      onEnded={onDone}
+      onError={onDone}
     />
   );
 }
@@ -110,6 +112,10 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   })());
   const [mode, setMode] = useState<StageMode>('pending');
   const [phase, setPhase] = useState<OpeningPhase>('loading');
+  // logo 出场动画：减少动态效果时直接显示平面 logo
+  const showReveal = LOGO_REVEAL && !reduced;
+  const [revealDone, setRevealDone] = useState(false);
+  const finishReveal = useCallback(() => setRevealDone(true), []);
   const [stillShot, setStillShot] = useState<'back' | 'front'>('back');
   const [menuOpen, setMenuOpen] = useState(false);
   const [debut, setDebut] = useState(false);
@@ -415,12 +421,15 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
         </nav>
 
         <div className="hv-title">
-          <div className="hv-title__logo-wrap" style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}>
+          <div
+            className="hv-title__logo-wrap"
+            data-reveal={showReveal ? (revealDone ? 'done' : 'playing') : undefined}
+            style={{ '--logo-mask': `url("${HOME_ASSETS.logo3d}")` } as CSSProperties}
+          >
             {LOGO_3D
               ? <Suspense fallback={<HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}><Logo3D label={h.hero.logoAlt} /></Suspense>
-              : LOGO_VIDEO
-                ? <LogoReveal play={phase === 'hero'} fallback={<HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />} />
-                : <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}
+              : <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}
+            {showReveal ? <LogoReveal play={phase === 'hero'} onDone={finishReveal} /> : null}
             
           </div>
           <h1 className="hv-title__slogan">
