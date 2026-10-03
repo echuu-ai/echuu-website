@@ -39,101 +39,81 @@ function largestComponent(mask: Uint8Array): Uint8Array {
 }
 
 /**
- * 画翅膀引导：用真实右翼那一块的位置、方向和大小（主轴分析），画一片「一眼看得出是翅膀」的造型——
- * 前缘一道饱满的弧，后缘四片圆头羽毛的扇贝边，里面三道羽轴。蓝色铅笔点线 + 很淡的面。
- * 翅根取离右肩最近的那一端，前缘朝向头的一侧（醒来后真实羽翼长在同一个地方）。
+ * 画翅膀引导（按 Cory 手绘的样子）：一片卡通小天使翅膀——翅根在右肩胛，前缘一道饱满的弧往上往外长到翅尖，
+ * 外缘三片圆滚滚的羽毛往下收回，底边平平地回到翅根。圆点虚线 + 很淡的蓝面 + 两道羽轴 + 翅尖两颗小星星。
+ * 方向与大小按身体算：「上」= 髋→头，「外」= 背离脊柱、朝真实右翼所在的一侧，高约为头到髋的 0.8 倍、宽约 0.85 倍（和手绘稿一样往外伸得开，又不出纸边）。
  */
-function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { head: readonly [number, number]; shoulder: readonly [number, number] }) {
+function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { head: readonly [number, number]; hips: readonly [number, number]; shoulder: readonly [number, number] }) {
+  // 真实右翼那一块的重心：决定翅膀往哪一侧长
   let n = 0; let mx = 0; let my = 0;
   for (let i = 0; i < wing.length; i += 1) if (wing[i]) { mx += i % MASK_WIDTH; my += (i / MASK_WIDTH) | 0; n += 1; }
-  if (n < 30) return;
-  mx /= n; my /= n;
-  let sxx = 0; let syy = 0; let sxy = 0;
-  for (let i = 0; i < wing.length; i += 1) {
-    if (!wing[i]) continue;
-    const dx = (i % MASK_WIDTH) - mx;
-    const dy = ((i / MASK_WIDTH) | 0) - my;
-    sxx += dx * dx; syy += dy * dy; sxy += dx * dy;
-  }
-  const angle = 0.5 * Math.atan2(2 * sxy, sxx - syy);
-  let ux = Math.cos(angle); let uy = Math.sin(angle);
-  // 主轴方向上的范围；翅根 = 离右肩近的一端
-  let lo = Infinity; let hi = -Infinity; let wlo = Infinity; let whi = -Infinity;
-  for (let i = 0; i < wing.length; i += 1) {
-    if (!wing[i]) continue;
-    const dx = (i % MASK_WIDTH) - mx;
-    const dy = ((i / MASK_WIDTH) | 0) - my;
-    const a = dx * ux + dy * uy;
-    const b = -dx * uy + dy * ux;
-    lo = Math.min(lo, a); hi = Math.max(hi, a); wlo = Math.min(wlo, b); whi = Math.max(whi, b);
-  }
-  const endA = [mx + ux * lo, my + uy * lo];
-  const endB = [mx + ux * hi, my + uy * hi];
-  const dA = Math.hypot(endA[0] - refs.shoulder[0], endA[1] - refs.shoulder[1]);
-  const dB = Math.hypot(endB[0] - refs.shoulder[0], endB[1] - refs.shoulder[1]);
-  let root = endA;
-  if (dB < dA) { root = endB; ux = -ux; uy = -uy; }
-  const length = hi - lo;
-  const span = Math.max(whi - wlo, length * 0.34);
-  // 前缘朝头：垂直方向取指向头的一侧
-  let vx = -uy; let vy = ux;
-  if ((refs.head[0] - root[0]) * vx + (refs.head[1] - root[1]) * vy < 0) { vx = -vx; vy = -vy; }
-
+  const [hx, hy] = refs.head;
+  const [kx, ky] = refs.hips;
+  const L = Math.hypot(hx - kx, hy - ky) || 1;
+  const upx = (hx - kx) / L;
+  const upy = (hy - ky) / L;
+  let outx = -upy;
+  let outy = upx;
+  const sidePoint = n > 30 ? [mx / n, my / n] : [refs.shoulder[0], refs.shoulder[1]];
+  if ((sidePoint[0] - kx) * outx + (sidePoint[1] - ky) * outy < 0) { outx = -outx; outy = -outy; }
+  // 翅根：右肩往脊柱方向收一点、往下一点（肩胛骨的位置）
+  const rootX = refs.shoulder[0] - outx * L * 0.02 - upx * L * 0.26;
+  const rootY = refs.shoulder[1] - outy * L * 0.02 - upy * L * 0.26;
+  const W = L * 0.84;
+  const H = L * 0.82;
   const sx = PAPER_TEXTURE_WIDTH / MASK_WIDTH;
   const sy = PAPER_TEXTURE_HEIGHT / MASK_HEIGHT;
-  /** 翅膀本地坐标（u 沿翅根→翅尖 0–1，v 朝前缘为正，单位 = 翅宽）→ 贴图像素 */
-  const at = (u: number, v: number): [number, number] => [
-    (root[0] + ux * u * length + vx * v * span) * sx,
-    (root[1] + uy * u * length + vy * v * span) * sy,
+  /** 翅膀本地坐标（x 朝外、y 朝上，翅根 = 原点）→ 贴图像素 */
+  const at = (x: number, y: number): [number, number] => [
+    (rootX + outx * x * W + upx * y * H) * sx,
+    (rootY + outy * x * W + upy * y * H) * sy,
   ];
-  // 造型：前缘从翅根饱满地鼓起到翅尖；后缘四片羽毛，越靠近翅尖越长
-  const outline: Array<[number, number]> = [];
-  const push = (u: number, v: number) => outline.push(at(u, v));
-  for (let k = 0; k <= 24; k += 1) {
-    const u = k / 24;
-    push(u, 0.22 + 0.42 * Math.sin(Math.PI * Math.min(1, u * 0.92)) * (1 - u * 0.35) - 0.2 * u * u);
-  }
-  const feathers = [
-    { u0: 1.0, u1: 0.74, depth: 0.5 },
-    { u0: 0.74, u1: 0.52, depth: 0.46 },
-    { u0: 0.52, u1: 0.32, depth: 0.4 },
-    { u0: 0.32, u1: 0.06, depth: 0.32 },
+  const path = (curves: number[][], start: [number, number]) => {
+    ctx.beginPath();
+    ctx.moveTo(...at(...start));
+    for (const c of curves) ctx.bezierCurveTo(...at(c[0], c[1]), ...at(c[2], c[3]), ...at(c[4], c[5]));
+  };
+  // 外形：前缘 → 圆翅尖 → 三片圆羽毛 → 平底回到翅根
+  const outline = [
+    [0.04, 0.46, 0.42, 0.96, 0.94, 1.0],
+    [1.06, 1.01, 1.08, 0.86, 0.99, 0.8],
+    [1.13, 0.72, 1.06, 0.55, 0.93, 0.57],
+    [1.02, 0.45, 0.93, 0.31, 0.79, 0.35],
+    [0.85, 0.2, 0.72, 0.1, 0.57, 0.15],
+    [0.55, 0.03, 0.42, -0.02, 0.3, 0.03],
+    [0.2, 0.04, 0.08, 0.02, 0, 0],
   ];
-  for (const f of feathers) {
-    for (let k = 1; k <= 10; k += 1) {
-      const s = k / 10;
-      const u = f.u0 + (f.u1 - f.u0) * s;
-      // 每片羽毛是一个圆头：中间最深
-      push(u, -0.05 - f.depth * Math.sin(Math.PI * s) * (0.55 + 0.45 * u));
-    }
-  }
-  push(0, 0.02);
-
   ctx.save();
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.beginPath();
-  outline.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  path(outline, [0, 0]);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(114, 196, 250, 0.13)';
+  ctx.fillStyle = 'rgba(130, 200, 255, 0.2)';
   ctx.fill();
-  // 蓝色铅笔点线（像老师先用蓝笔点好的范围）
-  ctx.setLineDash([2.2, 6.5]);
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = 'rgba(58, 146, 220, 0.9)';
+  // 圆点虚线：线宽 3.6 + 极短的线段 = 一颗颗小圆点
+  ctx.setLineDash([0.1, 9]);
+  ctx.lineWidth = 3.8;
+  ctx.strokeStyle = 'rgba(58, 146, 226, 0.95)';
   ctx.stroke();
-  // 三道羽轴：从翅根附近散开到每片羽毛
-  ctx.setLineDash([1.6, 7]);
+  // 两道羽轴（更淡的点线）
+  ctx.lineWidth = 2.6;
+  ctx.strokeStyle = 'rgba(58, 146, 226, 0.5)';
+  path([[0.3, 0.32, 0.55, 0.5, 0.86, 0.66]], [0.12, 0.12]);
+  ctx.stroke();
+  path([[0.28, 0.2, 0.45, 0.28, 0.66, 0.34]], [0.14, 0.07]);
+  ctx.stroke();
+  // 翅尖旁两颗小星星（四角星，实线）
+  ctx.setLineDash([]);
   ctx.lineWidth = 2.2;
-  ctx.strokeStyle = 'rgba(58, 146, 220, 0.55)';
-  for (const f of feathers.slice(0, 3)) {
-    const um = (f.u0 + f.u1) / 2;
-    const [ax, ay] = at(0.08, 0.05);
-    const [cx, cy] = at(um * 0.6, 0.1);
-    const [bx, by] = at(um, -0.05 - f.depth * 0.6);
+  ctx.strokeStyle = 'rgba(58, 146, 226, 0.85)';
+  // 星星在翅尖内侧上方（纸面里面），不出纸边
+  for (const [x, y, r] of [[0.62, 1.12, 0.07], [0.42, 1.04, 0.045]] as const) {
+    const [cx, cy] = at(x, y);
+    const size = r * H * Math.hypot(sx, sy) / Math.SQRT2;
     ctx.beginPath();
-    ctx.moveTo(ax, ay);
-    ctx.quadraticCurveTo(cx, cy, bx, by);
+    ctx.moveTo(cx, cy - size); ctx.quadraticCurveTo(cx, cy, cx + size, cy);
+    ctx.quadraticCurveTo(cx, cy, cx, cy + size); ctx.quadraticCurveTo(cx, cy, cx - size, cy);
+    ctx.quadraticCurveTo(cx, cy, cx, cy - size);
     ctx.stroke();
   }
   ctx.restore();
@@ -254,6 +234,6 @@ export function captureSleepOutline(gl: THREE.WebGLRenderer, vrm: VRM, paper: Pa
   const guide = document.createElement('canvas');
   guide.width = PAPER_TEXTURE_WIDTH;
   guide.height = PAPER_TEXTURE_HEIGHT;
-  drawWingGuide(guide.getContext('2d')!, largestComponent(wings), { head: [hx, hy], shoulder: [rx, ry] });
+  drawWingGuide(guide.getContext('2d')!, largestComponent(wings), { head: [hx, hy], hips: [kx, ky], shoulder: [rx, ry] });
   return { strokes, canvas, guide };
 }

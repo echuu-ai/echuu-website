@@ -80,11 +80,11 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
 
   // 手写提示语用 Reenie Beanie（像铅笔随手写的字），只在开场按需加载
   useEffect(() => {
-    if (document.querySelector('link[data-hv-cursive]')) return;
+    if (document.querySelector('link[data-hv-pencil-font]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap';
-    link.setAttribute('data-hv-cursive', '');
+    link.setAttribute('data-hv-pencil-font', '');
     document.head.appendChild(link);
   }, []);
 
