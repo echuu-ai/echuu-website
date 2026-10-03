@@ -1037,3 +1037,12 @@ html.hv-charm-dragging, html.hv-charm-dragging * { user-select: none !important;
 @media (max-width: 900px) {
   .echuu-website .hv-replay { bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px + 12px); right: 12px; }
 }
+
+/* --- 首页白色铅笔涂鸦（PageDoodle） ---------------------------------------- */
+.echuu-website .hv-doodle {
+  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 45; pointer-events: none;
+  filter: url(#hv-page-boil);
+}
+/* 画的时候不要选中文字 */
+html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-user-select: none !important; }
+@media (prefers-reduced-motion: reduce) { .echuu-website .hv-doodle { filter: none; } }

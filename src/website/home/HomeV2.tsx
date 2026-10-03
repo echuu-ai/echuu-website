@@ -10,6 +10,7 @@ import { HomeFooter } from './HomeFooter';
 import { BlogSection } from './BlogSection';
 import { useSceneReveal } from './useSceneReveal';
 import { HeroGuideLines } from './HeroGuideLines';
+import { PageDoodle } from './PageDoodle';
 import '../styles/home.css';
 import '../styles/home-scenes.css';
 
@@ -56,6 +57,8 @@ export function HomeV2() {
       <HomeFooter onBeta={() => openAccess('signup')} />
       {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
       <HeroGuideLines />
+      {/* 白色铅笔涂鸦：开场结束后在空白处拖动就能画 */}
+      <PageDoodle />
       {SeamTuningPanel && showSeamTuning() && <Suspense fallback={null}><SeamTuningPanel /></Suspense>}
       {LogoTuningPanel && tuneParam() === 'logo' && <Suspense fallback={null}><LogoTuningPanel /></Suspense>}
       {SceneGradePanel && tuneParam() === 'grade' && <Suspense fallback={null}><SceneGradePanel /></Suspense>}
