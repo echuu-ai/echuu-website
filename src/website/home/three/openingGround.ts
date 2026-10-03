@@ -6,8 +6,8 @@ import type { MotionKey } from '../openingMotion';
  * 开场动作的接地与对齐（加载烘焙后跑一次）。
  *
  * - Mixamo 的 Stand Up 带一个约 +0.86 m 的根节点高度：按「最后一帧脚底 = 定格姿势脚底」整体下移。
- * - PET_SLEEPING 是桌宠在窗口上沿睡觉（离地约 0.5 m，头朝 −X），而 Stand Up 第一帧躺在地上、头朝 −Z：
- *   把睡姿绕 Y 转到同一朝向、平移到同一位置并落到同一高度，两段之间的 0.7 s 交叉淡入才不会转身、下坠。
+ * - 睡姿（Mixamo Sleeping Idle，侧身蜷着睡）的朝向与位置和 Stand Up 第一帧（躺在地上、头朝 −Z）不同：
+ *   把睡姿绕 Y 转到同一朝向、平移到同一位置并落到同一高度，两段之间的交叉淡入才不会转身、下坠。
  *
  * 只改 hips 的 position / quaternion 轨道（其余骨骼都是相对旋转），时间轴不动。
  * 返回躺姿的身体中心与头的方向，纸面按它摆放。
@@ -95,9 +95,10 @@ export function groundOpeningClips(
   pose(stand, standDuration);
   const standingHips = bone('hips')!;
   const standingHead = bone('head')!;
-  // 站姿面朝 +Z：折纸点在她右前方的地面上——纸从脚下滑出来就在这里折，不和身体穿插；从她右肩后看，纸在右腿旁边不被挡住
+  // 站姿面朝 +Z：纸保持原大小（约 1.95 × 2.7 m）从脚下往前滑到她正前方约 1.9 m 处再折（纸的近边离脚尖约 0.5 m，不穿模），
+  // 折好机头朝前、直接往窗口飞
   void standingHead;
-  const foldPoint = new THREE.Vector3(standingHips.x + 0.55, 0.006, standingHips.z + 0.7);
+  const foldPoint = new THREE.Vector3(standingHips.x, 0.006, standingHips.z + 1.9);
 
   // 2. Stand Up 第一帧的躺姿：中心、朝向、最低点
   pose(stand, 0);

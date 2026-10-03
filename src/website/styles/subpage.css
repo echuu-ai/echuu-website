@@ -5,6 +5,8 @@
 .echuu-website .hv.subpage-chrome,
 .echuu-website .hv.team-chrome { background: transparent; overflow: visible; isolation: auto; }
 .echuu-website .hv.subpage-chrome::before { display: none; }
+/* 团队页保留 .hv 的天空伪元素，但它四边外扩 28px（藏模糊边）：底边会把文档撑长 28px，页脚下露出一条天空。底边收回到 0 */
+.echuu-website .hv.team-chrome::before { bottom: 0; }
 .echuu-website .subpage-chrome > .hv-header,
 .echuu-website .team-chrome > .hv-header { position: relative; height: 152px; z-index: 5; }
 .echuu-website .subpage-chrome .hv-footer,

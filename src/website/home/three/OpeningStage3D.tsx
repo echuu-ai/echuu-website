@@ -137,10 +137,10 @@ const CAMERA_KEYS: CameraKey[] = [
   { t: W + 0.3, anchor: 'head', pos: [0.47, -0.05, 1.48], look: 'head', lookOff: [0, -0.02, 0], fov: 30, dof: FACE_DOF },
   // 2-1 纸从脚下慢慢飘起：镜头从正面绕到她右侧（侧面：人与纸同框），再绕到右肩后
   { t: R.riseStart + 0.7, anchor: 'head', pos: [1.05, 0.02, 0.95], look: 'head', lookOff: [0, -0.15, 0.25], fov: 34, dof: FACE_DOF },
-  { t: R.foldStart, anchor: 'head', pos: [2.7, 0.45, 0.95], look: 'fold', lookOff: [-0.3, 0.85, -0.35], fov: 46, dof: FOLD_DOF },
-  // 2-2 高位 3/4 后侧：越过翅膀与右肩，看她右前方地上的纸一折一折慢慢折成纸飞机；她和纸同框，焦点在纸上
-  { t: R.foldStart + 1.0, anchor: 'head', pos: [1.1, 0.75, -1.9], look: 'fold', lookOff: [-0.3, 0.85, -0.3], fov: 46, dof: FOLD_DOF },
-  { t: R.flyStart, anchor: 'head', pos: [1.0, 0.7, -1.75], look: 'fold', lookOff: [-0.25, 0.8, -0.1], fov: 44, dof: FOLD_DOF },
+  { t: R.foldStart, anchor: 'head', pos: [2.4, 1.0, 0.2], look: 'fold', lookOff: [-0.2, 0.4, -0.9], fov: 48, dof: FOLD_DOF },
+  // 2-2 高位、她右后方偏外：视线从她身侧擦过，她在画面左侧前景，整张纸（原大小）在她正前方地上一折一折折成纸飞机
+  { t: R.foldStart + 1.0, anchor: 'head', pos: [1.9, 1.5, -1.6], look: 'fold', lookOff: [-0.2, 0.3, -0.5], fov: 50, dof: FOLD_DOF },
+  { t: R.flyStart, anchor: 'head', pos: [1.6, 1.4, -1.6], look: 'fold', lookOff: [-0.1, 0.4, -0.3], fov: 48, dof: FOLD_DOF },
   // 2-3 纸飞机越过她飞进窗口：镜头留在她身后、略后退，视线跟着飞机往前
   { t: OPENING.openStart, anchor: 'hips', pos: [-0.25, 1.55, -2.3], look: 'chest', lookOff: [0, 0.15, 1.5], fov: 38 },
   // open 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕（与旧版一致）
@@ -652,10 +652,8 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
  */
 
 const FLY_END = OPENING.openStart + 0.15;
-/** 在地上折的那张纸相对整张纸的大小（纸宽 1.95 m → 约 0.5 m，接近一张大号作业纸） */
-const FOLD_SCALE = 0.26;
-/** 折纸时机头的水平方向（她面朝 +Z）：右前方 */
-const FOLD_NOSE = { x: 0.9, z: 0.45 } as const;
+/** 折纸时机头的水平方向（她面朝 +Z）：朝前、对着窗口，折好直接往前飞（纸全程不缩放） */
+const FOLD_NOSE = { x: 0, z: 1 } as const;
 const FLY_DEPTH = 7;
 /** 瞄准手机窗靠右的位置，不从角色身后穿过去 */
 const WINDOW_AIM_X = 0.6;
@@ -806,12 +804,12 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     parts.paper.setFold(steps[0], steps[1], steps[2], steps[3], pool.light);
 
     if (t < flyStart) {
-      // 从她脚下滑出来、贴着地面缩成一张小纸，转到折纸的朝向
+      // 原大小从她脚下滑出来、转到折纸的朝向（不缩放）
       const m = smoothstep(F, foldStart, t);
       g.position.lerpVectors(placement.current.center, pool.anchor, m);
       g.position.y = 0.006 + Math.sin(m * Math.PI) * 0.05;
       g.quaternion.slerpQuaternions(placement.current.groupQuaternion, pool.foldQuat, m);
-      g.scale.setScalar(1 - (1 - FOLD_SCALE) * m);
+      g.scale.setScalar(1);
       return;
     }
     // 起飞：先从地上抬起来，再沿弧线钻进窗口；机头在头 0.45 s 里转向飞行方向
@@ -825,7 +823,7 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     flightOrientation(Math.sin(u * Math.PI * 2) * 0.3);
     g.position.copy(pool.pos);
     g.quaternion.copy(pool.foldQuat).slerp(pool.flightQuat, smoothstep(flyStart, flyStart + 0.45, t));
-    g.scale.setScalar(FOLD_SCALE * (1 - 0.4 * u));
+    g.scale.setScalar(1);
   });
   return (
     <group ref={group} visible={false}>

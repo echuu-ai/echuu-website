@@ -6,6 +6,7 @@ import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
 import { buildMailto } from '../lib/cta';
 import { VrmGuide } from '../components/VrmGuide';
 import { Reveal } from '../components/Reveal';
+import { LoopArt } from '../components/LoopArt';
 
 const BroochStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.BroochStage })));
 const KeysStage = lazy(() => import('./three/Charms3D').then((m) => ({ default: m.KeysStage })));
@@ -299,7 +300,7 @@ export function CreatorsSection() {
           </div>
         </Reveal>
       </div>
-      <img className="hv-creators__art" src={HOME_ASSETS.creatorsCircle} alt={h.creators.imageAlt} width={1058} height={794} loading="lazy" decoding="async" />
+      <LoopArt className="hv-creators__art" once poster={HOME_ASSETS.creatorsCircle} {...HOME_ASSETS.loops.creators} alt={h.creators.imageAlt} width={1058} height={794} />
     </section>
   );
 }

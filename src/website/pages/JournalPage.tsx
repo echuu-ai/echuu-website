@@ -61,9 +61,6 @@ export function JournalPage() {
                 </p>
                 <h2 style={{ fontSize: 19 }}>{note.title[locale] ?? note.title.en}</h2>
                 <p>{note.body[locale] ?? note.body.en}</p>
-                <p className="note-card__meta">
-                  {t.journal.shortNote} · {t.journal.source}: {note.source}
-                </p>
               </article>
             ))}
           </div>

@@ -1,33 +1,93 @@
-.echuu-access-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(9,38,67,.26); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
-.echuu-access { position: fixed; z-index: 10001; left: 50%; top: 50%; transform: translate(-50%,-50%); width: min(440px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; border-radius: 32px; outline: none; font-family: '42dot Sans',system-ui,sans-serif; color: #183d54; }
+/*
+ * 官网弹窗统一面板（内测 / 登录 / 微信 / QQ 群）——Cory 的面板模版：
+ * 363 × 543、rgba(10, 36, 53, .3)、圆角 14。所有弹窗同一尺寸、同一结构：
+ * 头部（标题 + 说明）在上，主按钮固定在底部，中间放各自的内容。
+ */
+.echuu-access-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(6, 26, 44, .38); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.echuu-access {
+  position: fixed; z-index: 10001; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(363px, calc(100vw - 32px)); height: min(543px, calc(100dvh - 32px));
+  border-radius: 14px; outline: none; font-family: '42dot Sans', system-ui, sans-serif; color: #fff;
+}
 .echuu-access *, .echuu-access *::before, .echuu-access *::after { box-sizing: border-box; }
-.echuu-access__glass { position: relative; isolation: isolate; padding: 38px 32px 28px; border-radius: inherit; overflow: hidden; background: linear-gradient(135deg,rgba(255,255,255,.88),rgba(228,249,255,.77) 55%,rgba(212,240,255,.86)); backdrop-filter: blur(28px) saturate(1.5); -webkit-backdrop-filter: blur(28px) saturate(1.5); border: 1px solid rgba(255,255,255,.85); box-shadow: inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(255,255,255,.4),0 24px 80px rgba(4,41,82,.25); }
-.echuu-access__glass::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; background: radial-gradient(ellipse at 0 0,rgba(255,255,255,.9),transparent 48%),radial-gradient(ellipse at 100% 100%,rgba(120,221,249,.22),transparent 55%); }
-.echuu-access button,.echuu-access input { font: inherit; }
+.echuu-access__glass {
+  position: relative; display: flex; flex-direction: column; height: 100%; overflow-y: auto;
+  padding: 28px 24px 24px; border-radius: inherit;
+  background: rgba(10, 36, 53, .3);
+  backdrop-filter: blur(28px) saturate(1.3); -webkit-backdrop-filter: blur(28px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 24px 64px rgba(2, 18, 32, .35);
+}
+.echuu-access button, .echuu-access input { font: inherit; }
 .echuu-access button { cursor: pointer; }
-.echuu-access__close { position: absolute; right: 17px; top: 17px; width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: 50%; color: #35576d; background: rgba(255,255,255,.55); }
-.echuu-access__badge { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 17px; color: #137599; background: linear-gradient(135deg,#fff9,#94e9ff70); border: 1px solid #fff; box-shadow: inset 0 1px 8px #fff8,0 5px 15px #1c8cbb15; }
-.echuu-access__eyebrow { font-size: 10px; font-weight: 650; letter-spacing: .2em; margin: 24px 0 10px; color: #527485; }
-.echuu-access__title { margin: 0; font: 600 clamp(23px,5vw,28px)/1.35 '42dot Sans',system-ui,sans-serif; letter-spacing: -.035em; }
-.echuu-access__description { font-size: 14px; line-height: 1.8; color: #436378; margin: 13px 0 26px; }
-.echuu-access__form { display: grid; gap: 18px; }
-.echuu-access label { display: grid; gap: 8px; font-size: 13px; font-weight: 550; }
-.echuu-access input { width: 100%; min-height: 50px; border: 1px solid #fff; border-radius: 14px; padding: 12px 15px; background: rgba(255,255,255,.65); box-shadow: inset 0 2px 5px #21496308; color: #15394f; font-size: 15px; }
-.echuu-access input::placeholder { color: #728796; }
-.echuu-access input:focus { outline: 2px solid #2a9cc3; outline-offset: 2px; }
-.echuu-access button:focus-visible { outline: 2px solid #16759b; outline-offset: 3px; }
+.echuu-access button:focus-visible { outline: 2px solid #8fe3ff; outline-offset: 3px; }
+
+.echuu-access__close {
+  position: absolute; right: 14px; top: 14px; width: 32px; height: 32px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; color: #fff; background: rgba(255, 255, 255, .12); transition: background .15s;
+}
+.echuu-access__close:hover { background: rgba(255, 255, 255, .22); }
+
+/* 头部 */
+/* 头部：标题用蒲瓜纤云宋（与首页 Slogan 同一套），居中；细笔画加一点同色描边 */
+.echuu-access__title {
+  margin: 0; padding: 0 40px; text-align: center; text-wrap: balance; word-break: keep-all; overflow-wrap: anywhere;
+  font-family: 'PuguaXianyunsong Home', 'Noto Serif SC', 'Songti SC', serif; font-weight: 200; font-size: 26px; line-height: 1.3;
+  letter-spacing: -.02em; -webkit-text-stroke: .03em currentColor;
+}
+.echuu-access:lang(ja) .echuu-access__title { font-family: 'Shippori Mincho', 'Noto Serif SC', serif; font-weight: 500; -webkit-text-stroke: 0; }
+.echuu-access:lang(ko) .echuu-access__title { font-family: 'Maru Buri', 'Noto Serif SC', serif; font-weight: 600; -webkit-text-stroke: 0; }
+.echuu-access__description { margin: 10px 0 0; text-align: center; text-wrap: balance; font-size: 14px; line-height: 1.7; color: rgba(255, 255, 255, .74); }
+
+/* 中间内容：占满剩余高度，主按钮被推到底部 */
+.echuu-access__body { flex: 1; display: flex; flex-direction: column; gap: 16px; margin-top: 24px; min-height: 0; }
+.echuu-access__actions { display: grid; gap: 12px; margin-top: auto; padding-top: 20px; }
+
+/* 表单 */
+.echuu-access__form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.echuu-access label { display: grid; gap: 8px; font-size: 13px; font-weight: 550; color: rgba(255, 255, 255, .86); }
+.echuu-access input {
+  width: 100%; height: 46px; padding: 0 14px; border-radius: 10px; font-size: 15px; color: #fff;
+  border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08);
+}
+.echuu-access input::placeholder { color: rgba(255, 255, 255, .45); }
+.echuu-access input:focus { outline: none; border-color: rgba(143, 227, 255, .9); background: rgba(255, 255, 255, .12); }
 .echuu-access__password { position: relative; display: block; }
-.echuu-access__password input { padding-right: 48px; }
-.echuu-access__password button { position: absolute; right: 3px; top: 3px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; color: #527485; background: transparent; }
-.echuu-access__submit { width: 100%; min-height: 50px; display: flex; justify-content: center; align-items: center; gap: 12px; border-radius: 15px; border: 1px solid #ffffffc0; background: linear-gradient(130deg,#89e9fc,#4dccf0); color: #104660; font-weight: 650 !important; box-shadow: inset 0 1px 1px #fff8,0 6px 20px #2b9dca20; transition: filter .15s; }
-.echuu-access__submit:hover:not(:disabled) { filter: brightness(1.07); }
-.echuu-access__submit:disabled { cursor: not-allowed; opacity: .55; }
-.echuu-access__switch { font-size: 13px; text-align: center; margin: 22px 0 0; color: #526d7e; }
-.echuu-access__switch button { border: 0; background: none; color: #00658b; font-weight: 650; padding: 6px; }
-.echuu-access__notice,.echuu-access__error { margin: 0; font-size: 12px; line-height: 1.6; }
-.echuu-access__notice { color: #526b7b; }
-.echuu-access__error { color: #9d283b; }
-.echuu-access__privacy { text-align: center; font-size: 11px; color: #526b7b; margin: 14px 0 0; }
-@media(max-width: 480px) { .echuu-access__glass { padding: 30px 23px 23px; } }
-@media(prefers-reduced-motion: reduce) { .echuu-access * { transition: none !important; } }
-@supports not (backdrop-filter: blur(1px)) { .echuu-access__glass { background: #edf9ff; } }
+.echuu-access__password input { padding-right: 46px; }
+.echuu-access__password button { position: absolute; right: 1px; top: 1px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; color: rgba(255, 255, 255, .7); background: transparent; }
+
+/* 主按钮：白底深字，全宽，一行 */
+.echuu-access__submit {
+  width: 100%; height: 48px; display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap;
+  border: 0; border-radius: 10px; background: #fff; color: #0a2435; font-weight: 650 !important; font-size: 15px;
+  transition: filter .15s, opacity .15s;
+}
+.echuu-access__submit:hover:not(:disabled) { filter: brightness(.94); }
+.echuu-access__submit:disabled { cursor: not-allowed; opacity: .5; }
+
+.echuu-access__switch { margin: 0; font-size: 13px; text-align: center; color: rgba(255, 255, 255, .7); }
+.echuu-access__switch button { border: 0; background: none; color: #8fe3ff; font-weight: 650; padding: 6px; white-space: nowrap; }
+.echuu-access__notice, .echuu-access__error, .echuu-access__privacy { margin: 0; font-size: 12px; line-height: 1.6; }
+.echuu-access__notice, .echuu-access__privacy { color: rgba(255, 255, 255, .6); }
+.echuu-access__privacy { text-align: center; }
+.echuu-access__error { color: #ffb3c0; }
+
+/* 社群：二维码、号码卡、加入步骤 */
+/* 微信名片是竖图（888 × 1206）：占满头部与按钮之间的空间，完整显示不裁切 */
+.echuu-access__qr { display: block; flex: 1 1 0; min-height: 0; width: 100%; object-fit: contain; border-radius: 10px; }
+.echuu-access__id {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .06);
+}
+.echuu-access__id span { font-size: 12px; color: rgba(255, 255, 255, .6); white-space: nowrap; }
+.echuu-access__id strong { font-size: 20px; font-weight: 600; letter-spacing: .04em; font-variant-numeric: tabular-nums; user-select: all; }
+.echuu-access__steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: step; }
+.echuu-access__steps li { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, .86); counter-increment: step; }
+.echuu-access__steps li::before {
+  content: counter(step); width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%;
+  font-size: 12px; font-weight: 650; color: #0a2435; background: rgba(255, 255, 255, .88);
+}
+.echuu-access__status { min-height: 18px; margin: 0; font-size: 12px; text-align: center; color: rgba(255, 255, 255, .7); }
+
+@media (prefers-reduced-motion: reduce) { .echuu-access * { transition: none !important; } }
+@supports not (backdrop-filter: blur(1px)) { .echuu-access__glass { background: rgba(10, 36, 53, .92); } }

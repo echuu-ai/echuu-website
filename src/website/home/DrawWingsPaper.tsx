@@ -20,9 +20,12 @@ export const PAPER_TILT_DEG = -10.23;
 /** 轮廓「写」出来用多久 */
 const WRITE_SECONDS = 2.4;
 
-/** 画够这些笔迹（累计长度 / 纸宽）就算画好；宽松：在哪儿画都算 */
-const INK_TO_WAKE = 1.1;
-const IDLE_MS = 600;
+/**
+ * 画好的判定：累计笔迹长度 / 纸宽 ≥ INK_TO_WAKE，松手 IDLE_MS 后醒来。在哪儿画都算。
+ * 0.3 ≈ 沿引导的外缘描一笔（翅膀外缘约为纸宽的 0.4）——描个大概就够，不要求涂满。
+ */
+const INK_TO_WAKE = 0.3;
+const IDLE_MS = 450;
 
 type InkState = { drawing: boolean; x: number; y: number; ink: number; done: boolean; timer: number };
 

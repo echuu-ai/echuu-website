@@ -6,6 +6,7 @@ import { websitePath } from '../router';
 import { BETA_DOC_URL, CONTACT_EMAIL, LEGAL_DOCS } from '../config/site';
 import { fill } from '../i18n';
 import { Reveal } from '../components/Reveal';
+import { LoopArt } from '../components/LoopArt';
 
 /** 内测邀请 + 巨字 + 页脚。背景是从天空色沉到深蓝的渐变，中间是背对镜头的翅膀。 */
 export function HomeFooter({ onBeta }: { onBeta: () => void }) {
@@ -15,7 +16,7 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
 
   return (
     <footer className="hv-footer" id="beta">
-      <img className="hv-footer__wings" src={HOME_ASSETS.footerWings} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+      <LoopArt className="hv-footer__wings" poster={HOME_ASSETS.footerWings} {...HOME_ASSETS.loops.footerWings} width={1000} height={1499} />
       <Reveal className="hv-beta">
         <h2 className="hv-beta__title">
           {title1}
@@ -68,7 +69,7 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
         <p>
-          <Link to={home} className="hv-footer__home">Echuu</Link>
+          <Link to={home} className="hv-footer__home"><img src={HOME_ASSETS.logoWhite} alt="Echuu" width={679} height={569} loading="lazy" decoding="async" /></Link>
           <span>{fill(h.footer.copyright, { year: new Date().getFullYear() })}</span>
         </p>
       </div>

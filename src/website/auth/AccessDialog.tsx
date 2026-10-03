@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent, type RefObject } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, Check, Eye, EyeOff, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Check, Eye, EyeOff, X } from 'lucide-react';
 import { useLocale } from '../locale-context';
 import { authCopy } from './copy';
 import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta } from './api';
@@ -54,18 +54,18 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   return <Dialog.Root open={Boolean(mode)} onOpenChange={(open) => { if (!open) onClose(); }}>
     <Dialog.Portal>
       <Dialog.Overlay className="echuu-access-overlay" />
-      <Dialog.Content className="echuu-access" onCloseAutoFocus={(event) => {
+      <Dialog.Content className="echuu-access" lang={locale} onCloseAutoFocus={(event) => {
         event.preventDefault(); returnFocusRef.current?.focus();
       }}>
         <motion.div className="echuu-access__glass" initial={reduced ? false : { opacity: 0, y: 12, scale: .98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: reduced ? 0 : .24, ease: [.23, 1, .32, 1] }}>
           <Dialog.Close className="echuu-access__close" aria-label={c.close}><X size={20} /></Dialog.Close>
-          <div className="echuu-access__badge" aria-hidden="true">{success ? <Check /> : <Sparkles />}</div>
-          <p className="echuu-access__eyebrow">ECHUU · EARLY ACCESS</p>
           <Dialog.Title className="echuu-access__title">{success ? c.successTitle : invite ? c.inviteTitle : c.signupTitle}</Dialog.Title>
           <Dialog.Description className="echuu-access__description">{success ? c.successBody : invite ? c.inviteBody : c.signupBody}</Dialog.Description>
-          {success ? <button className="echuu-access__submit" onClick={onClose}>{c.done}<Check size={18} /></button> : <>
-            <form onSubmit={submit} className="echuu-access__form">
+          {success ? <div className="echuu-access__body"><div className="echuu-access__actions">
+            <button className="echuu-access__submit" onClick={onClose}>{c.done}<Check size={18} /></button>
+          </div></div> : <>
+            <form onSubmit={submit} className="echuu-access__form echuu-access__body">
               {invite ? <label>{c.code}<input autoFocus name="invitation" value={code} onChange={(e) => setCode(e.target.value)} required maxLength={256}
                 placeholder={c.codePlaceholder} autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} disabled={busy} /></label> : <>
                 <label>{c.email}<input autoFocus type="email" name="email" autoComplete="email" placeholder="you@example.com" value={email}
@@ -78,13 +78,15 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
               </>}
               {!configured && <p className="echuu-access__notice" role="status">{c.unavailable}</p>}
               {error && <p className="echuu-access__error" role="alert">{error}</p>}
-              <button type="submit" className="echuu-access__submit" disabled={busy || !configured} aria-busy={busy}>
-                {busy ? c.busy : invite ? c.submitInvite : c.submitSignup}<ArrowRight size={18} />
-              </button>
+              <div className="echuu-access__actions">
+                <button type="submit" className="echuu-access__submit" disabled={busy || !configured} aria-busy={busy}>
+                  {busy ? c.busy : invite ? c.submitInvite : c.submitSignup}<ArrowRight size={18} />
+                </button>
+                <p className="echuu-access__switch">{invite ? c.noCode : c.hasCode} <button type="button" onClick={() => onModeChange(invite ? 'signup' : 'invite')}>
+                  {invite ? c.beta : c.login}</button></p>
+                {!invite && <p className="echuu-access__privacy">{c.privacy}</p>}
+              </div>
             </form>
-            <p className="echuu-access__switch">{invite ? c.noCode : c.hasCode} <button type="button" onClick={() => onModeChange(invite ? 'signup' : 'invite')}>
-              {invite ? c.beta : c.login}</button></p>
-            {!invite && <p className="echuu-access__privacy">{c.privacy}</p>}
           </>}
         </motion.div>
       </Dialog.Content>

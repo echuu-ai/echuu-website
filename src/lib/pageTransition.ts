@@ -12,6 +12,8 @@ export function revealApplication() {
     window.requestAnimationFrame(() => {
       document.documentElement.classList.remove('echuu-booting');
       document.documentElement.classList.add('echuu-ready');
+      // 加载幕淡出（240 ms）后再撤掉首页的黑底，之后页面背景照常由各页自己决定
+      window.setTimeout(() => document.documentElement.classList.remove('echuu-dark-boot'), 400);
     });
   });
 }

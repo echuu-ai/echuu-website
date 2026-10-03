@@ -44,7 +44,7 @@ function largestComponent(mask: Uint8Array): Uint8Array {
  * 方向与大小按身体算：「上」= 髋→头，「外」= 背离脊柱、朝真实右翼所在的一侧，高约为头到髋的 0.8 倍、宽约 0.85 倍（和手绘稿一样往外伸得开，又不出纸边）。
  */
 function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { head: readonly [number, number]; hips: readonly [number, number]; shoulder: readonly [number, number] }) {
-  // 真实右翼那一块的重心：决定翅膀往哪一侧长
+  // 引导那一侧真实翅膀的重心：决定翅膀往哪一侧长
   let n = 0; let mx = 0; let my = 0;
   for (let i = 0; i < wing.length; i += 1) if (wing[i]) { mx += i % MASK_WIDTH; my += (i / MASK_WIDTH) | 0; n += 1; }
   const [hx, hy] = refs.head;
@@ -54,11 +54,12 @@ function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { 
   const upy = (hy - ky) / L;
   let outx = -upy;
   let outy = upx;
-  const sidePoint = n > 30 ? [mx / n, my / n] : [refs.shoulder[0], refs.shoulder[1]];
-  if ((sidePoint[0] - kx) * outx + (sidePoint[1] - ky) * outy < 0) { outx = -outx; outy = -outy; }
-  // 翅根：右肩往脊柱方向收一点、往下一点（肩胛骨的位置）
-  const rootX = refs.shoulder[0] - outx * L * 0.02 - upx * L * 0.26;
-  const rootY = refs.shoulder[1] - outy * L * 0.02 - upy * L * 0.26;
+  // 有真实翅膀像素就朝它长；没有就朝画面左边长
+  const flip = n > 30 ? (mx / n - kx) * outx + (my / n - ky) * outy < 0 : outx > 0;
+  if (flip) { outx = -outx; outy = -outy; }
+  // 翅根：肩往外推到背的边缘、再往下一点（肩胛骨），翅膀从背后长出来、不盖住身体
+  const rootX = refs.shoulder[0] + outx * L * 0.1 - upx * L * 0.36;
+  const rootY = refs.shoulder[1] + outy * L * 0.1 - upy * L * 0.36;
   const W = L * 0.84;
   const H = L * 0.82;
   const sx = PAPER_TEXTURE_WIDTH / MASK_WIDTH;
@@ -115,7 +116,7 @@ function drawWingGuide(ctx: CanvasRenderingContext2D, wing: Uint8Array, refs: { 
 /**
  * 从 3D 睡姿生成纸上的铅笔稿：正交相机贴着纸面往下拍角色剪影（不含翅膀——翅膀留给观众画），
  * 剪影边缘串成笔画（sketchStrokes）。这样纸上的线和 3D 角色在 wake 那一刻严丝合缝。
- * 再单独拍一次翅膀，只留角色右侧那片：它就是「画翅膀」的引导，和醒来后真实的羽翼完全对齐。
+ * 再单独拍一次翅膀，只留画面左侧（她背后）那片：它就是「画翅膀」的引导，和醒来后真实的羽翼对齐。
  */
 
 /** 纸面贴图尺寸（与 PaperSheet3D 的画布一致） */
@@ -127,7 +128,7 @@ export type SketchOutline = {
   strokes: SketchStroke[];
   /** 画好整幅轮廓的贴图（3D 纸面用） */
   canvas: HTMLCanvasElement;
-  /** 右侧翅膀的引导（与纸面同尺寸，透明底） */
+  /** 左侧翅膀的引导（与纸面同尺寸，透明底） */
   guide: HTMLCanvasElement;
 };
 
@@ -217,12 +218,17 @@ export function captureSleepOutline(gl: THREE.WebGLRenderer, vrm: VRM, paper: Pa
   };
   const [hx, hy] = toMask('head');
   const [kx, ky] = toMask('hips');
-  const [rx, ry] = toMask('rightUpperArm');
   const sideOf = (x: number, y: number) => Math.sign((hx - kx) * (y - ky) - (hy - ky) * (x - kx));
-  const rightSide = sideOf(rx, ry) || 1;
+  // 引导固定在画面左侧（侧睡时就是她背后那一侧）：脊柱线左边那片翅膀
+  const keepSide = sideOf(kx - MASK_WIDTH, ky) || 1;
+  // 翅根取这一侧的肩；两肩都不在这侧时取离这一侧更近的那个
+  const [lx, ly] = toMask('leftUpperArm');
+  const [rx0, ry0] = toMask('rightUpperArm');
+  const leftOf = (x: number, y: number) => (hx - kx) * (y - ky) - (hy - ky) * (x - kx);
+  const [rx, ry] = leftOf(lx, ly) * keepSide > leftOf(rx0, ry0) * keepSide ? [lx, ly] : [rx0, ry0];
   const wings = renderMask(gl, vrm, camera, (mesh) => mesh.name === 'wings');
   for (let y = 0; y < MASK_HEIGHT; y += 1) {
-    for (let x = 0; x < MASK_WIDTH; x += 1) if (wings[y * MASK_WIDTH + x] && sideOf(x, y) !== rightSide) wings[y * MASK_WIDTH + x] = 0;
+    for (let x = 0; x < MASK_WIDTH; x += 1) if (wings[y * MASK_WIDTH + x] && sideOf(x, y) !== keepSide) wings[y * MASK_WIDTH + x] = 0;
   }
   const guide = document.createElement('canvas');
   guide.width = PAPER_TEXTURE_WIDTH;

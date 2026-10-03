@@ -6,3 +6,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 artifacts/
+
+# Kling 循环视频的中间文件
+scripts/loops/work/

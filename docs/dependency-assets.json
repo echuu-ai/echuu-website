@@ -166,8 +166,8 @@
   },
   {
     "path": "fonts/pugua-qianyun-song-home.woff2",
-    "bytes": 218080,
-    "sha256": "8ed70d730b02cc9d9686efccd3ee35186bc5f89ebdc31522e87b6dc56b2db338"
+    "bytes": 230400,
+    "sha256": "f1fcc98cc0e57f128a5c54b0823ffec9fad6bd67414847d9cc37ff2b59e093bb"
   },
   {
     "path": "fonts/pugua-qianyun-song.woff2",
@@ -599,5 +599,71 @@
     "bytes": 2466576,
     "sha256": "90fbfff33adc9467b7362275d4fa386e4ed8234f9895faf4179f59582609fae2",
     "source": "Mixamo \"Stand Up\", copied from echuu-ux-r3f-vite/public/assets/animation/Stand Up.fbx, 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "assets/animation/mixamo/sleeping-idle.fbx",
+    "bytes": 3766128,
+    "sha256": "615e312def4c3d9b56b6a8a089ed6106a5f9a9a7315264a3b9840b74e5fd35cd",
+    "source": "Mixamo \"Sleeping Idle\", supplied by Cory (~/Downloads/Sleeping Idle.fbx), 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/loops/footer-wings.webm",
+    "bytes": 805329,
+    "sha256": "8ec8986789507854ebdad2893428d056b0491f7bd0a083c8de5cc3ce2937f7fa",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (VP9 alpha)"
+  },
+  {
+    "path": "website/loops/footer-wings.mov",
+    "bytes": 2489255,
+    "sha256": "8e2bb85d7f5ab08e12a8d397862ad5b81d27b268e09f176c3f4c37741479f844",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (HEVC alpha)"
+  },
+  {
+    "path": "website/platforms/vroid.png",
+    "bytes": 1396,
+    "sha256": "41b11d4a1931a4e1710069ba55a8b1fdf13e63416ada4ac6775dfbd47d4b3bfb",
+    "source": "Platform site icon from https://vroid.com/favicon.png, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
+  },
+  {
+    "path": "website/platforms/aplaybox.png",
+    "bytes": 2160,
+    "sha256": "5b2bed79b4460d854d96f609b1e1e1902ccad15d66eae690490b1ebb26ab9b4f",
+    "source": "Platform site icon from https://www.aplaybox.com/favicon.ico, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
+  },
+  {
+    "path": "website/platforms/booth.png",
+    "bytes": 2670,
+    "sha256": "2c0d2a173c07ada26eae0b033eb78a93167e1950d21d387980ce2b40b00fe5d9",
+    "source": "Platform site icon from https://booth.pm/static-images/pwa/icon_size_180.png, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
+  },
+  {
+    "path": "website/figma/logo-chrome.png",
+    "bytes": 111020,
+    "sha256": "98e7994734f7004618a36e481e12f1aefd99854ff6b6b34b27f0cf04c60d9856",
+    "source": "Echuu logo, chrome-blue version supplied by Cory (~/Downloads/Group 2087328212.png), 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/loops/creators-circle.webm",
+    "bytes": 1995456,
+    "sha256": "19bb73a69755f07a19820c0cfce1a82e899f3af643b579918841adafd5053152",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (VP9 alpha), 2026-10-03"
+  },
+  {
+    "path": "website/loops/creators-circle.mov",
+    "bytes": 3912677,
+    "sha256": "dcb8749f2d3c78619b655bf8e04ace6f3393405cbefa8045fc1f942dd9a268df",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (HEVC alpha), 2026-10-03"
+  },
+  {
+    "path": "website/loops/creators-circle-start.webp",
+    "bytes": 65102,
+    "sha256": "0e8ca851d48bb6500f6478c622b08326aa20b1944b9b4eac65471755c62f6fba",
+    "source": "First frame of website/loops/creators-circle.webm (poster before playback), 2026-10-03"
+  },
+  {
+    "path": "website/figma/logo-white.png",
+    "bytes": 20141,
+    "sha256": "15e0cb67938a85302146d0ed4d92529df5ebe0ee54e55455dab69a1b01ca0b04",
+    "source": "White Echuu logo with tagline: derived from Cory's ~/Downloads/logo-with-text.png (808 px; kaomoji removed, all pixels white, alpha kept) to match ~/Downloads/logo-white-image-text.png at higher resolution, 2026-10-03"
   }
 ]

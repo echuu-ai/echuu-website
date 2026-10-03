@@ -57,7 +57,9 @@ export const HOME_ASSETS = {
     /** draw 阶段：黑场里的笔记本纸（Figma Opening-animation-01）；铅笔稿由 3D 睡姿实时生成 */
     paperSheet: FIG('opening-paper/sketch-body.png'),
   },
-  logo3d: FIG('logo-dark.png'),
+  logo3d: FIG('logo-chrome.png'),
+  /** 页脚用的白色 logo（带「你的OC出道舞台」） */
+  logoWhite: FIG('logo-white.png'),
   brooch: FIG('brooch.webp'),
   steps: [FIG('step-01.webp'), FIG('step-02.webp'), FIG('step-03.webp')],
   silhouetteGirl: FIG('silhouette-girl.svg'),
@@ -75,6 +77,12 @@ export const HOME_ASSETS = {
   crosswalk: FIG('crosswalk.webp'),
   creatorsCircle: FIG('creators-circle.webp'),
   footerWings: FIG('footer-wings.webp'),
+  /** 上面两张图的短片（Kling 图生视频，抠绿后转码）：webm = VP9 alpha，hevc = Safari 用的 HEVC alpha */
+  loops: {
+    // 创作者圈：剪影绕着女孩转一圈、停在原图上（只播一次）；startPoster 是第一帧
+    creators: { webm: publicUrl('website/loops/creators-circle.webm'), hevc: publicUrl('website/loops/creators-circle.mov'), startPoster: publicUrl('website/loops/creators-circle-start.webp') },
+    footerWings: { webm: publicUrl('website/loops/footer-wings.webm'), hevc: publicUrl('website/loops/footer-wings.mov') },
+  },
   icons: {
     language: FIG('icon-language.svg'),
     xiaohongshu: FIG('icon-xiaohongshu.svg'),
@@ -94,7 +102,7 @@ export const HOME_ASSETS = {
 /** 开场用的角色与动作：与产品 loading 阶段同一份 corynorootbone（含预压缩版） */
 export const HOME_OPENING_MODEL = `${publicUrl('assets/loading/corynorootbone.loading.vrm')}?scope=website-opening`;
 export const HOME_OPENING_MOTIONS = {
-  sleep: publicUrl('assets/animation/mate-engine/PET_SLEEPING_PET_SLEEPING.vrma'),
+  sleep: publicUrl('assets/animation/mixamo/sleeping-idle.fbx'),
   standUp: publicUrl('assets/animation/mixamo/stand-up.fbx'),
   intro: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO.vrma'),
   introEnd: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO_END.vrma'),

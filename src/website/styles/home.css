@@ -329,14 +329,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   position: absolute; z-index: 2; left: 69.9%; top: 64.2%;
   font-size: clamp(10px, 1.4vw, 20px); letter-spacing: 0.1em; color: #d6dbe3; transition: opacity 0.4s;
 }
-.echuu-website .hv-opening__skip {
-  position: absolute; right: 24px; bottom: 24px; z-index: 6;
-  padding: 10px 18px; border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.45); background: rgba(0, 0, 0, 0.35);
-  color: #fff; font: inherit; font-size: var(--t-meta); letter-spacing: 0.08em; cursor: pointer;
-  backdrop-filter: blur(8px);
-}
-.echuu-website .hv-opening__skip:hover { background: rgba(255, 255, 255, 0.18); }
 
 .echuu-website .hv-hero[data-phase='open'] .hv-opening__title,
 .echuu-website .hv-hero[data-phase='open'] .hv-opening__deco,
@@ -345,7 +337,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-hero[data-phase='open'] .hv-opening__live,
 .echuu-website .hv-hero[data-phase='open'] .hv-opening__outline { opacity: 0 !important; }
 .echuu-website .hv-hero[data-phase='open'] .hv-opening { pointer-events: none; }
-.echuu-website .hv-hero[data-phase='open'] .hv-opening__skip { pointer-events: auto; }
 
 /* 竖屏：把窗口放大、标题上移、装饰缩小 */
 @media (max-aspect-ratio: 9/10) {
@@ -358,7 +349,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv-opening__deco--plane { left: 74%; top: 24%; width: 18%; }
   .echuu-website .hv-opening__ui { left: 6%; top: 63.5%; width: 20%; }
   .echuu-website .hv-opening__stars { left: 78%; top: 64%; }
-  .echuu-website .hv-opening__skip { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
 }
 
 /* --- 首屏 UI ------------------------------------------------------------ */
@@ -471,13 +461,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-cta__beta i { width: 0; height: 0; border-style: solid; border-width: 5.5px 0 5.5px 11px; border-color: transparent transparent transparent #f2ee1b; }
 .echuu-website .hv-cta__beta:hover { transform: translateY(-2px); }
 
-.echuu-website .hv-replay {
-  position: absolute; right: clamp(16px, 2.8vw, 40px); bottom: max(20px, env(safe-area-inset-bottom));
-  padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.12); color: #fff; font: inherit; font-size: var(--t-caption); letter-spacing: 0.06em;
-  cursor: pointer; backdrop-filter: blur(8px);
-}
-.echuu-website .hv-replay:hover { background: rgba(255, 255, 255, 0.28); }
 
 .echuu-website .hv-menu-overlay {
   position: fixed; inset: 0; z-index: 70;
@@ -517,7 +500,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv-cta__group { gap: 6px; }
   .echuu-website .hv-cta__icon.is-pending:nth-child(2), .echuu-website .hv-cta__icon.is-pending:nth-child(3) { display: none; }
   .echuu-website .hv-cta__beta { padding: 10px 12px; }
-  .echuu-website .hv-replay { display: inline-flex; min-height: 36px; align-items: center; bottom: max(8px, env(safe-area-inset-bottom)); }
 }
 
 /* --- 页面主体：天空底 --------------------------------------------------- */
@@ -848,7 +830,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   font-size: var(--t-small); letter-spacing: -0.1em;
 }
 .echuu-website .hv-footer__bottom p { margin: 0; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.echuu-website .hv-footer__home { font-weight: 800; }
+.echuu-website .hv-footer__home { display: inline-flex; font-weight: 800; }
+/* 白色 logo（679 × 569）：高 76px，副标题「你的OC出道舞台」还读得清 */
+.echuu-website .hv-footer__home img { display: block; height: 76px; width: auto; }
 @media (max-width: 900px) {
   .echuu-website .hv-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .echuu-website .hv-footer { --wings-width: min(780px, 110vw); }
@@ -998,16 +982,38 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-title__beta-count > span { width:5px; height:5px; border-radius:50%; background:#2789ab; }
 
 .echuu-website .hv-vrm-trigger { border:0; cursor:pointer; }
-.hv-vrm-guide { width:min(660px,calc(100vw - 32px)); }
-.hv-vrm-guide__grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-.hv-vrm-guide__card { padding:18px; border-radius:18px; background:rgba(255,255,255,.42); box-shadow:inset 0 1px 0 rgba(255,255,255,.7); color:#215775; }
-.hv-vrm-guide__number { font-size:11px; opacity:.65; letter-spacing:.12em; }
-.hv-vrm-guide__card h3 { font:600 18px/1.4 system-ui,sans-serif; margin:6px 0 8px; }
-.hv-vrm-guide__card p { font:400 13px/1.65 system-ui,sans-serif; margin:0 0 12px; }
-.hv-vrm-guide__card a,.hv-vrm-guide__card summary { color:#126389; font:600 13px/1.5 system-ui,sans-serif; cursor:pointer; }
-.hv-vrm-guide__card a { display:inline-flex; align-items:center; gap:5px; text-decoration:none; }
-.hv-vrm-guide__card details p { margin-top:10px; }
-@media(max-width:480px) { .hv-vrm-guide__grid { grid-template-columns:1fr; } }
+.hv-vrm-guide.echuu-access { width: min(760px, calc(100vw - 32px)); height: auto; max-height: calc(100dvh - 32px); }
+.hv-vrm-guide .echuu-access__glass { padding: 36px 32px 28px; }
+.hv-vrm-guide__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.hv-vrm-guide__card {
+  display: flex; flex-direction: column; gap: 12px; padding: 22px; border-radius: 14px;
+  background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .14); color: #fff;
+}
+.hv-vrm-guide__head { display: flex; align-items: center; gap: 12px; }
+.hv-vrm-guide__icon {
+  flex: none; width: 36px; height: 36px; display: grid; place-items: center; overflow: hidden;
+  border-radius: 10px; background: rgba(255, 255, 255, .92); color: #0a2435;
+}
+.hv-vrm-guide__icon img { width: 100%; height: 100%; object-fit: cover; }
+.hv-vrm-guide__card h3 { flex: 1; margin: 0; font: 600 17px/1.35 '42dot Sans', system-ui, sans-serif; }
+.hv-vrm-guide__number { font-size: 11px; letter-spacing: .12em; color: rgba(255, 255, 255, .5); font-variant-numeric: tabular-nums; }
+.hv-vrm-guide__card p { margin: 0; font: 400 14px/1.7 '42dot Sans', system-ui, sans-serif; color: rgba(255, 255, 255, .78); }
+.hv-vrm-guide__card a, .hv-vrm-guide__card summary {
+  margin-top: auto; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start;
+  color: #8fe3ff; font: 600 14px/1.5 '42dot Sans', system-ui, sans-serif; text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.hv-vrm-guide__card a:hover, .hv-vrm-guide__card summary:hover { color: #c4f1ff; }
+.hv-vrm-guide__card details { margin-top: auto; }
+.hv-vrm-guide__card summary { list-style: none; }
+.hv-vrm-guide__card summary::-webkit-details-marker { display: none; }
+.hv-vrm-guide__card summary svg { transition: transform .2s; }
+.hv-vrm-guide__card details[open] summary svg { transform: rotate(90deg); }
+.hv-vrm-guide__card details p { margin-top: 10px; font-size: 13px; }
+.hv-vrm-guide__note { margin-top: 20px; }
+@media (max-width: 560px) {
+  .hv-vrm-guide__grid { grid-template-columns: 1fr; gap: 12px; margin-top: 22px; }
+  .hv-vrm-guide .echuu-access__glass { padding: 28px 20px 22px; }
+}
 
 /* One-shot debut: settle -> silver-blue light -> quiet. */
 .echuu-website .hv-title__logo-wrap { position:relative; max-width:100%; flex-shrink:0; }
@@ -1062,10 +1068,6 @@ html.hv-charm-dragging, html.hv-charm-dragging * { user-select: none !important;
 /* --- 底部栏随文案宽度自适应（日文、英文的「参与内测」更长），不超出屏幕 ------------------- */
 .echuu-website .hv-cta { width: auto; max-width: calc(100% - 24px); }
 .echuu-website .hv-cta__beta { white-space: nowrap; flex-shrink: 0; }
-/* 窄屏时「重播开场」挪到底部栏上方右侧，不和底部栏叠在一起 */
-@media (max-width: 900px) {
-  .echuu-website .hv-replay { bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px + 12px); right: 12px; }
-}
 
 /* --- 首页白色铅笔涂鸦（PageDoodle） ---------------------------------------- */
 .echuu-website .hv-doodle {
@@ -1078,7 +1080,7 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 
 /* ===== 按钮规范：按钮文字永远一行（禁止折行）；宽度随文字，太长就改文案，绝不换行 ===== */
 .echuu-website .hv :is(button, [role='button'], .hv-glass, .hv-pill, .hv-blog__all, .hv-cta__beta, .hv-title__register,
-  .hv-replay, .hv-opening__skip, .hv-langpop__list a) {
+  .hv-langpop__list a) {
   white-space: nowrap;
 }
 .echuu-website .hv :is(.hv-glass, .hv-blog__all, .hv-cta__beta, .hv-title__register) { min-height: var(--btn-h-md); }

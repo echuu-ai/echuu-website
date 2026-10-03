@@ -24,7 +24,6 @@ import {
   openingStarted,
   openingTime,
   phaseAt,
-  replayOpening,
   skipOpening,
   smoothstep,
   startOpeningClock,
@@ -247,19 +246,11 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     setPhase('hero');
   }, [clock, fallbackToStill]);
 
-  const replay = useCallback(() => {
-    if (!clock.ready || reduced) return;
-    const el = windowRef.current;
-    if (el) el.removeAttribute('style');
-    replayOpening(clock, performance.now());
-    setStillShot('back');
-    setPhase('wake');
-  }, [clock, mode, reduced]);
-
   useEffect(() => {
     if (phase === 'hero' || phase === 'loading') return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') skip();
+      // 开场不提供跳过按钮、也不点哪儿都跳过；只留 Esc 作为无障碍的退出口
+      if (event.key === 'Escape') skip();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -301,8 +292,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       </div>
 
       {showOpening ? (
-        // 画翅膀时不能「点哪儿都跳过」，只留跳过按钮与键盘
-        <div className="hv-opening" role="presentation" onClick={drawing ? undefined : skip}>
+        <div className="hv-opening" role="presentation">
           {mode === '3d' && (drawing || phase === 'wake') ? (
             <DrawWingsPaper
               fading={phase === 'wake'}
@@ -352,9 +342,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             </div>
           </div>
           {phase === 'open' ? <div className="hv-opening__flash" aria-hidden="true" /> : null}
-          <button type="button" className="hv-opening__skip" onClick={skip}>
-            {h.opening.skip}
-          </button>
         </div>
       ) : null}
 
@@ -385,9 +372,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
 
 
 
-        {mode === '3d' && !reduced ? (
-          <button type="button" className="hv-replay" onClick={replay}>{h.opening.replay}</button>
-        ) : null}
       </div>
 
       {phase === 'hero' && !menuOpen ? createPortal(
