@@ -6,7 +6,8 @@ const START = { sleep: 0, standUp: M.standStart, intro: M.introStart, introEnd: 
 
 /** Absolute sampling keeps clips, IK and the camera synchronized after slow frames, seeks and replay. */
 export function motionWeight(key: MotionKey, t: number, lockBlend = 0.6): number {
-  const stand = smoothstep(M.standStart, M.standStart + 0.7, t);
+  // 睡姿 → Stand Up 第一帧是从侧卧转到仰躺，过渡放长一点，像翻身醒来
+  const stand = smoothstep(M.standStart, M.standStart + 1.2, t);
   const end = smoothstep(M.introEndStart, M.introEndStart + 0.35, t);
   const lock = smoothstep(M.lockStart, M.lockStart + Math.max(0.001, lockBlend), t);
   if (t < M.introStart) return key === 'sleep' ? 1 - stand : key === 'standUp' ? stand : 0;

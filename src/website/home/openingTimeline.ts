@@ -15,8 +15,8 @@
  */
 export type OpeningPhase = 'loading' | 'draw' | 'wake' | 'fold' | 'open' | 'hero';
 
-/** 物化特效扫完主体（introMaterialize：1.1 s 起 2.25 s）后再站起来：睡姿与铅笔稿重合的那一刻要看得见 */
-const STAND_START = 3.4;
+/** 角色从铅笔稿里显形（主体前沿 0.3–1.8 s）后睡一小会儿再醒：睡姿与铅笔稿重合的那一刻要看得见 */
+const STAND_START = 2.3;
 /** Stand Up 约 6 s：站稳之后纸才开始折 */
 const WAKE_END = STAND_START + 6.0;
 /** open 开窗的起点；open / hero 段内部的时长与旧版（9.6–15.8 s）完全一致，只是整体后移 */
@@ -26,8 +26,8 @@ export const OPENING = {
   /** wake 内：Stand Up 开始 */
   standStart: STAND_START,
   wakeEnd: WAKE_END,
-  /** fold 内：手机窗、蓝框和纸飞机出现 */
-  windowBack: WAKE_END + 1.6,
+  /** fold 内：纸飞机折好起飞时，手机窗与蓝框回来 */
+  windowBack: WAKE_END + 2.0,
   openStart: OPEN_START,
   /** 窗口从手机窗放大到全屏所需秒数（CSS 过渡与 3D 相机同步） */
   windowOpenSeconds: 1.6,

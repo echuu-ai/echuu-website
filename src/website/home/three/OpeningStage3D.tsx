@@ -407,10 +407,11 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
       boneWorld('hips', introCage.position);
     }
     const introSeconds = s.materializeHold ?? t - s.materializeStart;
-    applyIntroTimeline(materialize, introSeconds);
+    applyIntroTimeline(materialize, introSeconds, true);
     const introRunning = introSeconds < INTRO_TOTAL_SECONDS;
-    introWire.current?.setVisible(introRunning);
-    introCage.visible = introRunning;
+    // 官网开场用 quiet 物化：线框与笔记都不出现
+    introWire.current?.setVisible(false);
+    introCage.visible = false;
     materialize.uIntroTime.value += delta;
     // 开场手机窗：出场效果只画在窗里（黑框本身不写深度，挡不住发光层）
     const rect = hole.current;
@@ -567,17 +568,18 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
  * 外加用户画的翅膀笔迹）。角色在它上面物化并站起；fold 阶段它翻卷着飞走，让位给纸飞机。
  */
 /**
- * fold：角色站起来以后，纸从地上飘起来按真实折法折成纸飞机（foldingPaper），
- * 一边折一边缩小、飞到镜头前的起飞点，再沿弧线钻进手机窗，开窗白闪前一刻消失。
+ * fold：角色站稳以后，脚下那张纸飘到她身前，按真实折法折成纸飞机（foldingPaper，四步依次进行），
+ * 折好立刻出发，沿弧线钻进手机窗，开窗白闪前一刻消失。
  */
-const FOLD_SECONDS = 1.2;
+const FOLD_SECONDS = 2.0;
 const FLY_END = OPENING.openStart + 0.15;
-/** 折好后纸飞机相对整张纸的大小 */
+/** 折好的纸飞机相对整张纸的大小（纸长 2.27 m → 机身约 0.45 m） */
 const PLANE_SCALE = 0.2;
-/** 纸飞机起飞点与弧线控制点（相机空间，米） */
-const FLY_START = new THREE.Vector3(0.32, -0.3, -1.5);
-const FLY_CONTROL = new THREE.Vector3(0.75, 0.42, -2.6);
+/** 折纸的位置（相机空间，米）：画面中间偏右下、离镜头 1.7 m，折的每一步都看得清，又不挡住角色 */
+const FOLD_POINT = new THREE.Vector3(0.42, -0.12, -1.7);
 const FLY_DEPTH = 7;
+/** 瞄准手机窗靠右的位置，不从角色身后穿过去 */
+const WINDOW_AIM_X = 0.8;
 
 function PaperSheet3D({ clock, art, lying, hole }: {
   clock: OpeningClock;
@@ -595,15 +597,15 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 4;
-    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false });
+    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false, vertexColors: true });
     const paper = createFoldingPaper(material, PAPER_WIDTH, PAPER_HEIGHT);
     return { texture, material, paper, ctx: canvas.getContext('2d'), sheet: null as HTMLImageElement | null, sketched: false, stamped: false };
   }, []);
   const pool = useMemo(() => ({
-    start: new THREE.Vector3(), control: new THREE.Vector3(), end: new THREE.Vector3(),
-    pos: new THREE.Vector3(), tangent: new THREE.Vector3(), up: new THREE.Vector3(), right: new THREE.Vector3(),
-    basis: new THREE.Matrix4(), flightQuat: new THREE.Quaternion(), bankQuat: new THREE.Quaternion(),
-    tail: new THREE.Vector3(), nose: new THREE.Vector3(0, 1, 0),
+    anchor: new THREE.Vector3(), start: new THREE.Vector3(), control: new THREE.Vector3(), end: new THREE.Vector3(),
+    pos: new THREE.Vector3(), tangent: new THREE.Vector3(), tail: new THREE.Vector3(), up: new THREE.Vector3(), right: new THREE.Vector3(),
+    basis: new THREE.Matrix4(), flightQuat: new THREE.Quaternion(), bankQuat: new THREE.Quaternion(), nose: new THREE.Vector3(0, 1, 0),
+    light: new THREE.Vector3(),
   }), []);
   const placement = useRef<ReturnType<typeof paperPlacement> | null>(null);
   useEffect(() => {
@@ -617,13 +619,11 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     parts.paper.dispose();
   }, [parts]);
 
-  /** 相机空间的点 → 世界坐标 */
-  const fromCamera = (v: THREE.Vector3, out: THREE.Vector3) => out.copy(v).applyMatrix4(camera.matrixWorld);
   /** 手机窗中心方向上、相机前方 FLY_DEPTH 米的点（窗口还没完全回来也按它的最终位置瞄准） */
   const windowTarget = (out: THREE.Vector3) => {
     const rect = hole.current;
     const bounds = gl.domElement.getBoundingClientRect();
-    const ndcX = ((rect.x + rect.w / 2 - bounds.left) / Math.max(1, bounds.width)) * 2 - 1;
+    const ndcX = ((rect.x + rect.w * WINDOW_AIM_X - bounds.left) / Math.max(1, bounds.width)) * 2 - 1;
     const ndcY = 1 - ((rect.y + rect.h / 2 - bounds.top) / Math.max(1, bounds.height)) * 2;
     out.set(ndcX, ndcY, 0.5).unproject(camera).sub(camera.position).normalize();
     return out.multiplyScalar(FLY_DEPTH).add(camera.position);
@@ -637,9 +637,9 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     pool.tangent.copy(pool.control).sub(pool.start).multiplyScalar(2 * (1 - u))
       .addScaledVector(pool.tail.copy(pool.end).sub(pool.control), 2 * u).normalize();
   };
-  /** 机头（纸面 +y）沿切线、机背（纸面 +z）朝镜头的上方 */
+  /** 机头（纸面 +y）沿切线、机背（纸面 +z）朝上 */
   const flightOrientation = (bank: number) => {
-    pool.up.setFromMatrixColumn(camera.matrixWorld, 1);
+    pool.up.set(0, 1, 0);
     pool.right.crossVectors(pool.tangent, pool.up).normalize();
     pool.up.crossVectors(pool.right, pool.tangent).normalize();
     pool.basis.makeBasis(pool.right, pool.tangent, pool.up);
@@ -681,40 +681,59 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     const flyStart = F + FOLD_SECONDS;
     g.visible = started && !!placement.current && t < FLY_END;
     if (!g.visible || !placement.current) return;
-
-    camera.updateMatrixWorld();
-    fromCamera(FLY_START, pool.start);
-    fromCamera(FLY_CONTROL, pool.control);
-    windowTarget(pool.end);
-
-    // 三步折叠：角 → 对折 → 翻翼（彼此稍有重叠，动作连贯）
-    parts.paper.setFold(
-      smoothstep(F + 0.05, F + 0.45, t),
-      smoothstep(F + 0.4, F + 0.85, t),
-      smoothstep(F + 0.8, F + FOLD_SECONDS, t),
-    );
-    if (t < flyStart) {
-      // 一边折一边从地上飘到起飞点，缩成纸飞机大小
-      const m = smoothstep(F, flyStart, t);
-      bezier(0);
-      flightOrientation(0);
-      g.position.copy(placement.current.center).lerp(pool.start, m);
-      g.position.y += Math.sin(m * Math.PI) * 0.25;
-      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.flightQuat, smoothstep(0.15, 1, m));
-      g.scale.setScalar(1 - (1 - PLANE_SCALE) * smoothstep(0, 0.8, m));
+    if (t < F) {
+      // 平铺在地上
+      g.position.copy(placement.current.center);
+      g.quaternion.copy(placement.current.groupQuaternion);
+      g.scale.setScalar(1);
+      parts.paper.setFold(0, 0, 0, 0);
       return;
     }
-    // 沿弧线飞进窗口，飞行中轻轻侧倾
-    const u = smoothstep(flyStart, FLY_END, t);
+
+    camera.updateMatrixWorld();
+    // 折纸的位置跟着镜头走：镜头还在后拉，纸始终留在画面里同一个地方
+    pool.anchor.copy(FOLD_POINT).applyMatrix4(camera.matrixWorld);
+
+    // 四步依次折：角 → 鼻 → 对折 → 翻翼
+    const steps = [
+      smoothstep(F + 0.15, F + 0.6, t),
+      smoothstep(F + 0.6, F + 1.05, t),
+      smoothstep(F + 1.05, F + 1.5, t),
+      smoothstep(F + 1.45, F + 1.9, t),
+    ];
+    // 折痕明暗：光从镜头方向来
+    pool.light.copy(camera.position);
+    g.worldToLocal(pool.light).normalize();
+    parts.paper.setFold(steps[0], steps[1], steps[2], steps[3], pool.light);
+
+    // 起飞线：从折纸处出发，先往上抬，再钻向手机窗
+    pool.start.copy(pool.anchor);
+    windowTarget(pool.end);
+    pool.control.copy(pool.start).lerp(pool.end, 0.3);
+    pool.control.y += 0.6;
+
+    if (t < flyStart) {
+      // 从地上飘到身前，一边折一边缩小、转向起飞方向
+      const m = smoothstep(F, F + 0.9, t);
+      bezier(0);
+      flightOrientation(0);
+      g.position.copy(placement.current.center).lerp(pool.anchor, m);
+      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.flightQuat, smoothstep(F + 0.3, F + 1.4, t));
+      g.scale.setScalar(1 - (1 - PLANE_SCALE) * smoothstep(F, F + 1.2, t));
+      return;
+    }
+    // 折好立刻出发：前段就有速度（ease-out），不在原地停顿
+    const x = Math.min(1, Math.max(0, (t - flyStart) / (FLY_END - flyStart)));
+    const u = 1 - (1 - x) * (1 - x);
     bezier(u);
-    flightOrientation(Math.sin(u * Math.PI * 2) * 0.35);
+    flightOrientation(Math.sin(u * Math.PI * 2) * 0.3);
     g.position.copy(pool.pos);
     g.quaternion.copy(pool.flightQuat);
-    g.scale.setScalar(PLANE_SCALE);
+    g.scale.setScalar(PLANE_SCALE * (1 - 0.35 * u));
   });
   return (
     <group ref={group} visible={false}>
-      <primitive object={parts.paper.root} />
+      <primitive object={parts.paper.mesh} />
     </group>
   );
 }

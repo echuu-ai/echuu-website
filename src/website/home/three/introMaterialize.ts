@@ -69,8 +69,20 @@ const power4InOut = (t: number) => (t < 0.5 ? 8 * t ** 4 : 1 - (-2 * t + 2) ** 4
 /** 整段出场结束的时间：之后线稿与笼子隐藏、主体恢复原样 */
 export const INTRO_TOTAL_SECONDS = 5.2;
 
-export function applyIntroTimeline(u: IntroMaterializeUniforms, seconds: number) {
+/**
+ * quiet：官网「画翅膀唤醒」开场用——不要线框和笼子，只让主体从铅笔稿里显形（0.3 s 起 1.5 s 扫完），
+ * 前沿的白热光就像铅笔线被点亮。
+ */
+export function applyIntroTimeline(u: IntroMaterializeUniforms, seconds: number, quiet = false) {
   const s = Math.max(0, seconds);
+  if (quiet) {
+    u.uWireProgress.value = 1;
+    u.uWireAlpha.value = 0;
+    u.uCageProgress.value = 1;
+    u.uCageAlpha.value = 0;
+    u.uIntroProgress.value = s >= INTRO_TOTAL_SECONDS ? 1 : power3InOut(clamp01((s - 0.3) / 1.5));
+    return;
+  }
   // ① 线稿：0s 起 2.5s power3.inOut 浮现；2s 起 3s 淡出
   u.uWireProgress.value = power3InOut(clamp01(s / 2.5));
   u.uWireAlpha.value = 1 - power4InOut(clamp01((s - 2) / 3));
