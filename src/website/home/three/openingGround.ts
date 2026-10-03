@@ -23,6 +23,10 @@ export type GroundResult = {
   paperFill?: number;
   /** DOM 纸中心相对视口中心的像素偏移（右、下为正） */
   paperShift?: THREE.Vector2;
+  /** 站稳后（Stand Up 最后一帧）的髋部位置：第二幕的折纸点在她身前 */
+  standHips: THREE.Vector3;
+  /** 折纸飞机的位置（世界坐标）：她身前、略偏右、腰胸之间的高度 */
+  foldPoint: THREE.Vector3;
   /** 从睡姿拍出的铅笔稿与画翅膀引导（captureOutline） */
   sketch?: import('./captureOutline').SketchOutline;
 };
@@ -88,6 +92,11 @@ export function groundOpeningClips(
   const standDuration = stand.getClip().duration;
   pose(stand, standDuration);
   shift(stand.getClip(), new THREE.Vector3(0, groundFeet - feetY(), 0));
+  pose(stand, standDuration);
+  const standingHips = bone('hips')!;
+  const standingHead = bone('head')!;
+  // 站姿面朝 +Z：折纸点在她面前略偏右、胸口高度——镜头在她右肩后时，纸正好落在她视线前方
+  const foldPoint = standingHips.clone().add(new THREE.Vector3(0.16, (standingHead.y - standingHips.y) * 0.6, 0.6));
 
   // 2. Stand Up 第一帧的躺姿：中心、朝向、最低点
   pose(stand, 0);
@@ -133,5 +142,5 @@ export function groundOpeningClips(
   headDir.copy(restHead).sub(restFeet).setY(0).normalize();
 
   for (const action of Object.values(actions)) action?.setEffectiveWeight(0);
-  return { center, headDir };
+  return { center, headDir, standHips: standingHips, foldPoint };
 }

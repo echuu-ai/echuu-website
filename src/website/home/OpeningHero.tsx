@@ -31,6 +31,7 @@ import {
   type OpeningPhase,
 } from './openingTimeline';
 import { DrawWingsPaper } from './DrawWingsPaper';
+import { updateOpeningSound } from '../lib/openingSound';
 
 const OpeningStage3D = lazy(() => import('./three/OpeningStage3D').then((m) => ({ default: m.OpeningStage3D })));
 
@@ -161,6 +162,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       const t = Number.isFinite(hold) && clock.ready ? hold : openingTime(clock, now);
       const next = phaseAt(t, clock.ready, openingStarted(clock));
       setPhase((current) => (current === next ? current : next));
+      if (mode === '3d') updateOpeningSound(t, openingStarted(clock));
       if (mode === 'still') setStillShot(t < OPENING.openStart + 3.2 ? 'back' : 'front');
     };
     tick();

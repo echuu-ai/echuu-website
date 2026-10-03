@@ -28,12 +28,14 @@ import { groundOpeningClips, type GroundResult } from './openingGround';
 import { PAPER_HEIGHT, PAPER_RATIO, PAPER_WIDTH, paperPlacement } from './paperFrame';
 import { PAPER_TEXTURE_HEIGHT, PAPER_TEXTURE_WIDTH, captureSleepOutline, type SketchOutline } from './captureOutline';
 import { createFoldingPaper } from './foldingPaper';
+import { CinematicLayer, hermite, lerpFPS } from './cameraRig';
 import { WEBSITE_SKY_HDR } from '../../sky';
 import heroSceneJson from '../heroScene.json';
 import {
   OPENING,
   OPENING_MOTION,
   OPENING_TOTAL,
+  OPENING_ACT2,
   markOpeningReady,
   openingStarted,
   openingTime,
@@ -66,10 +68,13 @@ export type HoleRect = {
   reveal: number;
 };
 
-/** paper = 3D 纸面中心（只给开场第一镜用） */
-type Anchor = VRMHumanBoneName | 'origin' | 'world' | 'paper';
+/** paper = 3D 纸面中心（开场第一镜）；fold = 第二幕折纸飞机的位置 */
+type Anchor = VRMHumanBoneName | 'origin' | 'world' | 'paper' | 'fold';
 
-type DofState = Pick<SceneCamera, 'dofEnabled' | 'focusMode' | 'focusDistance' | 'focusRange' | 'blur' | 'target'>;
+type DofState = Pick<SceneCamera, 'dofEnabled' | 'focusMode' | 'focusDistance' | 'focusRange' | 'blur' | 'target'> & {
+  /** 对焦跟着某个锚点走（拉焦用），优先于 target */
+  focusAnchor?: Anchor;
+};
 
 type CameraKey = {
   t: number;
@@ -99,25 +104,47 @@ const HERO_DOF: DofState = {
  * 相机关键帧。开场分镜相对骨骼世界位置给出（躺下 / 站起构图都跟着角色）；
  * 定格镜头用 `world` 锚点直接取场景文件里的绝对坐标。
  */
+/** 英雄停顿与拉焦的景深（导演流程 1-5、2-1、2-2） */
+const FACE_DOF: DofState = { dofEnabled: true, focusMode: 'target', focusDistance: 2, focusRange: 0.45, blur: 1.1, target: [0, 1.4, 0], focusAnchor: 'head' };
+const FOLD_DOF: DofState = { dofEnabled: true, focusMode: 'target', focusDistance: 1, focusRange: 0.25, blur: 2.2, target: [0, 1, 0], focusAnchor: 'fold' };
+
+/**
+ * 分镜（docs/website-opening-director.md 第 3 节）。关键帧之间用三次 Hermite 插值（cameraRig），
+ * 经过关键帧速度连续；相邻两帧相同 = hold。
+ */
+const A = OPENING.standStart;
+const W = OPENING.wakeEnd;
+const R = OPENING_ACT2;
 const CAMERA_KEYS: CameraKey[] = [
-  // wake 俯视纸面：铅笔稿物化成 3D，像从纸上看它醒来
-  // 头朝 −Z 躺在纸上：相机在正上方略偏 +Z，画面上方就是头的方向；第一帧整张纸占满画面高度，与 DOM 纸衔接
+  // 0 / 1-1 纸面交接：第一帧与 DOM 纸完全重合，DOM 淡出期间不动
   { t: 0, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
-  // DOM 纸淡出期间镜头不动，两张纸叠得住
-  { t: 1.0, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
-  { t: OPENING.standStart, anchor: 'hips', pos: [0, 2.6, 0.35], look: 'hips', lookOff: [0, 0, 0.1], fov: 32 },
-  { t: OPENING.standStart + 1.2, anchor: 'hips', pos: [0.3, 2.2, 1.6], look: 'chest', lookOff: [0, 0.05, 0], fov: 33 },
-  // Stand Up：镜头随站起转到正面
-  { t: OPENING.standStart + 2.9, anchor: 'hips', pos: [0.35, 1.5, 2.6], look: 'chest', lookOff: [0, 0.12, 0], fov: 32 },
-  // 站稳后拉开、略俯视：脚下那张纸折成纸飞机的过程要在画面里
-  { t: OPENING.wakeEnd, anchor: 'hips', pos: [0.45, 1.55, 3.0], look: 'hips', lookOff: [0.1, -0.35, 0.45], fov: 38 },
-  // fold：后拉，手机窗与纸飞机回到画面
-  { t: OPENING.windowBack, anchor: 'hips', pos: [0.55, 1.35, 3.1], look: 'chest', lookOff: [0, 0.1, 0], fov: 36 },
-  { t: OPENING.openStart, anchor: 'hips', pos: [0.55, 1.35, 3.1], look: 'chest', lookOff: [0, 0.1, 0], fov: 36 },
+  { t: 0.7, anchor: 'paper', pos: [0, 0, 0], look: 'paper', lookOff: [0, 0, 0], fov: 32, fitPaper: true },
+  // 1-1 显形：沿身体轴向推到胸口上方（跟着光的前沿从头走下来）
+  { t: 2.0, anchor: 'chest', pos: [0, 2.0, 0.12], look: 'chest', lookOff: [0, 0, 0.02], fov: 32 },
+  // 1-2 翻身：绕身体转 30° 并降低机位（与翻身同向）
+  { t: A + 1.1, anchor: 'hips', pos: [0.95, 1.3, 1.05], look: 'chest', lookOff: [0, 0.02, 0], fov: 38 },
+  // 1-3 坐起：贴地低机位、广角仰拍，向后退让她「升起来」
+  { t: A + 2.7, anchor: 'hips', pos: [0.3, 0.12, 1.9], look: 'head', lookOff: [0, 0.05, 0], fov: 46 },
+  { t: A + 4.1, anchor: 'hips', pos: [0.42, 0.02, 2.5], look: 'head', lookOff: [0, 0.02, 0], fov: 42 },
+  // 1-4 站起：升到眼平，同时环绕约 15°，速度不停
+  { t: A + 5.5, anchor: 'head', pos: [0.55, -0.05, 1.7], look: 'head', lookOff: [0, -0.02, 0], fov: 34 },
+  // 1-5 英雄停顿：静止一拍，再极慢推进
+  { t: A + 5.95, anchor: 'head', pos: [0.55, -0.05, 1.7], look: 'head', lookOff: [0, -0.02, 0], fov: 34, dof: FACE_DOF },
+  { t: W + 0.3, anchor: 'head', pos: [0.47, -0.05, 1.48], look: 'head', lookOff: [0, -0.02, 0], fov: 30, dof: FACE_DOF },
+  // 2-1 纸从脚下慢慢飘起：镜头从正面绕到她右侧（侧面：人与纸同框），再绕到右肩后
+  { t: R.riseStart + 0.7, anchor: 'head', pos: [1.05, 0.02, 0.95], look: 'head', lookOff: [0, -0.15, 0.25], fov: 34, dof: FACE_DOF },
+  { t: R.foldStart, anchor: 'head', pos: [1.3, 0.15, 0.05], look: 'fold', lookOff: [-0.05, 0.05, -0.32], fov: 40, dof: FOLD_DOF },
+  // 2-2 高位 3/4 后侧：越过翅膀与右肩俯看她面前的纸，一折一折慢慢折成纸飞机；焦点在纸上，她在前景虚化
+  { t: R.foldStart + 1.0, anchor: 'head', pos: [0.78, 0.62, -1.25], look: 'fold', lookOff: [0, 0, 0], fov: 34, dof: FOLD_DOF },
+  { t: R.flyStart, anchor: 'head', pos: [0.6, 0.6, -1.05], look: 'fold', lookOff: [0, 0, 0.2], fov: 33, dof: FOLD_DOF },
+  // 2-3 纸飞机越过她飞进窗口：镜头留在她身后、略后退，视线跟着飞机往前
+  { t: OPENING.openStart, anchor: 'hips', pos: [-0.25, 1.55, -2.3], look: 'chest', lookOff: [0, 0.15, 1.5], fov: 38 },
   // open 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕（与旧版一致）
   { t: OPENING.openStart + 1.3, anchor: 'hips', pos: [-0.5, 1.3, -2.3], look: 'chest', lookOff: [0, 0.1, 0], fov: 40 },
   { t: OPENING_MOTION.introEndStart, anchor: 'hips', pos: [1.9, 1.0, -1.1], look: 'head', lookOff: [0, -0.05, 0], fov: 34 },
   // 04 定格：场景文件里的相机（含景深）
+  // 绕到她右前方再落到定格镜头：直线过去会穿过头发
+  { t: OPENING_MOTION.lockStart + 0.35, anchor: 'head', pos: [1.25, 0.2, 0.85], look: 'head', lookOff: [0, -0.05, 0], fov: 32 },
   { t: OPENING_MOTION.lockStart + 0.9, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
   { t: OPENING_TOTAL, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
 ];
@@ -317,20 +344,51 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     anchor: new THREE.Vector3(), look: new THREE.Vector3(),
     posA: new THREE.Vector3(), posB: new THREE.Vector3(), lookA: new THREE.Vector3(), lookB: new THREE.Vector3(),
     targetPos: new THREE.Vector3(), targetLook: new THREE.Vector3(), smoothedLook: new THREE.Vector3(),
-    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), snapped: false,
+    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), prevPos: new THREE.Vector3(), snapped: false,
+  }), []);
+
+  // 相机曲线的工作区：每帧把各关键帧解析成世界坐标，再按通道做 Hermite 插值
+  const rig = useMemo(() => ({
+    times: CAMERA_KEYS.map((key) => key.t),
+    /** 开窗之前用 Hermite；开窗之后保持原来的分段运镜（R9：那段镜头不改） */
+    preTimes: CAMERA_KEYS.filter((key) => key.t <= OPENING.openStart).map((key) => key.t),
+    fov: CAMERA_KEYS.map((key) => key.fov),
+    channels: Array.from({ length: 6 }, () => new Array<number>(CAMERA_KEYS.length).fill(0)),
+    pos: CAMERA_KEYS.map(() => new THREE.Vector3()),
+    look: CAMERA_KEYS.map(() => new THREE.Vector3()),
+    layer: new CinematicLayer(),
+    speed: 0,
+    focus: [0, 0, 0] as [number, number, number],
   }), []);
 
   const boneWorld = (name: Anchor, out: THREE.Vector3): THREE.Vector3 => {
     if (name === 'origin' || name === 'world') return out.set(0, 0, 0);
     if (name === 'paper') return lying.current?.paper ? out.copy(lying.current.paper) : boneWorld('hips', out);
+    if (name === 'fold') return lying.current?.foldPoint ? out.copy(lying.current.foldPoint) : boneWorld('chest', out);
     const node = vrm.humanoid?.getRawBoneNode(name) ?? vrm.humanoid?.getNormalizedBoneNode(name);
     if (!node) return out.set(0, 1, 0);
     return node.getWorldPosition(out);
   };
 
+  /** 相机跟的骨骼锚点先做低通（约 0.25 s）：镜头跟着人走，但不跟着骨骼抖 */
+  const smoothedAnchors = useMemo(() => new Map<Anchor, THREE.Vector3>(), []);
+  const updateAnchors = (delta: number, snap: boolean) => {
+    for (const name of ['hips', 'chest', 'head'] as const) {
+      const raw = boneWorld(name, pool.anchor);
+      let value = smoothedAnchors.get(name);
+      if (!value) { value = raw.clone(); smoothedAnchors.set(name, value); }
+      if (snap) value.copy(raw);
+      else value.lerp(raw, 1 - Math.pow(1 - 0.12, delta * 60));
+    }
+  };
+  const anchorWorld = (name: Anchor, out: THREE.Vector3) => {
+    const smoothed = smoothedAnchors.get(name);
+    return smoothed ? out.copy(smoothed) : boneWorld(name, out);
+  };
+
   const applyKey = (key: CameraKey, pos: THREE.Vector3, look: THREE.Vector3) => {
-    boneWorld(key.anchor, pos).add(pool.anchor.set(key.pos[0], key.pos[1], key.pos[2]));
-    boneWorld(key.look, look).add(pool.anchor.set(key.lookOff[0], key.lookOff[1], key.lookOff[2]));
+    anchorWorld(key.anchor, pos).add(pool.anchor.set(key.pos[0], key.pos[1], key.pos[2]));
+    anchorWorld(key.look, look).add(pool.anchor.set(key.lookOff[0], key.lookOff[1], key.lookOff[2]));
     const pose = lying.current;
     if (key.fitPaper && pose) {
       // 正上方俯视纸面：距离取「整张纸占视口 paperFill」，画面上方 = 头的方向（与纸面图片上方一致），
@@ -450,35 +508,39 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
       };
     }
 
-    // 相机：在关键帧之间平滑插值，再做一点阻尼避免跟骨骼抖动
+    // 相机（cameraRig）：分镜关键帧 → Hermite 曲线（速度连续）→ igloo 式附加层（视差 / 手持 / 滚转）
+    updateAnchors(delta, !pool.snapped || jumped);
+    const keys = CAMERA_KEYS;
+    for (let k = 0; k < keys.length; k += 1) {
+      applyKey(keys[k], rig.pos[k], rig.look[k]);
+      for (let c = 0; c < 3; c += 1) {
+        rig.channels[c][k] = rig.pos[k].getComponent(c);
+        rig.channels[c + 3][k] = rig.look[k].getComponent(c);
+      }
+    }
+    // 当前所在的分镜段
     let index = 0;
-    while (index < CAMERA_KEYS.length - 2 && t >= CAMERA_KEYS[index + 1].t) index += 1;
-    let a = CAMERA_KEYS[index];
-    let b = CAMERA_KEYS[Math.min(index + 1, CAMERA_KEYS.length - 1)];
+    while (index < keys.length - 2 && t >= keys[index + 1].t) index += 1;
+    const a = keys[index];
+    const b = keys[Math.min(index + 1, keys.length - 1)];
+    const u = smoothstep(a.t, b.t, t);
+    let fov: number;
+    if (t < OPENING.openStart) {
+      const T = rig.preTimes;
+      pool.targetPos.set(hermite(T, rig.channels[0], t), hermite(T, rig.channels[1], t), hermite(T, rig.channels[2], t));
+      pool.targetLook.set(hermite(T, rig.channels[3], t), hermite(T, rig.channels[4], t), hermite(T, rig.channels[5], t));
+      fov = hermite(T, rig.fov, t);
+    } else {
+      pool.targetPos.copy(rig.pos[index]).lerp(rig.pos[Math.min(index + 1, keys.length - 1)], u);
+      pool.targetLook.copy(rig.look[index]).lerp(rig.look[Math.min(index + 1, keys.length - 1)], u);
+      fov = THREE.MathUtils.lerp(a.fov, b.fov, u);
+    }
     if (s.debug.cam) {
       const c = s.debug.cam;
-      a = { ...a, pos: [c[0], c[1], c[2]], lookOff: [c[3], c[4], c[5]], fov: c[6] };
-      b = a;
+      pool.targetPos.copy(pool.targetLook).add(pool.anchor.set(c[0], c[1], c[2]));
+      fov = c[6];
     }
-    const u = smoothstep(a.t, b.t, t);
-    applyKey(a, pool.posA, pool.lookA);
-    applyKey(b, pool.posB, pool.lookB);
-    pool.targetPos.copy(pool.posA).lerp(pool.posB, u);
-    pool.targetLook.copy(pool.lookA).lerp(pool.lookB, u);
-    const fov = THREE.MathUtils.lerp(a.fov, b.fov, u);
     const near = THREE.MathUtils.lerp(a.near ?? 0.05, b.near ?? 0.05, u);
-    const shift = THREE.MathUtils.lerp(a.shift ?? 0, b.shift ?? 0, u);
-    if (shift !== 0) {
-      pool.anchor.copy(pool.targetLook).sub(pool.targetPos).normalize();
-      pool.anchor.cross(pool.up).normalize();
-      pool.targetLook.addScaledVector(pool.anchor, shift);
-    }
-    if (t >= OPENING_TOTAL) {
-      // 定格后的轻微呼吸与指针视差，让画面不像静态图
-      const breathe = Math.sin(now * 0.0009) * 0.008;
-      pool.targetPos.x += frame.pointer.x * 0.03;
-      pool.targetPos.y += breathe + frame.pointer.y * 0.02;
-    }
 
     const perspective = camera as THREE.PerspectiveCamera;
     const pullback = portraitPullback(perspective.aspect, t);
@@ -489,23 +551,25 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     const portraitLift = Math.min(1, pullback) * 0.1;
     pool.targetPos.y -= portraitLift;
     pool.targetLook.y -= portraitLift;
-    if (!pool.snapped || jumped) {
-      camera.position.copy(pool.targetPos);
-      pool.smoothedLook.copy(pool.targetLook);
-      pool.snapped = true;
-    } else {
-      const k = 1 - Math.exp(-delta * 9);
-      camera.position.lerp(pool.targetPos, k);
-      pool.smoothedLook.lerp(pool.targetLook, k);
-    }
-    camera.lookAt(pool.smoothedLook);
+
+    // 速度感：机位移动越快 fov 略微张开（igloo 按滚动速度加宽）
+    const speed = pool.snapped && !jumped && delta > 0 ? pool.prevPos.distanceTo(pool.targetPos) / delta : 0;
+    rig.speed = lerpFPS(rig.speed, Math.min(speed, 4), 0.08, delta);
+    pool.prevPos.copy(pool.targetPos);
+    pool.snapped = true;
+    fov += Math.min(4, rig.speed * 1.4);
+
+    // 活力：交接帧与大运动时只有基础层；英雄停顿与定格后手持 / 视差全开
+    const life = t >= OPENING_TOTAL ? 1
+      : 0.55 * smoothstep(0.35, 2.0, t) + 0.45 * smoothstep(A + 5.5, A + 6.0, t) * (1 - smoothstep(W + 0.6, W + 1.2, t));
+    rig.layer.apply(perspective, pool.targetPos, pool.targetLook, frame.pointer, life, delta, lying.current?.headDir);
     if (Math.abs(perspective.fov - fov) > 1e-3 || Math.abs(perspective.near - near) > 1e-4) {
       perspective.fov = fov;
       perspective.near = near;
       perspective.updateProjectionMatrix();
     }
 
-    // 景深状态：靠近定格镜头时平滑接入场景文件的对焦设置
+    // 景深：按段过渡；focusAnchor 让焦点跟着脸 / 纸走（拉焦）
     const dofA = a.dof ?? NO_DOF;
     const dofB = b.dof ?? NO_DOF;
     const view = cameraState.current;
@@ -514,8 +578,19 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     view.blur = THREE.MathUtils.lerp(dofA.blur ?? 1.4, dofB.blur ?? 1.4, u) * enabled;
     view.focusRange = THREE.MathUtils.lerp(dofA.focusRange ?? 0.3, dofB.focusRange ?? 0.3, u);
     view.focusDistance = THREE.MathUtils.lerp(dofA.focusDistance ?? 4, dofB.focusDistance ?? 4, u) + extraFocusDistance;
-    view.focusMode = (u < 0.5 ? dofA : dofB).focusMode ?? 'target';
-    view.target = (u < 0.5 ? dofA : dofB).target;
+    const dofNow = u < 0.5 ? dofA : dofB;
+    view.focusMode = dofNow.focusMode ?? 'target';
+    if (dofA.focusAnchor || dofB.focusAnchor) {
+      // 两个锚点之间平滑拉焦
+      anchorWorld(dofA.focusAnchor ?? dofB.focusAnchor!, pool.lookA);
+      anchorWorld(dofB.focusAnchor ?? dofA.focusAnchor!, pool.lookB);
+      pool.lookA.lerp(pool.lookB, u);
+      pool.lookA.toArray(rig.focus);
+      view.target = rig.focus;
+      view.focusMode = 'target';
+    } else {
+      view.target = dofNow.target;
+    }
   });
 
   // 结霜在相机与骨骼本帧更新之后计算（同优先级按注册顺序，排在上面的主循环之后）
@@ -568,18 +643,16 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
  * 外加用户画的翅膀笔迹）。角色在它上面物化并站起；fold 阶段它翻卷着飞走，让位给纸飞机。
  */
 /**
- * fold：角色站稳以后，脚下那张纸飘到她身前，按真实折法折成纸飞机（foldingPaper，四步依次进行），
- * 折好立刻出发，沿弧线钻进手机窗，开窗白闪前一刻消失。
+ * fold（导演流程第二幕）：英雄停顿后，脚下那张纸飘起到她身前（2-1，镜头下摇 + 拉焦），
+ * 在特写里按真实折法四拍折成纸飞机（2-2），折好立刻起飞（2-3 甩镜），沿弧线钻进手机窗（2-4 后拉揭示）。
  */
-const FOLD_SECONDS = 2.0;
+
 const FLY_END = OPENING.openStart + 0.15;
 /** 折好的纸飞机相对整张纸的大小（纸长 2.27 m → 机身约 0.45 m） */
-const PLANE_SCALE = 0.2;
-/** 折纸的位置（相机空间，米）：画面中间偏右下、离镜头 1.7 m，折的每一步都看得清，又不挡住角色 */
-const FOLD_POINT = new THREE.Vector3(0.42, -0.12, -1.7);
+const PLANE_SCALE = 0.17;
 const FLY_DEPTH = 7;
 /** 瞄准手机窗靠右的位置，不从角色身后穿过去 */
-const WINDOW_AIM_X = 0.8;
+const WINDOW_AIM_X = 0.6;
 
 function PaperSheet3D({ clock, art, lying, hole }: {
   clock: OpeningClock;
@@ -677,8 +750,9 @@ function PaperSheet3D({ clock, art, lying, hole }: {
       parts.stamped = true;
       parts.texture.needsUpdate = true;
     }
-    const F = OPENING.wakeEnd;
-    const flyStart = F + FOLD_SECONDS;
+    const F = OPENING_ACT2.riseStart;
+    const foldStart = OPENING_ACT2.foldStart;
+    const flyStart = OPENING_ACT2.flyStart;
     g.visible = started && !!placement.current && t < FLY_END;
     if (!g.visible || !placement.current) return;
     if (t < F) {
@@ -691,16 +765,12 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     }
 
     camera.updateMatrixWorld();
-    // 折纸的位置跟着镜头走：镜头还在后拉，纸始终留在画面里同一个地方
-    pool.anchor.copy(FOLD_POINT).applyMatrix4(camera.matrixWorld);
+    // 折纸的位置：她身前（openingGround 按站姿算好的世界坐标），镜头的拉焦与特写都对准它
+    pool.anchor.copy(pose?.foldPoint ?? placement.current.center);
 
-    // 四步依次折：角 → 鼻 → 对折 → 翻翼
-    const steps = [
-      smoothstep(F + 0.15, F + 0.6, t),
-      smoothstep(F + 0.6, F + 1.05, t),
-      smoothstep(F + 1.05, F + 1.5, t),
-      smoothstep(F + 1.45, F + 1.9, t),
-    ];
+    // 飘到她面前之后，四拍慢慢折：角 → 鼻 → 对折 → 翻翼
+    const beat = (flyStart - foldStart) / 4;
+    const steps = [0, 1, 2, 3].map((k) => smoothstep(foldStart + k * beat, foldStart + (k + 1) * beat - 0.08, t));
     // 折痕明暗：光从镜头方向来
     pool.light.copy(camera.position);
     g.worldToLocal(pool.light).normalize();
@@ -713,13 +783,14 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     pool.control.y += 0.6;
 
     if (t < flyStart) {
-      // 从地上飘到身前，一边折一边缩小、转向起飞方向
-      const m = smoothstep(F, F + 0.9, t);
+      // 从地上慢慢飘到她面前（带一点上浮的弧和悬浮的轻晃），飘的过程里缩到折纸的大小、转向起飞方向
+      const m = smoothstep(F, foldStart, t);
       bezier(0);
       flightOrientation(0);
       g.position.copy(placement.current.center).lerp(pool.anchor, m);
-      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.flightQuat, smoothstep(F + 0.3, F + 1.4, t));
-      g.scale.setScalar(1 - (1 - PLANE_SCALE) * smoothstep(F, F + 1.2, t));
+      g.position.y += Math.sin(m * Math.PI) * 0.15 + Math.sin(t * 1.7) * 0.015 * m;
+      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.flightQuat, smoothstep(F + 0.2, foldStart + 0.3, t));
+      g.scale.setScalar(1 - (1 - PLANE_SCALE * 1.6) * m - PLANE_SCALE * 0.6 * smoothstep(foldStart, flyStart, t));
       return;
     }
     // 折好立刻出发：前段就有速度（ease-out），不在原地停顿
@@ -742,8 +813,11 @@ function PaperSheet3D({ clock, art, lying, hole }: {
 const HeroLights = memo(function HeroLights({ lighting, clock }: { lighting: SceneLighting; clock: OpeningClock }) {
   const debutRim = useRef<THREE.DirectionalLight>(null);
   useFrame(() => {
-    if (debutRim.current) debutRim.current.intensity = clock.ready
-      ? 0.35 * debutEnvelope(openingTime(clock, performance.now()) - OPENING_TOTAL) : 0;
+    if (!debutRim.current) return;
+    const t = openingTime(clock, performance.now());
+    // 苏醒的轮廓光（导演流程 1-3 → 1-4 升起，英雄停顿后收）+ 定格时的一次出场光
+    const wake = openingStarted(clock) ? 0.55 * smoothstep(OPENING.standStart + 1.1, OPENING.standStart + 5.0, t) * (1 - smoothstep(OPENING.wakeEnd + 0.4, OPENING.wakeEnd + 1.4, t)) : 0;
+    debutRim.current.intensity = clock.ready ? Math.max(wake, 0.35 * debutEnvelope(t - OPENING_TOTAL)) : 0;
   });
   const target = useMemo(() => new THREE.Object3D(), []);
   useEffect(() => {

@@ -17,17 +17,31 @@ export type OpeningPhase = 'loading' | 'draw' | 'wake' | 'fold' | 'open' | 'hero
 
 /** 角色从铅笔稿里显形（主体前沿 0.3–1.8 s）后睡一小会儿再醒：睡姿与铅笔稿重合的那一刻要看得见 */
 const STAND_START = 2.3;
-/** Stand Up 约 6 s：站稳之后纸才开始折 */
-const WAKE_END = STAND_START + 6.0;
-/** open 开窗的起点；open / hero 段内部的时长与旧版（9.6–15.8 s）完全一致，只是整体后移 */
-const OPEN_START = WAKE_END + 3.2;
+/** Stand Up 约 6 s，站稳后留一个英雄停顿（导演流程 1-5），之后纸才飘起来 */
+const WAKE_END = STAND_START + 6.3;
+/**
+ * 第二幕（纸飞机）5.4 s，节奏放慢：
+ *   纸从地上慢慢飘到她面前，镜头同时从正面绕到她右肩后（rise）；
+ *   过肩镜头里纸一折一折慢慢折成纸飞机（fold，四拍各 0.6 s）；
+ *   纸飞机越过她往前飞进窗口（fly），镜头已在她身后，直接接开窗。
+ * open / hero 段内部的时长与旧版（9.6–15.8 s）完全一致，只是整体后移。
+ */
+const ACT2 = { riseStart: 0.3, foldStart: 1.8, flyStart: 4.2, length: 5.4 } as const;
+const OPEN_START = WAKE_END + ACT2.length;
+
+/** 第二幕的绝对时间（纸、镜头、音效共用） */
+export const OPENING_ACT2 = {
+  riseStart: WAKE_END + ACT2.riseStart,
+  foldStart: WAKE_END + ACT2.foldStart,
+  flyStart: WAKE_END + ACT2.flyStart,
+} as const;
 
 export const OPENING = {
   /** wake 内：Stand Up 开始 */
   standStart: STAND_START,
   wakeEnd: WAKE_END,
-  /** fold 内：纸飞机折好起飞时，手机窗与蓝框回来 */
-  windowBack: WAKE_END + 2.0,
+  /** fold 内：最后一折时手机窗与蓝框从黑暗里亮起来，纸飞机起飞就有了目标 */
+  windowBack: WAKE_END + 3.6,
   openStart: OPEN_START,
   /** 窗口从手机窗放大到全屏所需秒数（CSS 过渡与 3D 相机同步） */
   windowOpenSeconds: 1.6,
