@@ -678,6 +678,7 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     anchor: new THREE.Vector3(), start: new THREE.Vector3(), control: new THREE.Vector3(), end: new THREE.Vector3(),
     pos: new THREE.Vector3(), tangent: new THREE.Vector3(), tail: new THREE.Vector3(), up: new THREE.Vector3(), right: new THREE.Vector3(),
     basis: new THREE.Matrix4(), flightQuat: new THREE.Quaternion(), bankQuat: new THREE.Quaternion(), nose: new THREE.Vector3(0, 1, 0),
+    presentQuat: new THREE.Quaternion(), px: new THREE.Vector3(), py: new THREE.Vector3(), pz: new THREE.Vector3(), toCamera: new THREE.Vector3(),
     light: new THREE.Vector3(),
   }), []);
   const placement = useRef<ReturnType<typeof paperPlacement> | null>(null);
@@ -711,6 +712,19 @@ function PaperSheet3D({ clock, art, lying, hole }: {
       .addScaledVector(pool.tail.copy(pool.end).sub(pool.control), 2 * u).normalize();
   };
   /** 机头（纸面 +y）沿切线、机背（纸面 +z）朝上 */
+  /**
+   * 折纸时的朝向：机头横在画面里（沿镜头右方），纸面斜对镜头约 45°。
+   * 这样前两折看得到纸面，对折之后看得到纸飞机的侧面轮廓——不会正对机尾变成一条线。
+   */
+  const presentOrientation = () => {
+    pool.py.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
+    pool.toCamera.copy(camera.position).sub(pool.anchor).normalize();
+    pool.pz.set(0, 1, 0).multiplyScalar(0.55).addScaledVector(pool.toCamera, 0.6);
+    pool.pz.addScaledVector(pool.py, -pool.pz.dot(pool.py)).normalize();
+    pool.px.crossVectors(pool.py, pool.pz).normalize();
+    pool.basis.makeBasis(pool.px, pool.py, pool.pz);
+    pool.presentQuat.setFromRotationMatrix(pool.basis);
+  };
   const flightOrientation = (bank: number) => {
     pool.up.set(0, 1, 0);
     pool.right.crossVectors(pool.tangent, pool.up).normalize();
@@ -789,7 +803,10 @@ function PaperSheet3D({ clock, art, lying, hole }: {
       flightOrientation(0);
       g.position.copy(placement.current.center).lerp(pool.anchor, m);
       g.position.y += Math.sin(m * Math.PI) * 0.15 + Math.sin(t * 1.7) * 0.015 * m;
-      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.flightQuat, smoothstep(F + 0.2, foldStart + 0.3, t));
+      presentOrientation();
+      // 先转成侧对镜头的折纸姿态；最后一拍里再把机头转向窗口
+      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.presentQuat, smoothstep(F + 0.2, foldStart + 0.3, t))
+        .slerp(pool.flightQuat, smoothstep(flyStart - 0.45, flyStart + 0.25, t));
       g.scale.setScalar(1 - (1 - PLANE_SCALE * 1.6) * m - PLANE_SCALE * 0.6 * smoothstep(foldStart, flyStart, t));
       return;
     }
@@ -799,7 +816,8 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     bezier(u);
     flightOrientation(Math.sin(u * Math.PI * 2) * 0.3);
     g.position.copy(pool.pos);
-    g.quaternion.copy(pool.flightQuat);
+    presentOrientation();
+    g.quaternion.copy(pool.presentQuat).slerp(pool.flightQuat, smoothstep(flyStart - 0.45, flyStart + 0.25, t));
     g.scale.setScalar(PLANE_SCALE * (1 - 0.35 * u));
   });
   return (
