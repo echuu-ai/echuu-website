@@ -66,6 +66,8 @@ export type HoleRect = {
   x: number; y: number; w: number; h: number; open: boolean;
   /** 0 = 窗口还没回来（黑幕全黑）→ 1 = 窗口完整；fold 阶段从窗口中心张开 */
   reveal: number;
+  /** 窗口蓝框的不透明度：画在 3D 黑幕上（角色身后），不再用 DOM 描边盖住角色 */
+  border: number;
 };
 
 /** paper = 3D 纸面中心（开场第一镜）；fold = 第二幕折纸飞机的位置 */
@@ -135,10 +137,10 @@ const CAMERA_KEYS: CameraKey[] = [
   { t: W + 0.3, anchor: 'head', pos: [0.47, -0.05, 1.48], look: 'head', lookOff: [0, -0.02, 0], fov: 30, dof: FACE_DOF },
   // 2-1 纸从脚下慢慢飘起：镜头从正面绕到她右侧（侧面：人与纸同框），再绕到右肩后
   { t: R.riseStart + 0.7, anchor: 'head', pos: [1.05, 0.02, 0.95], look: 'head', lookOff: [0, -0.15, 0.25], fov: 34, dof: FACE_DOF },
-  { t: R.foldStart, anchor: 'head', pos: [1.3, 0.15, 0.05], look: 'fold', lookOff: [-0.05, 0.05, -0.32], fov: 40, dof: FOLD_DOF },
-  // 2-2 高位 3/4 后侧：越过翅膀与右肩俯看她面前的纸，一折一折慢慢折成纸飞机；焦点在纸上，她在前景虚化
-  { t: R.foldStart + 1.0, anchor: 'head', pos: [0.78, 0.62, -1.25], look: 'fold', lookOff: [0, 0, 0], fov: 34, dof: FOLD_DOF },
-  { t: R.flyStart, anchor: 'head', pos: [0.6, 0.6, -1.05], look: 'fold', lookOff: [0, 0, 0.2], fov: 33, dof: FOLD_DOF },
+  { t: R.foldStart, anchor: 'head', pos: [1.65, 0.25, 0.25], look: 'fold', lookOff: [-0.3, 0.75, -0.35], fov: 42, dof: FOLD_DOF },
+  // 2-2 高位 3/4 后侧：越过翅膀与右肩，看她右前方地上的纸一折一折慢慢折成纸飞机；她和纸同框，焦点在纸上
+  { t: R.foldStart + 1.0, anchor: 'head', pos: [0.95, 0.75, -1.5], look: 'fold', lookOff: [-0.3, 0.55, -0.3], fov: 40, dof: FOLD_DOF },
+  { t: R.flyStart, anchor: 'head', pos: [0.85, 0.7, -1.35], look: 'fold', lookOff: [-0.25, 0.5, -0.1], fov: 38, dof: FOLD_DOF },
   // 2-3 纸飞机越过她飞进窗口：镜头留在她身后、略后退，视线跟着飞机往前
   { t: OPENING.openStart, anchor: 'hips', pos: [-0.25, 1.55, -2.3], look: 'chest', lookOff: [0, 0.15, 1.5], fov: 38 },
   // open 白闪后冲进窗口对面的世界：镜头退到角色后上方，环绕（与旧版一致）
@@ -650,8 +652,10 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
  */
 
 const FLY_END = OPENING.openStart + 0.15;
-/** 折好的纸飞机相对整张纸的大小（纸长 2.27 m → 机身约 0.45 m） */
-const PLANE_SCALE = 0.145;
+/** 在地上折的那张纸相对整张纸的大小（纸宽 1.95 m → 约 0.5 m，接近一张大号作业纸） */
+const FOLD_SCALE = 0.26;
+/** 折纸时机头的水平方向（她面朝 +Z）：右前方 */
+const FOLD_NOSE = { x: 0.9, z: 0.45 } as const;
 const FLY_DEPTH = 7;
 /** 瞄准手机窗靠右的位置，不从角色身后穿过去 */
 const WINDOW_AIM_X = 0.6;
@@ -673,21 +677,38 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 4;
     // 交接时与 DOM 纸一样纯白；DOM 淡出后慢慢压到略低于纯白，镜头贴近时不被 bloom 吹成一片白
-    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false, vertexColors: true });
+    // alphaTest：纸外的透明边和打孔的黑洞都镂空（不然纸飞机边上一圈黑）
+    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, side: THREE.DoubleSide, fog: false, vertexColors: true, alphaTest: 0.5 });
     const paper = createFoldingPaper(material, PAPER_WIDTH, PAPER_HEIGHT);
-    return { texture, material, paper, ctx: canvas.getContext('2d'), sheet: null as HTMLImageElement | null, sketched: false, stamped: false };
+    return { texture, material, paper, ctx: canvas.getContext('2d'), sheet: null as HTMLCanvasElement | null, sketched: false, stamped: false };
   }, []);
   const pool = useMemo(() => ({
     anchor: new THREE.Vector3(), start: new THREE.Vector3(), control: new THREE.Vector3(), end: new THREE.Vector3(),
     pos: new THREE.Vector3(), tangent: new THREE.Vector3(), tail: new THREE.Vector3(), up: new THREE.Vector3(), right: new THREE.Vector3(),
     basis: new THREE.Matrix4(), flightQuat: new THREE.Quaternion(), bankQuat: new THREE.Quaternion(), nose: new THREE.Vector3(0, 1, 0),
-    presentQuat: new THREE.Quaternion(), px: new THREE.Vector3(), py: new THREE.Vector3(), pz: new THREE.Vector3(), toCamera: new THREE.Vector3(),
+    foldQuat: new THREE.Quaternion(), euler: new THREE.Euler(),
     light: new THREE.Vector3(),
   }), []);
   const placement = useRef<ReturnType<typeof paperPlacement> | null>(null);
   useEffect(() => {
     const image = new Image();
-    image.onload = () => { parts.sheet = image; };
+    image.onload = () => {
+      // 纸张图里的打孔是黑色像素：抠成透明，纸飞机折起来也不会露出黑洞
+      const sheet = document.createElement('canvas');
+      sheet.width = image.naturalWidth;
+      sheet.height = image.naturalHeight;
+      const ctx = sheet.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+      ctx.drawImage(image, 0, 0);
+      const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const luma = 0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2];
+        if (luma < 70) px[i + 3] = 0;
+      }
+      ctx.putImageData(data, 0, 0);
+      parts.sheet = sheet;
+    };
     image.src = HOME_ASSETS.opening.paperSheet;
   }, [parts]);
   useEffect(() => () => {
@@ -715,19 +736,6 @@ function PaperSheet3D({ clock, art, lying, hole }: {
       .addScaledVector(pool.tail.copy(pool.end).sub(pool.control), 2 * u).normalize();
   };
   /** 机头（纸面 +y）沿切线、机背（纸面 +z）朝上 */
-  /**
-   * 折纸时的朝向：机头横在画面里（沿镜头右方），纸面斜对镜头约 45°。
-   * 这样前两折看得到纸面，对折之后看得到纸飞机的侧面轮廓——不会正对机尾变成一条线。
-   */
-  const presentOrientation = () => {
-    pool.py.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
-    pool.toCamera.copy(camera.position).sub(pool.anchor).normalize();
-    pool.pz.set(0, 1, 0).multiplyScalar(0.55).addScaledVector(pool.toCamera, 0.6);
-    pool.pz.addScaledVector(pool.py, -pool.pz.dot(pool.py)).normalize();
-    pool.px.crossVectors(pool.py, pool.pz).normalize();
-    pool.basis.makeBasis(pool.px, pool.py, pool.pz);
-    pool.presentQuat.setFromRotationMatrix(pool.basis);
-  };
   const flightOrientation = (bank: number) => {
     pool.up.set(0, 1, 0);
     pool.right.crossVectors(pool.tangent, pool.up).normalize();
@@ -783,46 +791,41 @@ function PaperSheet3D({ clock, art, lying, hole }: {
     }
 
     camera.updateMatrixWorld();
-    // 折纸的位置：她身前（openingGround 按站姿算好的世界坐标），镜头的拉焦与特写都对准它
+    // 折纸点：她脚前方的地面（openingGround），机头朝她的右前方——镜头在她右肩后，看到的是纸飞机的侧面
     pool.anchor.copy(pose?.foldPoint ?? placement.current.center);
+    pool.nose.set(FOLD_NOSE.x, 0, FOLD_NOSE.z).normalize();
+    pool.foldQuat.setFromEuler(pool.euler.set(-Math.PI / 2, 0, Math.atan2(-pool.nose.x, -pool.nose.z), 'XYZ'));
+    pool.nose.set(0, 1, 0);
 
-    // 飘到她面前之后，四拍慢慢折：角 → 鼻 → 对折 → 翻翼
-    const beat = (flyStart - foldStart) / 4;
-    const steps = [0, 1, 2, 3].map((k) => smoothstep(foldStart + k * beat, foldStart + (k + 1) * beat - 0.08, t));
-    // 折痕明暗：光从镜头方向来
+    // 在地上四拍慢慢折：角 → 鼻 → 对折 → 翻翼（折完留一小拍再起飞）
+    const foldEnd = flyStart - 0.25;
+    const beat = (foldEnd - foldStart) / 4;
+    const steps = [0, 1, 2, 3].map((k) => smoothstep(foldStart + k * beat, foldStart + (k + 1) * beat - 0.06, t));
     pool.light.copy(camera.position);
     g.worldToLocal(pool.light).normalize();
     parts.paper.setFold(steps[0], steps[1], steps[2], steps[3], pool.light);
 
-    // 起飞线：从折纸处出发，先往上抬，再钻向手机窗
-    pool.start.copy(pool.anchor);
-    windowTarget(pool.end);
-    pool.control.copy(pool.start).lerp(pool.end, 0.3);
-    pool.control.y += 0.6;
-
     if (t < flyStart) {
-      // 从地上慢慢飘到她面前（带一点上浮的弧和悬浮的轻晃），飘的过程里缩到折纸的大小、转向起飞方向
+      // 从她脚下滑出来、贴着地面缩成一张小纸，转到折纸的朝向
       const m = smoothstep(F, foldStart, t);
-      bezier(0);
-      flightOrientation(0);
-      g.position.copy(placement.current.center).lerp(pool.anchor, m);
-      g.position.y += Math.sin(m * Math.PI) * 0.15 + Math.sin(t * 1.7) * 0.015 * m;
-      presentOrientation();
-      // 先转成侧对镜头的折纸姿态；最后一拍里再把机头转向窗口
-      g.quaternion.copy(placement.current.groupQuaternion).slerp(pool.presentQuat, smoothstep(F + 0.2, foldStart + 0.3, t))
-        .slerp(pool.flightQuat, smoothstep(flyStart - 0.45, flyStart + 0.25, t));
-      g.scale.setScalar(1 - (1 - PLANE_SCALE * 1.6) * m - PLANE_SCALE * 0.6 * smoothstep(foldStart, flyStart, t));
+      g.position.lerpVectors(placement.current.center, pool.anchor, m);
+      g.position.y = 0.006 + Math.sin(m * Math.PI) * 0.05;
+      g.quaternion.slerpQuaternions(placement.current.groupQuaternion, pool.foldQuat, m);
+      g.scale.setScalar(1 - (1 - FOLD_SCALE) * m);
       return;
     }
-    // 折好立刻出发：前段就有速度（ease-out），不在原地停顿
+    // 起飞：先从地上抬起来，再沿弧线钻进窗口；机头在头 0.45 s 里转向飞行方向
+    pool.start.copy(pool.anchor).setY(0.05);
+    windowTarget(pool.end);
+    pool.control.copy(pool.start).lerp(pool.end, 0.3);
+    pool.control.y += 0.8;
     const x = Math.min(1, Math.max(0, (t - flyStart) / (FLY_END - flyStart)));
     const u = 1 - (1 - x) * (1 - x);
     bezier(u);
     flightOrientation(Math.sin(u * Math.PI * 2) * 0.3);
     g.position.copy(pool.pos);
-    presentOrientation();
-    g.quaternion.copy(pool.presentQuat).slerp(pool.flightQuat, smoothstep(flyStart - 0.45, flyStart + 0.25, t));
-    g.scale.setScalar(PLANE_SCALE * (1 - 0.35 * u));
+    g.quaternion.copy(pool.foldQuat).slerp(pool.flightQuat, smoothstep(flyStart, flyStart + 0.45, t));
+    g.scale.setScalar(FOLD_SCALE * (1 - 0.4 * u));
   });
   return (
     <group ref={group} visible={false}>
@@ -872,7 +875,10 @@ function BlackFrame({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
     depthWrite: false,
     transparent: false,
     toneMapped: false,
-    uniforms: { uRect: { value: new THREE.Vector4(-2, -2, 2, 2) }, uDistance: { value: FRAME_DISTANCE }, uFeather: { value: 0.002 } },
+    uniforms: {
+      uRect: { value: new THREE.Vector4(-2, -2, 2, 2) }, uDistance: { value: FRAME_DISTANCE }, uFeather: { value: 0.002 },
+      uPx: { value: new THREE.Vector2(0.001, 0.001) }, uThickness: { value: 12 }, uBorder: { value: 0 },
+    },
     vertexShader: `
       uniform float uDistance;
       varying vec2 vNdc;
@@ -884,12 +890,22 @@ function BlackFrame({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
     fragmentShader: `
       uniform vec4 uRect;
       uniform float uFeather;
+      uniform vec2 uPx;
+      uniform float uThickness;
+      uniform float uBorder;
       varying vec2 vNdc;
       void main() {
         vec2 inside = smoothstep(uRect.xy - uFeather, uRect.xy + uFeather, vNdc) * (1.0 - smoothstep(uRect.zw - uFeather, uRect.zw + uFeather, vNdc));
         float hole = inside.x * inside.y;
         if (hole > 0.999) discard;
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0 - hole);
+        // 窗口外缘到这里的像素距离：蓝框 = 一圈实心 + 外发光（与原 DOM 描边同色同粗）
+        vec2 q = max(uRect.xy - vNdc, vNdc - uRect.zw) / uPx;
+        float d = length(max(q, 0.0));
+        float ring = 1.0 - smoothstep(uThickness - 1.0, uThickness + 1.0, d);
+        float glow = exp(-max(d - uThickness, 0.0) / (uThickness * 1.4)) * 0.55;
+        vec3 blue = vec3(0.447, 0.835, 0.996);
+        float a = clamp(ring + glow * (1.0 - ring), 0.0, 1.0) * uBorder;
+        gl_FragColor = vec4(blue * a, 1.0 - hole);
       }`,
   }), []);
   useEffect(() => () => material.dispose(), [material]);
@@ -910,6 +926,10 @@ function BlackFrame({ hole }: { hole: React.MutableRefObject<HoleRect> }) {
     const hw = (rect.w / 2) * r;
     const hh = (rect.h / 2) * r;
     material.uniforms.uRect.value.set(nx(cx - hw), ny(cy + hh), nx(cx + hw), ny(cy - hh));
+    material.uniforms.uPx.value.set(2 / Math.max(1, bounds.width), 2 / Math.max(1, bounds.height));
+    // 原 DOM 描边：684 宽的窗口里 17 单位粗
+    material.uniforms.uThickness.value = Math.max(2, rect.w * (17 / 684) * r);
+    material.uniforms.uBorder.value = rect.border;
     material.uniforms.uDistance.value = Math.min(FRAME_DISTANCE, (camera as THREE.PerspectiveCamera).far * 0.5);
   });
   return (

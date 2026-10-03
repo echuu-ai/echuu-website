@@ -89,7 +89,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const [ready, setReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const windowRef = useRef<HTMLDivElement | null>(null);
-  const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false, reveal: 0 });
+  const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false, reveal: 0, border: 0 });
   const paperArt = useRef<HTMLCanvasElement | null>(null);
   const [pendingWake, setPendingWake] = useState(false);
   // 3D 就绪后从睡姿拍出的铅笔稿 + 画翅膀引导：DOM 纸换上同一张线稿
@@ -192,6 +192,9 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
         hole.current.w = rect.width;
         hole.current.h = rect.height;
         hole.current.reveal = mode === '3d' ? smoothstep(OPENING.windowBack, OPENING.windowBack + 0.9, t) : 1;
+        hole.current.border = mode === '3d'
+          ? smoothstep(OPENING.windowBack, OPENING.windowBack + 0.9, t) * (1 - smoothstep(OPENING.openStart, OPENING.openStart + 0.5, t))
+          : 0;
         hole.current.open = false;
       }
       raf = requestAnimationFrame(track);

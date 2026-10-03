@@ -198,6 +198,10 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 /* 纸先折，最后一折时窗口才回来（windowBack − wakeEnd = 3.6 s） */
 .echuu-website .hv-hero--3d[data-phase='fold'] .hv-opening__frame { transition-delay: 3.6s; }
 .echuu-website .hv-hero--3d :is(.hv-opening__title, .hv-opening__deco, .hv-opening__ui, .hv-opening__stars, .hv-opening__outline) { display: none; }
+/* 3D 开场的窗口蓝框画在 3D 黑幕里（角色身后）；DOM 描边与内发光会盖住角色，不再显示 */
+.echuu-website .hv-hero--3d .hv-opening__stroke { display: none; }
+.echuu-website .hv-hero--3d .hv-opening__window,
+.echuu-website .hv-hero--3d .hv-opening__window[data-loaded='true'] { box-shadow: none; }
 
 /* --- 开场覆盖层 --------------------------------------------------------- */
 .echuu-website .hv-opening {

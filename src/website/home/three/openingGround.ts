@@ -95,8 +95,9 @@ export function groundOpeningClips(
   pose(stand, standDuration);
   const standingHips = bone('hips')!;
   const standingHead = bone('head')!;
-  // 站姿面朝 +Z：折纸点在她面前略偏右、胸口高度——镜头在她右肩后时，纸正好落在她视线前方
-  const foldPoint = standingHips.clone().add(new THREE.Vector3(0.16, (standingHead.y - standingHips.y) * 0.6, 0.6));
+  // 站姿面朝 +Z：折纸点在她右前方的地面上——纸从脚下滑出来就在这里折，不和身体穿插；从她右肩后看，纸在右腿旁边不被挡住
+  void standingHead;
+  const foldPoint = new THREE.Vector3(standingHips.x + 0.55, 0.006, standingHips.z + 0.7);
 
   // 2. Stand Up 第一帧的躺姿：中心、朝向、最低点
   pose(stand, 0);
