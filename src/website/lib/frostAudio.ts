@@ -9,8 +9,8 @@
 
 /** 总音量（所有交互音效共用；整体压低，作为背景存在） */
 const MASTER = 0.2;
-/** 角色扩散音单独衰减，保留蝉鸣、风铃和其他交互的原有音量。 */
-const FROST_GAIN = 0.25;
+/** 角色扩散音（悬停冰晶沙沙声 + 进入时的 beep）单独衰减到 10%：2026-10-03 Cory 反馈 0.25 仍太响；蝉鸣、风铃和其他交互音量不变。 */
+const FROST_GAIN = 0.1;
 const MUTE_KEY = 'echuu-sound-muted';
 const BEEP_NOTES = [1318.5, 1567.98, 2093];
 const SPARKLE_NOTES = [2349.3, 2637, 3136, 3520, 4186];
@@ -131,8 +131,9 @@ export function playFrostBeep(nowSeconds: number) {
   if (!v) return;
   lastBeep = nowSeconds;
   const note = BEEP_NOTES[Math.floor(Math.random() * BEEP_NOTES.length)];
-  ping(v, note, 0.18, 0.09, 'triangle');
-  window.setTimeout(() => voice && ping(voice, note * 1.5, 0.1, 0.07, 'triangle'), 70);
+  // 正弦波比三角波圆润，不刺耳
+  ping(v, note, 0.18, 0.09, 'sine');
+  window.setTimeout(() => voice && ping(voice, note * 1.5, 0.1, 0.07, 'sine'), 70);
 }
 
 /**

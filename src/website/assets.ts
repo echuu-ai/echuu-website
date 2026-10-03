@@ -58,6 +58,8 @@ export const HOME_ASSETS = {
     paperSheet: FIG('opening-paper/sketch-body.png'),
   },
   logo3d: FIG('logo-chrome.png'),
+  /** Kling 生成的 logo 出场动画（星星闪 → 光环划出 → 像素字拼出，停在完整 logo）；?logo=video 试验 */
+  logoReveal: { webm: publicUrl('website/loops/logo-reveal.webm'), hevc: publicUrl('website/loops/logo-reveal.mov'), startPoster: publicUrl('website/loops/logo-reveal-start.webp') },
   /** 页脚用的白色 logo（带「你的OC出道舞台」） */
   logoWhite: FIG('logo-white.png'),
   brooch: FIG('brooch.webp'),

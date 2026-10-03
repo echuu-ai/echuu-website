@@ -719,5 +719,23 @@
     "bytes": 195392,
     "sha256": "bb6a01eeb50692ab7594f8fb976d476f0a259a3e12a7b86027c3cc21782085e4",
     "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/golden-croissant.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/loops/logo-reveal.webm",
+    "bytes": 985931,
+    "sha256": "ef5851fac9f4f06259918eb5a1236ca09d9643870fc520b1b479c05696bff4e2",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = lone star on chroma green, last frame = Echuu logo (from Cory's logo-with-text.png, tagline/kaomoji removed); keyed with scripts/loops/key.py, 2026-10-03 (VP9 alpha)"
+  },
+  {
+    "path": "website/loops/logo-reveal.mov",
+    "bytes": 2403288,
+    "sha256": "e764c68ca1cbbd0fed97d4810378240722b0fcbc73554db2c1de79c4b41a71c9",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = lone star on chroma green, last frame = Echuu logo (from Cory's logo-with-text.png, tagline/kaomoji removed); keyed with scripts/loops/key.py, 2026-10-03 (HEVC alpha)"
+  },
+  {
+    "path": "website/loops/logo-reveal-start.webp",
+    "bytes": 3530,
+    "sha256": "0587638ef942045c5c159c089388a42311e01718854ced2d66921210f7d573db",
+    "source": "First frame of logo-reveal (poster before playback), 2026-10-03"
   }
 ]
