@@ -118,7 +118,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const showReveal = LOGO_REVEAL && !reduced;
   const [revealDone, setRevealDone] = useState(false);
   const finishReveal = useCallback(() => setRevealDone(true), []);
-  const [stillShot, setStillShot] = useState<'back' | 'front'>('back');
   const [menuOpen, setMenuOpen] = useState(false);
   const [debut, setDebut] = useState(false);
   useEffect(() => {
@@ -210,7 +209,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       const next = phaseAt(t, clock.ready, openingStarted(clock));
       setPhase((current) => (current === next ? current : next));
       if (mode === '3d') updateOpeningSound(t, openingStarted(clock));
-      if (mode === 'still') setStillShot(t < OPENING.openStart + 3.2 ? 'back' : 'front');
     };
     tick();
     const timer = window.setInterval(tick, 80);
@@ -329,7 +327,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
         {stageStill ? (
           <img
             className="hv-stage__still"
-            src={stillShot === 'front' || phase === 'hero' ? HOME_ASSETS.heroShot : HOME_ASSETS.opening.back}
+            src={HOME_ASSETS.heroShot}
             alt=""
             width={1076}
             height={782}
@@ -358,42 +356,16 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               guide={sketch?.guide ?? null}
             />
           ) : null}
-          <div className="hv-opening__frame">
-            <p className="hv-opening__title" lang="en">
-              <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
-              <span>{h.opening.title.pre}</span>
-              <mark className="hv-opening__hl hv-opening__hl--yellow">{h.opening.title.hl1}</mark>
-              <span>{h.opening.title.mid}</span>
-              <i className="hv-opening__dot" aria-hidden="true" />
-              <mark className="hv-opening__hl hv-opening__hl--blue">{h.opening.title.hl2}</mark>
-              <img src={HOME_ASSETS.opening.star} alt="" className="hv-opening__star" />
-            </p>
-
-            <img className="hv-opening__deco hv-opening__deco--wing" src={HOME_ASSETS.opening.wing} alt="" />
-            <img className="hv-opening__deco hv-opening__deco--sword" src={HOME_ASSETS.opening.sword} alt="" />
-            <img className="hv-opening__deco hv-opening__deco--pegasus" src={HOME_ASSETS.opening.pegasus} alt="" />
-            <img className="hv-opening__deco hv-opening__deco--plane" src={HOME_ASSETS.opening.plane} alt="" />
-            <img className="hv-opening__ui" src={HOME_ASSETS.opening.uiList} alt="" />
-            <span className="hv-opening__stars" aria-hidden="true">★★★</span>
-
+          {/* 只剩手机窗：3D 开窗用它的位置；旧版开场（标题、剑、飞马、静态分镜）已删除，判定舞台模式前保持黑场 */}
+          {mode === '3d' ? <div className="hv-opening__frame">
             <div className="hv-opening__window" ref={windowRef} data-loaded={stroke >= 1}>
               {/* 蓝色描边 = 进度条：沿矩形周长生长，描完镜头再冲进窗口 */}
               <svg className="hv-opening__stroke" viewBox="0 0 684 294" preserveAspectRatio="none" aria-hidden="true">
                 <rect x="8.5" y="8.5" width="667" height="277" pathLength={1} style={{ strokeDashoffset: 1 - stroke }} />
               </svg>
               <span className="hv-opening__live">{h.opening.live}</span>
-              {stageStill ? (
-                <div className="hv-opening__stills">
-                  <span className="hv-opening__sky" />
-                  <img className="hv-opening__still hv-opening__still--lie" src={HOME_ASSETS.opening.lie} alt="" />
-                  <img className="hv-opening__still hv-opening__still--hand" src={HOME_ASSETS.opening.hand} alt="" />
-                </div>
-              ) : null}
-              <img className="hv-opening__outline hv-opening__outline--01" src={HOME_ASSETS.opening.outline01} alt="" />
-              <img className="hv-opening__outline hv-opening__outline--02" src={HOME_ASSETS.opening.outline02} alt="" />
-              {phase === 'loading' && mode !== '3d' ? <span className="hv-opening__loading">{h.opening.loading}</span> : null}
             </div>
-          </div>
+          </div> : null}
           {phase === 'open' ? <div className="hv-opening__flash" aria-hidden="true" /> : null}
         </div>
       ) : null}
