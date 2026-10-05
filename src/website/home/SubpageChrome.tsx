@@ -6,7 +6,7 @@ import { useHomeDict } from './useHomeDict';
 import { Link } from '../components/Link';
 import { LangInline } from '../components/LangInline';
 import { websitePath } from '../router';
-import { AccessDialog, type AccessMode } from '../auth/AccessDialog';
+import { LazyAccessDialog, type AccessMode } from '../auth/LazyAccessDialog';
 import { HOME_ASSETS } from '../assets';
 import '../styles/subpage.css';
 
@@ -38,7 +38,7 @@ export function SubpageChrome({ children, className, world = false }: { children
         accessTrigger.current = document.activeElement as HTMLElement;
         setAccessMode('signup');
       }} />
-      <AccessDialog mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} returnFocusRef={accessTrigger} />
+      <LazyAccessDialog mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} returnFocusRef={accessTrigger} />
       <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
         <Dialog.Content className="hv-menu-overlay" id={menuId} aria-describedby={undefined} onCloseAutoFocus={(event) => { event.preventDefault(); menuTrigger.current?.focus(); }}>
           <Dialog.Title className="team-menu-title">{h.header.menu}</Dialog.Title>

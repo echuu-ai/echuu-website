@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef, type CSSProperties } from 'react';
-import { AccessDialog, type AccessMode } from '../auth/AccessDialog';
+import { LazyAccessDialog, type AccessMode } from '../auth/LazyAccessDialog';
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
 import { HOME_ASSETS } from '../assets';
@@ -69,7 +69,7 @@ export function HomeV2() {
       {SeamTuningPanel && showSeamTuning() && <Suspense fallback={null}><SeamTuningPanel /></Suspense>}
       {LogoTuningPanel && tuneParam() === 'logo' && <Suspense fallback={null}><LogoTuningPanel /></Suspense>}
       {SceneGradePanel && tuneParam() === 'grade' && <Suspense fallback={null}><SceneGradePanel /></Suspense>}
-      <AccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
+      <LazyAccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
 }
