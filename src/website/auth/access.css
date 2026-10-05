@@ -7,7 +7,7 @@
 .echuu-access {
   position: fixed; z-index: 10001; left: 50%; top: 50%; transform: translate(-50%, -50%);
   width: min(363px, calc(100vw - 32px)); height: min(543px, calc(100dvh - 32px));
-  border-radius: 14px; outline: none; font-family: '42dot Sans', system-ui, sans-serif; color: #fff;
+  border-radius: 14px; outline: none; font-family: var(--echuu-sans); color: #fff;
 }
 .echuu-access *, .echuu-access *::before, .echuu-access *::after { box-sizing: border-box; }
 .echuu-access__glass {

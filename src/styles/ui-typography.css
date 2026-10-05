@@ -51,13 +51,21 @@
   font-display: swap;
 }
 
+/* 42dot Sans 的拉丁精简版（OFL，见 public/fonts/42dot-sans-OFL.txt）：只含英文字母、数字与标点，28 KB，
+   粗细 300–800 可变。中文交给系统细体（苹方 / 微软雅黑），不下载中文字体；替代原 6 MB 的方正兰亭黑。 */
 @font-face {
-  font-family: 'FZLanTingHei';
-  src: url('/fonts/fz-lantinghei.ttf') format('truetype');
-  font-weight: 100 900;
+  font-family: 'Echuu 42dot';
+  src: url('/fonts/42dot-sans-latin.woff2') format('woff2');
+  font-weight: 300 800;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-017F, U+2000-206F, U+20A0-20BF, U+2122, U+2190-2193, U+2197;
 }
+
+/* 全站无衬线：拉丁走 42dot，中日韩按语言走各自的系统细体（韩文用完整 42dot Sans） */
+:root { --echuu-sans: 'Echuu 42dot', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif; }
+:lang(ja) { --echuu-sans: 'Echuu 42dot', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif; }
+:lang(ko) { --echuu-sans: 'Echuu 42dot', '42dot Sans', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif; }
 
 @font-face {
   font-family: 'PuguaQianyunSong';
@@ -213,10 +221,10 @@
 }
 
 html:lang(zh-CN) {
-  --font-system: 'FZLanTingHei', 'BlurWeb-LightW03-Regular', ui-sans-serif, system-ui, sans-serif;
-  --font-system-medium: 'FZLanTingHei', 'BlurWeb-MediumW03-Regular', ui-sans-serif, system-ui, sans-serif;
-  --font-deco: 'FZLanTingHei', 'BlurWeb-LightW03-Regular', ui-sans-serif, sans-serif;
-  --font-deco-medium: 'FZLanTingHei', 'BlurWeb-MediumW03-Regular', ui-sans-serif, sans-serif;
+  --font-system: 'Echuu 42dot', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'BlurWeb-LightW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-system-medium: 'Echuu 42dot', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'BlurWeb-MediumW03-Regular', ui-sans-serif, system-ui, sans-serif;
+  --font-deco: 'Echuu 42dot', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'BlurWeb-LightW03-Regular', ui-sans-serif, sans-serif;
+  --font-deco-medium: 'Echuu 42dot', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'BlurWeb-MediumW03-Regular', ui-sans-serif, sans-serif;
 }
 
 html:lang(ja),
@@ -242,7 +250,7 @@ html:lang(zh-CN) .onboarding-screen :where(
   textarea,
   label
 ) {
-  font-family: 'FZLanTingHei', var(--font-system) !important;
+  font-family: var(--font-system) !important;
 }
 
 html:lang(ja) .onboarding-screen :where(

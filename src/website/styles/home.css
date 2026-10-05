@@ -23,10 +23,9 @@
   --hv-ink: #616161;
   --hv-shell: min(1360px, 100% - 32px);
   --hv-serif: 'PuguaXianyunsong Home', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
-  --hv-sans: '42dot Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans',
-    'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+  --hv-sans: var(--echuu-sans);
   /* Figma 用 KyivType Sans（仓库无授权文件），回退到同为无衬线的 42dot Sans 细体 */
-  --hv-display: 'KyivType Sans', '42dot Sans', 'Inter', sans-serif;
+  --hv-display: 'KyivType Sans', var(--echuu-sans);
   --hv-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   /* ===== UI 规范（docs/website-ui-spec.md）：字号 / 行高 / 间距 / 按钮，组件只引用这些 token ===== */
   --t-display: clamp(32px, 4.4vw, 64px);   /* 区块大标题 */
@@ -1043,11 +1042,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   border-radius: 10px; background: rgba(255, 255, 255, .92); color: #0a2435;
 }
 .hv-vrm-guide__icon img { width: 100%; height: 100%; object-fit: cover; }
-.hv-vrm-guide__card h3 { flex: 1; margin: 0; font: 600 17px/1.35 '42dot Sans', system-ui, sans-serif; }
-.hv-vrm-guide__card p { margin: 0; font: 400 14px/1.7 '42dot Sans', system-ui, sans-serif; color: rgba(255, 255, 255, .78); }
+.hv-vrm-guide__card h3 { flex: 1; margin: 0; font: 600 17px/1.35 var(--echuu-sans); }
+.hv-vrm-guide__card p { margin: 0; font: 400 14px/1.7 var(--echuu-sans); color: rgba(255, 255, 255, .78); }
 .hv-vrm-guide__card a, .hv-vrm-guide__card summary {
   margin-top: auto; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start;
-  color: #8fe3ff; font: 600 14px/1.5 '42dot Sans', system-ui, sans-serif; text-decoration: none; cursor: pointer; white-space: nowrap;
+  color: #8fe3ff; font: 600 14px/1.5 var(--echuu-sans); text-decoration: none; cursor: pointer; white-space: nowrap;
 }
 .hv-vrm-guide__card a:hover, .hv-vrm-guide__card summary:hover { color: #c4f1ff; }
 .hv-vrm-guide__card details { margin-top: auto; }
