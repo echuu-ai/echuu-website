@@ -1,5 +1,7 @@
 import {
   createContext,
+  lazy,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
@@ -10,7 +12,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react';
-import * as ColorWheel from 'react-hsv-ring';
+import { AppColorSlider } from './AppColorSlider';
 import {
   APP_COLOR_GRADE_FILTER_ID,
   APP_COLOR_GRADE_UNDO_FILTER_ID,
@@ -26,8 +28,6 @@ import {
   colorGradeWebglCompensationFilterCss,
   invertColorGradeTableValues,
   sameDocumentFilterUrl,
-  colorGradeHexToWheelXY,
-  colorGradeWheelXYToHex,
   DEFAULT_APP_COLOR,
   deriveColorGradeCss,
   loadStoredAppColorGrade,
@@ -132,91 +132,8 @@ function AppColorGradeFilter({ value }: { value: AppColorGradeState }) {
   );
 }
 
-function AppColorSlider({
-  label,
-  value,
-  min,
-  max,
-  step,
-  suffix = '',
-  onChange,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  suffix?: string;
-  onChange: (next: number) => void;
-}) {
-  return (
-    <label className="app-color-slider">
-      <span>
-        {label}
-        <b>{value.toFixed(step >= 1 ? 0 : 2)}{suffix}</b>
-      </span>
-      <input
-        type="range"
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
-    </label>
-  );
-}
-
-function AppColorWheel({
-  label,
-  x,
-  y,
-  strength,
-  onChangeXY,
-  onChangeStrength,
-  onReset,
-}: {
-  label: string;
-  x: number;
-  y: number;
-  strength: number;
-  onChangeXY: (x: number, y: number) => void;
-  onChangeStrength: (value: number) => void;
-  onReset: () => void;
-}) {
-  const [wheelHex, setWheelHex] = useState(() => colorGradeWheelXYToHex(x, y));
-  useEffect(() => {
-    setWheelHex(colorGradeWheelXYToHex(x, y));
-  }, [x, y]);
-
-  const handleWheelChange = useCallback((nextHex: string) => {
-    setWheelHex(nextHex);
-    const [nextX, nextY] = colorGradeHexToWheelXY(nextHex);
-    onChangeXY(nextX, nextY);
-  }, [onChangeXY]);
-
-  return (
-    <div className="app-color-wheel-card">
-      <div className="app-color-wheel-card__head">
-        <span>{label}</span>
-        <button type="button" onClick={onReset}>Reset</button>
-      </div>
-      <ColorWheel.Root value={wheelHex} onValueChange={handleWheelChange}>
-        <ColorWheel.Wheel size={86} ringWidth={12} className="app-hsv-wheel">
-          <ColorWheel.HueRing />
-          <ColorWheel.HueThumb />
-          <ColorWheel.Area />
-          <ColorWheel.AreaThumb />
-        </ColorWheel.Wheel>
-      </ColorWheel.Root>
-      <div className="app-color-wheel-card__chip">
-        <span style={{ backgroundColor: wheelHex }} />
-        <code>{wheelHex.toUpperCase()}</code>
-      </div>
-      <AppColorSlider label="Strength" value={strength} min={-1} max={1} step={0.01} onChange={onChangeStrength} />
-    </div>
-  );
-}
+// 色轮单独成块，面板打开时才加载（react-hsv-ring 不进主入口块）
+const AppColorWheel = lazy(() => import('./AppColorGradeWheel'));
 
 function AppCurveEditor({
   label,
@@ -387,33 +304,35 @@ function AppColorTuner({
         />
       </div>
       <div className="app-color-wheel-grid">
-        <AppColorWheel
-          label="Lift"
-          x={value.liftX}
-          y={value.liftY}
-          strength={value.liftStrength}
-          onChangeXY={(x, y) => updateWheel('lift', x, y)}
-          onChangeStrength={(next) => update('liftStrength', next)}
-          onReset={() => onChange({ ...value, liftX: 0, liftY: 0, liftStrength: 0 })}
-        />
-        <AppColorWheel
-          label="Gamma"
-          x={value.gammaX}
-          y={value.gammaY}
-          strength={value.gammaStrength}
-          onChangeXY={(x, y) => updateWheel('gamma', x, y)}
-          onChangeStrength={(next) => update('gammaStrength', next)}
-          onReset={() => onChange({ ...value, gammaX: 0, gammaY: 0, gammaStrength: 0 })}
-        />
-        <AppColorWheel
-          label="Gain"
-          x={value.gainX}
-          y={value.gainY}
-          strength={value.gainStrength}
-          onChangeXY={(x, y) => updateWheel('gain', x, y)}
-          onChangeStrength={(next) => update('gainStrength', next)}
-          onReset={() => onChange({ ...value, gainX: 0, gainY: 0, gainStrength: 0 })}
-        />
+        <Suspense fallback={null}>
+          <AppColorWheel
+            label="Lift"
+            x={value.liftX}
+            y={value.liftY}
+            strength={value.liftStrength}
+            onChangeXY={(x, y) => updateWheel('lift', x, y)}
+            onChangeStrength={(next) => update('liftStrength', next)}
+            onReset={() => onChange({ ...value, liftX: 0, liftY: 0, liftStrength: 0 })}
+          />
+          <AppColorWheel
+            label="Gamma"
+            x={value.gammaX}
+            y={value.gammaY}
+            strength={value.gammaStrength}
+            onChangeXY={(x, y) => updateWheel('gamma', x, y)}
+            onChangeStrength={(next) => update('gammaStrength', next)}
+            onReset={() => onChange({ ...value, gammaX: 0, gammaY: 0, gammaStrength: 0 })}
+          />
+          <AppColorWheel
+            label="Gain"
+            x={value.gainX}
+            y={value.gainY}
+            strength={value.gainStrength}
+            onChangeXY={(x, y) => updateWheel('gain', x, y)}
+            onChangeStrength={(next) => update('gainStrength', next)}
+            onReset={() => onChange({ ...value, gainX: 0, gainY: 0, gainStrength: 0 })}
+          />
+        </Suspense>
       </div>
       <label className="app-color-toggle">
         <input type="checkbox" checked={value.curveEnabled} onChange={(event: ChangeEvent<HTMLInputElement>) => update('curveEnabled', event.target.checked)} />
