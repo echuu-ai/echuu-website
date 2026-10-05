@@ -2,7 +2,7 @@
    之前 app 的 599 字形子集缺 83 个所需字形，首页不再用它。 */
 @font-face {
   font-family: 'PuguaXianyunsong Home';
-  src: url('/fonts/pugua-qianyun-song-home.woff2?v=3c59b4eede') format('woff2');
+  src: url('/fonts/pugua-qianyun-song-home.woff2?v=ecd342817d') format('woff2');
   font-weight: 200;
   font-display: swap;
 }
