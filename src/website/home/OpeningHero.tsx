@@ -3,7 +3,6 @@ import type { CSSProperties } from 'react';
 import { DEBUT_SECONDS } from './debutHighlight';
 import { createPortal } from 'react-dom';
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useProgress } from '@react-three/drei';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
@@ -99,15 +98,6 @@ const MENU_ANCHORS = [
   ['beta', '#beta'],
 ] as const;
 
-/** 蓝色描边 = 加载进度：drei 的 loader 进度会分批跳动，只取单调递增值，就绪前封顶 92% */
-function useStrokeProgress(ready: boolean, mode: StageMode) {
-  const { progress } = useProgress();
-  const shown = useRef(0);
-  if (ready || mode === 'still') shown.current = 1;
-  else shown.current = Math.max(shown.current, Math.min(0.92, progress / 100));
-  return shown.current;
-}
-
 export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: () => void }) {
   const { h, locale } = useHomeDict();
   const reduced = usePrefersReducedMotion();
@@ -138,7 +128,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const handleSketch = useCallback((next: SketchOutline) => {
     setSketch({ strokes: next.strokes, guide: next.guide.toDataURL('image/png') });
   }, []);
-  const stroke = useStrokeProgress(ready, mode);
 
   // draw 阶段结束（翅膀画好）：时钟就绪则立刻开始 wake，否则等 3D 就绪后自动开始
   const beginWake = useCallback(() => {
@@ -358,11 +347,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           ) : null}
           {/* 只剩手机窗：3D 开窗用它的位置；旧版开场（标题、剑、飞马、静态分镜）已删除，判定舞台模式前保持黑场 */}
           {mode === '3d' ? <div className="hv-opening__frame">
-            <div className="hv-opening__window" ref={windowRef} data-loaded={stroke >= 1}>
-              {/* 蓝色描边 = 进度条：沿矩形周长生长，描完镜头再冲进窗口 */}
-              <svg className="hv-opening__stroke" viewBox="0 0 684 294" preserveAspectRatio="none" aria-hidden="true">
-                <rect x="8.5" y="8.5" width="667" height="277" pathLength={1} style={{ strokeDashoffset: 1 - stroke }} />
-              </svg>
+            <div className="hv-opening__window" ref={windowRef} data-loaded={ready}>
               <span className="hv-opening__live">{h.opening.live}</span>
             </div>
           </div> : null}
