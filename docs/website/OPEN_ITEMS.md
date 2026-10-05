@@ -9,7 +9,7 @@
 
 | # | 事项 | 现状 | 需要 |
 |---|---|---|---|
-| A1 | 用户协议定稿 | `terms.html` 仍含草案与占位项 | 法务/团队定稿后把 `src/website/config/site.ts` 的 `LEGAL_FINALIZED` 改为 `true` |
+| A1 | ~~用户协议定稿~~ | **已定稿 2026-10-05**：补齐内华达州 LLC、服务商清单（Vercel / AWS S3 / LiveKit Cloud / OpenPanel / Logto / 阿里云 DashScope·Qwen）、账号注销后 30 天内删除、删除申请 30 天内答复（cory@anngel.live）。**工程需兑现**：S3 素材桶给旧版本设 ≤30 天过期规则、账号注销流程同步清理对象。建议律师复核 | 工程 / 律师 |
 | A2 | 正式域名 | 未确认。资料中出现过多个域名，本次不替团队选 | 确定后设 `VITE_SITE_ORIGIN`，canonical 与 hreflang 才会输出 |
 | A3 | ~~品牌英文字体授权~~ | **已解决 2026-10-05**：移除 PP Editorial New（仅个人授权），英文标题改用蒲瓜纤云宋的拉丁字形（商用免费） | — |
 | A4 | ~~CoryNoRootBone 权利冲突~~ | **已确认 2026-10-05**：Cory 本人付费约稿，持有使用权。文件内嵌 VRM meta 仍写第三方作者 / 禁止商用，建议请画师按约稿范围更新 meta，并留存约稿合同与付款记录备查 | Cory 留存凭证 |

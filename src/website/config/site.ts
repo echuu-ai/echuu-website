@@ -62,11 +62,8 @@ export const LEGAL_DOCS = {
   minors: LEGAL_MINORS,
 } as const;
 
-/**
- * 条款定稿状态。现有用户协议仍有草案和占位项，
- * 生产发布前需要团队定稿（见 docs/OPEN_ITEMS.md）。
- */
-export const LEGAL_FINALIZED = false;
+/** 条款定稿状态：2026-10-05 补齐运营主体、服务商、保存期限与删除流程后定稿（四份法律文件同步）。 */
+export const LEGAL_FINALIZED = true;
 
 /** Product sign-up remains on the separately deployed product app. */
 export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.live")).replace(/\/$/, "");
