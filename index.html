@@ -7,8 +7,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Google Fonts 首屏都不是必需的（韩文 42dot、一处 Agu Display 标题、宋体回落）：异步加载，不阻塞首帧 -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300;400;700;800&family=Agu+Display&family=Noto+Serif+SC:wght@300;400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <!-- Google Fonts 首屏都不是必需的（韩文 42dot、一处 Agu Display 标题、宋体回落）：media=print 先以最低优先级异步下载、不阻塞首帧，加载完再生效 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300;400;700;800&family=Agu+Display&family=Noto+Serif+SC:wght@300;400&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300;400;700;800&family=Agu+Display&family=Noto+Serif+SC:wght@300;400&display=swap" /></noscript>
     <meta name="description" content="Echuu 是面向虚拟主播与原创角色创作者的 AI VTuber 直播创作平台，提供 VRM 角色、实时动作捕捉、直播场景、角色人格与内容制作工具。" />
     <meta name="keywords" content="AI VTuber,虚拟主播,动作捕捉,VRM,虚拟直播,Echuu" />

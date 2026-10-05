@@ -12,6 +12,7 @@ import { BlogSection } from './BlogSection';
 import { useSceneReveal } from './useSceneReveal';
 import { HeroGuideLines } from './HeroGuideLines';
 import { PageDoodle } from './PageDoodle';
+import { useOpeningPainted } from './openingPaint';
 import '../styles/home.css';
 import '../styles/home-scenes.css';
 
@@ -34,10 +35,12 @@ export function HomeV2() {
   const accessTrigger = useRef<HTMLElement | null>(null);
   const openAccess = (mode: AccessMode) => { accessTrigger.current = document.activeElement as HTMLElement; setAccessMode(mode); };
   const { h } = useHomeDict();
-  const style = { '--hv-sky-bg': `url(${HOME_ASSETS.skyBg})` } as CSSProperties;
+  // 开场覆盖层下面的内容（天空背景、各区块、页脚）等开场第一屏画好再挂载，不和纸张抢带宽；见 openingPaint.ts
+  const painted = useOpeningPainted();
+  const style = (painted ? { '--hv-sky-bg': `url(${HOME_ASSETS.skyBg})` } : undefined) as CSSProperties | undefined;
   // 首屏以下按屏入场（标题揭开 → 导语配图 → 卡片错开）
   const rootRef = useRef<HTMLDivElement>(null);
-  useSceneReveal(rootRef);
+  useSceneReveal(rootRef, painted);
   return (
     <div className="hv" style={style} ref={rootRef}>
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
@@ -47,20 +50,22 @@ export function HomeV2() {
       </svg>
       <Head locale={locale} htmlLang={t.htmlLang} title={h.meta.title} description={h.meta.description} path="" />
       <OpeningHero onLogin={() => openAccess('invite')} onBeta={() => openAccess('signup')} />
-      <div className="hv-body">
-        <IntroSection />
-        <StepsSection />
-        <FeatureSection />
-        <ModesSection />
-        <CreatorsSection />
-        <BlogSection />
-        <AnswersSection />
-      </div>
-      <HomeFooter onBeta={() => openAccess('signup')} />
-      {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
-      <HeroGuideLines />
-      {/* 白色铅笔涂鸦：开场结束后在空白处拖动就能画 */}
-      <PageDoodle />
+      {painted ? <>
+        <div className="hv-body">
+          <IntroSection />
+          <StepsSection />
+          <FeatureSection />
+          <ModesSection />
+          <CreatorsSection />
+          <BlogSection />
+          <AnswersSection />
+        </div>
+        <HomeFooter onBeta={() => openAccess('signup')} />
+        {/* 构图辅助线：固定在视口上，按当前所在区块切换线组 */}
+        <HeroGuideLines />
+        {/* 白色铅笔涂鸦：开场结束后在空白处拖动就能画 */}
+        <PageDoodle />
+      </> : null}
       {SeamTuningPanel && showSeamTuning() && <Suspense fallback={null}><SeamTuningPanel /></Suspense>}
       {LogoTuningPanel && tuneParam() === 'logo' && <Suspense fallback={null}><LogoTuningPanel /></Suspense>}
       {SceneGradePanel && tuneParam() === 'grade' && <Suspense fallback={null}><SceneGradePanel /></Suspense>}

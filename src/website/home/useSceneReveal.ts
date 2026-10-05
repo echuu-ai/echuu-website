@@ -8,11 +8,12 @@ import { useEffect, type RefObject } from 'react';
  * - 先由 JS 标成 pending 再隐藏：没有 JS、减少动态效果或不支持 IntersectionObserver 时内容直接可见。
  * - 不劫持滚动，正常滚动即可。
  */
-export function useSceneReveal(rootRef: RefObject<HTMLElement>) {
+/** ready：区块挂载后才为 true（首页等开场第一屏画好再挂载区块） */
+export function useSceneReveal(rootRef: RefObject<HTMLElement>, ready = true) {
   useEffect(() => {
     const root = rootRef.current;
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (!root || reduce || typeof IntersectionObserver === 'undefined') return;
+    if (!ready || !root || reduce || typeof IntersectionObserver === 'undefined') return;
     const scenes = Array.from(root.querySelectorAll<HTMLElement>('.hv-section, .hv-footer'));
     for (const scene of scenes) scene.dataset.scene = 'pending';
     const observer = new IntersectionObserver(
@@ -31,5 +32,5 @@ export function useSceneReveal(rootRef: RefObject<HTMLElement>) {
       observer.disconnect();
       for (const scene of scenes) delete scene.dataset.scene;
     };
-  }, [rootRef]);
+  }, [ready, rootRef]);
 }

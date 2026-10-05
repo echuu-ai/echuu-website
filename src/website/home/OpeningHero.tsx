@@ -31,6 +31,7 @@ import {
   type OpeningPhase,
 } from './openingTimeline';
 import { DrawWingsPaper } from './DrawWingsPaper';
+import { markOpeningPainted, useOpeningPainted } from './openingPaint';
 import { alphaVideoSource } from '../lib/alphaVideo';
 import { updateOpeningSound } from '../lib/openingSound';
 
@@ -160,15 +161,15 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     }
   }, [clock, reduced]);
 
-  // 3D 舞台（13 MB 模型、HDR、动作）等纸张先画上屏幕再开始加载：否则它们和纸张抢带宽、
-  // 解析时占住主线程，首屏迟迟画不出来。纸张图异常时 3 s 后照常加载。
-  const [paperPainted, setPaperPainted] = useState(false);
-  const handleSheetPainted = useCallback(() => setPaperPainted(true), []);
+  // 3D 舞台（13 MB 模型、HDR、动作）和覆盖层下面的首屏 chrome 等纸张先画上屏幕再加载：否则它们和纸张抢带宽、
+  // 解析时占住主线程，首屏迟迟画不出来。纸张图异常时 3 s 后照常加载。见 openingPaint.ts
+  const paperPainted = useOpeningPainted();
   useEffect(() => {
+    if (mode === 'still') { markOpeningPainted(); return; }
     if (mode !== '3d') return;
-    const timer = window.setTimeout(handleSheetPainted, 3000);
+    const timer = window.setTimeout(markOpeningPainted, 3000);
     return () => window.clearTimeout(timer);
-  }, [handleSheetPainted, mode]);
+  }, [mode]);
 
   const handleReady = useCallback(() => {
     setReady(true);
@@ -353,7 +354,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               loadingLabel={h.opening.loading}
               sketch={sketch?.strokes ?? null}
               guide={sketch?.guide ?? null}
-              onSheetPainted={handleSheetPainted}
+              onSheetPainted={markOpeningPainted}
             />
           ) : null}
           {/* 只剩手机窗：3D 开窗用它的位置；旧版开场（标题、剑、飞马、静态分镜）已删除，判定舞台模式前保持黑场 */}
@@ -366,7 +367,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
         </div>
       ) : null}
 
-      <div className="hv-chrome" data-visible={phase === 'hero'} data-debut={debut && !reduced}>
+      {paperPainted ? <div className="hv-chrome" data-visible={phase === 'hero'} data-debut={debut && !reduced}>
         <HomeHeader menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((value) => !value)} />
 
         <nav className="hv-menu" aria-label={h.header.menu}>
@@ -397,10 +398,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
           <BetaCount />
         </div>
-
-
-
-      </div>
+      </div> : null}
 
       {phase === 'hero' && !menuOpen ? createPortal(
         <div className="hv-cta">
