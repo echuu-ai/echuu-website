@@ -33,6 +33,31 @@ type InkState = { drawing: boolean; x: number; y: number; ink: number; done: boo
 const TILT_COS = Math.cos((-PAPER_TILT_DEG * Math.PI) / 180);
 const TILT_SIN = Math.sin((-PAPER_TILT_DEG * Math.PI) / 180);
 
+/**
+ * 纸张图真正画上屏幕后再回调：等浏览器把它记为「最大内容绘制」（LCP；纸有 1.1 s 淡入，记录会晚几帧），
+ * 不支持 LCP 观察时退回两帧；最多等 0.8 s。
+ */
+function waitForPaint(image: HTMLImageElement, done: () => void) {
+  let fired = false;
+  let observer: PerformanceObserver | null = null;
+  const finish = () => {
+    if (fired) return;
+    fired = true;
+    observer?.disconnect();
+    window.clearTimeout(timer);
+    done();
+  };
+  const timer = window.setTimeout(finish, 800);
+  if (PerformanceObserver.supportedEntryTypes?.includes('largest-contentful-paint')) {
+    observer = new PerformanceObserver((list) => {
+      if (list.getEntries().some((entry) => (entry as PerformanceEntry & { element?: Element }).element === image)) finish();
+    });
+    observer.observe({ type: 'largest-contentful-paint', buffered: true });
+  } else {
+    requestAnimationFrame(() => requestAnimationFrame(finish));
+  }
+}
+
 export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingLabel, sketch, guide, onSheetPainted }: {
   /** wake 开始后置 true：纸淡出，让位给 3D 里的同一张纸 */
   fading: boolean;
@@ -47,7 +72,7 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
   sketch: SketchStroke[] | null;
   /** 右侧翅膀的引导图（dataURL），轮廓写完后出现 */
   guide: string | null;
-  /** 纸张图已经画到屏幕上（加载完再过两帧；加载失败也算）：之后才开始加载 3D */
+  /** 纸张图已经画到屏幕上（见 waitForPaint；加载失败也算）：之后才开始加载 3D */
   onSheetPainted: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -229,7 +254,7 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
             src={HOME_ASSETS.opening.paperSheet}
             alt=""
             draggable={false}
-            onLoad={() => requestAnimationFrame(() => requestAnimationFrame(onSheetPainted))}
+            onLoad={(event) => waitForPaint(event.currentTarget, onSheetPainted)}
             onError={onSheetPainted}
           />
           <canvas className="hv-paper__outline" ref={outlineRef} data-inked={inked || undefined} aria-hidden="true" />
