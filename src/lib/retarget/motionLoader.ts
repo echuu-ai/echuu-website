@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { BVHLoader } from 'three/examples/jsm/loaders/BVHLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { decodeBakedClip } from './bakedClip';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {
   VRMAnimationLoaderPlugin,
@@ -10,10 +11,12 @@ import {
 import { remapAnimationToVrm } from './retarget';
 import type { RetargetReport } from './types';
 
-export type MotionFormat = 'fbx' | 'bvh' | 'vrma' | 'gltf' | 'unknown';
+/** clip = 预烘焙片段（.clip.bin，已重定向到某个 VRM，见 bakedClip.ts） */
+export type MotionFormat = 'fbx' | 'bvh' | 'vrma' | 'gltf' | 'clip' | 'unknown';
 
 export function detectMotionFormat(filenameOrUrl: string): MotionFormat {
   const lower = filenameOrUrl.toLowerCase();
+  if (lower.split('?')[0].endsWith('.clip.bin')) return 'clip';
   if (lower.endsWith('.fbx')) return 'fbx';
   if (lower.endsWith('.bvh')) return 'bvh';
   if (lower.endsWith('.vrma')) return 'vrma';
@@ -51,6 +54,8 @@ export async function loadMotion(url: string, format?: MotionFormat): Promise<Lo
       return loadVrma(url);
     case 'gltf':
       return loadGltf(url);
+    case 'clip':
+      return loadBakedClip(url);
     default:
       throw new Error(`Unsupported motion format for "${url}"`);
   }
@@ -92,6 +97,12 @@ export function pickBodyMotionClipIndex(clips: THREE.AnimationClip[]): number | 
   });
 
   return candidates[0].index;
+}
+
+async function loadBakedClip(url: string): Promise<LoadedMotion> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Baked clip "${url}" failed: ${response.status}`);
+  return { clip: decodeBakedClip(await response.arrayBuffer()), source: null, preTargeted: true, format: 'clip' };
 }
 
 async function loadFbx(url: string): Promise<LoadedMotion> {
@@ -156,6 +167,8 @@ export function bakeMotionForVrm(
   vrm: Vrm,
   options: { presetId?: string; includeLookAt?: boolean } = {},
 ): { clip: THREE.AnimationClip | null; report?: RetargetReport } {
+  // 预烘焙片段已经对准 VRM 骨骼：给一份拷贝（调用方可能就地改轨道，比如开场的接地对齐）
+  if (motion.format === 'clip') return { clip: motion.clip.clone() };
   if (motion.preTargeted && motion.format === 'vrma') {
     const vrmAnim = (motion.clip as THREE.AnimationClip & { __vrmAnimation?: VRMAnimation }).__vrmAnimation;
     if (!vrmAnim) return { clip: motion.clip };

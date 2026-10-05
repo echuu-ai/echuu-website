@@ -107,9 +107,16 @@ export const HOME_ASSETS = {
 /** 开场用的角色与动作：与产品 loading 阶段同一份 corynorootbone（含预压缩版） */
 export const HOME_OPENING_MODEL = `${publicUrl('assets/loading/corynorootbone.loading.vrm')}?scope=website-opening`;
 export const HOME_OPENING_MOTIONS = {
-  sleep: publicUrl('assets/animation/mixamo/sleeping-idle.fbx'),
-  standUp: publicUrl('assets/animation/mixamo/stand-up.fbx'),
+  // 两段 Mixamo 动作用预烘焙片段（scripts/bake-opening-motions.mjs，无损），比整份 FBX 小约 80%；
+  // 加载失败时退回下面 HOME_OPENING_MOTION_FALLBACK 里的原 FBX
+  sleep: publicUrl('assets/animation/baked/sleeping-idle.clip.bin'),
+  standUp: publicUrl('assets/animation/baked/stand-up.clip.bin'),
   intro: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO.vrma'),
   introEnd: publicUrl('assets/animation/mate-engine/PET_INTRO_PET_INTRO_END.vrma'),
   targetLock: publicUrl('assets/animation/vroid/Resources/animations/pv/male/spot_target_locked.vrma'),
 } as const;
+/** 预烘焙片段读不到时的原始 FBX（需要运行时重定向） */
+export const HOME_OPENING_MOTION_FALLBACK: Partial<Record<keyof typeof HOME_OPENING_MOTIONS, string>> = {
+  sleep: publicUrl('assets/animation/mixamo/sleeping-idle.fbx'),
+  standUp: publicUrl('assets/animation/mixamo/stand-up.fbx'),
+};

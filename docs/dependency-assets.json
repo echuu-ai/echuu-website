@@ -755,5 +755,17 @@
     "bytes": 236756,
     "sha256": "16b9ac1a77a76b1e3b5d3521a038a77c4f3d402205b841d1413077fccf92e9ab",
     "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 notebook paper; lossless WebP of the former sketch-body.png (pixel-identical), 2026-10-05"
+  },
+  {
+    "path": "assets/animation/baked/sleeping-idle.clip.bin",
+    "bytes": 673028,
+    "sha256": "07b13902e81d627b989cfecceb5d6cd16e0312096e475ea563f7bfd3965888be",
+    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/sleeping-idle.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
+  },
+  {
+    "path": "assets/animation/baked/stand-up.clip.bin",
+    "bytes": 213048,
+    "sha256": "bbc5d999df2e0a1d52b6578ace3cebe9a8d6c1d79c95371de4beccc6c43ff891",
+    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/stand-up.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
   }
 ]

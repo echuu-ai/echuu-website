@@ -23,7 +23,7 @@ import { FACE_CHANNELS } from '../../../lib/scene-expression';
 import { defaultSceneLighting, type SceneLighting } from '../../../lib/scene-lighting';
 import { parseProject, type SceneCamera, type SceneProject } from '../../../lib/scene-editor';
 import { publicUrl } from '../../../lib/publicUrl';
-import { HOME_ASSETS, HOME_OPENING_MODEL, HOME_OPENING_MOTIONS } from '../../assets';
+import { HOME_ASSETS, HOME_OPENING_MODEL, HOME_OPENING_MOTION_FALLBACK, HOME_OPENING_MOTIONS } from '../../assets';
 import { groundOpeningClips, type GroundResult } from './openingGround';
 import { PAPER_HEIGHT, PAPER_RATIO, PAPER_WIDTH, paperPlacement } from './paperFrame';
 import { PAPER_TEXTURE_HEIGHT, PAPER_TEXTURE_WIDTH, captureSleepOutline, type SketchOutline } from './captureOutline';
@@ -196,7 +196,14 @@ function curveAt(keys: Array<[number, number]>, t: number) {
 let motionCache: Promise<Record<MotionKey, LoadedMotion>> | null = null;
 function loadOpeningMotions() {
   motionCache ??= Promise.all(
-    (Object.keys(HOME_OPENING_MOTIONS) as MotionKey[]).map(async (key) => [key, await loadMotion(HOME_OPENING_MOTIONS[key])] as const),
+    (Object.keys(HOME_OPENING_MOTIONS) as MotionKey[]).map(async (key) => {
+      const fallback = HOME_OPENING_MOTION_FALLBACK[key];
+      const motion = await loadMotion(HOME_OPENING_MOTIONS[key]).catch((error) => {
+        if (!fallback) throw error;
+        return loadMotion(fallback);
+      });
+      return [key, motion] as const;
+    }),
   ).then((entries) => Object.fromEntries(entries) as Record<MotionKey, LoadedMotion>);
   return motionCache;
 }
@@ -317,6 +324,8 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
           const { clip } = bakeMotionForVrm(motions[key], vrm as never, { includeLookAt: false });
           if (!clip) return;
           clip.name = `website-opening:${key}`;
+          // 开发环境 ?bakeclips：导出重定向后的片段，给 scripts/bake-opening-motions.mjs 生成 .clip.bin
+          if (import.meta.env.DEV && new URLSearchParams(location.search).has('bakeclips')) ((window as unknown as Record<string, Record<string, unknown>>).__hvBakedClips ??= {})[key] = THREE.AnimationClip.toJSON(clip);
           const action = mixer.clipAction(clip);
           action.setLoop(THREE.LoopOnce, 1);
           action.clampWhenFinished = true;
