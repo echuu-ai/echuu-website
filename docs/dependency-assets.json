@@ -1,8 +1,8 @@
 [
   {
     "path": "apple-touch-icon.png",
-    "bytes": 123461,
-    "sha256": "963848e8eeb5f528606d024973587ebd48e57206f60ab61a8181df4bc7283185"
+    "bytes": 34536,
+    "sha256": "ce03ae88fc197cb4d6ea09f0954d564d1408a66f956455da899ff86feaa74c07"
   },
   {
     "path": "assets/Fonts/MHTIROGLA.ttf",
@@ -56,8 +56,8 @@
   },
   {
     "path": "assets/cursor/silver-paper-plane.svg",
-    "bytes": 202126,
-    "sha256": "f052b13754882751ec40797e0fb962831bc75dbe7cf4d0dc2db34023a0a180a1"
+    "bytes": 109419,
+    "sha256": "88102cba29771c0d7777b3c0dad22236d6f47332733431f180c47e41f218d8e0"
   },
   {
     "path": "assets/loading/corynorootbone.loading.vrm",
@@ -76,8 +76,8 @@
   },
   {
     "path": "favicon.png",
-    "bytes": 123461,
-    "sha256": "963848e8eeb5f528606d024973587ebd48e57206f60ab61a8181df4bc7283185"
+    "bytes": 38048,
+    "sha256": "ce7df4e8e891b788c79884b7e345eae44889bc7b42dbc010ffffa5eeb321e1f0"
   },
   {
     "path": "figma/landing/figma-1146-ellipse-center-a.svg",
@@ -529,12 +529,6 @@
     "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/key-right.webp; meshopt + 1024px WebP via gltf-transform"
   },
   {
-    "path": "website/figma/opening-paper/sketch-body.png",
-    "bytes": 467261,
-    "sha256": "a9110fc91969674de9bdac372d4392ff07caeb40554813a09337c467bf0c7706",
-    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 (image 1942, notebook paper), retrieved 2026-10-03 (unaltered)"
-  },
-  {
     "path": "assets/animation/mixamo/stand-up.fbx",
     "bytes": 2466576,
     "sha256": "90fbfff33adc9467b7362275d4fa386e4ed8234f9895faf4179f59582609fae2",
@@ -755,5 +749,11 @@
     "bytes": 175160,
     "sha256": "dbcd28571952b8525a09af879aa319fb82896a160778477cc2652c9164dd1615",
     "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Bold.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "website/figma/opening-paper/sketch-body.webp",
+    "bytes": 236756,
+    "sha256": "16b9ac1a77a76b1e3b5d3521a038a77c4f3d402205b841d1413077fccf92e9ab",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 notebook paper; lossless WebP of the former sketch-body.png (pixel-identical), 2026-10-05"
   }
 ]
