@@ -130,31 +130,6 @@
     "sha256": "b440ed79f8977b10fb5fc2b845536ec684a076cc512076320c0f3bcfad136617"
   },
   {
-    "path": "fonts/inter-bold.ttf",
-    "bytes": 316584,
-    "sha256": "412c068eab6f36e6807d630ff89127165e8e4d3e8653434cdfb56b60cdcc3a32"
-  },
-  {
-    "path": "fonts/inter-regular.ttf",
-    "bytes": 310252,
-    "sha256": "3127f0b873387ee37e2040135a06e9e9c05030f509eb63689529becf28b50384"
-  },
-  {
-    "path": "fonts/maru-buri-light.woff2",
-    "bytes": 435344,
-    "sha256": "81dc58bb33e008d3bb2b7e9330fdb56806b830fbe5328b5532c486276e9aad12"
-  },
-  {
-    "path": "fonts/maru-buri-semibold.woff2",
-    "bytes": 465624,
-    "sha256": "7428cf5ba1da87f6ca2e3de8bb99c2e8cb4cbff19dea5220c9f7b21e0c21a6ca"
-  },
-  {
-    "path": "fonts/notosansjp-bold.ttf",
-    "bytes": 5319680,
-    "sha256": "a3910e15eea0451ffbea62e894e951ea9f7c812c8b4b5e947593b6ecc2d4b057"
-  },
-  {
     "path": "fonts/pugua-qianyun-song-home.woff2",
     "bytes": 233388,
     "sha256": "21976deea832797f27f197555a95572ac346963540fc72bcc2d00f6699583452"
@@ -165,11 +140,6 @@
     "sha256": "699cd09103084cc6ab3a1397fcff3cd39eeb5b5a2be7c70a9dc76ce1c7cc58b8"
   },
   {
-    "path": "fonts/shippori-mincho-bold.woff2",
-    "bytes": 3330636,
-    "sha256": "c5a85f96ba730362bf79b43725bd3eec9a34f75a0ffc8a3906c3ac48491c7082"
-  },
-  {
     "path": "fonts/yomeng-script.woff2",
     "bytes": 3850320,
     "sha256": "0c34190ca58b20b98a329663d5222186e2c7fd8c3bc41a146f482b307b0bb109"
@@ -178,26 +148,6 @@
     "path": "fonts/zaozigongfangyueyuanti.ttf",
     "bytes": 3106872,
     "sha256": "1e10a800df429bfdc946d43a3e9481c81d8db70bde236aa58f36679d940ff1c4"
-  },
-  {
-    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Bold.ttf",
-    "bytes": 3778984,
-    "sha256": "d726be217b3039398300c0e1c5991119e78e54af56b0b53423769479493128a7"
-  },
-  {
-    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Light.ttf",
-    "bytes": 3723328,
-    "sha256": "ddf1803fbd0d7dd43dfe15ef63f8461905a0a097389acb469a96443e41bc9f64"
-  },
-  {
-    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Medium.ttf",
-    "bytes": 3810920,
-    "sha256": "fa15ff0f55e0f848935c9b9264ddb8a9212c2e22d8dea2aee373ff43c7fc3211"
-  },
-  {
-    "path": "fonts/zen-maru-gothic/ZenMaruGothic-Regular.ttf",
-    "bytes": 3832732,
-    "sha256": "d1e5d9a182b5a6a64609ce237a3d44cd9a7eee588b74893b3ebe2c90caaac11d"
   },
   {
     "path": "legal/ATTRIBUTION-motion.md",
@@ -745,5 +695,65 @@
     "bytes": 4391,
     "sha256": "1e25d65ef980a81f53feb4fcded827df7edb116f32ffd40b8f4e7250d4d8976b",
     "source": "SIL Open Font License for 42dot Sans, from github.com/google/fonts ofl/42dotsans/OFL.txt"
+  },
+  {
+    "path": "fonts/subset/inter-regular.woff2",
+    "bytes": 17244,
+    "sha256": "e7e767afcc9248e197918745b12273223124a05bc89dd65af58611485fb2fd39",
+    "source": "Subset of fonts-src/inter-regular.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/inter-bold.woff2",
+    "bytes": 18200,
+    "sha256": "54b85a696c1db18f703e88de680fa1aefac53b343157b1291a96e35dbbcb6978",
+    "source": "Subset of fonts-src/inter-bold.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/shippori-mincho-bold.woff2",
+    "bytes": 213080,
+    "sha256": "71e9e07ef514130a31c184d3f5b4d4846eab4eafa1f62a0eaf5c3157fd991712",
+    "source": "Subset of fonts-src/shippori-mincho-bold.woff2 to the website copy (1054 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/notosansjp-bold.woff2",
+    "bytes": 160388,
+    "sha256": "f1a6e86b3e81d84b2ee312269746bf14bd637f978ca95b5f9e0894cb744761e9",
+    "source": "Subset of fonts-src/notosansjp-bold.ttf to the website copy (1056 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/maru-buri-light.woff2",
+    "bytes": 64236,
+    "sha256": "e0b569aff732b4edce57d3503ec7f742154ed21d484c51bd4682fd6807ef6859",
+    "source": "Subset of fonts-src/maru-buri-light.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/maru-buri-semibold.woff2",
+    "bytes": 67076,
+    "sha256": "ab48429f012e154db9b281aaa9d15052431de3caa83d3ce9d73f3d0ac0060c55",
+    "source": "Subset of fonts-src/maru-buri-semibold.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-light.woff2",
+    "bytes": 162004,
+    "sha256": "59d07f6fa1929c0e3675fecbc3f096d7b72a0a806410fad8fa39cc7f6729919e",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Light.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-regular.woff2",
+    "bytes": 170176,
+    "sha256": "02d2371fa1de03c70894be8cf4390bcb506d576387fa7441aeca934a7f1f0fe4",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Regular.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-medium.woff2",
+    "bytes": 172812,
+    "sha256": "771640d65bfd46ab2e23a7a877d64f2555f125599d95ef94a931ea2a420be9c6",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Medium.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-bold.woff2",
+    "bytes": 175160,
+    "sha256": "dbcd28571952b8525a09af879aa319fb82896a160778477cc2652c9164dd1615",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Bold.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
   }
 ]

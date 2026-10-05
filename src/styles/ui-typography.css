@@ -29,7 +29,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/fonts/inter-regular.ttf') format('truetype');
+  src: url('/fonts/subset/inter-regular.woff2?v=e7e767afcc') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -37,7 +37,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/fonts/inter-bold.ttf') format('truetype');
+  src: url('/fonts/subset/inter-bold.woff2?v=54b85a696c') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -80,7 +80,7 @@
 
 @font-face {
   font-family: 'Shippori Mincho';
-  src: url('/fonts/shippori-mincho-bold.woff2') format('woff2');
+  src: url('/fonts/subset/shippori-mincho-bold.woff2?v=71e9e07ef5') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -88,7 +88,7 @@
 
 @font-face {
   font-family: 'Maru Buri';
-  src: url('/fonts/maru-buri-light.woff2') format('woff2');
+  src: url('/fonts/subset/maru-buri-light.woff2?v=e0b569aff7') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -96,7 +96,7 @@
 
 @font-face {
   font-family: 'Maru Buri';
-  src: url('/fonts/maru-buri-semibold.woff2') format('woff2');
+  src: url('/fonts/subset/maru-buri-semibold.woff2?v=ab48429f01') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -112,7 +112,7 @@
 
 @font-face {
   font-family: 'Noto Sans JP';
-  src: url('/fonts/notosansjp-bold.ttf') format('truetype');
+  src: url('/fonts/subset/notosansjp-bold.woff2?v=f1a6e86b3e') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -175,7 +175,7 @@
 
 @font-face {
   font-family: 'Echuu Zen Maru';
-  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Light.ttf') format('truetype');
+  src: url('/fonts/subset/zen-maru-gothic-light.woff2?v=59d07f6fa1') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -184,7 +184,7 @@
 
 @font-face {
   font-family: 'Echuu Zen Maru';
-  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Regular.ttf') format('truetype');
+  src: url('/fonts/subset/zen-maru-gothic-regular.woff2?v=02d2371fa1') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -193,7 +193,7 @@
 
 @font-face {
   font-family: 'Echuu Zen Maru';
-  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Medium.ttf') format('truetype');
+  src: url('/fonts/subset/zen-maru-gothic-medium.woff2?v=771640d65b') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -202,7 +202,7 @@
 
 @font-face {
   font-family: 'Echuu Zen Maru';
-  src: url('/fonts/zen-maru-gothic/ZenMaruGothic-Bold.ttf') format('truetype');
+  src: url('/fonts/subset/zen-maru-gothic-bold.woff2?v=dbcd285719') format('woff2');
   font-weight: 600 900;
   font-style: normal;
   font-display: swap;
