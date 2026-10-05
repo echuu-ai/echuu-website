@@ -14,6 +14,7 @@ import { LangPopover } from './LangPopover';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
 import { BetaCount } from '../components/BetaCount';
+import { OcText } from '../components/OcText';
 import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
 import type { SketchOutline } from './three/captureOutline';
@@ -421,9 +422,9 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           </div>
           <h1 className="hv-title__slogan">
             {h.hero.slogan.pre}
-            <mark className="hv-title__hl hv-title__hl--yellow">{h.hero.slogan.hl1}</mark>
+            <mark className="hv-title__hl hv-title__hl--yellow"><OcText>{h.hero.slogan.hl1}</OcText></mark>
             {h.hero.slogan.mid}
-            <mark className="hv-title__hl hv-title__hl--blue">{h.hero.slogan.hl2}</mark>
+            <mark className="hv-title__hl hv-title__hl--blue"><OcText>{h.hero.slogan.hl2}</OcText></mark>
           </h1>
           <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
           <BetaCount />

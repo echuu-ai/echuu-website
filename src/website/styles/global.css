@@ -5,11 +5,10 @@
 
 /* --- 字体 -----------------------------------------------------------------
    全部复用 app 在 `src/styles/ui-typography.css` 里的 @font-face：
-   Inter / PuguaQianyunSong / Shippori Mincho / PP Editorial New / Maru Buri。
+   Inter / PuguaQianyunSong / Shippori Mincho / Maru Buri（英文标题也用蒲瓜）。
    官网不再重复声明，字体文件也不再复制一份。
 
-   注意：PP Editorial New 本地只有个人使用 EULA，商业发布授权未核实；
-   Maru Buri 未附许可文件。发布闸门会拦截，见 docs/website/OPEN_ITEMS.md。
+   注意：Maru Buri 未附许可文件。发布闸门会拦截，见 docs/website/OPEN_ITEMS.md。
    -------------------------------------------------------------------------- */
 
 .echuu-website {
@@ -40,7 +39,7 @@
   --gutter: 16px;
 
   /* 品牌英文 tagline 四语都用英文品牌字体，不套 CJK */
-  --font-brand: 'PP Editorial New', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-brand: 'PuguaXianyunsong Home', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'PingFang SC', 'Hiragino Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
   /* 本地语言标题复用 app 的 --font-brand-title（定义在 src/styles/ui-typography.css，

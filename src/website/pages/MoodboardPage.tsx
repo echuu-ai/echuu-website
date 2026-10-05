@@ -117,7 +117,7 @@ export function MoodboardPage() {
 
           <div className="type-sample">
             <div className="type-sample__label">
-              品牌 tagline · PP Editorial New（本地仅个人使用 EULA，商业发布授权<strong>未核实</strong>）
+              品牌 tagline · 蒲瓜纤云宋拉丁字形（商用免费）
             </div>
             <div style={{ fontFamily: 'var(--font-brand)', fontSize: 48, lineHeight: 1.05 }} lang="en">
               To recreate life out of live

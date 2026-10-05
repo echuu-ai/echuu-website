@@ -2,7 +2,7 @@
    之前 app 的 599 字形子集缺 83 个所需字形，首页不再用它。 */
 @font-face {
   font-family: 'PuguaXianyunsong Home';
-  src: url('/fonts/pugua-qianyun-song-home.woff2?v=ecd342817d') format('woff2');
+  src: url('/fonts/pugua-qianyun-song-home.woff2?v=21976deea8') format('woff2');
   font-weight: 200;
   font-display: swap;
 }
@@ -53,7 +53,7 @@
 }
 .echuu-website[data-locale='ja'] .hv { --hv-serif: 'Shippori Mincho', 'Noto Serif SC', serif; }
 .echuu-website[data-locale='ko'] .hv { --hv-serif: 'Maru Buri', 'Noto Serif SC', serif; }
-.echuu-website[data-locale='en'] .hv { --hv-serif: 'PuguaXianyunsong Home', 'PP Editorial New', 'Iowan Old Style', serif; }
+.echuu-website[data-locale='en'] .hv { --hv-serif: 'PuguaXianyunsong Home', 'Iowan Old Style', serif; }
 
 html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 
@@ -1194,3 +1194,7 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 .echuu-website .hv-answers__links a { display: inline-flex; align-items: center; min-height: var(--btn-h-md); }
 .echuu-website .hv-answers__links a:hover { text-decoration: underline; text-underline-offset: .25em; }
 @media (prefers-reduced-motion: reduce) { .echuu-website .hv-answers summary svg { transition: none; } }
+
+/* 「OC」链接：外观完全跟周围文字一样（不加下划线、不加高亮），只换手指光标；键盘聚焦时给一圈细框 */
+.echuu-website .hv-oc-link { color: inherit; text-decoration: none; background: none; cursor: pointer; }
+.echuu-website .hv-oc-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 2px; }

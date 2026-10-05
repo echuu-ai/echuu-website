@@ -235,23 +235,6 @@
       "note": ""
     },
     {
-      "id": "T01a",
-      "localPath": "public/fonts/pp-editorial-new-regular.otf",
-      "sourceUrlOrPath": "public/fonts/pp-editorial-new-regular.otf",
-      "creator": "Pangram Pangram Foundry",
-      "rightsStatus": "unverified",
-      "allowedUse": "仅本地预览。商业发布授权未核实，随包附个人使用 EULA。",
-      "credit": "Pangram Pangram",
-      "alt": "",
-      "dimensions": "font",
-      "usedIn": [
-        "brand-tagline（预览）"
-      ],
-      "productStatus": "preview-only",
-      "note": "发布前须取得商业授权或替换为有明确许可的英文衬线字体。release gate 会提示。",
-      "bytes": 58264
-    },
-    {
       "id": "T01b",
       "localPath": "public/fonts/shippori-mincho-bold.woff2",
       "sourceUrlOrPath": "public/fonts/shippori-mincho-bold.woff2",

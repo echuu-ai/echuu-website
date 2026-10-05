@@ -160,14 +160,9 @@
     "sha256": "a3910e15eea0451ffbea62e894e951ea9f7c812c8b4b5e947593b6ecc2d4b057"
   },
   {
-    "path": "fonts/pp-editorial-new-regular.otf",
-    "bytes": 58264,
-    "sha256": "527c535ac11f1206411ce5ba5e61c86616b7356fb170e42a3c9a774f0e348fd3"
-  },
-  {
     "path": "fonts/pugua-qianyun-song-home.woff2",
-    "bytes": 233424,
-    "sha256": "ecd342817d8854b66b60da863eed8b2f8d3ccc2fc29e08dc6cdf083cc40b58a0"
+    "bytes": 233388,
+    "sha256": "21976deea832797f27f197555a95572ac346963540fc72bcc2d00f6699583452"
   },
   {
     "path": "fonts/pugua-qianyun-song.woff2",

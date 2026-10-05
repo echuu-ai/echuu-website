@@ -68,12 +68,5 @@ export const LEGAL_DOCS = {
  */
 export const LEGAL_FINALIZED = false;
 
-/**
- * 品牌英文标题字体（PP Editorial New）本地只有个人使用 EULA，
- * 商业发布授权未核实。默认只在预览中加载。
- */
-export const BRAND_FONT_LICENSED =
-  (import.meta.env.VITE_BRAND_FONT_LICENSED as string | undefined) === '1';
-
 /** Product sign-up remains on the separately deployed product app. */
 export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.live")).replace(/\/$/, "");

@@ -11,12 +11,12 @@ export const ANSWERS: Record<Locale, { title: string; items: { q: string; a: str
     { q: '现在怎样申请内测？', a: '点击“参与内测”查看当前申请方式。在线申请未开放时，可自行发送邮件至 cory@anngel.live；打开邮件客户端不会自动提交申请，也不需要先设置密码。' },
   ] },
   en: { title: 'Before your first scene', items: [
-    { q: 'What is Echuu?', a: 'Echuu is an AI VTuber performance and streaming creation platform for original character (OC) creators. Supply a character, persona and topic to help your character tell stories and interact with an audience.' },
+    { q: 'What is Echuu?', a: 'Echuu is an AI VTuber performance and streaming platform for original-character (OC) creators. Bring a character, a persona and a topic, and your character tells stories and plays off the audience.' },
     { q: 'How does AI performance differ from motion capture?', a: 'AI performance uses a persona and topic to drive dialogue and voice. Motion capture maps a human performer’s expressions and movements onto a virtual character. Available capabilities depend on the current beta version.' },
-    { q: 'What model do I need?', a: 'Use a sample character or a VRM model you are authorized to use, then add a persona and topic. VRM is a 3D character format. Check the model and supporting assets’ permissions before uploading.' },
-    { q: 'How do chat messages and gifts affect the character?', a: 'In supported interactive demos, messages and gifts can inform responses and subsequent topics. A website demo does not mean every feature is available to every account; consult the invitation and version notes.' },
+    { q: 'What model do I need?', a: 'Use a sample character, or a VRM model you have the rights to use, then add a persona and a topic. VRM is a common 3D avatar format; please check the model’s license before uploading.' },
+    { q: 'How do chat messages and gifts affect the character?', a: 'In interactive demos, chat messages and gifts feed into how the character responds and where the topic goes next. Not every feature shown here is available to every account yet; check your beta invite and release notes.' },
     { q: 'Do creators keep their character rights?', a: 'Creators retain their existing rights to original characters and assets; third-party assets remain subject to their licenses. Applying for the beta or uploading a model is not consent to public website display. See the character and asset terms for details.' },
-    { q: 'How can I request beta access?', a: 'Select “Join the beta” for the current application method. When online applications are unavailable, you can email cory@anngel.live yourself. Opening your email app does not submit a request or require a password.' },
+    { q: 'How can I request beta access?', a: 'Click “Join the beta” and leave your email. Once you’re approved, we’ll email you a beta code to enter on this site. Until online applications open, you can also write to cory@anngel.live.' },
   ] },
   ja: { title: '最初のシーンの前に', items: [
     { q: 'Echuu とは？', a: 'Echuu はオリジナルキャラクター（OC）のクリエイター向け AI VTuber 表現・配信制作プラットフォームです。キャラクター、人物設定、話題を用意し、物語や視聴者とのやり取りにつなげます。' },

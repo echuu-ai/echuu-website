@@ -78,15 +78,6 @@
   font-display: swap;
 }
 
-/* Local preview asset: supplied PP Editorial New personal-use package. */
-@font-face {
-  font-family: 'PP Editorial New';
-  src: url('/fonts/pp-editorial-new-regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 @font-face {
   font-family: 'Maru Buri';
   src: url('/fonts/maru-buri-light.woff2') format('woff2');
@@ -318,12 +309,12 @@ html:lang(ko) .onboarding-screen :where(
 
 /* Shared editorial title families: landing and onboarding use one locale map. */
 :root {
-  --font-brand-title: 'PuguaQianyunSong', 'PP Editorial New', serif;
+  --font-brand-title: 'PuguaQianyunSong', Georgia, serif;
   --font-brand-title-weight: 700;
   --font-brand-title-synthesis: style weight;
 }
 html:lang(en) {
-  --font-brand-title: 'PP Editorial New', Georgia, serif;
+  --font-brand-title: 'PuguaQianyunSong', Georgia, serif; /* 英文标题也用蒲瓜（商用免费）；PP Editorial New 只有个人授权，已移除 */
   --font-brand-title-weight: 400;
   --font-brand-title-synthesis: none;
 }
@@ -347,9 +338,9 @@ html .onboarding-screen :is(.ob-brand-title, .ob-title, .ob-persona-name, .ob-pe
   font-synthesis: var(--font-brand-title-synthesis);
 }
 
-/* Chinese display glyphs need synthetic weight; PP Regular Latin does not. */
+/* Chinese display glyphs need synthetic weight; the Latin part does not. */
 html:lang(zh-CN) .onboarding-screen .ob-brand-title .brand-title-latin {
-  font-family: 'PP Editorial New', Georgia, serif !important;
+  font-family: 'PuguaQianyunSong', Georgia, serif !important;
   font-weight: 400 !important;
   font-style: normal;
   font-synthesis: none;

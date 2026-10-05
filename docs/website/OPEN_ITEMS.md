@@ -11,8 +11,8 @@
 |---|---|---|---|
 | A1 | 用户协议定稿 | `terms.html` 仍含草案与占位项 | 法务/团队定稿后把 `src/website/config/site.ts` 的 `LEGAL_FINALIZED` 改为 `true` |
 | A2 | 正式域名 | 未确认。资料中出现过多个域名，本次不替团队选 | 确定后设 `VITE_SITE_ORIGIN`，canonical 与 hreflang 才会输出 |
-| A3 | 品牌英文字体授权 | PP Editorial New 本地只有个人使用 EULA | 取得商业授权后设 `VITE_BRAND_FONT_LICENSED=1`，或换成有明确许可的英文衬线字体 |
-| A4 | CoryNoRootBone 权利冲突 | 文件内嵌 meta 显示第三方作者、禁止商用与再分发，与条款 4.4 冲突 | 核实实际授权文件；决定更正条款还是更换素材。详见 `docs/website/source-audit.md` §3.1 |
+| A3 | ~~品牌英文字体授权~~ | **已解决 2026-10-05**：移除 PP Editorial New（仅个人授权），英文标题改用蒲瓜纤云宋的拉丁字形（商用免费） | — |
+| A4 | ~~CoryNoRootBone 权利冲突~~ | **已确认 2026-10-05**：Cory 本人付费约稿，持有使用权。文件内嵌 VRM meta 仍写第三方作者 / 禁止商用，建议请画师按约稿范围更新 meta，并留存约稿合同与付款记录备查 | Cory 留存凭证 |
 
 ## B. 素材
 
