@@ -160,6 +160,16 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     }
   }, [clock, reduced]);
 
+  // 3D 舞台（13 MB 模型、HDR、动作）等纸张先画上屏幕再开始加载：否则它们和纸张抢带宽、
+  // 解析时占住主线程，首屏迟迟画不出来。纸张图异常时 3 s 后照常加载。
+  const [paperPainted, setPaperPainted] = useState(false);
+  const handleSheetPainted = useCallback(() => setPaperPainted(true), []);
+  useEffect(() => {
+    if (mode !== '3d') return;
+    const timer = window.setTimeout(handleSheetPainted, 3000);
+    return () => window.clearTimeout(timer);
+  }, [handleSheetPainted, mode]);
+
   const handleReady = useCallback(() => {
     setReady(true);
   }, []);
@@ -308,7 +318,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   return (
     <section className={`hv-hero hv-hero--${mode}`} ref={heroRef} style={{ '--opening-window-duration': `${OPENING.windowOpenSeconds / OPENING_RATE}s` } as CSSProperties} data-phase={phase} aria-label={h.header.brand}>
       <div className="hv-stage" aria-hidden="true">
-        {mode === '3d' ? (
+        {mode === '3d' && paperPainted ? (
           <Suspense fallback={null}>
             <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} paperArt={paperArt} onSketch={handleSketch} />
           </Suspense>
@@ -343,6 +353,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               loadingLabel={h.opening.loading}
               sketch={sketch?.strokes ?? null}
               guide={sketch?.guide ?? null}
+              onSheetPainted={handleSheetPainted}
             />
           ) : null}
           {/* 只剩手机窗：3D 开窗用它的位置；旧版开场（标题、剑、飞马、静态分镜）已删除，判定舞台模式前保持黑场 */}

@@ -33,7 +33,7 @@ type InkState = { drawing: boolean; x: number; y: number; ink: number; done: boo
 const TILT_COS = Math.cos((-PAPER_TILT_DEG * Math.PI) / 180);
 const TILT_SIN = Math.sin((-PAPER_TILT_DEG * Math.PI) / 180);
 
-export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingLabel, sketch, guide }: {
+export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingLabel, sketch, guide, onSheetPainted }: {
   /** wake 开始后置 true：纸淡出，让位给 3D 里的同一张纸 */
   fading: boolean;
   /** 画好了但 3D 还没就绪：提示加载中 */
@@ -47,6 +47,8 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
   sketch: SketchStroke[] | null;
   /** 右侧翅膀的引导图（dataURL），轮廓写完后出现 */
   guide: string | null;
+  /** 纸张图已经画到屏幕上（加载完再过两帧；加载失败也算）：之后才开始加载 3D */
+  onSheetPainted: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const boardRef = useRef<HTMLDivElement | null>(null);
@@ -222,7 +224,14 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
       </svg>
       <div className="hv-paper__frame">
         <div className="hv-paper__board" ref={boardRef} style={{ transform: `rotate(${PAPER_TILT_DEG}deg)` }}>
-          <img className="hv-paper__sheet" src={HOME_ASSETS.opening.paperSheet} alt="" draggable={false} />
+          <img
+            className="hv-paper__sheet"
+            src={HOME_ASSETS.opening.paperSheet}
+            alt=""
+            draggable={false}
+            onLoad={() => requestAnimationFrame(() => requestAnimationFrame(onSheetPainted))}
+            onError={onSheetPainted}
+          />
           <canvas className="hv-paper__outline" ref={outlineRef} data-inked={inked || undefined} aria-hidden="true" />
           {guide && written ? (
             <img className="hv-paper__guide" src={guide} alt="" draggable={false} data-state={inked ? 'done' : touched ? 'drawing' : 'idle'} />

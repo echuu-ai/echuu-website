@@ -18,7 +18,9 @@
     <meta name="theme-color" content="#58b8ed" />
     <script>
       // 首页开场是黑底：首帧、加载幕都用黑色，不再闪一下蓝色。子页面仍是天空色。
-      (function(){var p=location.pathname.replace(/\/+$/,'');if(p.indexOf('/website')<0||/\/website(\/(zh|en|ja|ko))?$/.test(p))document.documentElement.classList.add('echuu-dark-boot')})();
+      (function(){var p=location.pathname.replace(/\/+$/,'');if(p.indexOf('/website')<0||/\/website(\/(zh|en|ja|ko))?$/.test(p)){document.documentElement.classList.add('echuu-dark-boot');
+        // 开场纸张是首屏最大元素（LCP）：只在首页、且不是「减少动态效果」（那时直接进首屏静态图）时提前下载
+        if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){var l=document.createElement('link');l.rel='preload';l.as='image';l.href='%BASE_URL%website/figma/opening-paper/sketch-body.webp';l.setAttribute('fetchpriority','high');document.head.appendChild(l)}}})();
     </script>
     <style id="echuu-critical-transition">
       html,body{margin:0;min-height:100%;background:#73c8f2;color:#fff}body{overflow-x:hidden}
