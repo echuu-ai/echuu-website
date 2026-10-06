@@ -6,7 +6,7 @@ import { BLOG_POSTS } from '../src/website/data/blog';
 import { JOURNAL_NOTES, RESEARCH_NOTES } from '../src/website/data/journal';
 import { TEAM } from '../src/website/data/team';
 import { ANSWERS } from '../src/website/data/answers';
-import { seoDocument, publicRoutes, type SeoOptions } from '../src/website/seo/siteSeo';
+import { SHARE_IMAGE, seoDocument, publicRoutes, type SeoOptions } from '../src/website/seo/siteSeo';
 
 function Content({ locale, path, base }: { locale: Locale; path: string; base: string }) {
   const t = DICTS[locale], h = HOME_DICTS[locale];
@@ -48,7 +48,6 @@ export function staticPages(template: string, options: SeoOptions) {
   const base = `/${options.base.split('/').filter(Boolean).join('/')}${options.base === '/' ? '' : '/'}`;
   const make = (locale: Locale, path: string) => {
     const seo = seoDocument(locale, path, options);
-    const localImage = `${base}website/figma/hero-shot.webp`;
     const meta = (attr: string, name: string, value: string) => `<meta data-seo="1" ${attr}="${name}" content="${escape(value)}" />`;
     const tags = [
       `<title>${escape(seo.title)}</title>`, meta('name', 'description', seo.description),
@@ -56,9 +55,10 @@ export function staticPages(template: string, options: SeoOptions) {
       meta('property', 'og:title', seo.title), meta('property', 'og:description', seo.description),
       meta('property', 'og:type', seo.article ? 'article' : 'website'), meta('property', 'og:site_name', 'Echuu'),
       meta('property', 'og:locale', seo.lang.replace('-', '_')),
-      meta('property', 'og:image', seo.indexable ? seo.image : localImage),
+      meta('property', 'og:image', seo.image), meta('property', 'og:image:width', String(SHARE_IMAGE.width)),
+      meta('property', 'og:image:height', String(SHARE_IMAGE.height)), meta('property', 'og:image:type', SHARE_IMAGE.type),
       meta('name', 'twitter:card', 'summary_large_image'), meta('name', 'twitter:title', seo.title),
-      meta('name', 'twitter:description', seo.description), meta('name', 'twitter:image', seo.indexable ? seo.image : localImage),
+      meta('name', 'twitter:description', seo.description), meta('name', 'twitter:image', seo.image),
       `<script data-seo="1" type="application/ld+json">${JSON.stringify(seo.schema).replace(/</g, '\\u003c')}</script>`,
     ];
     if (seo.indexable) {

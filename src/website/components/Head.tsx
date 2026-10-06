@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { Locale } from '../i18n';
 import { CANONICAL_ORIGIN } from '../config/site';
-import { seoDocument } from '../seo/siteSeo';
+import { SHARE_IMAGE, seoDocument } from '../seo/siteSeo';
 
 type Props = { locale: Locale; htmlLang: string; title: string; description: string; path: string; noindex?: boolean };
 
@@ -29,13 +29,13 @@ export function Head({ locale, htmlLang, title, description, path, noindex }: Pr
       'og:title': title, 'og:description': description, 'og:type': seo.article ? 'article' : 'website',
       'og:locale': htmlLang.replace('-', '_'), 'og:site_name': 'Echuu',
       'og:url': seo.indexable ? seo.url : window.location.href,
-      'og:image': seo.indexable ? seo.image : new URL(`${import.meta.env.BASE_URL}website/figma/hero-shot.webp`, window.location.origin).href,
+      'og:image': seo.image, 'og:image:width': String(SHARE_IMAGE.width), 'og:image:height': String(SHARE_IMAGE.height), 'og:image:type': SHARE_IMAGE.type,
       'og:image:alt': HOME_IMAGE_ALT,
     })) add('meta', { property, content });
     add('meta', { name: 'twitter:card', content: 'summary_large_image' });
     add('meta', { name: 'twitter:title', content: title });
     add('meta', { name: 'twitter:description', content: description });
-    add('meta', { name: 'twitter:image', content: seo.indexable ? seo.image : new URL(`${import.meta.env.BASE_URL}website/figma/hero-shot.webp`, window.location.origin).href });
+    add('meta', { name: 'twitter:image', content: seo.image });
     if (seo.indexable) {
       add('link', { rel: 'canonical', href: seo.url });
       for (const item of seo.alternates) add('link', { rel: 'alternate', hreflang: item.lang, href: item.url });

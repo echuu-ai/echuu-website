@@ -4,6 +4,8 @@ import { BLOG_POSTS } from '../data/blog';
 
 /** 正式主地址：带 www（Cory 2026-10-04 定；echuu.ai 在 Vercel 308 跳到 www） */
 export const PLANNED_ORIGIN = 'https://www.echuu.ai';
+/** 分享卡片图（og:image / twitter:image）：1200×630 JPG，微信、QQ、X、Discord 等都能抓 */
+export const SHARE_IMAGE = { url: (origin: string) => `${origin}/website/og/echuu-share.jpg`, width: 1200, height: 630, type: 'image/jpeg' };
 export const SEO_PAGES = ['', 'gallery', 'creators', 'journal', 'blog', 'team', 'feedback', 'doodle'] as const;
 export function publicRoutes() {
   return [...SEO_PAGES, ...BLOG_POSTS.map((post) => `blog/${post.slug}`)];
@@ -28,7 +30,8 @@ export function seoDocument(locale: Locale, path: string, options: SeoOptions, o
   const urlFor = (language: Locale) => `${origin}${base}/website/${language}${path ? `/${path}` : ''}/`;
   const url = urlFor(locale);
   const indexable = options.indexable && !meta.noindex;
-  const image = `${origin}${base}/website/figma/hero-shot.webp`;
+  // 分享卡片图：始终是正式站上的绝对地址（社交平台抓不到相对路径；预览站也指向正式站这张图）
+  const image = SHARE_IMAGE.url(origin);
   const lang = DICTS[locale].htmlLang;
   const org = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Echuu', legalName: 'Anngel LLC', url: origin };
   const website = { '@type': 'WebSite', '@id': `${origin}/#website`, name: 'Echuu', alternateName: 'エチュウゥ', url: `${origin}${base}/website/en/`, publisher: { '@id': org['@id'] }, inLanguage: WEBSITE_LOCALES.map((l) => DICTS[l].htmlLang) };
