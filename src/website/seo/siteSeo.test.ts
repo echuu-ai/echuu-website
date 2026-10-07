@@ -16,7 +16,7 @@ describe('search documents', () => {
       expect(doc.querySelectorAll('link[rel=canonical]')).toHaveLength(1);
       expect(doc.querySelectorAll('link[hreflang]')).toHaveLength(5);
       expect(doc.title).toBe(seoDocument(locale, path, options).title);
-      expect(JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!)['@graph']).toHaveLength(3);
+      expect(JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!)['@graph']).toHaveLength(path ? 3 : 5);
     }
   });
   it('keeps all previews noindex with no canonical or sitemap entries, including subpath builds', () => {

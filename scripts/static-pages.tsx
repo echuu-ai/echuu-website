@@ -42,6 +42,42 @@ function Content({ locale, path, base }: { locale: Locale; path: string; base: s
   return <main id="main" className="seo-static">{links}{body}<footer><a href="mailto:cory@anngel.live">cory@anngel.live</a><p>Echuu · Anngel LLC</p><nav aria-label={t.nav.language}>{WEBSITE_LOCALES.map((l) => <a key={l} href={`${base}website/${l}/${path && publicRoutes().includes(path) ? `${path}/` : ''}`} hrefLang={DICTS[l].htmlLang}>{DICTS[l].localeName}{' '}</a>)}</nav></footer></main>;
 }
 
+/**
+ * llms.txt（https://llmstxt.org）：给 AI 回答引擎的站点说明。纯 Markdown，英文为主，
+ * 内容全部来自页面上已有的文案（FAQ、团队、博客），不写页面上没有的承诺。
+ */
+function llmsTxt(options: SeoOptions, base: string) {
+  const site = (path = '', locale: Locale = 'en') => new URL(`${base}website/${locale}/${path ? `${path}/` : ''}`, options.origin).href;
+  const en = DICTS.en, h = HOME_DICTS.en;
+  const lines = [
+    '# Echuu',
+    '',
+    `> ${h.meta.description}`,
+    '',
+    `Echuu is made by Anngel LLC. The product app is at https://echuu.live; this website (${site()}) explains the product and handles beta access. The site is available in English, 简体中文, 日本語 and 한국어 (replace /en/ with /zh/, /ja/ or /ko/).`,
+    '',
+    '## Key pages',
+    `- [Home](${site()}): what Echuu is, the three steps to debut, live-room features, streaming modes and FAQ`,
+    `- [For creators](${site('creators')}): ${en.meta.creators.description}`,
+    `- [Team](${site('team')}): ${en.meta.team.description}`,
+    `- [Blog](${site('blog')}): ${en.meta.blog.description}`,
+    `- [Journal](${site('journal')}): ${en.meta.journal.description}`,
+    `- [Gallery](${site('gallery')}): ${en.meta.gallery.description}`,
+    '',
+    '## Blog posts',
+    ...BLOG_POSTS.map((post) => `- [${post.title.en}](${site(`blog/${post.slug}`)}): ${post.excerpt.en}`),
+    '',
+    '## FAQ',
+    ...ANSWERS.en.items.flatMap((item) => [`### ${item.q}`, item.a, '']),
+    '## Optional',
+    `- [中文首页](${site('', 'zh')})`,
+    `- [日本語ホーム](${site('', 'ja')})`,
+    `- [한국어 홈](${site('', 'ko')})`,
+    `- X (Twitter): ${'https://x.com/Echuu_AIVTUBING'}`,
+  ];
+  return lines.join('\n') + '\n';
+}
+
 const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 export function staticPages(template: string, options: SeoOptions) {
   const result: Record<string, string> = {};
@@ -75,10 +111,16 @@ export function staticPages(template: string, options: SeoOptions) {
   result['index.html'] = make('en', '');
   result['website/index.html'] = make('en', '');
   result['404.html'] = make('en', 'not-found');
-  const urls = options.indexable ? WEBSITE_LOCALES.flatMap((locale) => publicRoutes().map((path) => seoDocument(locale, path, options).url)) : [];
-  result['sitemap.xml'] = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>${escape(url)}</loc></url>`).join('')}</urlset>`;
+  // sitemap：每个地址带上全部语言版本（hreflang），搜索引擎据此把四种语言当成同一页面
+  const docs = options.indexable ? WEBSITE_LOCALES.flatMap((locale) => publicRoutes().map((path) => seoDocument(locale, path, options))) : [];
+  const entry = (doc: ReturnType<typeof seoDocument>) => `<url><loc>${escape(doc.url)}</loc>${[...doc.alternates, { lang: 'x-default', url: doc.xDefault }]
+    .map((alt) => `<xhtml:link rel="alternate" hreflang="${alt.lang}" href="${escape(alt.url)}"/>`).join('')}</url>`;
+  result['sitemap.xml'] = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${docs.map(entry).join('')}</urlset>`;
   // noindex remains readable to crawlers on previews; disallow would hide that directive.
-  result['robots.txt'] = `User-agent: *\nAllow: /\n${options.indexable ? `Sitemap: ${new URL(`${base}sitemap.xml`, options.origin).href}\n` : '# Preview: pages carry noindex; the sitemap is intentionally empty.\n'}`;
+  // AI 搜索 / 回答引擎的爬虫单独点名放行（GEO）：全站只有公开内容，没有需要挡的路径
+  const aiBots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'Baiduspider', 'Bytespider', 'YisouSpider'];
+  result['robots.txt'] = `User-agent: *\nAllow: /\n\n${aiBots.map((bot) => `User-agent: ${bot}`).join('\n')}\nAllow: /\n\n${options.indexable ? `Sitemap: ${new URL(`${base}sitemap.xml`, options.origin).href}\n` : '# Preview: pages carry noindex; the sitemap is intentionally empty.\n'}`;
+  result['llms.txt'] = llmsTxt(options, base);
   result['.nojekyll'] = '';
   return result;
 }
