@@ -197,10 +197,11 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   font-family: 'Reenie Beanie', 'Cedarville Cursive', cursive; font-size: 4.4cqh; line-height: 1.05; letter-spacing: 0.01em;
   color: #55555c; white-space: pre; filter: url(#hv-pencil-boil);
   /* 手写：从左到右一点点写出来（步进的节奏像一个字母一个字母落笔） */
-  clip-path: inset(-40% 100% -40% 0);
+  /* 手写体的字形会伸出文字框（live 的 e 收笔），结束状态左右各留余量，否则最后一笔被切掉 */
+  clip-path: inset(-40% 100% -40% -10%);
   animation: hv-handwrite 1.9s 0.7s steps(30, end) forwards;
 }
-@keyframes hv-handwrite { to { clip-path: inset(-40% 0 -40% 0); } }
+@keyframes hv-handwrite { to { clip-path: inset(-40% -20% -40% -10%); } }
 .echuu-website .hv-paper__loading {
   position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); margin: 0;
   color: #fff; opacity: 0.75; font-family: var(--hv-serif); font-size: 14px; letter-spacing: 0.1em;

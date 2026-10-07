@@ -2,6 +2,7 @@ import { playInteractionSound } from '../../lib/interactionSound';
 import { Suspense, memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
+import { AdaptiveDpr } from './AdaptiveDpr';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { AppColorGradeLutPass } from '../../../components/ColorGradeLutPass';
@@ -498,6 +499,7 @@ export function BroochStage({ onReady }: { onReady: () => void }) {
         camera={{ fov: 30, position: [0, 0, 4.7], near: 0.1, far: 20 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
       >
+        <AdaptiveDpr max={1.75} />
         <RoomEnv />
         <ambientLight intensity={0.25} />
         <KeyLight position={[1.8, 2.6, 3.2]} />
@@ -735,6 +737,7 @@ export function KeysStage({ sectionRef, onReady, onReveal }: { sectionRef: RefOb
         camera={{ fov: 26, position: [0, 0, 6], near: 0.1, far: 30 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
       >
+        <AdaptiveDpr max={1.75} />
         <RoomEnv />
         <ambientLight intensity={0.3} />
         <KeyLight position={[2.5, 3.5, 4]} />

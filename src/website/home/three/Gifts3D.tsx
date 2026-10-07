@@ -72,9 +72,10 @@ function Gift({ url, pos, size, tilt, sway, phase }: (typeof GIFTS)[number]) {
   );
 }
 
-export default function Gifts3D() {
+/** active=false：卡片在视口外，停掉渲染循环（画布保留最后一帧，回到视口不用重建） */
+export default function Gifts3D({ active = true }: { active?: boolean }) {
   return (
-    <Canvas dpr={[1, 2]} gl={{ alpha: true, antialias: true }} camera={{ fov: 30, position: [0, 0, 4.2] }}>
+    <Canvas frameloop={active ? 'always' : 'never'} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} camera={{ fov: 30, position: [0, 0, 4.2] }}>
       <Suspense fallback={null}>
         <Environment files={`${BASE}${WEBSITE_SKY_HDR}`} />
         {GIFTS.map((g) => <Gift key={g.url} {...g} />)}

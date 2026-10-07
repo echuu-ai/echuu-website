@@ -199,6 +199,10 @@ export default function BlendCursor() {
     let previousY = my;
     let lastFrame = performance.now();
     let hasPointer = false;
+    let overUiCached = false;
+    let hitX = NaN;
+    let hitY = NaN;
+    let hitAt = -Infinity;
     let pressed = false;
     let pressedAt = 0;
     let flightX = 0;
@@ -458,7 +462,13 @@ export default function BlendCursor() {
       previousY = my;
       // Controls can appear beneath a stationary pointer (e.g. opening a dialog).
       // Recheck the hit surface before starting or continuing any decorative flight.
-      const overUi = hasPointer && isCursorUi(document.elementFromPoint(mx, my));
+      // elementFromPoint forces a hit test (and layout while scrolling): run it when the pointer
+      // moved or a press is pending, otherwise at most every 120 ms.
+      if (hasPointer && (mx !== hitX || my !== hitY || pressed || flight || now - hitAt >= 120)) {
+        overUiCached = isCursorUi(document.elementFromPoint(mx, my));
+        hitX = mx; hitY = my; hitAt = now;
+      }
+      const overUi = hasPointer && overUiCached;
       if (overUi) cancelGesture();
       if (pressed && !reduced && !launched && now - pressedAt >= HOLD_DELAY_MS) {
         launched = true;

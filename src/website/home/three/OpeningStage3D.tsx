@@ -13,6 +13,7 @@ import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMHumanBoneName } from '@pix
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FlightCanvas } from '../../../components/three/FlightCanvas';
+import { AdaptiveDpr } from './AdaptiveDpr';
 import { AppColorGradeLutPass } from '../../../components/ColorGradeLutPass';
 import { LiveRotatableHdrSky } from '../../../components/three/WebsiteHdrSky';
 import { loadVrmLookSettings } from '../../../components/vrm-rig/VrmLookPanel';
@@ -1022,6 +1023,8 @@ type OpeningStage3DProps = {
   onFail: (error: unknown) => void;
   /** 首屏离开视口后停掉渲染循环 */
   running: boolean;
+  /** 开场结束（首屏）后才允许掉帧时降分辨率；开场期间保持原画质 */
+  adaptive: boolean;
   hole: React.MutableRefObject<HoleRect>;
   /** draw 阶段画的翅膀笔迹（DrawWingsPaper 的画布） */
   paperArt: React.MutableRefObject<HTMLCanvasElement | null>;
@@ -1033,7 +1036,7 @@ type OpeningStage3DProps = {
  * 首屏 3D 舞台：直播间同款 HDR 天空 + 场景文件的灯光 / 景深 + Bloom + 全局调色（LUT），
  * corynorootbone 开场表演。用 FlightCanvas 挂载，纸飞机光标可以飞进这个场景绕角色一圈。
  */
-export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onFail, running, hole, paperArt, onSketch }: OpeningStage3DProps) {
+export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onFail, running, adaptive, hole, paperArt, onSketch }: OpeningStage3DProps) {
   const [look] = useState(() => loadVrmLookSettings(LIVE_VRM_LOOK_STORAGE_KEY, DEFAULT_LIVE_VRM_LOOK));
   const cameraState = useRef<SceneCamera>({ ...HERO_CAMERA, ...NO_DOF, target: HERO_CAMERA.target });
   const lying = useRef<GroundResult | null>(null);
@@ -1048,6 +1051,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
       camera={{ fov: 30, near: 0.05, far: 80, position: [2, 1, 2] }}
       gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
     >
+      <AdaptiveDpr max={1.5} enabled={adaptive} />
       <Suspense fallback={null}>
         <LiveRotatableHdrSky
           url={publicUrl(WEBSITE_SKY_HDR)}

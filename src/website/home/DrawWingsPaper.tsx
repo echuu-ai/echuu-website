@@ -242,7 +242,7 @@ export function DrawWingsPaper({ fading, waiting, artRef, onWake, hint, loadingL
   return (
     <div className="hv-paper" data-fading={fading || undefined}>
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
-        <filter id="hv-pencil-boil" x="-5%" y="-5%" width="110%" height="110%">
+        <filter id="hv-pencil-boil" x="-10%" y="-15%" width="130%" height="130%">
           <feTurbulence ref={boilRef} type="fractalNoise" baseFrequency="0.04" numOctaves={2} seed={1} result="noise" />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale={2.4} xChannelSelector="R" yChannelSelector="G" />
         </filter>

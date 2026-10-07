@@ -128,10 +128,16 @@ function FeatureVideo() {
 /** 直播间体验：标题 + LIVE + 视频 + 三张横向循环的功能卡 */
 const Gifts3D = lazy(() => import('./three/Gifts3D'));
 
-/** 礼物：卡片进入视口才挂 3D（滚动带里有两份卡片，出视口就卸载）；没 WebGL / 减少动态效果时是静态拼图 */
+/**
+ * 礼物：卡片第一次进入视口才挂 3D，之后一直挂着、出视口只暂停渲染。
+ * 滚动带里有两份卡片、会自己横向循环进出视口；以前出视口就卸载，每次回来都要重建 WebGL、重载 HDR 和模型，造成周期性卡顿。
+ * 没 WebGL / 减少动态效果时是静态拼图。
+ */
 function GiftArt() {
   const ref = useRef<HTMLSpanElement | null>(null);
   const [live, setLive] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  if (live && !mounted) setMounted(true);
   const [can3d] = useState(() => {
     if (typeof window === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
     try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
@@ -146,7 +152,7 @@ function GiftArt() {
   const still = HOME_ASSETS.gifts.map((gift) => <img key={gift} src={gift} alt="" loading="lazy" />);
   return (
     <span ref={ref} className="hv-fcard__art hv-fcard__art--gifts" data-live={live || undefined}>
-      {live ? <Suspense fallback={still}><Gifts3D /></Suspense> : still}
+      {mounted ? <Suspense fallback={still}><Gifts3D active={live} /></Suspense> : still}
     </span>
   );
 }

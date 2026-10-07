@@ -321,7 +321,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       <div className="hv-stage" aria-hidden="true">
         {mode === '3d' && paperPainted ? (
           <Suspense fallback={null}>
-            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} hole={hole} paperArt={paperArt} onSketch={handleSketch} />
+            <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} adaptive={phase === 'hero'} hole={hole} paperArt={paperArt} onSketch={handleSketch} />
           </Suspense>
         ) : null}
         {stageStill ? (
