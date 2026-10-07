@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import type { Locale } from '../i18n';
 import { CANONICAL_ORIGIN } from '../config/site';
 import { SHARE_IMAGE, seoDocument } from '../seo/siteSeo';
+import { startAnalytics, trackPageView } from '../lib/googleAnalytics';
 
 type Props = { locale: Locale; htmlLang: string; title: string; description: string; path: string; noindex?: boolean };
 
@@ -42,6 +43,9 @@ export function Head({ locale, htmlLang, title, description, path, noindex }: Pr
       add('link', { rel: 'alternate', hreflang: 'x-default', href: seo.xDefault });
     }
     add('script', { type: 'application/ld+json' }, JSON.stringify(seo.schema));
+    // 每个页面（含站内跳转、切换语言）记一次浏览；只在正式站且配置了 GA 时生效
+    startAnalytics();
+    trackPageView(title);
   }, [locale, htmlLang, title, description, path, noindex]);
   return null;
 }
