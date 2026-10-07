@@ -26,7 +26,10 @@ while True:
     alpha = 1 - np.clip((key - 28) / (90 - 28), 0, 1)
     g2 = np.minimum(g, other + 6)         # green limit：只压掉超出红蓝的那部分绿（米色、白色不受影响）
     rgba = np.dstack([r, g2, b, alpha * 255]).clip(0, 255).astype(np.uint8)
-    webm.stdin.write(rgba.tobytes()); mov.stdin.write(rgba.tobytes())
+    webm.stdin.write(rgba.tobytes())
+    # HEVC alpha 在苹果 WebKit（Safari、iPhone 全部浏览器）里按「预乘」合成：颜色必须先乘以透明度，
+    # 否则透明处原来的底色（白底素材就是白色）会叠加显示出来。VP9 是直通 alpha，不预乘。
+    mov.stdin.write(np.dstack([(rgba[..., :3] * (rgba[..., 3:4] / 255.0)).round(), rgba[..., 3]]).astype(np.uint8).tobytes())
     if n == 0: Image.fromarray(rgba, 'RGBA').save(f'{name}-first.png')
     if n == 60: Image.fromarray(rgba, 'RGBA').save(f'{name}-key.png')
     last = rgba

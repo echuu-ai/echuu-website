@@ -161,8 +161,8 @@
   },
   {
     "path": "legal/privacy.html",
-    "bytes": 41849,
-    "sha256": "2dcab786727f915a9ed0b23be472c3fe693b6afcbe72d4ef37a9327bcb2ac928"
+    "bytes": 44807,
+    "sha256": "b28895aef2a7b4b75be84f9d065931b972f9f55ac0c8d92a690a2a4787f07f85"
   },
   {
     "path": "legal/terms.html",
@@ -620,9 +620,9 @@
   },
   {
     "path": "website/feature/mocap.mov",
-    "bytes": 489168,
-    "sha256": "7d2029a3f1c6f23f8dd4858ad81e18e99833cf9c325eaa22e3496759973742b6",
-    "source": "Same clip as HEVC alpha for Safari, 2026-10-03"
+    "bytes": 654488,
+    "sha256": "f2072f45f0d43a83fd4ff9bceed4049a18824001d1d3dcc131b9b0f2cd675dd4",
+    "source": "Same clip as HEVC alpha for Safari, 2026-10-03 Re-encoded 2026-10-07 with premultiplied colour (Safari white-background fix)."
   },
   {
     "path": "website/feature/mocap-poster.webp",
