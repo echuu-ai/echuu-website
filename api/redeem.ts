@@ -98,7 +98,7 @@ function limited(ip: string): boolean {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ status: 'method_not_allowed' });
-    if (!configured()) return res.status(503).json({ status: 'unavailable', has: { sheet: Boolean(SHEET_ID), email: Boolean(SA_EMAIL), key: Boolean(SA_KEY) } });
+    if (!configured()) return res.status(503).json({ status: 'unavailable' });
 
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
     if (limited(ip)) return res.status(429).json({ status: 'rate' });
@@ -122,9 +122,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     await markRedeemed(found.row, ip);
     return res.status(200).json({ status: 'redeemed', redirect_url: buildRedirectUrl(found.email) });
-  } catch (e) {
-    // 诊断期：回真实错误（稳定后收敛成 {status:'failed'}）
-    const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
-    return res.status(500).json({ status: 'failed', error: msg.slice(0, 500) });
+  } catch {
+    return res.status(500).json({ status: 'failed' });
   }
 }
