@@ -4,11 +4,21 @@
   "framework": "vite",
   "routes": [
     {
+      "src": "^/website/((?:zh|en|ja|ko)(?:/[^.]*[^/.])?)$",
+      "status": 308,
+      "headers": { "Location": "/website/$1/" }
+    },
+    {
       "handle": "filesystem"
     },
     {
+      "src": "^/website/?$",
+      "dest": "/website/index.html"
+    },
+    {
       "src": "/.*",
-      "dest": "/index.html"
+      "status": 404,
+      "dest": "/404.html"
     }
   ]
 }
