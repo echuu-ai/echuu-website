@@ -3,6 +3,7 @@ import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
 import { fill } from '../i18n';
 import { buildMailto, copyText } from '../lib/cta';
+import { trackEvent } from '../lib/googleAnalytics';
 import { CONTACT_EMAIL, FEEDBACK_ENDPOINT } from '../config/site';
 
 const MAX = 1200;
@@ -65,6 +66,7 @@ export function FeedbackPage() {
             onSubmit={(event) => {
               event.preventDefault();
               if (!validate()) return;
+              trackEvent('feedback_submitted', { category, method: 'email' });
               window.location.href = buildMailto(
                 CONTACT_EMAIL,
                 `[Echuu] ${categoryLabel}`,
@@ -137,6 +139,7 @@ export function FeedbackPage() {
                   if (!validate()) return;
                   const ok = await copyText(composed);
                   if (ok) {
+                    trackEvent('feedback_submitted', { category, method: 'copy' });
                     setCopied(true);
                     window.setTimeout(() => setCopied(false), 2400);
                   }

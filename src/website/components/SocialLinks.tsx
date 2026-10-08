@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Youtube, X as Close, Copy } from 'lucide-react';
 import { SOCIAL_LINKS } from '../config/site';
 import { HOME_ASSETS } from '../assets';
+import { trackEvent } from '../lib/googleAnalytics';
 import { useLocale } from '../locale-context';
 import '../auth/access.css';
 
@@ -54,7 +55,7 @@ export function SocialLinks({ compact = false }: { compact?: boolean }) {
     {(['wechat', 'qq'] as const).map((id) => <button key={id} type="button" className={compact ? 'hv-cta__icon' : 'hv-social-link'} aria-label={c[id]} onClick={() => open(id)}>
       {compact ? <img src={id === 'wechat' ? HOME_ASSETS.icons.bilibili : HOME_ASSETS.icons.qq} alt="" /> : c[id]}
     </button>)}
-    {SOCIAL_LINKS.map((social) => <a key={social.id} className={compact ? 'hv-cta__icon' : 'hv-social-link'} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={socialLabel(social.id, social.label, c)}>
+    {SOCIAL_LINKS.map((social) => <a key={social.id} className={compact ? 'hv-cta__icon' : 'hv-social-link'} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={socialLabel(social.id, social.label, c)} onClick={() => trackEvent('outbound_click', { kind: 'social', id: social.id })}>
       {compact ? social.id === 'xiaohongshu' ? <img src={HOME_ASSETS.icons.xiaohongshu} alt="" /> : social.id === 'x' ? <img src={HOME_ASSETS.icons.x} alt="" /> : <Youtube size={22} aria-hidden="true" /> : socialLabel(social.id, social.label, c)}
     </a>)}
     <Dialog.Root open={Boolean(channel)} onOpenChange={(value) => { if (!value) setChannel(null); }}>

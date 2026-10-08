@@ -15,6 +15,8 @@ type Gtag = (...args: unknown[]) => void;
 declare global { interface Window { dataLayer?: unknown[]; gtag?: Gtag } }
 
 let started = false;
+/** startAnalytics() 之前触发的事件先排这里，配置就绪后一起补发。 */
+const pending: Array<[string, Record<string, unknown>]> = [];
 
 export function analyticsEnabled() {
   return import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(MEASUREMENT_ID) && typeof window !== 'undefined' && window.location.origin === CANONICAL_ORIGIN;
@@ -36,6 +38,8 @@ export function startAnalytics() {
   gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', region: EEA_UK_CH });
   gtag('js', new Date());
   gtag('config', MEASUREMENT_ID, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
+  // 补发启动前排队的事件（例如首帧就触发的交互）
+  for (const [name, params] of pending.splice(0)) gtag('event', name, params);
   const load = () => {
     const script = document.createElement('script');
     script.async = true;
@@ -53,4 +57,27 @@ export function startAnalytics() {
 export function trackPageView(title: string) {
   if (!started) return;
   gtag('event', 'page_view', { page_location: window.location.href, page_path: window.location.pathname, page_title: title });
+}
+
+/** 官网自定义事件名。命名用 GA4 惯例的小写下划线，含义见各埋点处注释。 */
+export type SiteEvent =
+  | 'access_opened'        // 打开邀请码 / 注册弹窗
+  | 'access_completed'     // 邀请码兑换成功（跳产品）或内测注册成功
+  | 'access_failed'        // 兑换 / 注册失败
+  | 'access_email_fallback'// 无接口时点「邮件申请」
+  | 'feedback_submitted'   // 意见箱提交（邮件 / 复制）
+  | 'outbound_click';      // 外链点击（社交 / 产品 / 文档）
+
+type EventParams = Record<string, string | number | boolean | undefined>;
+
+/**
+ * 发一条自定义事件。未启用（本地 / 预览 / 未配 ID）时静默丢弃；
+ * gtag 尚未初始化时先排队，startAnalytics() 就绪后补发。
+ */
+export function trackEvent(name: SiteEvent, params: EventParams = {}) {
+  if (!analyticsEnabled()) return;
+  const clean: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(params)) if (value !== undefined) clean[key] = value;
+  if (!started) { pending.push([name, clean]); return; }
+  gtag('event', name, clean);
 }

@@ -7,6 +7,7 @@ import { authCopy } from './copy';
 import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta } from './api';
 import { isWellFormedInviteCode, normalizeInviteCode } from './inviteCode';
 import { CONTACT_EMAIL } from '../config/site';
+import { trackEvent } from '../lib/googleAnalytics';
 import './access.css';
 
 export type AccessMode = 'invite' | 'signup';
@@ -30,7 +31,9 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   useEffect(() => {
     request.current?.abort();
     setCode(''); setPassword(''); setEmail(''); setError(''); setBusy(false); setSuccess(false); setShowPassword(false);
+    if (mode) trackEvent('access_opened', { mode, configured });
     return () => { request.current?.abort(); request.current = null; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -44,13 +47,23 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
     try {
       if (invite) {
         const destination = await redeemInvite(normalizeInviteCode(code), controller.signal);
-        if (!controller.signal.aborted) window.location.assign(destination);
+        if (!controller.signal.aborted) {
+          trackEvent('access_completed', { mode: 'invite' });
+          window.location.assign(destination);
+        }
       } else {
         await registerBeta(email, password, locale, controller.signal);
-        if (!controller.signal.aborted) { setSuccess(true); setPassword(''); }
+        if (!controller.signal.aborted) {
+          trackEvent('access_completed', { mode: 'signup' });
+          setSuccess(true); setPassword('');
+        }
       }
     } catch (err) {
-      if (request.current === controller) setError(c[err instanceof AuthError ? err.code : 'network']);
+      if (request.current === controller) {
+        const code = err instanceof AuthError ? err.code : 'network';
+        setError(c[code]);
+        trackEvent('access_failed', { mode: invite ? 'invite' : 'signup', reason: code });
+      }
     } finally {
       clearTimeout(timeout);
       if (request.current === controller) setBusy(false);
@@ -73,7 +86,8 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
             <div className="echuu-access__body">
               <p role="status">{c.unavailable}</p>
               <p>{t.apply.mailNote}</p>
-              <a className="echuu-access__submit" href={mailHref}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
+              <a className="echuu-access__submit" href={mailHref}
+                onClick={() => trackEvent('access_email_fallback', { mode: invite ? 'invite' : 'signup' })}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
               <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
             </div>
           ) : <>
