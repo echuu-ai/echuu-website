@@ -12,6 +12,10 @@
       "handle": "filesystem"
     },
     {
+      "src": "^/api/(.*)$",
+      "dest": "/api/$1"
+    },
+    {
       "src": "^/website/?$",
       "dest": "/website/index.html"
     },
