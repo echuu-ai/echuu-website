@@ -2,7 +2,6 @@
 // 与前端 src/website/auth/api.ts 契约一致：和官网同源，无 CORS。
 // 错误用 HTTP 状态：410=无效/已用/过期（前端显示 invalid）、429=限流、503=未配置、500=失败。
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { buildRedirectUrl, configured, findCode, isWellFormed, markRedeemed, normalizeCode } from './_lib';
 
 // 尽力而为的限流：无状态函数下每实例内存，不保证全局，但能挡住单实例暴刷。
 const hits = new Map<string, number[]>();
@@ -15,23 +14,27 @@ function limited(ip: string): boolean {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') return res.status(405).json({ status: 'method_not_allowed' });
-  if (!configured()) return res.status(503).json({ status: 'unavailable' });
-
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
-  if (limited(ip)) return res.status(429).json({ status: 'rate' });
-
-  let code = '';
   try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
-    code = String(body.code || '');
-  } catch {
-    return res.status(400).json({ status: 'invalid' });
-  }
+    if (req.method !== 'POST') return res.status(405).json({ status: 'method_not_allowed' });
 
-  if (!isWellFormed(code)) return res.status(410).json({ status: 'invalid' });
+    // 动态 import，这样 _lib / google-auth-library 若加载失败也能被捕获并报出真因
+    const { buildRedirectUrl, configured, findCode, isWellFormed, markRedeemed, normalizeCode } = await import('./_lib');
 
-  try {
+    if (!configured()) return res.status(503).json({ status: 'unavailable' });
+
+    const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+    if (limited(ip)) return res.status(429).json({ status: 'rate' });
+
+    let code = '';
+    try {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
+      code = String(body.code || '');
+    } catch {
+      return res.status(400).json({ status: 'invalid' });
+    }
+
+    if (!isWellFormed(code)) return res.status(410).json({ status: 'invalid' });
+
     const found = await findCode(normalizeCode(code));
     // 不存在 / 已用 / 撤销 / 过期：统一 410，不区分，防枚举
     if (!found) return res.status(410).json({ status: 'invalid' });
@@ -42,7 +45,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     await markRedeemed(found.row, ip);
     return res.status(200).json({ status: 'redeemed', redirect_url: buildRedirectUrl(found.email) });
-  } catch {
-    return res.status(500).json({ status: 'failed' });
+  } catch (e) {
+    // 诊断期：把真实错误回给调用方（稳定后收敛成 {status:'failed'}）
+    const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+    return res.status(500).json({ status: 'failed', error: msg.slice(0, 500) });
   }
 }
