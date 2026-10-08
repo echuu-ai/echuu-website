@@ -40,7 +40,8 @@ export function parseWebsiteLocation(pathname: string, hash: string): WebsiteLoc
 export function websitePath(locale: Locale, page: WebsitePage | '' = '', slug?: string): string {
   const segment = !page || page === 'home' ? '' : `/${page}`;
   const tail = slug && page && PAGES_WITH_SLUG.has(page) ? `/${encodeURIComponent(slug)}` : '';
-  return `${WEBSITE_BASE}/${locale}${segment}${tail}`;
+  // 结尾带 /：和预渲染的静态页、canonical、sitemap 同一个地址（不带 / 的地址服务器会 308 过来，多跳一次）
+  return `${WEBSITE_BASE}/${locale}${segment}${tail}/`;
 }
 
 /** 站内跳转，复用 app 既有的过渡与 popstate 处理。 */
