@@ -16,7 +16,7 @@ describe('search documents', () => {
       expect(doc.querySelectorAll('link[rel=canonical]')).toHaveLength(1);
       expect(doc.querySelectorAll('link[hreflang]')).toHaveLength(5);
       expect(doc.title).toBe(seoDocument(locale, path, options).title);
-      expect(JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!)['@graph']).toHaveLength(path ? 3 : 5);
+      expect(JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!)['@graph'].map((node: { '@type': string }) => node['@type'])).toEqual(expect.arrayContaining(['Organization', 'WebSite', path.startsWith('blog/') ? 'Article' : 'WebPage', 'Person', ...(path ? ['BreadcrumbList'] : ['SoftwareApplication', 'FAQPage'])]));
     }
   });
   it('keeps all previews noindex with no canonical or sitemap entries, including subpath builds', () => {

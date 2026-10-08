@@ -2,6 +2,7 @@ import { DICTS, WEBSITE_LOCALES, type Locale } from '../i18n';
 import { HOME_DICTS } from '../i18n/home';
 import { BLOG_POSTS } from '../data/blog';
 import { ANSWERS } from '../data/answers';
+import { TEAM } from '../data/team';
 
 /** 正式主地址：带 www（Cory 2026-10-04 定；echuu.ai 在 Vercel 308 跳到 www） */
 export const PLANNED_ORIGIN = 'https://www.echuu.ai';
@@ -17,13 +18,26 @@ export const SEO_PAGES = ['', 'gallery', 'creators', 'journal', 'blog', 'team', 
 export function publicRoutes() {
   return [...SEO_PAGES, ...BLOG_POSTS.map((post) => `blog/${post.slug}`)];
 }
+/**
+ * 子页描述太短时（搜索结果里只有一句话、没有「Echuu 是什么」），接上 FAQ「Echuu 是什么？」答案的第一句——
+ * 网站上已有的四语文案，不另写宣传语。英文少于 110 字符、中日韩少于 50 字时才接。
+ */
+function withBrandContext(locale: Locale, description: string) {
+  const min = locale === 'en' ? 110 : 50;
+  if (description.length >= min) return description;
+  const what = ANSWERS[locale].items[0].a;
+  // 第一句：中日以「。」结尾；英韩以「. 」结尾（句点后有空格或到结尾）
+  const first = what.match(/^.*?(?:。|\.(?=\s|$))/)?.[0] ?? what;
+  const spaced = locale === 'en' || locale === 'ko';
+  return `${description}${spaced ? ' ' : ''}${first}`;
+}
 export function pageMetadata(locale: Locale, path: string) {
   const dict = DICTS[locale];
   if (!path) return { ...HOME_DICTS[locale].meta, article: false, noindex: false };
   const post = path.startsWith('blog/') ? BLOG_POSTS.find((item) => `blog/${item.slug}` === path) : undefined;
   if (post) return { title: `${post.title[locale]} — Echuu`, description: post.excerpt[locale], article: true, noindex: false };
   const entry = dict.meta[path as keyof typeof dict.meta];
-  if (entry && SEO_PAGES.includes(path as typeof SEO_PAGES[number])) return { ...entry, article: false, noindex: false };
+  if (entry && SEO_PAGES.includes(path as typeof SEO_PAGES[number])) return { ...entry, description: withBrandContext(locale, entry.description), article: false, noindex: false };
   return { title: `${dict.common.notFound} — Echuu`, description: '', article: false, noindex: true };
 }
 
@@ -41,7 +55,18 @@ export function seoDocument(locale: Locale, path: string, options: SeoOptions, o
   const image = SHARE_IMAGE.url(origin);
   const lang = DICTS[locale].htmlLang;
   const org = { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Echuu', legalName: 'Anngel LLC', url: origin,
-    logo: { '@type': 'ImageObject', url: BRAND.logo(origin) }, sameAs: BRAND.sameAs };
+    logo: { '@type': 'ImageObject', url: BRAND.logo(origin) }, sameAs: BRAND.sameAs, founder: { '@id': `${origin}/#person-cory` } };
+  // 团队成员（团队页）：名字、职位、个人主页都来自 data/team.ts；创始人在每页都作为 Organization.founder 出现
+  const person = (member: typeof TEAM[number]) => ({ '@type': 'Person', '@id': `${origin}/#person-${member.id}`, name: member.name[locale], jobTitle: member.role[locale],
+    ...(member.links?.website ? { url: member.links.website, sameAs: [member.links.website] } : {}), ...(member.group === 'core' ? { worksFor: { '@id': `${origin}/#organization` } } : {}) });
+  const people = path === 'team' ? TEAM.map(person) : [person(TEAM.find((member) => member.id === 'cory')!)];
+  // 面包屑：首页 › 子页（› 文章）
+  const crumbs = path ? [
+    { name: 'Echuu', item: `${origin}${base}/website/${locale}/` },
+    ...(path.startsWith('blog/') ? [{ name: DICTS[locale].blogPage.title, item: `${origin}${base}/website/${locale}/blog/` }] : []),
+    { name: meta.title.replace(/ — Echuu$/, ''), item: url },
+  ] : [];
+  const breadcrumb = crumbs.length && !meta.noindex ? [{ '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`, itemListElement: crumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, ...crumb })) }] : [];
   const website = { '@type': 'WebSite', '@id': `${origin}/#website`, name: 'Echuu', alternateName: 'エチュウゥ', url: `${origin}${base}/website/en/`, publisher: { '@id': org['@id'] }, inLanguage: WEBSITE_LOCALES.map((l) => DICTS[l].htmlLang) };
   const page = { '@type': meta.article ? 'Article' : 'WebPage', '@id': `${url}#page`, url, name: meta.title, description: meta.description, inLanguage: lang, isPartOf: { '@id': website['@id'] },
     primaryImageOfPage: { '@type': 'ImageObject', url: image, width: SHARE_IMAGE.width, height: SHARE_IMAGE.height },
@@ -55,6 +80,6 @@ export function seoDocument(locale: Locale, path: string, options: SeoOptions, o
   ] : [];
   return { ...meta, lang, url, image, indexable,
     alternates: WEBSITE_LOCALES.map((language) => ({ lang: DICTS[language].htmlLang, url: urlFor(language) })),
-    xDefault: urlFor('en'), schema: { '@context': 'https://schema.org', '@graph': [org, website, page, ...home] },
+    xDefault: urlFor('en'), schema: { '@context': 'https://schema.org', '@graph': [org, website, page, ...home, ...people, ...breadcrumb] },
   };
 }

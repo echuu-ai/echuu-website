@@ -69,6 +69,8 @@ function llmsTxt(options: SeoOptions, base: string) {
     '',
     '## FAQ',
     ...ANSWERS.en.items.flatMap((item) => [`### ${item.q}`, item.a, '']),
+    `- [Full text for language models](${new URL(`${base}llms-full.txt`, options.origin).href}): every blog post, the creators page, the team and the FAQ in one file`,
+    '',
     '## Optional',
     `- [中文首页](${site('', 'zh')})`,
     `- [日本語ホーム](${site('', 'ja')})`,
@@ -76,6 +78,23 @@ function llmsTxt(options: SeoOptions, base: string) {
     `- X (Twitter): ${'https://x.com/Echuu_AIVTUBING'}`,
   ];
   return lines.join('\n') + '\n';
+}
+
+/** llms-full.txt：英文全文（博客正文、创作者页、团队、FAQ），AI 回答引擎一次读完不用逐页抓。 */
+function llmsFullTxt(options: SeoOptions, base: string) {
+  const site = (path = '') => new URL(`${base}website/en/${path ? `${path}/` : ''}`, options.origin).href;
+  const en = DICTS.en, h = HOME_DICTS.en;
+  const section = (items: readonly { title: string; body: string }[]) => items.flatMap((item) => [`### ${item.title}`, item.body, '']);
+  return [
+    '# Echuu — full text', '', `> ${h.meta.description}`, '', `Source: ${site()} (also in 简体中文 /zh/, 日本語 /ja/, 한국어 /ko/). Made by Anngel LLC. Product app: https://echuu.live`, '',
+    '## What Echuu is', h.intro.body, '',
+    `## ${h.steps.title}`, ...section(h.steps.items),
+    `## ${en.features.title}`, ...section(en.features.items),
+    `## ${en.creatorsPage.title}`, `Source: ${site('creators')}`, '', en.creators.manifesto, '', ...section(en.creators.intents), en.creators.disclaimer, '', ...section(en.trust.items),
+    `## ${en.teamPage.title}`, `Source: ${site('team')}`, '', ...TEAM.flatMap((person) => [`### ${person.name.en} — ${person.role.en}`, ...(person.bio ? [person.bio.en] : []), ...(person.links?.website ? [person.links.website] : []), '']),
+    '## Blog', ...BLOG_POSTS.flatMap((post) => [`### ${post.title.en}`, `Source: ${site(`blog/${post.slug}`)}`, '', post.excerpt.en, '', ...post.body.en.flatMap((paragraph) => [paragraph, '']), '']),
+    '## FAQ', ...ANSWERS.en.items.flatMap((item) => [`### ${item.q}`, item.a, '']),
+  ].join('\n') + '\n';
 }
 
 const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -121,6 +140,7 @@ export function staticPages(template: string, options: SeoOptions) {
   const aiBots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'Baiduspider', 'Bytespider', 'YisouSpider'];
   result['robots.txt'] = `User-agent: *\nAllow: /\n\n${aiBots.map((bot) => `User-agent: ${bot}`).join('\n')}\nAllow: /\n\n${options.indexable ? `Sitemap: ${new URL(`${base}sitemap.xml`, options.origin).href}\n` : '# Preview: pages carry noindex; the sitemap is intentionally empty.\n'}`;
   result['llms.txt'] = llmsTxt(options, base);
+  result['llms-full.txt'] = llmsFullTxt(options, base);
   result['.nojekyll'] = '';
   return result;
 }
