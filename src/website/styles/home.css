@@ -1149,6 +1149,11 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 .echuu-website .hv-opening-controls button:focus-visible,
 .echuu-website .hv-cta button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .echuu-website .hv-opening-controls button:disabled { opacity: .6; cursor: wait; }
+/* 跳过按钮：比声音键更小、更低调，单行不换行 */
+.echuu-website .hv .hv-opening-controls button.hv-opening-controls__skip {
+  font-size: 10px; line-height: 18px; padding: 3px 8px; opacity: .78; white-space: nowrap;
+}
+.echuu-website .hv .hv-opening-controls button.hv-opening-controls__skip:hover:not(:disabled) { opacity: 1; }
 .echuu-website .hv-title__slogan { font-weight: inherit; }
 @media (max-width: 560px) {
   .echuu-website .hv-cta__group { display: none; }

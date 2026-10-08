@@ -283,7 +283,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     return () => observer.disconnect();
   }, []);
 
-  // 开场不提供跳过 / 唤醒按钮、回访也照常播放（Cory 2026-10-03 再次确认）；只留 Esc 作为无障碍退出口
+  // 开场提供「跳过」按钮（声音键旁，Cory 2026-10-08）+ Esc 无障碍退出口；跳过只选最终姿态，3D 未就绪时不降级
   const skip = useCallback(() => {
     setPendingWake(false);
     // Skipping selects the final pose; it must never downgrade a loading 3D stage.
@@ -339,6 +339,14 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
       {showOpening ? (
         <div className="hv-opening-controls" data-no-doodle>
           <SoundToggle label={h.header.sound} />
+          <button
+            type="button"
+            className="hv-opening-controls__skip"
+            onClick={skip}
+            disabled={!ready}
+          >
+            {h.opening.skip}
+          </button>
         </div>
       ) : null}
 
