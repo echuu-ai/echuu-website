@@ -98,7 +98,7 @@ function limited(ip: string): boolean {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') return res.status(405).json({ status: 'method_not_allowed' });
-    if (!configured()) return res.status(503).json({ status: 'unavailable' });
+    if (!configured()) return res.status(503).json({ status: 'unavailable', has: { sheet: Boolean(SHEET_ID), email: Boolean(SA_EMAIL), key: Boolean(SA_KEY) } });
 
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
     if (limited(ip)) return res.status(429).json({ status: 'rate' });
