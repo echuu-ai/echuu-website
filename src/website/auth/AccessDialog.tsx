@@ -6,7 +6,7 @@ import { useLocale } from '../locale-context';
 import { authCopy } from './copy';
 import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta } from './api';
 import { isWellFormedInviteCode, normalizeInviteCode } from './inviteCode';
-import { CONTACT_EMAIL } from '../config/site';
+import { CONTACT_EMAIL, CONTACT_EMAIL_ALT, CONTACT_RECIPIENTS } from '../config/site';
 import { trackEvent } from '../lib/googleAnalytics';
 import './access.css';
 
@@ -27,7 +27,7 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   const request = useRef<AbortController | null>(null);
   const invite = mode === 'invite';
   const configured = Boolean(invite ? INVITE_ENDPOINT : SIGNUP_ENDPOINT);
-  const mailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t.apply.emailSubject)}&body=${encodeURIComponent(t.apply.emailBody)}`;
+  const mailHref = `mailto:${CONTACT_RECIPIENTS}?subject=${encodeURIComponent(t.apply.emailSubject)}&body=${encodeURIComponent(t.apply.emailBody)}`;
   useEffect(() => {
     request.current?.abort();
     setCode(''); setPassword(''); setEmail(''); setError(''); setBusy(false); setSuccess(false); setShowPassword(false);
@@ -88,7 +88,7 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
               <p>{t.apply.mailNote}</p>
               <a className="echuu-access__submit" href={mailHref}
                 onClick={() => trackEvent('access_email_fallback', { mode: invite ? 'invite' : 'signup' })}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
-              <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+              <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> · <a href={`mailto:${CONTACT_EMAIL_ALT}`}>{CONTACT_EMAIL_ALT}</a></p>
             </div>
           ) : <>
             <form onSubmit={submit} className="echuu-access__form echuu-access__body">

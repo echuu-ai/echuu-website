@@ -241,7 +241,7 @@ export const en: Dict = {
       ['Founded', '2025'],
       ['Based in', 'Shanghai, China / Nevada, USA'],
       ['Platforms', 'Web and desktop, with output to Twitch, YouTube and Bilibili'],
-      ['Press contact', 'cory@anngel.live'],
+      ['Press contact', 'cory@echuu.ai'],
     ],
     thanks: 'Built on Qwen (Alibaba Cloud), LiveKit, VRoid, three-vrm and the open VRM ecosystem. Special thanks to the 215 creators on the waitlist, who let us meet their characters before anyone else.',
     source: 'Kept in sync with the Notion press kit (last updated 2026-08-28).',

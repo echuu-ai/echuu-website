@@ -241,7 +241,7 @@ export const ko: Dict = {
       ['설립', '2025'],
       ['거점', '중국 상하이 / 미국 네바다주'],
       ['플랫폼', '웹과 데스크톱. Twitch, YouTube, bilibili 송출 지원'],
-      ['미디어 문의', 'cory@anngel.live'],
+      ['미디어 문의', 'cory@echuu.ai'],
     ],
     thanks: 'Qwen(Alibaba Cloud), LiveKit, VRoid, three-vrm, 그리고 열린 VRM 생태계 위에 만들었습니다. 대기 명단의 215명 크리에이터께 특별히 감사드립니다. 누구보다 먼저 여러분의 캐릭터를 만나게 해 주셨습니다.',
     source: 'Notion 미디어 키트(최종 갱신 2026.8.28)와 내용을 맞추고 있습니다.',

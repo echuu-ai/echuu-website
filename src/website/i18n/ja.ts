@@ -241,7 +241,7 @@ export const ja: Dict = {
       ['設立', '2025'],
       ['拠点', '中国・上海 / 米国・ネバダ州'],
       ['プラットフォーム', 'Web とデスクトップ。Twitch、YouTube、bilibili への出力に対応'],
-      ['メディア連絡先', 'cory@anngel.live'],
+      ['メディア連絡先', 'cory@echuu.ai'],
     ],
     thanks: 'Qwen（Alibaba Cloud）、LiveKit、VRoid、three-vrm、そしてオープンな VRM エコシステムの上に構築しています。ウェイトリストの 215 名のクリエイターに感謝します。誰よりも早く、皆さんのキャラクターに会わせてくれました。',
     source: 'Notion のプレスキット（最終更新 2026.8.28）と内容を揃えています。',

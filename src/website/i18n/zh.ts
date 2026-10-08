@@ -242,7 +242,7 @@ export const zh = {
       ['成立', '2025'],
       ['总部', '中国上海 / 美国内华达州'],
       ['平台', '网页版、桌面版，支持输出至 Twitch、YouTube、哔哩哔哩'],
-      ['媒体联系', 'cory@anngel.live'],
+      ['媒体联系', 'cory@echuu.ai'],
     ],
     thanks: '本项目基于 Qwen（阿里云）、LiveKit、VRoid、three-vrm 以及开放的 VRM 生态系统构建。特别感谢候补名单上的 215 位创作者，是他们让我们比任何人都更早地见到了他们的角色。',
     source: '内容与 Notion 媒体资料包保持一致（最后更新 2026.8.28）。',

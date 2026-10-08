@@ -1,11 +1,11 @@
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
 import { buildMailto } from '../lib/cta';
-import { CONTACT_EMAIL, LEGAL_DOCS } from '../config/site';
+import { CONTACT_RECIPIENTS, LEGAL_DOCS } from '../config/site';
 
 export function CreatorsPage() {
   const { locale, t } = useLocale();
-  const href = buildMailto(CONTACT_EMAIL, t.creatorsPage.emailSubject, t.creatorsPage.emailBody);
+  const href = buildMailto(CONTACT_RECIPIENTS, t.creatorsPage.emailSubject, t.creatorsPage.emailBody);
 
   return (
     <>

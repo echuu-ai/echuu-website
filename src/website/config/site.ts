@@ -23,15 +23,12 @@ export const BETA_SIGNUP_ENDPOINT: string | null =
 export const FEEDBACK_ENDPOINT: string | null =
   (import.meta.env.VITE_FEEDBACK_ENDPOINT as string | undefined) ?? null;
 
-/** app 共用配置中的默认联系邮箱。 */
-export const CONTACT_EMAIL = 'cory@anngel.live';
-
-/** Notion 另列的商务联系地址，来源不同，保留记录，不随机轮换。 */
-export const BUSINESS_EMAIL_NOTE = {
-  address: 'cory958014884@gmail.com',
-  source: 'Notion Beta 文档（商务联系）',
-  use: '仅记录来源差异，官网默认不展示。',
-} as const;
+/** 主联系邮箱（官网、法律文档、内测申请展示用）。 */
+export const CONTACT_EMAIL = 'cory@echuu.ai';
+/** 备用联系邮箱（商务 / 兜底，和主邮箱一起列出、一起收信）。 */
+export const CONTACT_EMAIL_ALT = 'cory958014884@gmail.com';
+/** mailto 收件人：两个邮箱都收，避免漏掉内测申请 / 反馈 / 联系。 */
+export const CONTACT_RECIPIENTS = `${CONTACT_EMAIL},${CONTACT_EMAIL_ALT}`;
 
 /** 只列已取得真实地址的社交账号。 */
 export const SOCIAL_LINKS = [

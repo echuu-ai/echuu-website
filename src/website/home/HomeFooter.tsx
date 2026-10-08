@@ -3,7 +3,7 @@ import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
-import { BETA_DOC_URL, CONTACT_EMAIL, LEGAL_DOCS } from '../config/site';
+import { BETA_DOC_URL, CONTACT_EMAIL, CONTACT_EMAIL_ALT, LEGAL_DOCS } from '../config/site';
 import { fill } from '../i18n';
 import { Reveal } from '../components/Reveal';
 import { LoopArt } from '../components/LoopArt';
@@ -67,6 +67,8 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
         <p>
           <span>{h.footer.contact}</span>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          {' · '}
+          <a href={`mailto:${CONTACT_EMAIL_ALT}`}>{CONTACT_EMAIL_ALT}</a>
         </p>
         <Link to={home} className="hv-footer__home"><img src={HOME_ASSETS.logoWhite} alt="Echuu" width={679} height={569} loading="lazy" decoding="async" /></Link>
         <p>

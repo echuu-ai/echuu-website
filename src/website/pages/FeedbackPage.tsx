@@ -4,7 +4,7 @@ import { Head } from '../components/Head';
 import { fill } from '../i18n';
 import { buildMailto, copyText } from '../lib/cta';
 import { trackEvent } from '../lib/googleAnalytics';
-import { CONTACT_EMAIL, FEEDBACK_ENDPOINT } from '../config/site';
+import { CONTACT_RECIPIENTS, FEEDBACK_ENDPOINT } from '../config/site';
 
 const MAX = 1200;
 
@@ -68,7 +68,7 @@ export function FeedbackPage() {
               if (!validate()) return;
               trackEvent('feedback_submitted', { category, method: 'email' });
               window.location.href = buildMailto(
-                CONTACT_EMAIL,
+                CONTACT_RECIPIENTS,
                 `[Echuu] ${categoryLabel}`,
                 composed,
               );

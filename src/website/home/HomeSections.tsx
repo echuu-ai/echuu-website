@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState, type RefObjec
 import { Clapperboard, MessagesSquare, MicVocal, type LucideIcon } from 'lucide-react';
 import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
-import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_EMAIL } from '../config/site';
+import { INTRO_VIDEO, LEGAL_DOCS, CONTACT_RECIPIENTS } from '../config/site';
 import { buildMailto } from '../lib/cta';
 import { VrmGuide } from '../components/VrmGuide';
 import { Reveal } from '../components/Reveal';
@@ -306,7 +306,7 @@ const MODE_ICONS: Record<string, LucideIcon> = { reaction: Clapperboard, song: M
 export function CreatorsSection() {
   const { h } = useHomeDict();
   const [title1, title2] = h.creators.title.split('\n');
-  const partner = buildMailto(CONTACT_EMAIL, h.beta.partnerSubject, h.beta.partnerBody);
+  const partner = buildMailto(CONTACT_RECIPIENTS, h.beta.partnerSubject, h.beta.partnerBody);
   return (
     <section className="hv-section hv-creators" id="creators" aria-labelledby="hv-creators-title">
       <div className="hv-creators__grid">
