@@ -1,7 +1,7 @@
 # 内测码兑换：一次性配置清单（Cory 操作）
 
-兑换逻辑已经做好了:Vercel 函数 [`api/redeem.ts`](../api/redeem.ts) + [`api/_lib.ts`](../api/_lib.ts),和官网同源、无 CORS、前端零改动。
-你只需配好下面 4 步,兑换就能跑。Sheet 已确定:`1xGpZ_7AVomTEf67T0xGDt5BpD2Wz2JNdQ9yOUKAbUac`。
+兑换逻辑已经做好了:单文件 Vercel 函数 [`api/redeem.ts`](../api/redeem.ts),和官网同源、无 CORS、前端零改动。
+你只需配好下面 4 步,兑换就能跑。Sheet 已确定:`1niAHTwdYP_yzdO55C1bgyEmNO8hiZMBeREWGOsUl-Lw`。
 
 ## 1. 建 Codes 表(在你的 Google Sheet 里)
 
@@ -27,7 +27,7 @@
 
 | 变量 | 值 | 作用域 |
 |---|---|---|
-| `BETA_SHEET_ID` | `1xGpZ_7AVomTEf67T0xGDt5BpD2Wz2JNdQ9yOUKAbUac` | Production |
+| `BETA_SHEET_ID` | `1niAHTwdYP_yzdO55C1bgyEmNO8hiZMBeREWGOsUl-Lw` | Production |
 | `GOOGLE_SA_EMAIL` | 服务账号邮箱(第 2 步) | Production |
 | `GOOGLE_SA_PRIVATE_KEY` | JSON 里 `"private_key"` 的值,**连同里面的 `\n` 一起原样粘贴** | Production |
 | `PRODUCT_ORIGIN` | `https://echuu.live` | Production |
