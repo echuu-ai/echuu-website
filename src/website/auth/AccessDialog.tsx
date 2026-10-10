@@ -86,9 +86,11 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
             <div className="echuu-access__body">
               <p role="status">{c.unavailable}</p>
               <p>{t.apply.mailNote}</p>
-              <a className="echuu-access__submit" href={mailHref}
-                onClick={() => trackEvent('access_email_fallback', { mode: invite ? 'invite' : 'signup' })}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
-              <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> · <a href={`mailto:${CONTACT_EMAIL_ALT}`}>{CONTACT_EMAIL_ALT}</a></p>
+              <div className="echuu-access__actions">
+                <a className="echuu-access__submit" href={mailHref}
+                  onClick={() => trackEvent('access_email_fallback', { mode: invite ? 'invite' : 'signup' })}>{t.apply.ctaEmail}<ArrowRight size={18} /></a>
+                <p className="echuu-access__contact"><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> · <a href={`mailto:${CONTACT_EMAIL_ALT}`}>{CONTACT_EMAIL_ALT}</a></p>
+              </div>
             </div>
           ) : <>
             <form onSubmit={submit} className="echuu-access__form echuu-access__body">

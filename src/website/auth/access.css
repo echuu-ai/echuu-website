@@ -60,7 +60,7 @@
 .echuu-access__submit {
   width: 100%; height: 48px; display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap;
   border: 0; border-radius: 10px; background: #fff; color: #0a2435; font-weight: 650 !important; font-size: 15px;
-  transition: filter .15s, opacity .15s;
+  text-decoration: none; transition: filter .15s, opacity .15s;
 }
 .echuu-access__submit:hover:not(:disabled) { filter: brightness(.94); }
 .echuu-access__submit:disabled { cursor: not-allowed; opacity: .5; }
@@ -93,4 +93,6 @@
 @supports not (backdrop-filter: blur(1px)) { .echuu-access__glass { background: rgba(10, 36, 53, .92); } }
 .echuu-access__body > p { line-height: 1.65; }
 .echuu-access__body > p a { color: inherit; text-underline-offset: 4px; }
-.echuu-access__body > a.echuu-access__submit { text-decoration: none; margin: 18px 0; }
+/* 未开放时的邮件兜底：联系邮箱一行，跟主按钮一起贴在底部 */
+.echuu-access__contact { margin: 0; text-align: center; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, .55); }
+.echuu-access__contact a { color: #fff; font-weight: 550; text-underline-offset: 4px; }
