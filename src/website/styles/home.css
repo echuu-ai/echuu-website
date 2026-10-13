@@ -1345,3 +1345,23 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   .echuu-website .hv .hv-steps__head :is(.hv-h2, .hv-lede) { text-align: center; }
   .echuu-website .hv .hv-feature { padding-bottom: var(--section-y); }
 }
+
+/* ===== 栅格（2026-10-13，对标 Awwwards / Webby 获奖站：12 列 + 统一外边距） =====
+ * 首页本来就有一套隐含栅格：内容区 --hv-shell = min(1360px, 100% - 32px)，1440 宽时左右各 40px；
+ * 博客三张卡片正好落在 12 列、栏间距 32px 的第 1 / 5 / 9 列。这里把它写成明确规则，并把偏离的区块拉回列线。
+ * 只管桌面（≥ 1024px）；首屏（Figma 精确摆位）、功能卡与直播模式（出血轮播）、居中标题不套栅格。 */
+.echuu-website .hv { --grid-cols: 12; --grid-gutter: 32px; }
+@media (min-width: 1024px) {
+  /* 三步：截图占 1–7 列，文字占 8–12 列（原来按 1.52fr / 1fr 自由分，文字左边落在两列之间） */
+  .echuu-website .hv .hv-steps__item { grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); }
+  .echuu-website .hv .hv-steps__item > :first-child { grid-column: 1 / span 7; }
+  .echuu-website .hv .hv-steps__item > :last-child { grid-column: 8 / -1; }
+  /* 直播间体验：标题去掉 2% 内缩，和其他区块一样贴内容区左边 */
+  .echuu-website .hv .hv-feature__head { padding-left: 0; }
+  /* 创作者：按钮组右边和上方标题对齐到内容区右边（原来多缩进 15px） */
+  .echuu-website .hv .hv-creators__actions { margin-right: 0; }
+  /* 页脚：五栏各占 2 列，从内容区左边起排；底栏去掉 2% 内缩 */
+  .echuu-website .hv .hv-footer__grid { grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); justify-content: stretch; padding-inline: 0; }
+  .echuu-website .hv .hv-footer__col { grid-column: span 2; }
+  .echuu-website .hv .hv-footer__bottom { padding-inline: 0; }
+}
