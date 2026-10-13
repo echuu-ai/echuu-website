@@ -193,12 +193,20 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     console.warn('[website-opening] 3D stage failed, using stills', error);
     fallbackToStill();
   }, [fallbackToStill]);
+  // 只累计页面可见的时间：后台标签页会暂停渲染帧，3D 根本没机会初始化，
+  // 不能让用户在新标签页后台打开、25 s 后切回来就看到被降级的静态分镜
   useEffect(() => {
     if (mode !== '3d') return;
-    const timer = window.setTimeout(() => {
-      if (!clock.ready) fallbackToStill();
-    }, 25000);
-    return () => window.clearTimeout(timer);
+    let visibleMs = 0;
+    let last = performance.now();
+    const timer = window.setInterval(() => {
+      const now = performance.now();
+      if (document.visibilityState === 'visible') visibleMs += now - last;
+      last = now;
+      if (clock.ready) { window.clearInterval(timer); return; }
+      if (visibleMs >= 25000) { window.clearInterval(timer); fallbackToStill(); }
+    }, 500);
+    return () => window.clearInterval(timer);
   }, [clock, fallbackToStill, mode]);
 
   // 低频轮询时钟推导阶段；逐帧更新只发生在 3D 场景与 CSS 过渡里

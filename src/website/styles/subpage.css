@@ -72,3 +72,9 @@
   /* 博客正文：纸面内 8 列里居中的 6 列 = 整页第 4–9 列（1440 宽时 664px，舒适阅读宽度） */
   .echuu-website .subpage-sheet .blog-post__shell { width: calc((100% + 32px) * 0.75 - 32px); max-width: none; margin-inline: auto; }
 }
+
+/* 触屏点击区域 ≥ 44px：博客卡片标题、「阅读全文」、文章页分类链接只扩点击范围，不改外观（同 home.css 触屏块） */
+@media (pointer: coarse) {
+  .echuu-website :is(.blog-card__title a, .blog-card__more, .blog-post__meta a) { position: relative; }
+  .echuu-website :is(.blog-card__title a, .blog-card__more, .blog-post__meta a)::after { content: ''; position: absolute; inset: -12px -4px; }
+}
