@@ -145,6 +145,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   -webkit-mask-image: linear-gradient(#000 58%, transparent 100%);
   mask-image: linear-gradient(#000 58%, transparent 100%);
 }
+/* 提前跳过时盖在 3D 上的定格海报：模型就绪、画面跳到定格后淡出 */
+.echuu-website .hv-stage__still[data-poster-hidden] { opacity: 0; pointer-events: none; transition-duration: 0.9s; }
 
 /* --- 开场 draw：黑场里的笔记本纸（Figma Opening-animation-01，1440×1024 画框） --- */
 .echuu-website .hv-paper {

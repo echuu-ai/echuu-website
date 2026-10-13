@@ -124,6 +124,9 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
   const hole = useRef<HoleRect>({ x: 0, y: 0, w: 0, h: 0, open: false, reveal: 0, border: 0 });
   const paperArt = useRef<HTMLCanvasElement | null>(null);
   const [pendingWake, setPendingWake] = useState(false);
+  // 模型还没就绪也能跳过：先进首屏，3D 的位置放定格海报图；模型在后台加载完后直接跳到定格、海报淡出（不降级成静态分镜）
+  const skippedEarly = useRef(false);
+  const [poster, setPoster] = useState(false);
   // 3D 就绪后从睡姿拍出的铅笔稿 + 画翅膀引导：DOM 纸换上同一张线稿
   const [sketch, setSketch] = useState<{ strokes: SketchStroke[]; guide: string } | null>(null);
   const handleSketch = useCallback((next: SketchOutline) => {
@@ -204,6 +207,8 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     const params = new URLSearchParams(window.location.search);
     const hold = import.meta.env.DEV && params.has('ophold') ? Number(params.get('ophold')) : NaN;
     const tick = () => {
+      // 提前跳过、模型还在加载：停在首屏，不被「未就绪 = loading」拉回开场
+      if (skippedEarly.current && !clock.ready) return;
       const now = performance.now();
       const t = Number.isFinite(hold) && clock.ready ? hold : openingTime(clock, now);
       const next = phaseAt(t, clock.ready, openingStarted(clock));
@@ -283,14 +288,23 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
     return () => observer.disconnect();
   }, []);
 
-  // 开场提供「跳过」按钮（声音键旁，Cory 2026-10-08）+ Esc 无障碍退出口；跳过只选最终姿态，3D 未就绪时不降级
+  // 开场提供「跳过」按钮（声音键旁，Cory 2026-10-08）+ Esc 无障碍退出口；随时可按，跳过只选最终姿态，3D 未就绪时也不降级
   const skip = useCallback(() => {
     setPendingWake(false);
-    // Skipping selects the final pose; it must never downgrade a loading 3D stage.
-    if (!clock.ready) return;
+    if (!clock.ready) {
+      skippedEarly.current = true;
+      setPoster(true);
+      markOpeningPainted(); // 不再等开场那张纸，立刻开始加载 3D
+      setPhase('hero');
+      return;
+    }
     skipOpening(clock, performance.now());
     setPhase('hero');
   }, [clock]);
+  // 提前跳过后模型就绪：时钟直接跳到定格
+  useEffect(() => {
+    if (ready && skippedEarly.current) skipOpening(clock, performance.now());
+  }, [clock, ready]);
 
   useEffect(() => {
     if (phase === 'hero') return;
@@ -324,6 +338,17 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             <OpeningStage3D clock={clock} onReady={handleReady} onFail={handleFail} running={running || showOpening} adaptive={phase === 'hero'} hole={hole} paperArt={paperArt} onSketch={handleSketch} />
           </Suspense>
         ) : null}
+        {mode === '3d' && poster ? (
+          <img
+            className="hv-stage__still"
+            data-poster-hidden={ready || undefined}
+            src={HOME_ASSETS.heroShot}
+            alt=""
+            width={1076}
+            height={782}
+            decoding="async"
+          />
+        ) : null}
         {stageStill ? (
           <img
             className="hv-stage__still"
@@ -343,7 +368,6 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             type="button"
             className="hv-opening-controls__skip"
             onClick={skip}
-            disabled={!ready}
           >
             {h.opening.skip}
           </button>

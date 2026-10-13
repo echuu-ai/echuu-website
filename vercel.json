@@ -6,7 +6,23 @@
     {
       "src": "^/website/((?:zh|en|ja|ko)(?:/[^.]*[^/.])?)$",
       "status": 308,
-      "headers": { "Location": "/website/$1/" }
+      "headers": {
+        "Location": "/website/$1/"
+      }
+    },
+    {
+      "src": "^/app-build/(.*)$",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "^/(assets|website|fonts)/(.*)\\.(vrm|vrma|glb|gltf|hdr|webp|png|jpe?g|avif|svg|webm|mp4|mp3|ogg|woff2?|ttf|otf)$",
+      "headers": {
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800"
+      },
+      "continue": true
     },
     {
       "handle": "filesystem"
