@@ -52,3 +52,8 @@
   .echuu-website .team-chrome .team-heading { padding-top: 36px; }
 }
 .echuu-website[data-page='team'] .team-glass { height: 100%; --glass-paper: #effaff; --glass-ink: #123b59; }
+
+/* 团队页没有纸面：内容区占首页 12 列栅格的第 2–11 列，和其他子页面纸面边线一致（见 subpage.css 栅格块） */
+@media (min-width: 1024px) {
+  .echuu-website[data-page='team'] { --shell: calc(min(1360px, 100% - 32px) - (min(1360px, 100% - 32px) + 32px) / 6); }
+}

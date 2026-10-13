@@ -6,6 +6,7 @@ import { useI18nStore } from '../hooks/use-i18n';
 import { useWebsiteLocation, WEBSITE_BASE } from './router';
 import { SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
 import { useSmoothScroll } from './lib/useSmoothScroll';
+import { findOrphans, watchOrphans } from './lib/orphanGuard';
 import { HomeV2 } from './home/HomeV2';
 import { TeamChrome } from './home/TeamChrome';
 import { SubpageChrome } from './home/SubpageChrome';
@@ -94,6 +95,10 @@ export default function EchuuWebsite() {
   usePrefetchPages();
   useSmoothScroll(page);
   useEffect(() => { if (page === 'home') return armSummerAmbience(); }, [page]);
+  // 防孤字：任何一行不能只剩一个词或「一个字 + 标点」。对话框、菜单是 portal 到 body 的，所以盯 body（见 lib/orphanGuard.ts）
+  useEffect(() => watchOrphans(document.body), []);
+  // 开发环境：控制台跑 window.__findOrphans() 列出当前页面的孤字（改文案、改版式后必查，四语 × 1440 / 1024 / 390）
+  useEffect(() => { if (import.meta.env.DEV) (window as Window & { __findOrphans?: typeof findOrphans }).__findOrphans = findOrphans; }, []);
 
   // 产品 app 的全局样式给 body 设了 overflow: hidden（直播舞台不滚动）；官网是普通长页，必须能滚
   useEffect(() => {

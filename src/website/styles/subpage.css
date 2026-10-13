@@ -55,3 +55,20 @@
 @media (max-width: 600px) {
   .echuu-website .subpage-sheet { width: calc(100% - 24px); border-radius: 22px; --shell: calc(100% - 36px); }
 }
+
+/* ===== 子页面对齐首页 12 列栅格（≥ 1024px，见 docs/website-ui-spec.md §2.5） =====
+ * 首页内容区 S = min(1360px, 100% − 32px)，12 列、栏间距 32px，列距（一列 + 一个栏间距）P = (S + 32px) / 12。
+ * 纸面占第 2–11 列、内边距 P → 纸面边落在第 2 / 11 列边线，内容落在第 3 / 10 列边线。
+ * 百分比只写在相对整页宽度的 width / padding 上；纸面里面直接用 100%，不把含百分比的变量往里传（会相对错对象）。 */
+@media (min-width: 1024px) {
+  .echuu-website {
+    --shell: calc(min(1360px, 100% - 32px) - (min(1360px, 100% - 32px) + 32px) / 6);
+  }
+  .echuu-website .subpage-sheet {
+    width: calc(min(1360px, 100% - 32px) - (min(1360px, 100% - 32px) + 32px) / 6);
+    padding-inline: calc((min(1360px, 100% - 32px) + 32px) / 12);
+    --shell: 100%;
+  }
+  /* 博客正文：纸面内 8 列里居中的 6 列 = 整页第 4–9 列（1440 宽时 664px，舒适阅读宽度） */
+  .echuu-website .subpage-sheet .blog-post__shell { width: calc((100% + 32px) * 0.75 - 32px); max-width: none; margin-inline: auto; }
+}

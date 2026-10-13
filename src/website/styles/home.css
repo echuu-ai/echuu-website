@@ -1,5 +1,13 @@
 /* 蒲瓜纤云宋（原创可商用，本机完整版 19 MB）按官网文案子集为 144 KB woff2；
    之前 app 的 599 字形子集缺 83 个所需字形，首页不再用它。 */
+/* 开场纸面上的铅笔手写提示语：Reenie Beanie（OFL，public/fonts/reenie-beanie-OFL.txt），自托管拉丁版 18 KB。
+   原来从 Google Fonts 按需加载，中国大陆打不开会退成别的手写体 */
+@font-face {
+  font-family: 'Reenie Beanie';
+  src: url('/fonts/reenie-beanie-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
 @font-face {
   font-family: 'PuguaXianyunsong Home';
   src: url('/fonts/pugua-qianyun-song-home.woff2?v=21976deea8') format('woff2');
@@ -1365,3 +1373,8 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   .echuu-website .hv .hv-footer__col { grid-column: span 2; }
   .echuu-website .hv .hv-footer__bottom { padding-inline: 0; }
 }
+
+/* ===== 防孤字（硬性规定，见 docs/website-ui-spec.md §1） =====
+ * 文字里的小标签必须是普通行内元素：inline-block / inline-flex 是不可拆的「原子盒子」，
+ * 零宽连接符管不到它前面的断行点，标签会被单独挤到下一行（手机上「直播间体验」后面的 LIVE 就是这样）。 */
+.echuu-website .hv .hv-live { display: inline; line-height: 1; white-space: nowrap; }
