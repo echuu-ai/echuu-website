@@ -123,7 +123,7 @@
   font-size: clamp(20px, 1.9vw, 28px);
   line-height: 1.34;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 300;
   max-width: 26ch;
 }
 .echuu-website .hero__lede {
@@ -202,7 +202,7 @@
 }
 .echuu-website .steps__item[data-active='true'] { border-color: var(--accent); background: var(--accent-tint); }
 .echuu-website .steps__no { font-size: 13px; letter-spacing: 0.12em; color: var(--ink-faint); font-weight: 700; }
-.echuu-website .steps__title { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .steps__title { font-family: var(--font-ui); font-size: 19px; font-weight: 600; }
 .echuu-website .steps__body { color: var(--ink-soft); font-size: 15px; }
 .echuu-website .steps__figure {
   border: 1px solid var(--line-strong); border-radius: var(--radius-l);
@@ -224,7 +224,7 @@
   border: 1px solid var(--line); border-radius: var(--radius-l);
   background: var(--white); padding: 22px; display: grid; gap: 10px; align-content: start;
 }
-.echuu-website .feature-card__title { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .feature-card__title { font-family: var(--font-ui); font-size: 19px; font-weight: 600; }
 .echuu-website .feature-card__body { color: var(--ink-soft); font-size: 15px; }
 .echuu-website .feature-card__media {
   border-radius: var(--radius-m); border: 1px solid var(--line);
@@ -249,7 +249,7 @@
 }
 .echuu-website .mode-card__poster img { width: 46px; opacity: 0.6; }
 .echuu-website .mode-card--dev .mode-card__poster { background: linear-gradient(160deg, #eef0f8 0%, #ffffff 76%); }
-.echuu-website .mode-card__name { font-family: var(--font-heading); font-size: 19px; font-weight: 600; }
+.echuu-website .mode-card__name { font-family: var(--font-ui); font-size: 19px; font-weight: 600; }
 .echuu-website .mode-card__body { color: var(--ink-soft); font-size: 15px; }
 @media (max-width: 860px) {
   .echuu-website .mode-grid { grid-template-columns: 1fr; }
@@ -268,7 +268,7 @@
 }
 .echuu-website .gallery-card__media img { width: 40px; opacity: 0.7; }
 .echuu-website .gallery-card__meta { padding: 16px 18px 18px; display: grid; gap: 8px; }
-.echuu-website .gallery-card__name { font-family: var(--font-heading); font-size: 17px; font-weight: 600; }
+.echuu-website .gallery-card__name { font-family: var(--font-ui); font-size: 17px; font-weight: 600; }
 /* 署名始终可见，不靠 hover */
 .echuu-website .gallery-card__rows { display: grid; gap: 4px; font-size: 14px; color: var(--ink-soft); }
 .echuu-website .gallery-card__rows dt { color: var(--ink-faint); font-size: 13px; }
@@ -291,7 +291,7 @@
 }
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .echuu-website .modal__head { display: flex; align-items: flex-start; gap: 16px; justify-content: space-between; }
-.echuu-website .modal__title { font-family: var(--font-heading); font-size: 21px; font-weight: 600; }
+.echuu-website .modal__title { font-family: var(--font-ui); font-size: 21px; font-weight: 600; }
 .echuu-website .modal__body { margin-top: 16px; display: grid; gap: 14px; }
 .echuu-website .modal dl { display: grid; gap: 6px; margin: 0; font-size: 15px; }
 .echuu-website .modal dt { color: var(--ink-faint); font-size: 13px; }
@@ -301,7 +301,7 @@
 .echuu-website .creators-block { display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
 .echuu-website .creators-manifesto {
   font-family: var(--font-heading);
-  font-size: clamp(22px, 2.8vw, 30px); font-weight: 600; line-height: 1.35;
+  font-size: clamp(22px, 2.8vw, 30px); font-weight: 300; line-height: 1.35;
 }
 .echuu-website .creators-art {
   border: 1px solid var(--line-strong); border-radius: var(--radius-l);
@@ -390,7 +390,7 @@
 .echuu-website .team-card__avatar {
   width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
   background: linear-gradient(160deg, var(--sky-pale), var(--sky)); color: var(--accent-strong);
-  font-family: var(--font-heading); font-weight: 600; font-size: 22px;
+  font-family: var(--font-ui); font-weight: 600; font-size: 22px;
 }
 .echuu-website .team-card__name { font-size: 18px; }
 .echuu-website .team-card__role { margin-top: 2px; font-size: 14px; color: var(--accent); font-weight: 600; }

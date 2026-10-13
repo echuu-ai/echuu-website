@@ -46,8 +46,6 @@
   font-size: clamp(34px, 5vw, 60px);
 }
 .echuu-website[data-locale='en'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: var(--font-brand); }
-.echuu-website[data-locale='ja'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: 'Shippori Mincho', serif; font-weight: 700; }
-.echuu-website[data-locale='ko'] .subpage-sheet :is(.page-head h1, .blog-post__title, .section > .shell > h1.section__title) { font-family: 'Maru Buri', serif; font-weight: 600; }
 .echuu-website .subpage-sheet .page-head { padding-top: clamp(28px, 4vw, 48px); }
 
 @media (max-width: 900px) {

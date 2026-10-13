@@ -3,10 +3,8 @@
 .echuu-website[data-page='team'] .team-world { position: fixed; inset: -40px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, #1268a529, #07508b80), var(--team-sky) center / cover; filter: blur(22px) saturate(.9); }
 .echuu-website[data-page='team'] .team-page { padding-bottom: 100px; }
 .echuu-website[data-page='team'] .team-heading { position: relative; padding: clamp(64px, 9vw, 130px) 0 clamp(64px, 8vw, 110px); }
-.echuu-website[data-page='team'] .team-heading h1 { color: white; font-family: 'PuguaXianyunsong Home', 'Songti SC', serif; font-weight: 200; font-size: clamp(66px, 9vw, 124px); letter-spacing: -.045em; line-height: 1.15; -webkit-text-stroke: 1pt white; paint-order: stroke fill; }
+.echuu-website[data-page='team'] .team-heading h1 { color: white; font-family: 'PuguaXianyunsong Home', 'Songti SC', 'AppleMyungjo', 'Batang', serif; font-weight: 200; font-size: clamp(66px, 9vw, 124px); letter-spacing: -.045em; line-height: 1.15; -webkit-text-stroke: 1pt white; paint-order: stroke fill; }
 .echuu-website[data-locale='en'] .team-heading h1 { font-family: var(--font-brand); -webkit-text-stroke: .25px white; }
-.echuu-website[data-locale='ja'] .team-heading h1 { font-family: 'Shippori Mincho', serif; font-weight: 700; -webkit-text-stroke: .2px white; }
-.echuu-website[data-locale='ko'] .team-heading h1 { font-family: 'Maru Buri', serif; font-weight: 600; -webkit-text-stroke: 0; }
 .echuu-website[data-page='team'] .team-heading > p { margin-top: 24px; max-width: 32em; color: #fff; font-size: clamp(17px, 2vw, 23px); line-height: 1.65; }
 .echuu-website[data-page='team'] .team-section { margin-bottom: 64px; }
 .echuu-website[data-page='team'] .team-section__title { color: #fff; font: 500 clamp(20px, 2.3vw, 28px)/1.4 var(--font-ui); margin-bottom: 24px; letter-spacing: .035em; }

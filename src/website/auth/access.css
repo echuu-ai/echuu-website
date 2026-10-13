@@ -32,11 +32,9 @@
 /* 头部：标题用蒲瓜纤云宋（与首页 Slogan 同一套），居中；细笔画加一点同色描边 */
 .echuu-access__title {
   margin: 0; padding: 0 40px; text-align: center; text-wrap: balance; word-break: keep-all; overflow-wrap: anywhere;
-  font-family: 'PuguaXianyunsong Home', 'Noto Serif SC', 'Songti SC', serif; font-weight: 200; font-size: 26px; line-height: 1.3;
+  font-family: 'PuguaXianyunsong Home', 'Songti SC', 'AppleMyungjo', 'Batang', serif; font-weight: 200; font-size: 26px; line-height: 1.3;
   letter-spacing: -.02em; -webkit-text-stroke: .03em currentColor;
 }
-.echuu-access:lang(ja) .echuu-access__title { font-family: 'Shippori Mincho', 'Noto Serif SC', serif; font-weight: 500; -webkit-text-stroke: 0; }
-.echuu-access:lang(ko) .echuu-access__title { font-family: 'Maru Buri', 'Noto Serif SC', serif; font-weight: 600; -webkit-text-stroke: 0; }
 .echuu-access__description { margin: 10px 0 0; text-align: center; text-wrap: balance; font-size: 14px; line-height: 1.7; color: rgba(255, 255, 255, .74); }
 
 /* 中间内容：占满剩余高度，主按钮被推到底部 */

@@ -22,7 +22,8 @@
   --hv-yellow: #fffa00;
   --hv-ink: #616161;
   --hv-shell: min(1360px, 100% - 32px);
-  --hv-serif: 'PuguaXianyunsong Home', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+  /* 标题只用蒲瓜纤云宋：中日英文案全在子集里；蒲瓜没有谚文，韩文字形逐字退到系统明朝体（不下载字体） */
+  --hv-serif: 'PuguaXianyunsong Home', 'Songti SC', 'STSong', 'AppleMyungjo', 'Batang', serif;
   --hv-sans: var(--echuu-sans);
   /* Figma 用 KyivType Sans（仓库无授权文件），回退到同为无衬线的 42dot Sans 细体 */
   --hv-display: 'KyivType Sans', var(--echuu-sans);
@@ -50,9 +51,6 @@
   background: #000;
   overflow-x: clip;
 }
-.echuu-website[data-locale='ja'] .hv { --hv-serif: 'Shippori Mincho', 'Noto Serif SC', serif; }
-.echuu-website[data-locale='ko'] .hv { --hv-serif: 'Maru Buri', 'Noto Serif SC', serif; }
-.echuu-website[data-locale='en'] .hv { --hv-serif: 'PuguaXianyunsong Home', 'Iowan Old Style', serif; }
 
 html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 
@@ -666,7 +664,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-steps__girl { width: clamp(52px, 6vw, 88px); height: auto; flex: none; }
 .echuu-website .hv-steps__three {
   position: absolute; right: 2%; top: 30%; z-index: 0; pointer-events: none;
-  font-family: 'Agu Display', var(--hv-serif); font-weight: 400;
+  font-family: var(--hv-serif); font-weight: 300;
   font-size: clamp(220px, 62vw, 940px); line-height: 1; letter-spacing: -0.1em;
   color: rgba(255, 255, 255, 0.34); mix-blend-mode: soft-light;
 }
@@ -824,7 +822,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   display: grid; place-items: center; color: var(--hv-blue-deep);
 }
 .echuu-website .hv-mcard__avatar svg { width: 26px; height: 26px; }
-.echuu-website .hv-mcard__name { font-family: 'Inter', var(--hv-sans); font-size: var(--t-h2); color: #6b6b6b; }
+.echuu-website .hv-mcard__name { font-family: var(--hv-sans); font-size: var(--t-h2); color: #6b6b6b; }
 .echuu-website .hv-mcard__media { width: 100%; aspect-ratio: 476 / 640; object-fit: cover; display: block; }
 .echuu-website .hv-mcard__actions { display: flex; align-items: center; gap: 18px; padding: 14px 16px; background: rgba(204, 253, 253, 0.9); }
 .echuu-website .hv-mcard__actions img { width: 30px; height: 30px; filter: drop-shadow(0 1px 2px rgba(0, 60, 120, 0.45)); }

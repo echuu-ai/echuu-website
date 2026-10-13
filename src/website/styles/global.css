@@ -4,11 +4,11 @@
    ========================================================================= */
 
 /* --- 字体 -----------------------------------------------------------------
-   全部复用 app 在 `src/styles/ui-typography.css` 里的 @font-face：
-   Inter / PuguaQianyunSong / Shippori Mincho / Maru Buri（英文标题也用蒲瓜）。
-   官网不再重复声明，字体文件也不再复制一份。
-
-   注意：Maru Buri 未附许可文件。发布闸门会拦截，见 docs/website/OPEN_ITEMS.md。
+   全站两种字体（2026-10-13 定）：
+   - 标题：蒲瓜纤云宋（子集 public/fonts/pugua-qianyun-song-home.woff2，覆盖中日英全部文案；加了新文案跑 scripts/subset-pugua.py）。
+     蒲瓜没有谚文，韩文标题的谚文逐字退到系统明朝体。
+   - 正文：42dot Sans 拉丁精简版 + 各语言系统字体（苹方 / 冬青黑 / 微软雅黑 / Apple SD Gothic），不下载中日韩字体。
+   不再用 Inter、Shippori Mincho、Maru Buri、Agu Display，也不依赖 Google Fonts（大陆访问不了）。
    -------------------------------------------------------------------------- */
 
 .echuu-website {
@@ -40,21 +40,13 @@
 
   /* 品牌英文 tagline 四语都用英文品牌字体，不套 CJK */
   --font-brand: 'PuguaXianyunsong Home', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'PingFang SC', 'Hiragino Sans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
-  /* 本地语言标题复用 app 的 --font-brand-title（定义在 src/styles/ui-typography.css，
-     按 html:lang 切换）。中文见下面的例外。 */
-  --font-heading: var(--font-brand-title, var(--font-ui));
+  /* 正文：拉丁走 42dot 精简版，中日韩走各语言系统字体（--echuu-sans，定义在 src/styles/ui-typography.css） */
+  --font-ui: var(--echuu-sans);
+  /* 标题只用蒲瓜纤云宋：子集已覆盖中日英全部文案；蒲瓜没有谚文，韩文字形逐字退到系统明朝体。
+     蒲瓜只有细字重，用在标题上写 300，别写 600 以上（会被浏览器假加粗） */
+  --font-heading: 'PuguaXianyunsong Home', 'Songti SC', 'STSong', 'AppleMyungjo', 'Batang', serif;
 
   --step-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-/* 中文是唯一例外：app 的 --font-brand-title 首选蒲瓜纤云宋，但那是 599 字形的子集，
-   不覆盖本站新文案（实测缺「三/两/做/哪/测/研/讲/谁/鱼/鸦」等，见 docs/website/source-audit.md）。
-   混排会一半蒲瓜一半回退，所以中文标题暂用系统字体，等重新取子集后再切回。 */
-.echuu-website[data-locale='zh'] {
-  --font-heading: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Source Han Sans SC',
-    'Microsoft YaHei', sans-serif;
 }
 
 /* 全部收敛在 .echuu-website 之下，不影响产品 app 的全局样式 */
@@ -66,6 +58,8 @@
   background: var(--page);
   color: var(--ink);
   font-family: var(--font-ui);
+  /* 正文字重 400（对标获奖站正文全部 ≥ 400）；body 上继承来的系统细体 300 压在天空和高光上发虚 */
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
@@ -89,9 +83,11 @@
   color: var(--ink);
   line-height: 1.25;
   margin: 0;
-  font-weight: 600;
+  font-weight: 300;
   text-wrap: balance;
 }
+/* 卡片名、弹窗标题这类小标题（h3 / h4）归正文字体加粗：细衬线在 17–22px 的白底上发虚 */
+.echuu-website h3, .echuu-website h4 { font-family: var(--font-ui); font-weight: 600; }
 
 .echuu-website p { margin: 0; }
 
