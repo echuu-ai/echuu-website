@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TUNE_PANEL_CSS } from './tunePanelStyles';
 import { TuneTabs } from './TuneTabs';
+import { TuneRow } from './TuneRow';
 import { useAppColorGrade } from '../../components/AppColorGrade';
 import { DEFAULT_APP_COLOR, type AppColorGradeState } from '../../lib/app-color-grade';
 import { SCENE_DEFAULTS, SCENE_RANGES, resetSceneTuning, setSceneTuning, useSceneTuning, type SceneTuning } from './three/sceneTuning';
@@ -18,17 +19,6 @@ const GRADE_RANGES: Record<NumericGradeKey, { min: number; max: number; step: nu
   curveB: { min: 0, max: 2, step: 0.02, label: '蓝曲线' },
 };
 
-function Row({ label, value, min, max, step, changed, onChange }: {
-  label: string; value: number; min: number; max: number; step: number; changed: boolean; onChange: (value: number) => void;
-}) {
-  return (
-    <label className="seam-tune__row">
-      <span className="seam-tune__label" data-changed={changed || undefined}>{label}</span>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
-      <input type="number" className="seam-tune__num" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
-    </label>
-  );
-}
 
 /**
  * 开发用：首屏 3D 场景调色面板。只在 dev 且地址带 ?tune=grade 时挂载。
@@ -43,14 +33,14 @@ export default function SceneGradePanel() {
   const grade = (key: NumericGradeKey) => {
     const r = GRADE_RANGES[key];
     return (
-      <Row key={key} {...r} value={color[key]} changed={color[key] !== DEFAULT_APP_COLOR[key]}
+      <TuneRow key={key} {...r} value={color[key]} changed={color[key] !== DEFAULT_APP_COLOR[key]}
         onChange={(value) => setColor({ ...color, [key]: value } as AppColorGradeState)} />
     );
   };
   const light = (key: keyof SceneTuning) => {
     const r = SCENE_RANGES[key];
     return (
-      <Row key={key} {...r} value={scene[key]} changed={scene[key] !== SCENE_DEFAULTS[key]}
+      <TuneRow key={key} {...r} value={scene[key]} changed={scene[key] !== SCENE_DEFAULTS[key]}
         onChange={(value) => setSceneTuning({ ...scene, [key]: value })} />
     );
   };

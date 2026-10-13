@@ -2,6 +2,7 @@ import { FingertipGlint } from './FingertipGlint';
 import { debutEnvelope } from '../debutHighlight';
 import { SkyEdgeEffect } from './SkyEdgeEffect';
 import { useSceneTuning } from './sceneTuning';
+import { getHeroTuning, heroReadout, useHeroTuning, type HeroTuning } from './heroTuning';
 import { FrostSim, pointerOnAvatar } from './mouseFrost';
 import { armFrostAudio, playFrostBeep, updateFrostAudio } from '../../lib/frostAudio';
 import { INTRO_TOTAL_SECONDS, applyIntroTimeline, attachIntroWire, createIntroCage, createIntroMaterializeUniforms, measureBindHeight, patchIntroMaterialize } from './introMaterialize';
@@ -9,7 +10,7 @@ import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Bloom, DepthOfField, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode, type DepthOfFieldEffect } from 'postprocessing';
-import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMHumanBoneName } from '@pixiv/three-vrm';
+import { VRMLoaderPlugin, VRMUtils, type VRM, type VRMHumanBoneName, type VRMSpringBoneJoint } from '@pixiv/three-vrm';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FlightCanvas } from '../../../components/three/FlightCanvas';
@@ -72,7 +73,8 @@ export type HoleRect = {
 };
 
 /** paper = 3D 纸面中心（开场第一镜）；fold = 第二幕折纸飞机的位置 */
-type Anchor = VRMHumanBoneName | 'origin' | 'world' | 'paper' | 'fold';
+/** eyes：两眼骨骼中点（落在脸的表面，比 head 关节更靠前），模型没有眼睛骨骼时退回 head */
+type Anchor = VRMHumanBoneName | 'origin' | 'world' | 'paper' | 'fold' | 'eyes';
 
 type DofState = Pick<SceneCamera, 'dofEnabled' | 'focusMode' | 'focusDistance' | 'focusRange' | 'blur' | 'target'> & {
   /** 对焦跟着某个锚点走（拉焦用），优先于 target */
@@ -96,14 +98,30 @@ type CameraKey = {
 };
 
 const NO_DOF: DofState = { dofEnabled: false, focusMode: 'target', focusDistance: 4, focusRange: 0.3, blur: 1.4, target: [0, 1, 0] };
+/**
+ * 定格景深的虚化强度 / 范围沿用场景文件；对焦点不用场景文件里的手动距离，而是每帧锁在两眼中点：
+ * 窄屏会把相机往后拉、鼠标会带动机位浮动、定格动作里头会摆，手动距离任何一项变了脸就虚
+ *（对焦范围只有十几厘米）。锁眼睛后在任何屏幕、任何机位下脸都是清楚的，只有伸向镜头的手是虚的。
+ */
 const HERO_DOF: DofState = {
   dofEnabled: HERO_CAMERA.dofEnabled ?? false,
-  focusMode: HERO_CAMERA.focusMode ?? 'target',
+  focusMode: 'target',
   focusDistance: HERO_CAMERA.focusDistance ?? 4,
   focusRange: HERO_CAMERA.focusRange ?? 0.3,
   blur: HERO_CAMERA.blur ?? 1.4,
   target: HERO_CAMERA.target,
+  focusAnchor: 'eyes',
 };
+/** 定格机位单独一份：高度、景深每帧从 heroTuning 同步（正式构建里就是场景文件的值） */
+const HERO_CAM_POS: [number, number, number] = [HERO_CAMERA.position[0], HERO_CAMERA.position[1], HERO_CAMERA.position[2]];
+function syncHeroTuning() {
+  const tune = getHeroTuning();
+  HERO_CAM_POS[1] = tune.camY;
+  HERO_DOF.dofEnabled = (HERO_CAMERA.dofEnabled ?? false) && tune.dof;
+  HERO_DOF.focusRange = tune.focusRange;
+  HERO_DOF.blur = tune.blur;
+  return tune;
+}
 
 /**
  * 相机关键帧。开场分镜相对骨骼世界位置给出（躺下 / 站起构图都跟着角色）；
@@ -150,8 +168,8 @@ const CAMERA_KEYS: CameraKey[] = [
   // 04 定格：场景文件里的相机（含景深）
   // 绕到她右前方再落到定格镜头：直线过去会穿过头发
   { t: OPENING_MOTION.lockStart - 0.25, anchor: 'head', pos: [1.25, 0.2, 0.85], look: 'head', lookOff: [0, -0.05, 0], fov: 32 },
-  { t: OPENING_MOTION.lockStart + 0.9, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
-  { t: OPENING_TOTAL, anchor: 'world', pos: HERO_CAMERA.position, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
+  { t: OPENING_MOTION.lockStart + 0.9, anchor: 'world', pos: HERO_CAM_POS, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
+  { t: OPENING_TOTAL, anchor: 'world', pos: HERO_CAM_POS, look: 'world', lookOff: HERO_CAMERA.target, fov: HERO_CAMERA.fov, dof: HERO_DOF },
 ];
 
 const LOCK_CLIP = HERO_ACTOR?.clips.find((clip) => clip.motionId.includes('spot-target-locked'));
@@ -380,7 +398,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     anchor: new THREE.Vector3(), look: new THREE.Vector3(),
     posA: new THREE.Vector3(), posB: new THREE.Vector3(), lookA: new THREE.Vector3(), lookB: new THREE.Vector3(),
     targetPos: new THREE.Vector3(), targetLook: new THREE.Vector3(), smoothedLook: new THREE.Vector3(),
-    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), snapped: false,
+    up: new THREE.Vector3(0, 1, 0), side: new THREE.Vector3(), eye: new THREE.Vector3(), snapped: false,
   }), []);
 
   // 相机曲线的工作区：每帧把各关键帧解析成世界坐标，再按通道做 Hermite 插值
@@ -398,6 +416,13 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     if (name === 'origin' || name === 'world') return out.set(0, 0, 0);
     if (name === 'paper') return lying.current?.paper ? out.copy(lying.current.paper) : boneWorld('hips', out);
     if (name === 'fold') return lying.current?.foldPoint ? out.copy(lying.current.foldPoint) : boneWorld('chest', out);
+    if (name === 'eyes') {
+      const left = vrm.humanoid?.getRawBoneNode('leftEye');
+      const right = vrm.humanoid?.getRawBoneNode('rightEye');
+      if (!left || !right) return boneWorld('head', out);
+      left.getWorldPosition(out);
+      return out.add(right.getWorldPosition(pool.eye)).multiplyScalar(0.5);
+    }
     const node = vrm.humanoid?.getRawBoneNode(name) ?? vrm.humanoid?.getNormalizedBoneNode(name);
     if (!node) return out.set(0, 1, 0);
     return node.getWorldPosition(out);
@@ -417,6 +442,41 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
   const anchorWorld = (name: Anchor, out: THREE.Vector3) => {
     const smoothed = smoothedAnchors.get(name);
     return smoothed ? out.copy(smoothed) : boneWorld(name, out);
+  };
+
+  /**
+   * 微风：在头发、衣摆弹簧骨骼原有的重力上叠一个水平风力。慢阵风包络 ×（1 + 紊动 × 每节错开相位的噪声），
+   * 再加一点与风向垂直的横向扰动，发丝不会整齐划一地摆。风力为 0 时重力原样还原；减少动态效果时不吹。
+   */
+  const windBase = useMemo(() => new Map<VRMSpringBoneJoint, { dir: THREE.Vector3; power: number; phase: number }>(), []);
+  const windPool = useMemo(() => ({ dir: new THREE.Vector3(), side: new THREE.Vector3(), force: new THREE.Vector3() }), []);
+  const windOff = useMemo(() => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches, []);
+  const applyWind = (time: number, tune: HeroTuning) => {
+    const joints = vrm.springBoneManager?.joints;
+    if (!joints) return;
+    const strength = windOff ? 0 : tune.wind;
+    const yaw = THREE.MathUtils.degToRad(tune.windDir);
+    windPool.dir.set(Math.sin(yaw), 0, Math.cos(yaw));
+    windPool.side.set(windPool.dir.z, 0, -windPool.dir.x);
+    const gust = 0.65 + 0.35 * Math.sin(time * 0.37) * Math.sin(time * 0.11 + 1.3);
+    let index = 0;
+    for (const joint of joints) {
+      let base = windBase.get(joint);
+      if (!base) {
+        base = { dir: joint.settings.gravityDir.clone(), power: joint.settings.gravityPower, phase: index * 0.61 };
+        windBase.set(joint, base);
+      }
+      index += 1;
+      const p = base.phase;
+      const noise = 0.5 * Math.sin(time * 1.7 + p) + 0.3 * Math.sin(time * 3.1 + p * 1.9) + 0.2 * Math.sin(time * 5.3 + p * 0.7);
+      windPool.force.copy(base.dir).multiplyScalar(base.power)
+        .addScaledVector(windPool.dir, strength * gust * (1 + tune.turbulence * noise))
+        .addScaledVector(windPool.side, strength * tune.turbulence * 0.35 * Math.sin(time * 2.3 + p * 1.3));
+      const power = windPool.force.length();
+      joint.settings.gravityPower = power;
+      if (power > 1e-6) joint.settings.gravityDir.copy(windPool.force).divideScalar(power);
+      else joint.settings.gravityDir.copy(base.dir);
+    }
   };
 
   const applyKey = (key: CameraKey, pos: THREE.Vector3, look: THREE.Vector3) => {
@@ -490,6 +550,7 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
     const t = s.holdTime ?? openingTime(clock, now);
     const jumped = s.lastT >= 0 && Math.abs(t - s.lastT) > 1;
     s.lastT = t;
+    const tune = syncHeroTuning();
 
     // 出场：第一次出现时开始；跳过 / 重播（时间跳变）时重新播一次。笼子以出场那一刻的髋部为中心
     if (s.materializeStart < 0 || jumped) {
@@ -535,13 +596,15 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
         manager.setValue(key, value);
       }
     }
+    applyWind(frame.clock.elapsedTime, tune);
     vrm.update(delta);
     vrm.scene.updateMatrixWorld(true);
     if (import.meta.env.DEV && (frame.clock.elapsedTime * 4 | 0) % 2 === 0) {
-      const read = (name: VRMHumanBoneName) => boneWorld(name, pool.anchor).toArray().map((v) => Number(v.toFixed(2)));
+      const read = (name: Anchor) => boneWorld(name, pool.anchor).toArray().map((v) => Number(v.toFixed(2)));
       (window as Window & { __hvOpening?: unknown }).__hvOpening = {
         t: Number(t.toFixed(2)), motion: s.currentKey,
-        hips: read('hips'), head: read('head'), chest: read('chest'),
+        hips: read('hips'), head: read('head'), eyes: read('eyes'), chest: read('chest'),
+        springJoints: vrm.springBoneManager?.joints.size ?? 0,
         leftFoot: read('leftFoot'), rightFoot: read('rightFoot'), rightHand: read('rightHand'), leftHand: read('leftHand'),
         camera: camera.position.toArray().map((v) => Number(v.toFixed(2))),
         headDir: lying.current?.headDir.toArray().map((v) => Number(v.toFixed(3))),
@@ -615,9 +678,19 @@ function OpeningAvatar({ clock, onReady, onFail, cameraState, hole, lying, onSke
       anchorWorld(dofA.focusAnchor ?? dofB.focusAnchor!, pool.lookA);
       anchorWorld(dofB.focusAnchor ?? dofA.focusAnchor!, pool.lookB);
       pool.lookA.lerp(pool.lookB, u);
+      if (dofB === HERO_DOF && tune.focusOffset !== 0) {
+        // 定格：焦点沿视线前后微调（面板「焦点前后」）
+        pool.anchor.copy(pool.lookA).sub(perspective.position).normalize();
+        pool.lookA.addScaledVector(pool.anchor, tune.focusOffset);
+      }
       pool.lookA.toArray(rig.focus);
       view.target = rig.focus;
       view.focusMode = 'target';
+      if (import.meta.env.DEV) {
+        heroReadout.camToFocus = pool.lookA.distanceTo(perspective.position);
+        heroReadout.camToEyes = boneWorld('eyes', pool.anchor).distanceTo(perspective.position);
+        heroReadout.camera = perspective.position.toArray();
+      }
     } else {
       view.target = dofNow.target;
     }
@@ -998,6 +1071,24 @@ function HeroViewExtend() {
   return null;
 }
 
+/** 开发用：在当前焦点处画一个品红小点（面板勾「显示焦点」），不受遮挡，方便看焦点有没有落在脸上 */
+function FocusMarker({ cameraState }: { cameraState: CameraStateRef }) {
+  const { showFocus } = useHeroTuning();
+  const mesh = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    const view = cameraState.current;
+    if (mesh.current && view.focusMode !== 'manual') mesh.current.position.fromArray(view.target);
+  });
+  if (!showFocus) return null;
+  return (
+    <mesh ref={mesh} renderOrder={999}>
+      <sphereGeometry args={[0.008, 12, 12]} />
+      {/* 设成 transparent 才会排进半透明那一轮最后画：模型的脸、眼镜是半透明材质，不透明的标记会被它们盖住 */}
+      <meshBasicMaterial color="#ff2fd2" transparent depthTest={false} depthWrite={false} toneMapped={false} />
+    </mesh>
+  );
+}
+
 /** 与 /scene-editor-lab 的 EditorDepthOfField 相同：每帧从相机状态取对焦 */
 function HeroDepthOfField({ cameraState }: { cameraState: CameraStateRef }) {
   const effect = useRef<DepthOfFieldEffect>(null);
@@ -1068,6 +1159,7 @@ export const OpeningStage3D = memo(function OpeningStage3D({ clock, onReady, onF
         <OpeningAvatar clock={clock} onReady={onReady} onFail={onFail} cameraState={cameraState} hole={hole} lying={lying} onSketch={onSketch} />
       </Suspense>
       <HeroViewExtend />
+      {import.meta.env.DEV && <FocusMarker cameraState={cameraState} />}
       <EffectComposer enableNormalPass={false} multisampling={0}>
         <>
           <HeroDepthOfField cameraState={cameraState} />

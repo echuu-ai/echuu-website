@@ -39,7 +39,7 @@
         "mode": "camera",
         "target": [
           -0.8648525116825428,
-          1.3839979410927847,
+          1.45,
           0.11998363711127055
         ],
         "yaw": 0,
@@ -52,7 +52,7 @@
     "time": 0,
     "position": [
       -0.8648525116825428,
-      1.3839979410927847,
+      1.45,
       0.11998363711127055
     ],
     "target": [
@@ -64,7 +64,7 @@
     "dofEnabled": true,
     "focusMode": "manual",
     "focusDistance": 0.85,
-    "focusRange": 0.16,
+    "focusRange": 0.24,
     "blur": 7.5,
     "easing": "linear"
   },

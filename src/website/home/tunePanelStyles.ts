@@ -17,6 +17,10 @@ export const TUNE_PANEL_CSS = `
         .seam-tune--compact .seam-tune__label { grid-column: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .seam-tune--compact .seam-tune__num { width: 52px; }
         .seam-tune--compact .seam-tune__actions { flex-wrap: wrap; }
+        .seam-tune .seam-tune__grip { display: flex; justify-content: center; align-items: center; height: 14px; margin: -6px -8px 4px; cursor: grab; touch-action: none; user-select: none; }
+        .seam-tune .seam-tune__grip::before { content: ''; width: 36px; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.32); transition: background 0.15s; }
+        .seam-tune .seam-tune__grip:hover::before { background: rgba(255,255,255,0.6); }
+        .seam-tune .seam-tune__grip[data-dragging] { cursor: grabbing; }
         .seam-tune__tabs { display: flex; gap: 4px; margin-bottom: 6px; }
         .seam-tune__tabs button { flex: 1; padding: 4px 0 !important; opacity: 0.7; }
         .seam-tune__tabs button[data-active] { opacity: 1; background: rgba(159, 208, 255, 0.35) !important; }
