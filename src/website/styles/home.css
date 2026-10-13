@@ -1389,3 +1389,12 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   .echuu-website .hv .hv-footer__bottom a::after { content: ''; position: absolute; inset: -10px -4px; }
   .echuu-website .hv-cta .hv-cta__icon { min-width: 44px; }
 }
+
+/* 首屏左上角引言：原来行高 1，12px 字一折行上下两行就叠在一起（「… out of life.」压住作者署名）。
+ * 宽度跟着视口收：右边要停在竖排菜单最长一项（英文「VTuber performance agent」）的左边；
+ * 1200px 以下首屏太挤，这句装饰性引言直接隐藏 */
+.echuu-website .hv .hv-header__quote { line-height: 1.4; max-width: min(300px, calc(37.4vw - 240px)); }
+@media (max-width: 1199px) { .echuu-website .hv .hv-header__quote { display: none; } }
+/* 菜单浮层：原来用区块大标题字号（1440 宽 64px），太大；降到 26–36px，行距跟着收 */
+.echuu-website .hv-menu-overlay nav { gap: 6px; }
+.echuu-website .hv-menu-overlay nav a { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.25; }
