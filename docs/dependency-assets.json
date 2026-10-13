@@ -20,6 +20,18 @@
     "sha256": "69276a23df415cfe512379666890ec5d8b3293530137192268cd8c5ddc086835"
   },
   {
+    "path": "assets/animation/baked/sleeping-idle.clip.bin",
+    "bytes": 673028,
+    "sha256": "07b13902e81d627b989cfecceb5d6cd16e0312096e475ea563f7bfd3965888be",
+    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/sleeping-idle.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
+  },
+  {
+    "path": "assets/animation/baked/stand-up.clip.bin",
+    "bytes": 213048,
+    "sha256": "bbc5d999df2e0a1d52b6578ace3cebe9a8d6c1d79c95371de4beccc6c43ff891",
+    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/stand-up.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
+  },
+  {
     "path": "assets/animation/mate-engine/PET_INTRO_PET_INTRO.vrma",
     "bytes": 585316,
     "sha256": "5c243e727fab36418c88e2d33f1ff49cde8bcded96d428fc96571b5c90e222af"
@@ -33,6 +45,18 @@
     "path": "assets/animation/mate-engine/PET_SLEEPING_PET_SLEEPING.vrma",
     "bytes": 1879732,
     "sha256": "94563ab295a9f302900c765cc01545fe2421344833a656369003a0892d84797c"
+  },
+  {
+    "path": "assets/animation/mixamo/sleeping-idle.fbx",
+    "bytes": 3766128,
+    "sha256": "615e312def4c3d9b56b6a8a089ed6106a5f9a9a7315264a3b9840b74e5fd35cd",
+    "source": "Mixamo \"Sleeping Idle\", supplied by Cory (~/Downloads/Sleeping Idle.fbx), 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "assets/animation/mixamo/stand-up.fbx",
+    "bytes": 2466576,
+    "sha256": "90fbfff33adc9467b7362275d4fa386e4ed8234f9895faf4179f59582609fae2",
+    "source": "Mixamo \"Stand Up\", copied from echuu-ux-r3f-vite/public/assets/animation/Stand Up.fbx, 2026-10-03 (unaltered)"
   },
   {
     "path": "assets/animation/plane-interaction/throw-object.fbx",
@@ -110,6 +134,18 @@
     "sha256": "d0665a79fb02b58cb3091ee28621b74d91906e6963d6154921986e9472f3f94b"
   },
   {
+    "path": "fonts/42dot-sans-OFL.txt",
+    "bytes": 4391,
+    "sha256": "1e25d65ef980a81f53feb4fcded827df7edb116f32ffd40b8f4e7250d4d8976b",
+    "source": "SIL Open Font License for 42dot Sans, from github.com/google/fonts ofl/42dotsans/OFL.txt"
+  },
+  {
+    "path": "fonts/42dot-sans-latin.woff2",
+    "bytes": 29308,
+    "sha256": "e27968f13a3dd1e3a02316ee1deaaee1cc8f78e66fb7ccfdab01534ee528db02",
+    "source": "42dot Sans (OFL 1.1, github.com/google/fonts ofl/42dotsans, variable wght 300–800), subset to Latin + punctuation with fontTools, 2026-10-05"
+  },
+  {
     "path": "fonts/BlurWeb-Light W03 Regular.ttf",
     "bytes": 65864,
     "sha256": "4e8692d7066eeec3c05c5df34f98cdb0bd67a22d92d25e2279439f4014ce62a6"
@@ -140,6 +176,76 @@
     "sha256": "699cd09103084cc6ab3a1397fcff3cd39eeb5b5a2be7c70a9dc76ce1c7cc58b8"
   },
   {
+    "path": "fonts/reenie-beanie-OFL.txt",
+    "bytes": 4452,
+    "sha256": "fbb941b371c6348ee2572ce8c78fb66128a61885f960dec1906c4e44ca4b4d3c"
+  },
+  {
+    "path": "fonts/reenie-beanie-latin.woff2",
+    "bytes": 17936,
+    "sha256": "aa3901be682af0f1faac8436a1f25438b0cc541b6ad2ece5668ae4c0ea70594a"
+  },
+  {
+    "path": "fonts/subset/inter-bold.woff2",
+    "bytes": 18200,
+    "sha256": "54b85a696c1db18f703e88de680fa1aefac53b343157b1291a96e35dbbcb6978",
+    "source": "Subset of fonts-src/inter-bold.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/inter-regular.woff2",
+    "bytes": 17244,
+    "sha256": "e7e767afcc9248e197918745b12273223124a05bc89dd65af58611485fb2fd39",
+    "source": "Subset of fonts-src/inter-regular.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/maru-buri-light.woff2",
+    "bytes": 64236,
+    "sha256": "e0b569aff732b4edce57d3503ec7f742154ed21d484c51bd4682fd6807ef6859",
+    "source": "Subset of fonts-src/maru-buri-light.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/maru-buri-semibold.woff2",
+    "bytes": 67076,
+    "sha256": "ab48429f012e154db9b281aaa9d15052431de3caa83d3ce9d73f3d0ac0060c55",
+    "source": "Subset of fonts-src/maru-buri-semibold.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/notosansjp-bold.woff2",
+    "bytes": 160388,
+    "sha256": "f1a6e86b3e81d84b2ee312269746bf14bd637f978ca95b5f9e0894cb744761e9",
+    "source": "Subset of fonts-src/notosansjp-bold.ttf to the website copy (1056 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/shippori-mincho-bold.woff2",
+    "bytes": 213080,
+    "sha256": "71e9e07ef514130a31c184d3f5b4d4846eab4eafa1f62a0eaf5c3157fd991712",
+    "source": "Subset of fonts-src/shippori-mincho-bold.woff2 to the website copy (1054 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-bold.woff2",
+    "bytes": 175160,
+    "sha256": "dbcd28571952b8525a09af879aa319fb82896a160778477cc2652c9164dd1615",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Bold.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-light.woff2",
+    "bytes": 162004,
+    "sha256": "59d07f6fa1929c0e3675fecbc3f096d7b72a0a806410fad8fa39cc7f6729919e",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Light.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-medium.woff2",
+    "bytes": 172812,
+    "sha256": "771640d65bfd46ab2e23a7a877d64f2555f125599d95ef94a931ea2a420be9c6",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Medium.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
+    "path": "fonts/subset/zen-maru-gothic-regular.woff2",
+    "bytes": 170176,
+    "sha256": "02d2371fa1de03c70894be8cf4390bcb506d576387fa7441aeca934a7f1f0fe4",
+    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Regular.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
+  },
+  {
     "path": "fonts/yomeng-script.woff2",
     "bytes": 3850320,
     "sha256": "0c34190ca58b20b98a329663d5222186e2c7fd8c3bc41a146f482b307b0bb109"
@@ -156,23 +262,46 @@
   },
   {
     "path": "legal/ai-content-disclosure.html",
-    "bytes": 13364,
-    "sha256": "cf2e74072da28a002dabdc54d3fafa2579007901e3a043a1bdd7cbddbf21b27c"
+    "bytes": 13628,
+    "sha256": "de4be1232dc478c17cbcf1db2937ef692ad8eaf043b5aa204874e5519c3dde4c"
+  },
+  {
+    "path": "legal/minors.html",
+    "bytes": 14643,
+    "sha256": "08101473ce1833bd4712bab1e62fe666a88d8c193bb047b0ffb1cd13bfabf24d"
   },
   {
     "path": "legal/privacy.html",
-    "bytes": 44807,
-    "sha256": "b28895aef2a7b4b75be84f9d065931b972f9f55ac0c8d92a690a2a4787f07f85"
+    "bytes": 45035,
+    "sha256": "1e74d060483920d7fe56b531a9c2d516eeda54224ecac969442ad2dff1fcd216"
   },
   {
     "path": "legal/terms.html",
-    "bytes": 52601,
-    "sha256": "2ddf4193e9d898d0ca8c0f1ed5e969ec33e1ab4e7d85be38116f7bdc69265509"
+    "bytes": 52841,
+    "sha256": "957e8a3482dbf960f2918eb5e41f20bae316b7889ca45ceacbe965ef50c4b3df"
   },
   {
     "path": "website/angel-deco.png",
     "bytes": 1034,
     "sha256": "d2a3c0c1e67f09021a3f192d3673cdcce78f196e9b4a67a29ef13d537f64ec61"
+  },
+  {
+    "path": "website/feature/mocap-poster.webp",
+    "bytes": 58620,
+    "sha256": "3897783c146ba2b0a906d9e5b0c87537a2b2998397826fb58041ac1d0cffc5be",
+    "source": "First frame of the mocap clip, 2026-10-03"
+  },
+  {
+    "path": "website/feature/mocap.mov",
+    "bytes": 654488,
+    "sha256": "f2072f45f0d43a83fd4ff9bceed4049a18824001d1d3dcc131b9b0f2cd675dd4",
+    "source": "Same clip as HEVC alpha for Safari, 2026-10-03 Re-encoded 2026-10-07 with premultiplied colour (Safari white-background fix)."
+  },
+  {
+    "path": "website/feature/mocap.webm",
+    "bytes": 829515,
+    "sha256": "766ea929b383b918874faab53382ef54b5723b13097527b19f64a2392a286a4f",
+    "source": "echuu-ux-r3f-vite/public/figma/stream-room/animations/mocap.webm scaled to 384 px (VP9 alpha), 2026-10-03"
   },
   {
     "path": "website/figma/brooch.webp",
@@ -320,6 +449,36 @@
     "sha256": "8116a0e7f6d202f76ae0838a8323972bafcfa45e80be12216fa4f592fe9ccc20"
   },
   {
+    "path": "website/figma/logo-chrome.png",
+    "bytes": 111020,
+    "sha256": "98e7994734f7004618a36e481e12f1aefd99854ff6b6b34b27f0cf04c60d9856",
+    "source": "Echuu logo, chrome-blue version supplied by Cory (~/Downloads/Group 2087328212.png), 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/figma/logo-dark.png",
+    "bytes": 26298,
+    "sha256": "0b35f3b1bb3f1fa389337b12f69b77b80b6521bb5f78e7afc674eced8bc7e438",
+    "source": "User supplied dark navy hero logo, 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/figma/logo-figma.png",
+    "bytes": 260962,
+    "sha256": "927915f984be0317a0827017b56b628b5904251dd4f35810918fb4e8ad4a9192",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2038:1070, MCP asset e5db6.png, retrieved 2026-09-28 (unaltered)"
+  },
+  {
+    "path": "website/figma/logo-pure.png",
+    "bytes": 94467,
+    "sha256": "29073b93981b11e96ef84e5bdd2a716f403d4c5bdc9430ba14647217a309e5bb",
+    "source": "Echuu logo, pure-image version (star, ring, eChuu, kaomoji; no tagline) supplied by Cory (~/Downloads/logo-final-pure-image.png), 2026-10-03 (unaltered)"
+  },
+  {
+    "path": "website/figma/logo-white.png",
+    "bytes": 20141,
+    "sha256": "15e0cb67938a85302146d0ed4d92529df5ebe0ee54e55455dab69a1b01ca0b04",
+    "source": "White Echuu logo with tagline: derived from Cory's ~/Downloads/logo-with-text.png (808 px; kaomoji removed, all pixels white, alpha kept) to match ~/Downloads/logo-white-image-text.png at higher resolution, 2026-10-03"
+  },
+  {
     "path": "website/figma/mocap-figure.webp",
     "bytes": 16086,
     "sha256": "46699f2b4514358897deef248911d7014d77f04d59f3a29ccd5dfe3c069aa715"
@@ -380,6 +539,12 @@
     "sha256": "28f8f33ad31af8b3c2f8b126e8b86901fa17fa1b721deabfb7e91f9151cf1535"
   },
   {
+    "path": "website/figma/opening-paper/sketch-body.webp",
+    "bytes": 236756,
+    "sha256": "16b9ac1a77a76b1e3b5d3521a038a77c4f3d402205b841d1413077fccf92e9ab",
+    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 notebook paper; lossless WebP of the former sketch-body.png (pixel-identical), 2026-10-05"
+  },
+  {
     "path": "website/figma/running-silhouette.svg",
     "bytes": 7867,
     "sha256": "c2c97f4339ab73b079d1af6cbe619d2deb42ce8b3cad8dbc9ce44b490dfa8bb0"
@@ -430,6 +595,30 @@
     "sha256": "94f3150e6ab1b9dc11d446c30b76288e0e8335c7024747fe98b76ef6a3e5347a"
   },
   {
+    "path": "website/gifts3d/baozi.glb",
+    "bytes": 140780,
+    "sha256": "31aa964baf723b4c93926bc2d0a2579e97f81fa0a68312ad313f26136eee1664",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/baozi.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/golden-croissant.glb",
+    "bytes": 195392,
+    "sha256": "bb6a01eeb50692ab7594f8fb976d476f0a259a3e12a7b86027c3cc21782085e4",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/golden-croissant.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/sealed-envelope.glb",
+    "bytes": 69192,
+    "sha256": "8245eb524a4ddcc4237503e2e5ead4deb4951d7eae445978fdd870164b180d90",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/sealed-envelope.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
+    "path": "website/gifts3d/white-pebble.glb",
+    "bytes": 199504,
+    "sha256": "9b4d90a480807b90a87838925a62b3c25a5022e97d67066fb72365fbc712df2b",
+    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/white-pebble.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
+  },
+  {
     "path": "website/internal/chat-panel.jpg",
     "bytes": 55983,
     "sha256": "b5d6c0918c31f137144175b7464977cc32a59894440f362c87b80bbd6f95b223"
@@ -455,48 +644,64 @@
     "sha256": "c18555826358e7946188f36c590623298cf40c1795acbd3677026bf32b6efb88"
   },
   {
-    "path": "website/sky-1k.hdr",
-    "bytes": 930297,
-    "sha256": "ce760f0a9d5648d2de9f6c87265bb50f6e1ba74a087e5ce57b26a7834b79918c"
+    "path": "website/logo3d/logo-shapes.json",
+    "bytes": 4230,
+    "sha256": "593a51dc3524a3914b382b2cbe25860ad12335dd3f439940e266d93620b0b47b",
+    "source": "Vector outlines traced (skimage contours) from Cory's ~/Downloads/logo-with-text.png with tagline and kaomoji removed; used by the ?logo=3d extruded logo, 2026-10-03"
   },
   {
-    "path": "website/sky-blob.png",
-    "bytes": 281075,
-    "sha256": "c8a7ab8a2842763dbf456b6515e482ec915f126b81451a4ab2542fac9b934655"
+    "path": "website/logo3d/logo-texture.png",
+    "bytes": 121928,
+    "sha256": "95813238312ddbb0ed2a32fabf7713a942f9ea179278da4f9d18444282cec07c",
+    "source": "Colour texture cropped from the same logo, colours bled outward for bevel edges, 2026-10-03"
   },
   {
-    "path": "website/wing-deco.png",
-    "bytes": 751,
-    "sha256": "72636a5016798762c125cf9544e947b1843f1b6358644831efc371ad50f2d68c"
+    "path": "website/loops/creators-circle-start.webp",
+    "bytes": 65102,
+    "sha256": "0e8ca851d48bb6500f6478c622b08326aa20b1944b9b4eac65471755c62f6fba",
+    "source": "First frame of website/loops/creators-circle.webm (poster before playback), 2026-10-03"
   },
   {
-    "path": "website/figma/logo-figma.png",
-    "bytes": 260962,
-    "sha256": "927915f984be0317a0827017b56b628b5904251dd4f35810918fb4e8ad4a9192",
-    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2038:1070, MCP asset e5db6.png, retrieved 2026-09-28 (unaltered)"
+    "path": "website/loops/creators-circle.mov",
+    "bytes": 3912677,
+    "sha256": "dcb8749f2d3c78619b655bf8e04ace6f3393405cbefa8045fc1f942dd9a268df",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (HEVC alpha), 2026-10-03"
   },
   {
-    "path": "website/figma/logo-dark.png",
-    "bytes": 26298,
-    "sha256": "0b35f3b1bb3f1fa389337b12f69b77b80b6521bb5f78e7afc674eced8bc7e438",
-    "source": "User supplied dark navy hero logo, 2026-10-03 (unaltered)"
+    "path": "website/loops/creators-circle.webm",
+    "bytes": 1995456,
+    "sha256": "19bb73a69755f07a19820c0cfce1a82e899f3af643b579918841adafd5053152",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (VP9 alpha), 2026-10-03"
   },
   {
-    "path": "website/social/wechat-contact.jpg",
-    "bytes": 102348,
-    "sha256": "29a9a7ca875ec11954481f1a943ae62b05dd4c6d8b13bdd6188c11077fe7251e",
-    "source": "User supplied WeChat contact QR, 2026-09-29"
+    "path": "website/loops/footer-wings.mov",
+    "bytes": 2489255,
+    "sha256": "8e2bb85d7f5ab08e12a8d397862ad5b81d27b268e09f176c3f4c37741479f844",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (HEVC alpha)"
   },
   {
-    "path": "legal/minors.html",
-    "bytes": 14379,
-    "sha256": "173526937aada2ba442571ba6b3e1fc8edc782021d55b9ddc97e6ab47b6b3167"
+    "path": "website/loops/footer-wings.webm",
+    "bytes": 805329,
+    "sha256": "8ec8986789507854ebdad2893428d056b0491f7bd0a083c8de5cc3ce2937f7fa",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (VP9 alpha)"
   },
   {
-    "path": "website/models/charms/pin.glb",
-    "bytes": 317800,
-    "sha256": "9a8c4996391fefbddc08875dc59493d752fac89b302aa9c20b8269c2d9dd2dc5",
-    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
+    "path": "website/loops/logo-reveal-start.webp",
+    "bytes": 14968,
+    "sha256": "050fb4988beb0f6875c5bdc914ce86b2f8a0320df2a197a0138960b33015ca21",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 — first frame poster"
+  },
+  {
+    "path": "website/loops/logo-reveal.mov",
+    "bytes": 1041413,
+    "sha256": "1b531b198b76a02cd60d7be36fa5a715aaa481be9ffc2d6e5cc2e9cd36da7979",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (HEVC alpha)"
+  },
+  {
+    "path": "website/loops/logo-reveal.webm",
+    "bytes": 131130,
+    "sha256": "5ec1fe11843d9f4f008f12ece11c0a8c3d50df26cd5c71800a28d4838fe4d338",
+    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (VP9 alpha)"
   },
   {
     "path": "website/models/charms/angel.glb",
@@ -529,34 +734,10 @@
     "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/key-right.webp; meshopt + 1024px WebP via gltf-transform"
   },
   {
-    "path": "assets/animation/mixamo/stand-up.fbx",
-    "bytes": 2466576,
-    "sha256": "90fbfff33adc9467b7362275d4fa386e4ed8234f9895faf4179f59582609fae2",
-    "source": "Mixamo \"Stand Up\", copied from echuu-ux-r3f-vite/public/assets/animation/Stand Up.fbx, 2026-10-03 (unaltered)"
-  },
-  {
-    "path": "assets/animation/mixamo/sleeping-idle.fbx",
-    "bytes": 3766128,
-    "sha256": "615e312def4c3d9b56b6a8a089ed6106a5f9a9a7315264a3b9840b74e5fd35cd",
-    "source": "Mixamo \"Sleeping Idle\", supplied by Cory (~/Downloads/Sleeping Idle.fbx), 2026-10-03 (unaltered)"
-  },
-  {
-    "path": "website/loops/footer-wings.webm",
-    "bytes": 805329,
-    "sha256": "8ec8986789507854ebdad2893428d056b0491f7bd0a083c8de5cc3ce2937f7fa",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (VP9 alpha)"
-  },
-  {
-    "path": "website/loops/footer-wings.mov",
-    "bytes": 2489255,
-    "sha256": "8e2bb85d7f5ab08e12a8d397862ad5b81d27b268e09f176c3f4c37741479f844",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s, start = end frame) from website/figma/footer-wings.webp on chroma green, 2026-10-03; 0.5 s crossfade loop, keyed with scripts/loops/key.py (HEVC alpha)"
-  },
-  {
-    "path": "website/platforms/vroid.png",
-    "bytes": 1396,
-    "sha256": "41b11d4a1931a4e1710069ba55a8b1fdf13e63416ada4ac6775dfbd47d4b3bfb",
-    "source": "Platform site icon from https://vroid.com/favicon.png, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
+    "path": "website/models/charms/pin.glb",
+    "bytes": 317800,
+    "sha256": "9a8c4996391fefbddc08875dc59493d752fac89b302aa9c20b8269c2d9dd2dc5",
+    "source": "Tripo3D image-to-model v3.1 (2026-10-02) from website/figma/brooch.webp; meshopt + 1024px WebP via gltf-transform"
   },
   {
     "path": "website/platforms/aplaybox.png",
@@ -571,201 +752,30 @@
     "source": "Platform site icon from https://booth.pm/static-images/pwa/icon_size_180.png, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
   },
   {
-    "path": "website/figma/logo-chrome.png",
-    "bytes": 111020,
-    "sha256": "98e7994734f7004618a36e481e12f1aefd99854ff6b6b34b27f0cf04c60d9856",
-    "source": "Echuu logo, chrome-blue version supplied by Cory (~/Downloads/Group 2087328212.png), 2026-10-03 (unaltered)"
+    "path": "website/platforms/vroid.png",
+    "bytes": 1396,
+    "sha256": "41b11d4a1931a4e1710069ba55a8b1fdf13e63416ada4ac6775dfbd47d4b3bfb",
+    "source": "Platform site icon from https://vroid.com/favicon.png, retrieved 2026-10-03, converted to PNG; used only to label the outbound link to that platform"
   },
   {
-    "path": "website/loops/creators-circle.webm",
-    "bytes": 1995456,
-    "sha256": "19bb73a69755f07a19820c0cfce1a82e899f3af643b579918841adafd5053152",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (VP9 alpha), 2026-10-03"
+    "path": "website/sky-1k.hdr",
+    "bytes": 930297,
+    "sha256": "ce760f0a9d5648d2de9f6c87265bb50f6e1ba74a087e5ce57b26a7834b79918c"
   },
   {
-    "path": "website/loops/creators-circle.mov",
-    "bytes": 3912677,
-    "sha256": "dcb8749f2d3c78619b655bf8e04ace6f3393405cbefa8045fc1f942dd9a268df",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (HEVC alpha), 2026-10-03"
+    "path": "website/sky-blob.png",
+    "bytes": 281075,
+    "sha256": "c8a7ab8a2842763dbf456b6515e482ec915f126b81451a4ab2542fac9b934655"
   },
   {
-    "path": "website/loops/creators-circle-start.webp",
-    "bytes": 65102,
-    "sha256": "0e8ca851d48bb6500f6478c622b08326aa20b1944b9b4eac65471755c62f6fba",
-    "source": "First frame of website/loops/creators-circle.webm (poster before playback), 2026-10-03"
+    "path": "website/social/wechat-contact.jpg",
+    "bytes": 102348,
+    "sha256": "29a9a7ca875ec11954481f1a943ae62b05dd4c6d8b13bdd6188c11077fe7251e",
+    "source": "User supplied WeChat contact QR, 2026-09-29"
   },
   {
-    "path": "website/figma/logo-white.png",
-    "bytes": 20141,
-    "sha256": "15e0cb67938a85302146d0ed4d92529df5ebe0ee54e55455dab69a1b01ca0b04",
-    "source": "White Echuu logo with tagline: derived from Cory's ~/Downloads/logo-with-text.png (808 px; kaomoji removed, all pixels white, alpha kept) to match ~/Downloads/logo-white-image-text.png at higher resolution, 2026-10-03"
-  },
-  {
-    "path": "website/logo3d/logo-shapes.json",
-    "bytes": 4230,
-    "sha256": "593a51dc3524a3914b382b2cbe25860ad12335dd3f439940e266d93620b0b47b",
-    "source": "Vector outlines traced (skimage contours) from Cory's ~/Downloads/logo-with-text.png with tagline and kaomoji removed; used by the ?logo=3d extruded logo, 2026-10-03"
-  },
-  {
-    "path": "website/logo3d/logo-texture.png",
-    "bytes": 121928,
-    "sha256": "95813238312ddbb0ed2a32fabf7713a942f9ea179278da4f9d18444282cec07c",
-    "source": "Colour texture cropped from the same logo, colours bled outward for bevel edges, 2026-10-03"
-  },
-  {
-    "path": "website/feature/mocap.webm",
-    "bytes": 829515,
-    "sha256": "766ea929b383b918874faab53382ef54b5723b13097527b19f64a2392a286a4f",
-    "source": "echuu-ux-r3f-vite/public/figma/stream-room/animations/mocap.webm scaled to 384 px (VP9 alpha), 2026-10-03"
-  },
-  {
-    "path": "website/feature/mocap.mov",
-    "bytes": 654488,
-    "sha256": "f2072f45f0d43a83fd4ff9bceed4049a18824001d1d3dcc131b9b0f2cd675dd4",
-    "source": "Same clip as HEVC alpha for Safari, 2026-10-03 Re-encoded 2026-10-07 with premultiplied colour (Safari white-background fix)."
-  },
-  {
-    "path": "website/feature/mocap-poster.webp",
-    "bytes": 58620,
-    "sha256": "3897783c146ba2b0a906d9e5b0c87537a2b2998397826fb58041ac1d0cffc5be",
-    "source": "First frame of the mocap clip, 2026-10-03"
-  },
-  {
-    "path": "website/gifts3d/white-pebble.glb",
-    "bytes": 199504,
-    "sha256": "9b4d90a480807b90a87838925a62b3c25a5022e97d67066fb72365fbc712df2b",
-    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/white-pebble.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
-  },
-  {
-    "path": "website/gifts3d/sealed-envelope.glb",
-    "bytes": 69192,
-    "sha256": "8245eb524a4ddcc4237503e2e5ead4deb4951d7eae445978fdd870164b180d90",
-    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/sealed-envelope.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
-  },
-  {
-    "path": "website/gifts3d/baozi.glb",
-    "bytes": 140780,
-    "sha256": "31aa964baf723b4c93926bc2d0a2579e97f81fa0a68312ad313f26136eee1664",
-    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/baozi.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
-  },
-  {
-    "path": "website/gifts3d/golden-croissant.glb",
-    "bytes": 195392,
-    "sha256": "bb6a01eeb50692ab7594f8fb976d476f0a259a3e12a7b86027c3cc21782085e4",
-    "source": "echuu-ux-r3f-vite/public/assets/stream-gifts/golden-croissant.glb via gltf-transform optimize (webp 512, meshopt, simplify 0.5), 2026-10-03"
-  },
-  {
-    "path": "website/loops/logo-reveal.webm",
-    "bytes": 131130,
-    "sha256": "5ec1fe11843d9f4f008f12ece11c0a8c3d50df26cd5c71800a28d4838fe4d338",
-    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (VP9 alpha)"
-  },
-  {
-    "path": "website/loops/logo-reveal.mov",
-    "bytes": 1041413,
-    "sha256": "1b531b198b76a02cd60d7be36fa5a715aaa481be9ffc2d6e5cc2e9cd36da7979",
-    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 (HEVC alpha)"
-  },
-  {
-    "path": "website/loops/logo-reveal-start.webp",
-    "bytes": 14968,
-    "sha256": "050fb4988beb0f6875c5bdc914ce86b2f8a0320df2a197a0138960b33015ca21",
-    "source": "Kling kling-v3 image-to-video (pro): first frame = pure-image logo with letters and kaomoji removed (star + ring kept), last frame = website/figma/logo-pure.png, on chroma green; letters appear one by one; trimmed to frames 0-90 before Kling's shine pass (the shine is CSS); keyed with scripts/loops/key.py, 2026-10-03 — first frame poster"
-  },
-  {
-    "path": "website/figma/logo-pure.png",
-    "bytes": 94467,
-    "sha256": "29073b93981b11e96ef84e5bdd2a716f403d4c5bdc9430ba14647217a309e5bb",
-    "source": "Echuu logo, pure-image version (star, ring, eChuu, kaomoji; no tagline) supplied by Cory (~/Downloads/logo-final-pure-image.png), 2026-10-03 (unaltered)"
-  },
-  {
-    "path": "fonts/42dot-sans-latin.woff2",
-    "bytes": 29308,
-    "sha256": "e27968f13a3dd1e3a02316ee1deaaee1cc8f78e66fb7ccfdab01534ee528db02",
-    "source": "42dot Sans (OFL 1.1, github.com/google/fonts ofl/42dotsans, variable wght 300–800), subset to Latin + punctuation with fontTools, 2026-10-05"
-  },
-  {
-    "path": "fonts/42dot-sans-OFL.txt",
-    "bytes": 4391,
-    "sha256": "1e25d65ef980a81f53feb4fcded827df7edb116f32ffd40b8f4e7250d4d8976b",
-    "source": "SIL Open Font License for 42dot Sans, from github.com/google/fonts ofl/42dotsans/OFL.txt"
-  },
-  {
-    "path": "fonts/subset/inter-regular.woff2",
-    "bytes": 17244,
-    "sha256": "e7e767afcc9248e197918745b12273223124a05bc89dd65af58611485fb2fd39",
-    "source": "Subset of fonts-src/inter-regular.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/inter-bold.woff2",
-    "bytes": 18200,
-    "sha256": "54b85a696c1db18f703e88de680fa1aefac53b343157b1291a96e35dbbcb6978",
-    "source": "Subset of fonts-src/inter-bold.ttf to the website copy (102 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/shippori-mincho-bold.woff2",
-    "bytes": 213080,
-    "sha256": "71e9e07ef514130a31c184d3f5b4d4846eab4eafa1f62a0eaf5c3157fd991712",
-    "source": "Subset of fonts-src/shippori-mincho-bold.woff2 to the website copy (1054 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/notosansjp-bold.woff2",
-    "bytes": 160388,
-    "sha256": "f1a6e86b3e81d84b2ee312269746bf14bd637f978ca95b5f9e0894cb744761e9",
-    "source": "Subset of fonts-src/notosansjp-bold.ttf to the website copy (1056 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/maru-buri-light.woff2",
-    "bytes": 64236,
-    "sha256": "e0b569aff732b4edce57d3503ec7f742154ed21d484c51bd4682fd6807ef6859",
-    "source": "Subset of fonts-src/maru-buri-light.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/maru-buri-semibold.woff2",
-    "bytes": 67076,
-    "sha256": "ab48429f012e154db9b281aaa9d15052431de3caa83d3ce9d73f3d0ac0060c55",
-    "source": "Subset of fonts-src/maru-buri-semibold.woff2 to the website copy (572 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/zen-maru-gothic-light.woff2",
-    "bytes": 162004,
-    "sha256": "59d07f6fa1929c0e3675fecbc3f096d7b72a0a806410fad8fa39cc7f6729919e",
-    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Light.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/zen-maru-gothic-regular.woff2",
-    "bytes": 170176,
-    "sha256": "02d2371fa1de03c70894be8cf4390bcb506d576387fa7441aeca934a7f1f0fe4",
-    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Regular.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/zen-maru-gothic-medium.woff2",
-    "bytes": 172812,
-    "sha256": "771640d65bfd46ab2e23a7a877d64f2555f125599d95ef94a931ea2a420be9c6",
-    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Medium.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "fonts/subset/zen-maru-gothic-bold.woff2",
-    "bytes": 175160,
-    "sha256": "dbcd28571952b8525a09af879aa319fb82896a160778477cc2652c9164dd1615",
-    "source": "Subset of fonts-src/zen-maru-gothic/ZenMaruGothic-Bold.ttf to the website copy (993 glyphs) by scripts/subset-fonts.py"
-  },
-  {
-    "path": "website/figma/opening-paper/sketch-body.webp",
-    "bytes": 236756,
-    "sha256": "16b9ac1a77a76b1e3b5d3521a038a77c4f3d402205b841d1413077fccf92e9ab",
-    "source": "Figma SbqimktgOKSM7cnvWGs8hk node 2134:21147 notebook paper; lossless WebP of the former sketch-body.png (pixel-identical), 2026-10-05"
-  },
-  {
-    "path": "assets/animation/baked/sleeping-idle.clip.bin",
-    "bytes": 673028,
-    "sha256": "07b13902e81d627b989cfecceb5d6cd16e0312096e475ea563f7bfd3965888be",
-    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/sleeping-idle.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
-  },
-  {
-    "path": "assets/animation/baked/stand-up.clip.bin",
-    "bytes": 213048,
-    "sha256": "bbc5d999df2e0a1d52b6578ace3cebe9a8d6c1d79c95371de4beccc6c43ff891",
-    "source": "Lossless pre-baked VRM clip of assets/animation/mixamo/stand-up.fbx retargeted onto corynorootbone (scripts/bake-opening-motions.mjs), 2026-10-05"
+    "path": "website/wing-deco.png",
+    "bytes": 751,
+    "sha256": "72636a5016798762c125cf9544e947b1843f1b6358644831efc371ad50f2d68c"
   }
 ]
