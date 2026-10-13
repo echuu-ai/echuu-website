@@ -395,7 +395,15 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
               ? <Suspense fallback={<HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}><Logo3D label={h.hero.logoAlt} /></Suspense>
               : <HeroLogo src={HOME_ASSETS.logo3d} alt={h.hero.logoAlt} />}
             {showReveal ? <LogoReveal play={phase === 'hero'} onDone={finishReveal} /> : null}
-            
+            {/* 四角星上的镜头光晕：星芯辉光 + 横向光条 + 竖光 + 三个鬼影，定时闪一次（样式见 home.css .hv-flare） */}
+            <span className="hv-flare" aria-hidden="true">
+              <i className="hv-flare__core" />
+              <i className="hv-flare__streak" />
+              <i className="hv-flare__spike" />
+              <i className="hv-flare__ghost hv-flare__ghost--1" />
+              <i className="hv-flare__ghost hv-flare__ghost--2" />
+              <i className="hv-flare__ghost hv-flare__ghost--3" />
+            </span>
           </div>
           <h1 className="hv-title__slogan">
             {h.hero.slogan.pre}

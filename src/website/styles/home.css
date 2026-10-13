@@ -421,6 +421,57 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-title__logo--3d > div { position: absolute !important; inset: -18% -14%; width: auto !important; height: auto !important; }
 /* 标语单独调色时叠在上面的那张（只露出标语区域，见 LogoTone.tsx） */
 .echuu-website .hv-title__logo-wrap > .hv-title__logo--tagline { position: absolute; inset: 0 auto auto 0; }
+
+/* --- logo 四角星的镜头光晕 ------------------------------------------------
+ * 叠在 logo 框上，坐标按 808 × 620 画板换算：星芯在 (404, 88) = 左 50%、上 14.2%。
+ * 每 7 秒闪一次：星芯放大、横向变形光条拉开、鬼影沿「星 → 画面中心」方向浮现后散去；其余时间只留很弱的星芯辉光。
+ * 尺寸全部按 logo 框宽的百分比，跟着各断点的 logo 大小缩放。入场动画播放时不出现；减少动态效果时只留静态弱光。 */
+/* 不用 screen 混合：logo 背后常是翅膀的大片白光，滤色在近白底上完全看不出；改普通混合 + 青 / 淡紫色调（与星星同色系） */
+.echuu-website .hv-flare { position: absolute; inset: 0; pointer-events: none; --flare-x: 50%; --flare-y: 14.2%; }
+.echuu-website .hv-title__logo-wrap[data-reveal='playing'] > .hv-flare { opacity: 0; }
+.echuu-website .hv-flare > i { position: absolute; left: var(--flare-x); top: var(--flare-y); display: block; border-radius: 50%; translate: -50% -50%; will-change: transform, opacity; }
+.echuu-website .hv-flare__core {
+  width: 22%; aspect-ratio: 1;
+  background: radial-gradient(circle, rgba(255,255,255,.95) 0%, rgba(214,246,255,.7) 14%, rgba(120,214,255,.28) 38%, rgba(120,214,255,0) 70%);
+  animation: hv-flare-core 7s var(--hv-ease) 1.2s infinite both;
+}
+.echuu-website .hv-flare__streak {
+  width: 130%; height: 1.4%; border-radius: 999px;
+  background: linear-gradient(90deg, rgba(64,190,255,0), rgba(64,190,255,.55) 26%, rgba(160,232,255,.95) 44%, #fff 50%, rgba(160,232,255,.95) 56%, rgba(64,190,255,.55) 74%, rgba(64,190,255,0));
+  filter: blur(.4px);
+  animation: hv-flare-streak 7s var(--hv-ease) 1.2s infinite both;
+}
+.echuu-website .hv-flare__spike {
+  width: .9%; height: 34%; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
+  animation: hv-flare-streak 7s var(--hv-ease) 1.2s infinite both;
+}
+/* 鬼影：相对星芯往右下排开（光源在画面左上，鬼影落在光源与画面中心的连线上） */
+/* 偏移写在 left / top 上（百分比相对 logo 框）；transform 的百分比相对自身，只用来做小幅漂移 */
+.echuu-website .hv-flare__ghost { animation: hv-flare-ghost 7s var(--hv-ease) 1.2s infinite both; }
+.echuu-website .hv-flare > .hv-flare__ghost--1 { --go: .6; left: calc(var(--flare-x) + 9%); top: calc(var(--flare-y) + 22%); width: 5%; aspect-ratio: 1; background: radial-gradient(circle, rgba(120,214,255,.85), rgba(120,214,255,0) 70%); }
+.echuu-website .hv-flare > .hv-flare__ghost--2 { --go: .55; left: calc(var(--flare-x) + 19%); top: calc(var(--flare-y) + 47%); width: 12%; aspect-ratio: 1; background: radial-gradient(circle, rgba(150,120,255,0) 52%, rgba(150,120,255,.6) 63%, rgba(64,190,255,.45) 72%, rgba(64,190,255,0) 80%); }
+.echuu-website .hv-flare > .hv-flare__ghost--3 { --go: .6; left: calc(var(--flare-x) + 27%); top: calc(var(--flare-y) + 70%); width: 3.5%; aspect-ratio: 1; background: radial-gradient(circle, rgba(64,190,255,.9), rgba(64,190,255,0) 70%); }
+@keyframes hv-flare-core {
+  0%, 60%, 100% { opacity: .35; transform: scale(.7); }
+  68% { opacity: 1; transform: scale(1.18); }
+  80% { opacity: .55; transform: scale(.85); }
+}
+@keyframes hv-flare-streak {
+  0%, 60%, 100% { opacity: 0; transform: scale(.15, 1); }
+  68% { opacity: 1; transform: scale(1, 1); }
+  84% { opacity: .2; transform: scale(.7, 1); }
+}
+@keyframes hv-flare-ghost {
+  0%, 62%, 100% { opacity: 0; transform: translate(-35%, -35%); }
+  72% { opacity: var(--go); transform: translate(0, 0); }
+  90% { opacity: 0; transform: translate(35%, 35%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .echuu-website .hv-flare > i { animation: none; }
+  .echuu-website .hv-flare__core { opacity: .35; transform: scale(.7); }
+  .echuu-website .hv-flare__streak, .echuu-website .hv-flare__spike, .echuu-website .hv-flare__ghost { opacity: 0; }
+}
 .echuu-website .hv-title__slogan {
   margin: 0; color: #000; font-size: var(--t-lede); line-height: 1.2; letter-spacing: -0.1em;
   white-space: nowrap; text-align: center;
