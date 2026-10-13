@@ -47,7 +47,7 @@
 .echuu-access__form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
 .echuu-access label { display: grid; gap: 8px; font-size: 13px; font-weight: 550; color: rgba(255, 255, 255, .86); }
 .echuu-access input {
-  width: 100%; height: 46px; padding: 0 14px; border-radius: 10px; font-size: 15px; color: #fff;
+  width: 100%; height: 46px; padding: 0 14px; border-radius: var(--btn-radius, 12px); font-size: 15px; color: #fff;
   border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08);
 }
 .echuu-access input::placeholder { color: rgba(255, 255, 255, .45); }
@@ -56,13 +56,14 @@
 .echuu-access__password input { padding-right: 46px; }
 .echuu-access__password button { position: absolute; right: 1px; top: 1px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; color: rgba(255, 255, 255, .7); background: transparent; }
 
-/* 主按钮：白底深字，全宽，一行 */
+/* 主按钮：白底深字，全宽，一行。尺寸 / 圆角 / 字重跟官网按钮规范同一套（lg 52、圆角 12、字重 400）；
+ * 弹窗挂在 body 上拿不到 .echuu-website 的 token，所以带回退值 */
 .echuu-access__submit {
-  width: 100%; height: 48px; display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap;
-  border: 0; border-radius: 10px; background: #fff; color: #0a2435; font-weight: 650 !important; font-size: 15px;
-  text-decoration: none; transition: filter .15s, opacity .15s;
+  width: 100%; height: var(--btn-h-lg, 52px); display: flex; justify-content: center; align-items: center; gap: 8px; white-space: nowrap;
+  border: 0; border-radius: var(--btn-radius, 12px); background: #fff; color: #0a2435; font-weight: 400; font-size: 15px; letter-spacing: 0;
+  text-decoration: none; transition: background-color .15s, opacity .15s;
 }
-.echuu-access__submit:hover:not(:disabled) { filter: brightness(.94); }
+.echuu-access__submit:hover:not(:disabled) { background: rgba(255, 255, 255, .86); }
 .echuu-access__submit:disabled { cursor: not-allowed; opacity: .5; }
 
 .echuu-access__switch { margin: 0; font-size: 13px; text-align: center; color: rgba(255, 255, 255, .7); }

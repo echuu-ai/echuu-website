@@ -31,17 +31,17 @@
   --t-display: clamp(32px, 4.4vw, 64px);   /* 区块大标题 */
   --t-h1: clamp(24px, 3vw, 44px);          /* 副标题 / 宣言 / 功能卡标题 */
   --t-h2: clamp(19px, 1.8vw, 26px);        /* 卡片标题 / 页脚栏目 */
-  --t-lede: clamp(16px, 1.65vw, 24px);     /* 区块导语 / 标语 / 说明 */
-  --t-body: clamp(15px, 1.3vw, 19px);      /* 正文 */
+  --t-lede: clamp(16px, 1.25vw, 19px);     /* 区块导语 / 标语 / 说明（宽屏不再放到 24px） */
+  --t-body: clamp(15px, 1.1vw, 16px);      /* 正文（宽屏不再放到 19px） */
   --t-small: 14px;                         /* 卡片摘要 */
   --t-meta: 13px;                          /* 次要链接 / 胶囊 */
   --t-caption: 12px;                       /* 页头 / 语言 / 系统提示 */
-  --t-label: 11px;                         /* 全大写标签（加字距） */
+  --t-label: 12px;                         /* 全大写标签（加字距）；并入 caption 档 */
   --t-numeral: clamp(22px, 2.2vw, 32px);   /* 序号 01 02 03 */
-  --t-button: clamp(15px, 1.15vw, 17px);
-  --t-button-lg: clamp(17px, 1.45vw, 21px);
+  --t-button: 15px;
+  --t-button-lg: 16px;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
-  --section-y: clamp(64px, 8vw, 120px);
+  --section-y: clamp(72px, 10vw, 144px);
   --card-pad: clamp(20px, 2.2vw, 32px);
   --btn-h-sm: 36px; --btn-h-md: 44px; --btn-h-lg: 52px;
   --btn-pad-x: 24px;
@@ -1190,3 +1190,94 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 /* 「OC」链接：外观完全跟周围文字一样（不加下划线、不加高亮），只换手指光标；键盘聚焦时给一圈细框 */
 .echuu-website .hv-oc-link { color: inherit; text-decoration: none; background: none; cursor: pointer; }
 .echuu-website .hv-oc-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 2px; }
+
+/* ===== 排版节奏：字距 / 行高 / 区块留白（审计见 docs/reviews/2026-10-13-typography-audit.md） =====
+ * 品牌标题的 1pt 白描边保留。描边让每个字向外多出约 0.7px，字距收得太紧白边就粘在一起，
+ * 所以带描边的标题字距不低于 -0.03em；中文没有上下伸部替它留白，展示标题行高至少 1.1。
+ * 负字距只留给巨型字（页脚 183px 那行保持 -0.1em 才能一行通栏）；正文、按钮、导航、小字一律 0。 */
+.echuu-website .hv :is(.hv-h2, .hv-beta__title) { letter-spacing: -0.03em; line-height: 1.1; }
+.echuu-website .hv :is(.hv-intro__kicker, .hv-creators__manifesto) { letter-spacing: -0.03em; line-height: 1.2; }
+.echuu-website .hv :is(.hv-steps__title, .hv-bcard__title) { letter-spacing: -0.02em; line-height: 1.25; }
+.echuu-website .hv :is(.hv-lede, .hv-menu) { letter-spacing: -0.01em; }
+.echuu-website .hv .hv-lede { line-height: 1.5; }
+.echuu-website .hv-menu-overlay nav a { letter-spacing: -0.02em; }
+/* 正文：步骤、内测、简介统一用正文字号（原来步骤和内测用的是导语字号） */
+.echuu-website .hv :is(.hv-steps__body, .hv-beta__body, .hv-intro__body) { font-size: var(--t-body); line-height: 1.75; letter-spacing: 0; }
+.echuu-website .hv .hv-answers details p { line-height: 1.75; }
+/* 按钮、页头小字、页脚：不用负字距 */
+.echuu-website .hv :is(.hv-glass, .hv-title__register, .hv-cta__beta, .hv-live,
+  .hv-header__tagline, .hv-header__quote, .hv-header__lede, .hv-header__brand,
+  .hv-footer__col, .hv-footer__col h3, .hv-footer__bottom) { letter-spacing: 0; }
+.echuu-website .hv .hv-footer__col h3 { font-weight: 600; }
+/* 字体收口：Inter 与 system-ui 残留改回 42dot */
+.echuu-website .hv :is(.hv-mcard__name, .hv-cta__beta, .hv-title__beta-count) { font-family: var(--hv-sans); }
+/* ===== 按钮规范（docs/website-ui-spec.md §3）：形状、尺寸、字重全站一套，颜色按底色反转 =====
+ * 尺寸 sm 36 / md 44 / lg 52，左右内边距 16 / 20 / 24；圆角一律 12（标签胶囊 999）；字重 400；字距 0。
+ * 深色 / 天空底：主按钮白底深字，次按钮玻璃。浅色纸面（子页面 .btn）：主按钮深底白字，次按钮透明 + 1px 线。
+ * 两种底用同一对颜色互换（深字色 = 弹窗按钮的 #0a2435）。hover 只提亮底色，不上浮、不加阴影。
+ * 底部 CTA 条渲染在 .hv 外面，拿不到 .hv 里的 token，所以按钮 token 定义在 .echuu-website 上。 */
+.echuu-website {
+  --btn-radius: 12px; --btn-weight: 400; --btn-fs: 15px; --btn-fs-sm: 13px;
+  --btn-h-sm: 36px; --btn-h-md: 44px; --btn-h-lg: 52px;
+  --btn-pad-sm: 16px; --btn-pad-md: 20px; --btn-pad-lg: 24px;
+  --btn-ink: #0a2435;
+}
+.echuu-website .hv :is(.hv-glass, .hv-blog__all, .hv-title__register, .btn),
+.echuu-website .hv-cta .hv-cta__beta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: var(--btn-radius); font-size: var(--btn-fs); font-weight: var(--btn-weight); letter-spacing: 0;
+  box-shadow: none; transform: none;
+  transition: background-color .15s var(--hv-ease), border-color .15s var(--hv-ease), color .15s var(--hv-ease);
+}
+/* lg：区块主行动、子页面主次按钮 */
+.echuu-website .hv :is(.hv-glass, .btn) { min-height: var(--btn-h-lg); padding: 0 var(--btn-pad-lg); }
+/* md：页头登录、底栏参与内测、全部文章、子页面小按钮 */
+.echuu-website .hv :is(.hv-title__register, .hv-blog__all, .btn--small, .btn--quiet),
+.echuu-website .hv-cta .hv-cta__beta { min-height: var(--btn-h-md); padding: 0 var(--btn-pad-md); }
+/* sm：标签胶囊 */
+.echuu-website .hv .hv-pill { min-height: var(--btn-h-sm); padding: 0 var(--btn-pad-sm); border-radius: 999px; font-size: var(--btn-fs-sm); font-weight: var(--btn-weight); }
+/* 创作者区按钮组原来写死 67px 高、21px 字，回到 lg */
+.echuu-website .hv .hv-creators__actions .hv-glass { min-height: var(--btn-h-lg); font-size: var(--btn-fs); }
+
+/* 深色底 · 主按钮：白底深字 */
+.echuu-website .hv-cta .hv-cta__beta { background: #fff; color: var(--btn-ink); }
+.echuu-website .hv-cta .hv-cta__beta:hover { background: rgba(255, 255, 255, .86); transform: none; }
+/* 深色底 · 次按钮：玻璃（半透明白 + 1px 白线，保留顶部一道高光作材质，不要外投影） */
+.echuu-website .hv :is(.hv-glass, .hv-blog__all) {
+  color: #fff; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45);
+  backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+}
+.echuu-website .hv :is(.hv-glass, .hv-blog__all):hover { background: rgba(255, 255, 255, .26); transform: none; }
+/* 页头「登录」保留 Figma 的青色作首屏唯一重点色，只统一形状 */
+.echuu-website .hv .hv-title__register:hover { background: #41dbfe; transform: none; }
+
+/* 浅色纸面（子页面）· 主按钮：深底白字 */
+.echuu-website .hv .btn--primary { background: var(--btn-ink); color: #fff; border: 1px solid var(--btn-ink); }
+.echuu-website .hv .btn--primary:hover { background: #1b3d55; border-color: #1b3d55; color: #fff; }
+/* 浅色纸面 · 次按钮：透明 + 1px 线 */
+.echuu-website .hv :is(.btn--ghost, .btn--quiet) { background: transparent; color: var(--btn-ink); border: 1px solid rgba(10, 36, 53, .24); }
+.echuu-website .hv :is(.btn--ghost, .btn--quiet):hover { background: rgba(10, 36, 53, .06); border-color: rgba(10, 36, 53, .4); color: var(--btn-ink); }
+
+/* 同一张表单里的控件跟按钮同一个圆角：分类单选（原来是全胶囊）、输入框（原来 10px） */
+.echuu-website .hv .radio-chip { min-height: var(--btn-h-md); padding: 0 var(--btn-pad-sm); border-radius: var(--btn-radius); border-color: rgba(10, 36, 53, .24); color: var(--btn-ink); font-weight: var(--btn-weight); }
+.echuu-website .hv .radio-chip input { accent-color: var(--btn-ink); }
+.echuu-website .hv .radio-chip:has(input:checked) { border-color: var(--btn-ink); background: rgba(10, 36, 53, .06); color: var(--btn-ink); }
+.echuu-website .hv .field :is(input, textarea, select) { border-radius: var(--btn-radius); }
+
+.echuu-website .hv :is(.hv-glass, .hv-blog__all, .hv-title__register, .btn):disabled,
+.echuu-website .hv-cta .hv-cta__beta:disabled { opacity: .5; cursor: not-allowed; }
+
+/* 区块留白：内容区块统一用 --section-y；首屏接缝、巨型「3」和页脚翅膀的美术位置不动 */
+@media (min-width: 1024px) {
+  .echuu-website .hv :is(.hv-steps, .hv-feature, .hv-modes) { padding-top: var(--section-y); }
+  /* 「三步」区块标题：原来 row-reverse + flex-start 把文字推到 960px 盒子右端，停在页面约 59% 处，
+   * 既不居中也不贴栅格边。改成真居中：文字在页面中轴，女孩站在右边，左边放等宽隐形占位抵消她的宽度 */
+  .echuu-website .hv .hv-steps__head { flex-direction: row; justify-content: center; padding-right: 0; }
+  .echuu-website .hv .hv-steps__head::before { content: ''; flex: none; width: clamp(52px, 6vw, 88px); order: 0; }
+  /* 限宽：英文标题折两行时盒子不再撑满，女孩贴着文字站 */
+  .echuu-website .hv .hv-steps__head > div { order: 1; max-width: 640px; }
+  .echuu-website .hv .hv-steps__girl { order: 2; }
+  .echuu-website .hv .hv-steps__head :is(.hv-h2, .hv-lede) { text-align: center; }
+  .echuu-website .hv .hv-feature { padding-bottom: var(--section-y); }
+}
