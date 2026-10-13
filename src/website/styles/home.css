@@ -1259,6 +1259,19 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 .echuu-website .hv :is(.btn--ghost, .btn--quiet) { background: transparent; color: var(--btn-ink); border: 1px solid rgba(10, 36, 53, .24); }
 .echuu-website .hv :is(.btn--ghost, .btn--quiet):hover { background: rgba(10, 36, 53, .06); border-color: rgba(10, 36, 53, .4); color: var(--btn-ink); }
 
+/* 首页菜单浮层的语言切换（旧 LangSwitch，原来白底全胶囊）：深色模糊底上的次按钮 → 玻璃 md */
+.echuu-website .hv-menu-overlay__lang .lang-switch__button {
+  min-height: var(--btn-h-md); padding: 0 var(--btn-pad-md); border-radius: var(--btn-radius);
+  font-size: var(--btn-fs); font-weight: var(--btn-weight); letter-spacing: 0; color: #fff;
+  background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45);
+}
+.echuu-website .hv-menu-overlay__lang .lang-switch__button:hover { background: rgba(255, 255, 255, .26); border-color: rgba(255, 255, 255, .55); color: #fff; }
+.echuu-website .hv-menu-overlay__lang .lang-switch__menu { border-radius: var(--btn-radius); }
+.echuu-website .hv-menu-overlay__lang .lang-switch__menu a { border-radius: 8px; color: var(--btn-ink); }
+.echuu-website .hv-menu-overlay__lang .lang-switch__menu a:hover { background: rgba(10, 36, 53, .06); }
+.echuu-website .hv-menu-overlay__lang .lang-switch__menu a[aria-current='true'] { color: var(--btn-ink); }
+
 /* 同一张表单里的控件跟按钮同一个圆角：分类单选（原来是全胶囊）、输入框（原来 10px） */
 .echuu-website .hv .radio-chip { min-height: var(--btn-h-md); padding: 0 var(--btn-pad-sm); border-radius: var(--btn-radius); border-color: rgba(10, 36, 53, .24); color: var(--btn-ink); font-weight: var(--btn-weight); }
 .echuu-website .hv .radio-chip input { accent-color: var(--btn-ink); }
