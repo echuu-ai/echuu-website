@@ -16,3 +16,8 @@
 - **对齐 12 列栅格**（≥ 1024px）：首页内容区 min(1360px, 100% − 32px)，栏间距 32px；子页面纸面占第 2–11 列、内容第 3–10 列。新区块先定占哪几列，不用 `padding-inline: 2%` 之类的内缩微调（见 §2.5）。
 - **间距用 4 的倍数**（2px 细缝除外），**触屏点击区域 ≥ 44px**（见 docs/website-ui-spec.md §2）。
 - **字体两种**：标题蒲瓜纤云宋，正文 42dot 精简版 + 系统中日韩字体；不引入新字体，不依赖 Google Fonts。
+
+## Safari 兼容（踩过的坑）
+
+- **不要用 `filter: url(#svg滤镜)` 给 `<video>` 调色**：Safari 只对图片、canvas 生效，视频（含外层 div）一律忽略。视频调色烧进素材：`scripts/loops/key.py` 的 `GRADE=` 参数。
+- **跨浏览器比颜色先统一色彩空间**：macOS 截屏带屏幕色彩配置（Display P3），无头 Chrome 截图是 sRGB；直接并排看 Safari 会显得发灰，要先把截图转成 sRGB 再比。

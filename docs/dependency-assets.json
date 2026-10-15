@@ -315,8 +315,9 @@
   },
   {
     "path": "website/figma/creators-circle.webp",
-    "bytes": 171554,
-    "sha256": "6cd741137a9d4ebef11678d0bdbfaa34c040d6d06bc437d0563015fbcbcdc2da"
+    "bytes": 187100,
+    "sha256": "73890c5457901d73f2d7efca1471893afe25674627c9f2ef64674869be536ba5",
+    "source": "Figma export (website home). Cool grade baked in 2026-10-13 (GRADE=cool: R×1.04 G×1.09 B×1.18 then saturate .86) — Safari ignores SVG filters on <video>, so the former CSS url(#hv-cool-art) only worked in Chrome."
   },
   {
     "path": "website/figma/crosswalk.webp",
@@ -657,21 +658,21 @@
   },
   {
     "path": "website/loops/creators-circle-start.webp",
-    "bytes": 65102,
-    "sha256": "0e8ca851d48bb6500f6478c622b08326aa20b1944b9b4eac65471755c62f6fba",
-    "source": "First frame of website/loops/creators-circle.webm (poster before playback), 2026-10-03"
+    "bytes": 71590,
+    "sha256": "bc61a2cdfa4abc0ceeb702087a32bc280da38081bd0fba51898197ce7f3a0bf3",
+    "source": "First frame of website/loops/creators-circle.webm (poster before playback), 2026-10-03; Cool grade baked in 2026-10-13 (GRADE=cool: R×1.04 G×1.09 B×1.18 then saturate .86) — Safari ignores SVG filters on <video>, so the former CSS url(#hv-cool-art) only worked in Chrome."
   },
   {
     "path": "website/loops/creators-circle.mov",
-    "bytes": 3912677,
-    "sha256": "dcb8749f2d3c78619b655bf8e04ace6f3393405cbefa8045fc1f942dd9a268df",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (HEVC alpha), 2026-10-03"
+    "bytes": 3922423,
+    "sha256": "79bb6ac1d68fff96748f2beecfe1be6267ae5c7812cf0988c0685e33a4813366",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (HEVC alpha), 2026-10-03; Cool grade baked in 2026-10-13 (GRADE=cool: R×1.04 G×1.09 B×1.18 then saturate .86) — Safari ignores SVG filters on <video>, so the former CSS url(#hv-cool-art) only worked in Chrome."
   },
   {
     "path": "website/loops/creators-circle.webm",
-    "bytes": 1995456,
-    "sha256": "19bb73a69755f07a19820c0cfce1a82e899f3af643b579918841adafd5053152",
-    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (VP9 alpha), 2026-10-03"
+    "bytes": 2047490,
+    "sha256": "ddcd9d9c4b385cd5ec650e98dd54fbb4a88c7840f24a10ef486cd699ea626f67",
+    "source": "Kling kling-v3 image-to-video (pro, 5 s): first frame = silhouettes mirrored around the girl, last frame = website/figma/creators-circle.webp, on chroma green; plays once; keyed with scripts/loops/key.py (VP9 alpha), 2026-10-03; Cool grade baked in 2026-10-13 (GRADE=cool: R×1.04 G×1.09 B×1.18 then saturate .86) — Safari ignores SVG filters on <video>, so the former CSS url(#hv-cool-art) only worked in Chrome."
   },
   {
     "path": "website/loops/footer-wings.mov",

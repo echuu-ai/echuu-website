@@ -44,11 +44,6 @@ export function HomeV2() {
   useSceneReveal(rootRef, painted);
   return (
     <div className="hv" style={style} ref={rootRef}>
-      <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
-        <defs><filter id="hv-cool-art" colorInterpolationFilters="sRGB">
-          <feColorMatrix type="matrix" values="1.04 0 0 0 0   0 1.09 0 0 0   0 0 1.18 0 0   0 0 0 1 0" />
-        </filter></defs>
-      </svg>
       <Head locale={locale} htmlLang={t.htmlLang} title={h.meta.title} description={h.meta.description} path="" />
       <OpeningHero onLogin={() => openAccess('invite')} onBeta={() => openAccess('signup')} />
       {painted ? <>
