@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Youtube, X as Close, Copy } from 'lucide-react';
 import { SOCIAL_LINKS } from '../config/site';
@@ -48,17 +48,40 @@ export function SocialLinks({ compact = false }: { compact?: boolean }) {
   const [channel, setChannel] = useState<'wechat' | 'qq' | null>(null);
   const [status, setStatus] = useState('');
   const trigger = useRef<HTMLElement | null>(null);
+  const contactButtons = useRef<Partial<Record<'wechat' | 'qq', HTMLButtonElement>>>({});
+  // 邮件链接由常驻页脚承接，避免和浮动底栏重复打开两个弹窗。
+  useEffect(() => {
+    if (compact) return;
+    const followContactLink = () => {
+      const value = new URLSearchParams(window.location.search).get('contact');
+      if (value === 'wechat' || value === 'qq') {
+        trigger.current = contactButtons.current[value] ?? null;
+        setStatus(''); setChannel(value);
+      }
+    };
+    followContactLink();
+    window.addEventListener('popstate', followContactLink);
+    return () => window.removeEventListener('popstate', followContactLink);
+  }, [compact]);
+  const close = () => {
+    setChannel(null);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('contact')) {
+      url.searchParams.delete('contact');
+      window.history.replaceState(window.history.state, '', url);
+    }
+  };
   const open = (value: 'wechat' | 'qq') => { trigger.current = document.activeElement as HTMLElement; setStatus(''); setChannel(value); };
   const number = channel === 'wechat' ? WECHAT_ID : QQ_GROUP;
   const copyNumber = async () => { try { await navigator.clipboard.writeText(number); setStatus(c.copied); } catch { setStatus(c.copyFailed); } };
   return <>
-    {(['wechat', 'qq'] as const).map((id) => <button key={id} type="button" className={compact ? 'hv-cta__icon' : 'hv-social-link'} aria-label={c[id]} onClick={() => open(id)}>
+    {(['wechat', 'qq'] as const).map((id) => <button key={id} ref={el => { if (el) contactButtons.current[id] = el; }} type="button" className={compact ? 'hv-cta__icon' : 'hv-social-link'} aria-label={c[id]} onClick={() => open(id)}>
       {compact ? <img src={id === 'wechat' ? HOME_ASSETS.icons.bilibili : HOME_ASSETS.icons.qq} alt="" /> : c[id]}
     </button>)}
     {SOCIAL_LINKS.map((social) => <a key={social.id} className={compact ? 'hv-cta__icon' : 'hv-social-link'} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={socialLabel(social.id, social.label, c)} onClick={() => trackEvent('outbound_click', { kind: 'social', id: social.id })}>
       {compact ? social.id === 'xiaohongshu' ? <img src={HOME_ASSETS.icons.xiaohongshu} alt="" /> : social.id === 'x' ? <img src={HOME_ASSETS.icons.x} alt="" /> : <Youtube size={22} aria-hidden="true" /> : socialLabel(social.id, social.label, c)}
     </a>)}
-    <Dialog.Root open={Boolean(channel)} onOpenChange={(value) => { if (!value) setChannel(null); }}>
+    <Dialog.Root open={Boolean(channel)} onOpenChange={(value) => { if (!value) close(); }}>
       <Dialog.Portal><Dialog.Overlay className="echuu-access-overlay" />
         <Dialog.Content className="echuu-access" lang={locale} onCloseAutoFocus={(event) => { event.preventDefault(); trigger.current?.focus(); }}>
           <div className="echuu-access__glass">
