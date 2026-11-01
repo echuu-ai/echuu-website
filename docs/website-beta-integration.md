@@ -1,6 +1,6 @@
 # 内测注册接入 · 2026-11-01
 
-采用已定规则：1,000 个内测名额，仅前 300 位获得 3,800 星碎。公开邀请链接 `/website/{locale}?access=signup&ref=…` 打开注册；一次提交后服务端发码，官网自动兑换并交接到主产品 Galatea。手工兑码保留为兜底，已有账号链接直接进入产品密码登录。
+采用已定规则：1,000 个内测名额，仅前 300 位获得 3,800 星碎。公开邀请链接 `/website/{locale}?access=signup&ref=…` 打开注册；一次提交后服务端发码，官网自动兑换并通过产品 `/auth/invite-callback` 交接到主 App 首页（`/#landing/home`）。Galatea 由用户从主 App 的角色生成入口主动进入。手工兑码保留为兜底，已有账号链接直接进入产品密码登录。
 
 Vercel 服务端必须配置 `BETA_PLATFORM_API_BASE=https://api.echuu.live/api/v1` 和与平台一致的 `BETA_WEBSITE_API_KEY`。浏览器默认 `/api/redeem?action=register`、`/api/redeem`，无配置时明确失败，不伪造注册成功。`VITE_PRODUCT_ORIGIN` 必须与平台 `BETA_PRODUCT_ORIGIN` 一致；默认 `https://echuu.live`。
 
