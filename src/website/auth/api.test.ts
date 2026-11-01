@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
-import { redeemInvite, registerBeta, validateProductRedirect } from './api';
+import { generateInviteCode } from './inviteCode';
+import { registerBeta, validateProductRedirect } from './api';
 afterEach(() => vi.unstubAllGlobals());
 describe('invitation access boundary', () => {
   it('accepts only the configured product origin', () => {
@@ -13,11 +14,26 @@ describe('invitation access boundary', () => {
     expect(validateProductRedirect('http://localhost:5173/#invite-exchange=opaque', 'http://localhost:5173')).toContain(':5173');
     expect(() => validateProductRedirect('http://localhost:5174', 'http://localhost:5173')).toThrow();
   });
-  it('fails closed and never transmits credentials without configured services', async () => {
-    const fetchMock = vi.fn(); vi.stubGlobal('fetch', fetchMock);
+  it('surfaces a disabled backend instead of pretending registration succeeded', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}', { status: 503 })));
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal)).rejects.toMatchObject({ code: 'unavailable' });
+  });
+  it('rejects full capacity and an impossible gift after place 300', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce(new Response('{}', { status: 409 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({status: 'issued', code: generateInviteCode(), ordinal: 301, gift_shards: 3800})));
+    vi.stubGlobal('fetch', fetchMock);
     const signal = new AbortController().signal;
-    await expect(redeemInvite('example', signal)).rejects.toMatchObject({ code: 'unavailable' });
-    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal)).rejects.toMatchObject({ code: 'unavailable' });
-    expect(fetchMock).not.toHaveBeenCalled();
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal)).rejects.toMatchObject({ code: 'full' });
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal)).rejects.toMatchObject({ code: 'failed' });
+  });
+  it('keeps referral attribution through registration and clears it after success', async () => {
+    history.replaceState({}, '', '/website/zh?ref=referral123');
+    const code = generateInviteCode();
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({status: 'issued', code, ordinal: 300, gift_shards: 3800})));
+    vi.stubGlobal('fetch', fetchMock);
+    const result = await registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal);
+    expect(result.gift_shards).toBe(3800);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).referral_code).toBe('referral123');
+    expect(sessionStorage.getItem('echuu-beta-referral-v1')).toBeNull();
   });
 });

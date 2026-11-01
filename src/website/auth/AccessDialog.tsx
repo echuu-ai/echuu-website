@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent, type RefObject } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, Check, Eye, EyeOff, X } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, X } from 'lucide-react';
 import { useLocale } from '../locale-context';
 import { authCopy } from './copy';
-import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta } from './api';
+import { AuthError, INVITE_ENDPOINT, SIGNUP_ENDPOINT, redeemInvite, registerBeta, type BetaIssued } from './api';
 import { isWellFormedInviteCode, normalizeInviteCode } from './inviteCode';
-import { CONTACT_EMAIL, CONTACT_EMAIL_ALT, CONTACT_RECIPIENTS } from '../config/site';
+import { CONTACT_EMAIL, CONTACT_EMAIL_ALT, CONTACT_RECIPIENTS, PRODUCT_ORIGIN } from '../config/site';
 import { trackEvent } from '../lib/googleAnalytics';
 import './access.css';
 
@@ -22,7 +22,8 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [issued, setIssued] = useState<BetaIssued | null>(null);
+  const success = issued !== null;
   const [error, setError] = useState('');
   const request = useRef<AbortController | null>(null);
   const invite = mode === 'invite';
@@ -30,7 +31,7 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
   const mailHref = `mailto:${CONTACT_RECIPIENTS}?subject=${encodeURIComponent(t.apply.emailSubject)}&body=${encodeURIComponent(t.apply.emailBody)}`;
   useEffect(() => {
     request.current?.abort();
-    setCode(''); setPassword(''); setEmail(''); setError(''); setBusy(false); setSuccess(false); setShowPassword(false);
+    setCode(''); setPassword(''); setEmail(''); setError(''); setBusy(false); setIssued(null); setShowPassword(false);
     if (mode) trackEvent('access_opened', { mode, configured });
     return () => { request.current?.abort(); request.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,30 +40,37 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
     event.preventDefault();
     if (busy || !configured) return;
     // 邀请码先在本地查格式与校验位：抄错一位直接提示，不打到服务端
-    if (invite && !isWellFormedInviteCode(code)) { setError(c.format); return; }
+    if ((invite || success) && !isWellFormedInviteCode(issued?.code ?? code)) { setError(c.format); return; }
     const controller = new AbortController();
     request.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), 15000);
+    let operation: AccessMode = invite || success ? 'invite' : 'signup';
     setBusy(true); setError('');
     try {
-      if (invite) {
-        const destination = await redeemInvite(normalizeInviteCode(code), controller.signal);
+      if (invite || success) {
+        const destination = await redeemInvite(normalizeInviteCode(issued?.code ?? code), controller.signal);
         if (!controller.signal.aborted) {
           trackEvent('access_completed', { mode: 'invite' });
           window.location.assign(destination);
         }
       } else {
-        await registerBeta(email, password, locale, controller.signal);
+        const result = await registerBeta(email, password, locale, controller.signal);
         if (!controller.signal.aborted) {
           trackEvent('access_completed', { mode: 'signup' });
-          setSuccess(true); setPassword('');
+          setIssued(result); setPassword('');
+          operation = 'invite';
+          const destination = await redeemInvite(result.code, controller.signal);
+          if (!controller.signal.aborted) {
+            trackEvent('access_completed', { mode: 'invite', entry: 'registration' });
+            window.location.assign(destination);
+          }
         }
       }
     } catch (err) {
       if (request.current === controller) {
         const code = err instanceof AuthError ? err.code : 'network';
         setError(c[code]);
-        trackEvent('access_failed', { mode: invite ? 'invite' : 'signup', reason: code });
+        trackEvent('access_failed', { mode: operation, reason: code });
       }
     } finally {
       clearTimeout(timeout);
@@ -80,9 +88,13 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
           <Dialog.Close className="echuu-access__close" aria-label={c.close}><X size={20} /></Dialog.Close>
           <Dialog.Title className="echuu-access__title">{success ? c.successTitle : invite ? c.inviteTitle : c.signupTitle}</Dialog.Title>
           <Dialog.Description className="echuu-access__description">{success ? c.successBody : !configured ? t.apply.body : invite ? c.inviteBody : c.signupBody}</Dialog.Description>
-          {success ? <div className="echuu-access__body"><div className="echuu-access__actions">
-            <button className="echuu-access__submit" onClick={onClose}>{c.done}<Check size={18} /></button>
-          </div></div> : !configured ? (
+          {success ? <form className="echuu-access__body" onSubmit={submit}>
+            <label>{c.code}<input readOnly value={issued.code} aria-label={c.code} onFocus={event => event.target.select()} /></label>
+            <p className="echuu-access__privacy">{issued.gift_shards === 3800 ? c.gift : c.accessOnly}</p>
+            {error && <p className="echuu-access__error" role="alert">{error}</p>}
+            <div className="echuu-access__actions"><button type="submit" className="echuu-access__submit" disabled={busy} aria-busy={busy}>{busy ? c.busy : c.submitInvite}<ArrowRight size={18} /></button></div>
+            <p className="echuu-access__switch"><a href={`${PRODUCT_ORIGIN}/#landing/log-in`}>{c.accountLogin}</a></p>
+          </form> : !configured ? (
             <div className="echuu-access__body">
               <p role="status">{c.unavailable}</p>
               <p>{t.apply.mailNote}</p>
@@ -113,6 +125,7 @@ export function AccessDialog({ mode, onClose, onModeChange, returnFocusRef }: {
                 <p className="echuu-access__switch">{invite ? c.noCode : c.hasCode} <button type="button" onClick={() => onModeChange(invite ? 'signup' : 'invite')}>
                   {invite ? c.beta : c.login}</button></p>
                 {!invite && <p className="echuu-access__privacy">{c.privacy}</p>}
+                <p className="echuu-access__switch"><a href={`${PRODUCT_ORIGIN}/#landing/log-in`}>{c.accountLogin}</a></p>
               </div>
             </form>
           </>}

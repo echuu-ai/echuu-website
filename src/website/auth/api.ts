@@ -1,8 +1,10 @@
 import { PRODUCT_ORIGIN } from '../config/site';
+import { clearReferral, getReferral } from './referral';
+import { isWellFormedInviteCode } from './inviteCode';
 
-export const INVITE_ENDPOINT = import.meta.env.VITE_INVITE_REDEEM_ENDPOINT?.trim() || '';
-export const SIGNUP_ENDPOINT = import.meta.env.VITE_BETA_ACCOUNT_ENDPOINT?.trim() || '';
-export type AuthErrorCode = 'unavailable' | 'invalid' | 'rate' | 'network' | 'failed';
+export const INVITE_ENDPOINT = import.meta.env.VITE_INVITE_REDEEM_ENDPOINT?.trim() || '/api/redeem';
+export const SIGNUP_ENDPOINT = import.meta.env.VITE_BETA_ACCOUNT_ENDPOINT?.trim() || '/api/redeem?action=register';
+export type AuthErrorCode = 'full' | 'unavailable' | 'invalid' | 'rate' | 'network' | 'failed';
 export class AuthError extends Error {
   constructor(public code: AuthErrorCode) { super(code); }
 }
@@ -30,8 +32,10 @@ async function post(endpoint: string, data: object, signal: AbortSignal) {
     if (signal.aborted) throw error;
     throw new AuthError('network');
   }
+  if (response.status === 409) throw new AuthError('full');
+  if (response.status === 503) throw new AuthError('unavailable');
   if (response.status === 429) throw new AuthError('rate');
-  if ([400, 401, 403, 410].includes(response.status)) throw new AuthError('invalid');
+  if ([400, 401, 403, 410, 422].includes(response.status)) throw new AuthError('invalid');
   if (!response.ok) throw new AuthError('failed');
   return response.json();
 }
@@ -41,7 +45,12 @@ export async function redeemInvite(code: string, signal: AbortSignal) {
   if (result.status !== 'redeemed') throw new AuthError('failed');
   return validateProductRedirect(result.redirect_url);
 }
+export type BetaIssued = { status: 'issued'; code: string; ordinal: number; gift_shards: 0 | 3800 };
 export async function registerBeta(email: string, password: string, locale: string, signal: AbortSignal) {
-  const result = await post(SIGNUP_ENDPOINT, { email: email.trim(), password, locale }, signal);
-  if (result.status !== 'pending_invitation') throw new AuthError('failed');
+  const result = await post(SIGNUP_ENDPOINT, { email: email.trim(), password, locale, referral_code: getReferral() }, signal);
+  if (result.status !== 'issued' || typeof result.code !== 'string' || !isWellFormedInviteCode(result.code)
+    || !Number.isInteger(result.ordinal) || result.ordinal < 1 || result.ordinal > 1000
+    || ![0, 3800].includes(result.gift_shards) || (result.ordinal > 300 && result.gift_shards !== 0)) throw new AuthError('failed');
+  clearReferral();
+  return result as BetaIssued;
 }

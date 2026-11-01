@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState, useRef, type CSSProperties } from 'react';
+import '../auth/referral';
 import { LazyAccessDialog, type AccessMode } from '../auth/LazyAccessDialog';
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
@@ -32,7 +33,7 @@ const showSeamTuning = () => tuneParam() === 'seam';
  */
 export function HomeV2() {
   const { locale, t } = useLocale();
-  const [accessMode, setAccessMode] = useState<AccessMode | null>(null);
+  const [accessMode, setAccessMode] = useState<AccessMode | null>(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('access') === 'signup' ? 'signup' : null);
   const accessTrigger = useRef<HTMLElement | null>(null);
   const openAccess = (mode: AccessMode) => { accessTrigger.current = document.activeElement as HTMLElement; setAccessMode(mode); };
   const { h } = useHomeDict();

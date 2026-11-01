@@ -37,7 +37,7 @@ export function startAnalytics() {
   gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
   gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', region: EEA_UK_CH });
   gtag('js', new Date());
-  gtag('config', MEASUREMENT_ID, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
+  gtag('config', MEASUREMENT_ID, { page_location: window.location.origin + window.location.pathname, page_referrer: document.referrer ? new URL(document.referrer).origin : '', send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
   // 补发启动前排队的事件（例如首帧就触发的交互）
   for (const [name, params] of pending.splice(0)) gtag('event', name, params);
   const load = () => {
@@ -56,7 +56,7 @@ export function startAnalytics() {
 /** 记一次页面浏览（首次进入与每次站内跳转）；未启用时什么都不做。 */
 export function trackPageView(title: string) {
   if (!started) return;
-  gtag('event', 'page_view', { page_location: window.location.href, page_path: window.location.pathname, page_title: title });
+  gtag('event', 'page_view', { page_location: window.location.origin + window.location.pathname, page_path: window.location.pathname, page_title: title });
 }
 
 /** 官网自定义事件名。命名用 GA4 惯例的小写下划线，含义见各埋点处注释。 */
