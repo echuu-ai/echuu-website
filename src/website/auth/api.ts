@@ -4,6 +4,7 @@ import { isWellFormedInviteCode } from './inviteCode';
 
 export const INVITE_ENDPOINT = import.meta.env.VITE_INVITE_REDEEM_ENDPOINT?.trim() || '/api/redeem';
 export const SIGNUP_ENDPOINT = import.meta.env.VITE_BETA_ACCOUNT_ENDPOINT?.trim() || '/api/redeem?action=register';
+const WAITLIST_ENDPOINT = '/api/redeem?action=waitlist';
 export type AuthErrorCode = 'full' | 'unavailable' | 'invalid' | 'rate' | 'network' | 'failed';
 export class AuthError extends Error {
   constructor(public code: AuthErrorCode) { super(code); }
@@ -53,4 +54,19 @@ export async function registerBeta(email: string, password: string, locale: stri
     || ![0, 3800].includes(result.gift_shards) || (result.ordinal > 300 && result.gift_shards !== 0)) throw new AuthError('failed');
   clearReferral();
   return result as BetaIssued;
+}
+
+export async function betaAvailability(signal: AbortSignal): Promise<'open' | 'full'> {
+  const response = await fetch('/api/redeem?action=availability', { signal, cache: 'no-store', credentials: 'omit', redirect: 'error' });
+  if (!response.ok) throw new AuthError('unavailable');
+  const result = await response.json();
+  if (!['open', 'full'].includes(result.status) || result.capacity !== 1000 || !Number.isInteger(result.issued)
+    || result.issued < 0 || result.issued > 1000 || (result.status === 'full') !== (result.issued === 1000)) throw new AuthError('failed');
+  return result.status;
+}
+
+export async function joinWaitlist(email: string, locale: string, signal: AbortSignal) {
+  const result = await post(WAITLIST_ENDPOINT, { email: email.trim(), locale, referral_code: getReferral() }, signal);
+  if (result.status !== 'waitlisted') throw new AuthError('failed');
+  clearReferral();
 }

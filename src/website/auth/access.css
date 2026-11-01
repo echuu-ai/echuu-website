@@ -72,6 +72,9 @@
 .echuu-access__notice, .echuu-access__error, .echuu-access__privacy { margin: 0; font-size: 12px; line-height: 1.6; }
 .echuu-access__notice, .echuu-access__privacy { color: rgba(255, 255, 255, .6); }
 .echuu-access__privacy { text-align: center; }
+.echuu-access__privacy a { color: #00ddff; text-underline-offset: 3px; }
+.echuu-access__privacy a:hover { color: #fff; }
+.echuu-access__privacy a:focus-visible { outline: 2px solid #00ddff; outline-offset: 3px; }
 .echuu-access__error { color: #ffb3c0; }
 
 /* 社群：二维码、号码卡、加入步骤 */

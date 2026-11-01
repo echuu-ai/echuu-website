@@ -1,0 +1,206 @@
+[
+  {
+    "locale": "zh",
+    "width": 390,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "加入候补名单",
+        "width": 309,
+        "height": 52,
+        "scroll": 309,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "Join the waitlist",
+        "width": 309,
+        "height": 52,
+        "scroll": 309,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ja",
+    "width": 390,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "キャンセル待ちに登録",
+        "width": 309,
+        "height": 52,
+        "scroll": 309,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"Hiragino Sans\", \"Hiragino Kaku Gothic ProN\", \"Yu Gothic\", \"Noto Sans JP\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ko",
+    "width": 390,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "대기 명단 등록",
+        "width": 309,
+        "height": 52,
+        "scroll": 309,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"42dot Sans\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "zh",
+    "width": 1024,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "加入候补名单",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 1024,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "Join the waitlist",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ja",
+    "width": 1024,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "キャンセル待ちに登録",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"Hiragino Sans\", \"Hiragino Kaku Gothic ProN\", \"Yu Gothic\", \"Noto Sans JP\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ko",
+    "width": 1024,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "대기 명단 등록",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"42dot Sans\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "zh",
+    "width": 1440,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "加入候补名单",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "en",
+    "width": 1440,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "Join the waitlist",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ja",
+    "width": 1440,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "キャンセル待ちに登録",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"Hiragino Sans\", \"Hiragino Kaku Gothic ProN\", \"Yu Gothic\", \"Noto Sans JP\", system-ui, sans-serif"
+      }
+    ]
+  },
+  {
+    "locale": "ko",
+    "width": 1440,
+    "orphans": [],
+    "overflow": false,
+    "button": [
+      {
+        "text": "대기 명단 등록",
+        "width": 314,
+        "height": 52,
+        "scroll": 314,
+        "color": "rgb(10, 36, 53)",
+        "background": "rgb(255, 255, 255)",
+        "font": "\"Echuu 42dot\", \"42dot Sans\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", \"Noto Sans KR\", system-ui, sans-serif"
+      }
+    ]
+  }
+]

@@ -8,7 +8,7 @@ it('fails closed before forwarding credentials when the platform is not configur
   vi.stubEnv('BETA_PLATFORM_API_BASE', '');
   const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
   const res = response();
-  await handler({ method: 'POST' } as never, res as never);
+  await handler({ method: 'POST', query: {} } as never, res as never);
   expect(res.status).toHaveBeenCalledWith(503);
   expect(fetcher).not.toHaveBeenCalled();
   expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
@@ -45,4 +45,20 @@ it('does not expose upstream errors and rejects credential-bearing or insecure d
   const res = response(); await handler(req as never, res as never);
   expect(res.status).toHaveBeenCalledWith(502);
   expect(res.json).toHaveBeenCalledWith({ status: 'failed' });
+});
+
+it('proxies capacity as GET and waitlist without password or arbitrary fields', async () => {
+  vi.stubEnv('BETA_PLATFORM_API_BASE', 'https://platform.example/api/v1');
+  vi.stubEnv('BETA_WEBSITE_API_KEY', 'test-only-key');
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({ status: 'full', issued: 1000, capacity: 1000 })));
+  vi.stubGlobal('fetch', fetcher);
+  await handler({ method: 'GET', query: { action: 'availability' }, headers: {} } as never, response() as never);
+  expect(fetcher.mock.calls[0][0]).toContain('/beta/availability');
+  expect(fetcher.mock.calls[0][1].method).toBe('GET');
+  expect(fetcher.mock.calls[0][1].body).toBeUndefined();
+  fetcher.mockResolvedValue(new Response(JSON.stringify({ status: 'waitlisted' })));
+  const res = response();
+  await handler({ method: 'POST', query: { action: 'waitlist' }, headers: {}, body: { email: 'test@example.com', locale: 'ko', referral_code: 'public123', password: 'discard', admin: true } } as never, res as never);
+  expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({ email: 'test@example.com', locale: 'ko', referral_code: 'public123' });
+  expect(res.json).toHaveBeenCalledWith({ status: 'waitlisted' });
 });

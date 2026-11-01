@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { generateInviteCode } from './inviteCode';
-import { registerBeta, validateProductRedirect } from './api';
+import { betaAvailability, joinWaitlist, registerBeta, validateProductRedirect } from './api';
 afterEach(() => vi.unstubAllGlobals());
 describe('invitation access boundary', () => {
   it('accepts only the configured product origin', () => {
@@ -36,4 +36,17 @@ describe('invitation access boundary', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body).referral_code).toBe('referral123');
     expect(sessionStorage.getItem('echuu-beta-referral-v1')).toBeNull();
   });
+});
+
+it('rejects inconsistent capacity and only confirms waitlist after persistence acknowledgement', async () => {
+  const signal = new AbortController().signal;
+  const fetcher = vi.fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify({status: 'full', issued: 999, capacity: 1000})))
+    .mockResolvedValueOnce(new Response(JSON.stringify({status: 'waitlisted'})));
+  vi.stubGlobal('fetch', fetcher);
+  await expect(betaAvailability(signal)).rejects.toMatchObject({code: 'failed'});
+  history.replaceState({}, '', '/website/zh?ref=referral123');
+  await joinWaitlist(' test@example.com ', 'ko', signal);
+  expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({email: 'test@example.com', locale: 'ko', referral_code: 'referral123'});
+  expect(sessionStorage.getItem('echuu-beta-referral-v1')).toBeNull();
 });
