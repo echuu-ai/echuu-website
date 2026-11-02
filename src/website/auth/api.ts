@@ -70,3 +70,13 @@ export async function joinWaitlist(email: string, locale: string, signal: AbortS
   if (result.status !== 'waitlisted') throw new AuthError('failed');
   clearReferral();
 }
+
+export type BetaApplication = { email: string; character: string; portfolio: string; website: string; locale: string };
+export async function submitBetaApplication(application: BetaApplication, signal: AbortSignal) {
+  const result = await post('/api/beta-application', {
+    ...application, email: application.email.trim(), character: application.character.trim(),
+    portfolio: application.portfolio.trim(), referral_code: getReferral(),
+  }, signal);
+  if (result.status !== 'submitted') throw new AuthError('failed');
+  // Keep referral attribution for eventual account activation; this only submits an application.
+}

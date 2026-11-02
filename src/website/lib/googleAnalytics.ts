@@ -65,6 +65,9 @@ export type SiteEvent =
   | 'access_completed'     // 邀请码兑换成功（跳产品）或内测注册成功
   | 'access_failed'        // 兑换 / 注册失败
   | 'access_email_fallback'// 无接口时点「邮件申请」
+  | 'beta_application_submitted' // 申请发送尝试，仅语言，不含资料
+  | 'beta_application_completed' // 邮件服务确认收下申请
+  | 'beta_application_failed'    // 申请失败，仅错误类型
   | 'waitlist_viewed'      // 后端确认满额后展示候补入口
   | 'waitlist_completed'   // 后端确认联系方式已保存
   | 'waitlist_failed'      // 候补提交失败，不记录邮箱
