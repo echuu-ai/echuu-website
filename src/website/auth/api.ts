@@ -47,8 +47,9 @@ export async function redeemInvite(code: string, signal: AbortSignal) {
   return validateProductRedirect(result.redirect_url);
 }
 export type BetaIssued = { status: 'issued'; code: string; ordinal: number; gift_shards: 0 | 3800 };
-export async function registerBeta(email: string, password: string, locale: string, signal: AbortSignal) {
-  const result = await post(SIGNUP_ENDPOINT, { email: email.trim(), password, locale, referral_code: getReferral() }, signal);
+export async function registerBeta(email: string, password: string, locale: string, signal: AbortSignal,
+  profile: { name: string; referralCode: string }) {
+  const result = await post(SIGNUP_ENDPOINT, { name: profile.name.trim(), email: email.trim(), password, locale, referral_code: profile.referralCode.trim() || undefined }, signal);
   if (result.status !== 'issued' || typeof result.code !== 'string' || !isWellFormedInviteCode(result.code)
     || !Number.isInteger(result.ordinal) || result.ordinal < 1 || result.ordinal > 1000
     || ![0, 3800].includes(result.gift_shards) || (result.ordinal > 300 && result.gift_shards !== 0)) throw new AuthError('failed');
@@ -65,18 +66,8 @@ export async function betaAvailability(signal: AbortSignal): Promise<'open' | 'f
   return result.status;
 }
 
-export async function joinWaitlist(email: string, locale: string, signal: AbortSignal) {
-  const result = await post(WAITLIST_ENDPOINT, { email: email.trim(), locale, referral_code: getReferral() }, signal);
+export async function joinWaitlist(email: string, locale: string, signal: AbortSignal, referralCode = getReferral()) {
+  const result = await post(WAITLIST_ENDPOINT, { email: email.trim(), locale, referral_code: referralCode?.trim() || undefined }, signal);
   if (result.status !== 'waitlisted') throw new AuthError('failed');
   clearReferral();
-}
-
-export type BetaApplication = { email: string; character: string; portfolio: string; website: string; locale: string };
-export async function submitBetaApplication(application: BetaApplication, signal: AbortSignal) {
-  const result = await post('/api/beta-application', {
-    ...application, email: application.email.trim(), character: application.character.trim(),
-    portfolio: application.portfolio.trim(), referral_code: getReferral(),
-  }, signal);
-  if (result.status !== 'submitted') throw new AuthError('failed');
-  // Keep referral attribution for eventual account activation; this only submits an application.
 }

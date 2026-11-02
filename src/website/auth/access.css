@@ -102,19 +102,11 @@
 .echuu-access__contact { margin: 0; text-align: center; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, .55); }
 .echuu-access__contact a { color: #fff; font-weight: 550; text-underline-offset: 4px; }
 
-/* Three-field application: preserve the website glass panel; scroll on short screens. */
-.echuu-access--application { height: auto; max-height: calc(100dvh - 32px); }
-.echuu-access--application .echuu-access__glass { max-height: calc(100dvh - 32px); }
-.echuu-access--application .echuu-access__body { flex: 0 0 auto; }
-.echuu-access--application .echuu-access__actions { padding-top: 0; }
-.echuu-access textarea {
-  width: 100%; min-height: 80px; padding: 12px 16px; border-radius: var(--btn-radius, 12px);
-  font: inherit; font-size: 15px; line-height: 1.5; color: #fff; resize: vertical;
-  border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08);
-}
-.echuu-access textarea::placeholder { color: rgba(255, 255, 255, .45); }
-.echuu-access textarea:focus { outline: 2px solid #00ddff; outline-offset: 2px; }
-.echuu-access__trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.echuu-access--application .echuu-access__switch button { min-height: 44px; color: #00ddff; }
-.echuu-access--application .echuu-access__switch a { display: inline-block; padding-block: 12px; }
-.echuu-access--application .echuu-access__close { width: 44px; height: 44px; right: 8px; top: 8px; }
+/* Registration fields remain usable on short screens without hiding content. */
+.echuu-access--registration { height: auto; max-height: calc(100dvh - 32px); }
+.echuu-access--registration .echuu-access__glass { max-height: calc(100dvh - 32px); }
+.echuu-access--registration .echuu-access__body { flex: 0 0 auto; }
+.echuu-access--registration .echuu-access__actions { padding-top: 0; }
+.echuu-access--registration .echuu-access__switch button { min-height: 44px; color: #00ddff; }
+.echuu-access--registration .echuu-access__switch a { display: inline-block; padding-block: 12px; }
+.echuu-access--registration .echuu-access__close { width: 44px; height: 44px; right: 8px; top: 8px; }

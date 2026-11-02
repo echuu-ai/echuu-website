@@ -1,3 +1,5 @@
+> 已被 Cory 后续确认的「用户名、邮箱、密码＋选填邀请码」注册流程取代。本文仅保留历史测试记录，不再是上线方案；参见 [最新验收](../2026-11-02-beta-registration/README.md)。
+
 # 官网三字段内测申请 · 2026-11-02
 
 - 目标：独立官网 echuu-ai/echuu-website；source baseline origin/dev `a17b740`。

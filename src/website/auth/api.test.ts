@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { generateInviteCode } from './inviteCode';
-import { betaAvailability, joinWaitlist, registerBeta, submitBetaApplication, validateProductRedirect } from './api';
+import { betaAvailability, joinWaitlist, registerBeta, validateProductRedirect } from './api';
 afterEach(() => vi.unstubAllGlobals());
 describe('invitation access boundary', () => {
   it('accepts only the configured product origin', () => {
@@ -16,24 +16,24 @@ describe('invitation access boundary', () => {
   });
   it('surfaces a disabled backend instead of pretending registration succeeded', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}', { status: 503 })));
-    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal)).rejects.toMatchObject({ code: 'unavailable' });
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal, {name: ' 小星 ', referralCode: 'referral123'})).rejects.toMatchObject({ code: 'unavailable' });
   });
   it('rejects full capacity and an impossible gift after place 300', async () => {
     const fetchMock = vi.fn().mockResolvedValueOnce(new Response('{}', { status: 409 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({status: 'issued', code: generateInviteCode(), ordinal: 301, gift_shards: 3800})));
     vi.stubGlobal('fetch', fetchMock);
     const signal = new AbortController().signal;
-    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal)).rejects.toMatchObject({ code: 'full' });
-    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal)).rejects.toMatchObject({ code: 'failed' });
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal, {name: '小星', referralCode: ''})).rejects.toMatchObject({ code: 'full' });
+    await expect(registerBeta('test@example.com', 'test-password-only', 'zh', signal, {name: '小星', referralCode: ''})).rejects.toMatchObject({ code: 'failed' });
   });
   it('keeps referral attribution through registration and clears it after success', async () => {
     history.replaceState({}, '', '/website/zh?ref=referral123');
     const code = generateInviteCode();
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({status: 'issued', code, ordinal: 300, gift_shards: 3800})));
     vi.stubGlobal('fetch', fetchMock);
-    const result = await registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal);
+    const result = await registerBeta('test@example.com', 'test-password-only', 'zh', new AbortController().signal, {name: ' 小星 ', referralCode: 'referral123'});
     expect(result.gift_shards).toBe(3800);
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body).referral_code).toBe('referral123');
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({name: '小星', email: 'test@example.com', password: 'test-password-only', locale: 'zh', referral_code: 'referral123'});
     expect(sessionStorage.getItem('echuu-beta-referral-v1')).toBeNull();
   });
 });
@@ -52,15 +52,9 @@ it('rejects inconsistent capacity and only confirms waitlist after persistence a
 });
 
 
-it('sends an application without clearing referral before later account activation', async () => {
-  sessionStorage.clear(); history.replaceState({}, '', '/website/en?ref=referral123');
-  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({status: 'submitted'})));
+it('allows registration without an invitation and does not send extra application fields', async () => {
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({status: 'issued', code: generateInviteCode(), ordinal: 301, gift_shards: 0})));
   vi.stubGlobal('fetch', fetcher);
-  await submitBetaApplication({email: ' test@example.com ', character: ' My OC ', portfolio: '', website: '', locale: 'en'}, new AbortController().signal);
-  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({email:'test@example.com', character:'My OC', portfolio:'', website:'', locale:'en', referral_code:'referral123'});
-  expect(sessionStorage.getItem('echuu-beta-referral-v1')).toContain('referral123');
-});
-it('does not treat arbitrary successful HTTP responses as an application receipt', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}')));
-  await expect(submitBetaApplication({email:'test@example.com',character:'',portfolio:'',website:'',locale:'zh'}, new AbortController().signal)).rejects.toMatchObject({code:'failed'});
+  await registerBeta(' test@example.com ', 'test-password-only', 'en', new AbortController().signal, {name: ' Star ', referralCode: ' '});
+  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({name: 'Star', email: 'test@example.com', password: 'test-password-only', locale: 'en'});
 });

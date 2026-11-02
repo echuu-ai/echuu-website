@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const body = method === 'GET' ? {} : typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     if (!body || typeof body !== 'object') return res.status(400).json({ status: 'invalid' });
     const payload = action === 'register'
-      ? { email: body.email, password: body.password, locale: body.locale, referral_code: body.referral_code }
+      ? { name: body.name, email: body.email, password: body.password, locale: body.locale, referral_code: body.referral_code }
       : action === 'waitlist' ? { email: body.email, locale: body.locale, referral_code: body.referral_code }
       : { code: body.code };
     const upstream = await fetch(`${base}/beta/${action}`, {

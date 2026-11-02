@@ -21,10 +21,10 @@ it('forwards only registration fields and its own server credential', async () =
   vi.stubGlobal('fetch', fetcher);
   const res = response();
   await handler({ method: 'POST', query: { action: 'register' }, headers: { 'x-forwarded-for': '192.0.2.1', 'x-beta-website-key': 'spoofed' },
-    body: { email: 'test@example.com', password: 'test-password', locale: 'zh', referral_code: 'public123', is_superuser: true } } as never, res as never);
+    body: { name: '小星', email: 'test@example.com', password: 'test-password', locale: 'zh', referral_code: 'public123', is_superuser: true } } as never, res as never);
   const [url, init] = fetcher.mock.calls[0];
   expect(url).toBe('https://platform.example/api/v1/beta/register');
-  expect(JSON.parse(init.body)).toEqual({ email: 'test@example.com', password: 'test-password', locale: 'zh', referral_code: 'public123' });
+  expect(JSON.parse(init.body)).toEqual({ name: '小星', email: 'test@example.com', password: 'test-password', locale: 'zh', referral_code: 'public123' });
   expect(init.headers['x-beta-website-key']).toBe('test-only-key');
   expect(init.redirect).toBe('error');
   expect(res.status).toHaveBeenCalledWith(200);
@@ -58,7 +58,7 @@ it('proxies capacity as GET and waitlist without password or arbitrary fields', 
   expect(fetcher.mock.calls[0][1].body).toBeUndefined();
   fetcher.mockResolvedValue(new Response(JSON.stringify({ status: 'waitlisted' })));
   const res = response();
-  await handler({ method: 'POST', query: { action: 'waitlist' }, headers: {}, body: { email: 'test@example.com', locale: 'ko', referral_code: 'public123', password: 'discard', admin: true } } as never, res as never);
+  await handler({ method: 'POST', query: { action: 'waitlist' }, headers: {}, body: { email: 'test@example.com', locale: 'ko', referral_code: 'public123', password: 'discard', name: 'discard', admin: true } } as never, res as never);
   expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({ email: 'test@example.com', locale: 'ko', referral_code: 'public123' });
   expect(res.json).toHaveBeenCalledWith({ status: 'waitlisted' });
 });
