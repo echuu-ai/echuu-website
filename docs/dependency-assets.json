@@ -577,18 +577,18 @@
   },
   {
     "path": "website/figma/step-01.webp",
-    "bytes": 26974,
-    "sha256": "80f399bb1eb8e783b3d551fa3c44ac6bc9d5993b40f19c9dae23617b8844d61f"
+    "bytes": 92474,
+    "sha256": "419185fe789fceb4090c9bb7686fe38dc90c7a7a96c26b54022e3086f4d440da"
   },
   {
     "path": "website/figma/step-02.webp",
-    "bytes": 61918,
-    "sha256": "ecbf041cbd82a75cc34e05f29ea5570649a49d1cbf91fcd074569840e91492b7"
+    "bytes": 82936,
+    "sha256": "20ae486782bcbef7e4a02dd02803090c7406f99dced0ea6f2726c641def8a288"
   },
   {
     "path": "website/figma/step-03.webp",
-    "bytes": 47942,
-    "sha256": "25f76b6fa2c3c79ae90c7d81b1a4fcf0554bd107720b0d75cd705e1a2815fe29"
+    "bytes": 56292,
+    "sha256": "7beaa2bb6a68cbd00736244f655a9ba586d59b6854980d7c6101b571ea3d017e"
   },
   {
     "path": "website/figma/video-poster.webp",

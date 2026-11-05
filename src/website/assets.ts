@@ -64,7 +64,8 @@ export const HOME_ASSETS = {
   /** 页脚用的白色 logo（带「你的OC出道舞台」） */
   logoWhite: FIG('logo-white.png'),
   brooch: FIG('brooch.webp'),
-  steps: [FIG('step-01.webp'), FIG('step-02.webp'), FIG('step-03.webp')],
+  // 产品 onboarding 实机截图（2026-11-05 重截）；换图时改 ?v=，线上这类图有 1 天缓存 + 7 天 SWR
+  steps: [`${FIG('step-01.webp')}?v=20261105`, `${FIG('step-02.webp')}?v=20261105`, `${FIG('step-03.webp')}?v=20261105`],
   silhouetteGirl: FIG('silhouette-girl.svg'),
   videoPoster: FIG('video-poster.webp'),
   jaggedShape: FIG('jagged-shape.svg'),
