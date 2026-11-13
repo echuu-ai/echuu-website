@@ -13,6 +13,7 @@ import { BlogSection } from './BlogSection';
 import { useSceneReveal } from './useSceneReveal';
 import { HeroGuideLines } from './HeroGuideLines';
 import { PageDoodle } from './PageDoodle';
+import { WaterRipples } from './WaterRipples';
 import { useOpeningPainted } from './openingPaint';
 import '../styles/home.css';
 import '../styles/home-scenes.css';
@@ -48,6 +49,8 @@ export function HomeV2() {
       <Head locale={locale} htmlLang={t.htmlLang} title={h.meta.title} description={h.meta.description} path="" />
       <OpeningHero onLogin={() => openAccess('invite')} onBeta={() => openAccess('signup')} />
       {painted ? <>
+        {/* 天空底的水波纹：指针划过时天空像水面一样起波纹（盖在 .hv::before 上，只画在 hv-body 范围内） */}
+        <WaterRipples />
         <div className="hv-body">
           <IntroSection />
           <StepsSection />

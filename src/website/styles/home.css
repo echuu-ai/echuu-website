@@ -1399,3 +1399,10 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 /* 菜单浮层：原来用区块大标题字号（1440 宽 64px），太大；降到 26–36px，行距跟着收 */
 .echuu-website .hv-menu-overlay nav { gap: 6px; }
 .echuu-website .hv-menu-overlay nav a { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.25; }
+
+/* --- 天空水波纹（WaterRipples.tsx）：固定在视口，盖在 .hv::before 天空上，画好之前透明 --- */
+.echuu-website .hv-ripples {
+  position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+.echuu-website .hv-ripples[data-ready='1'] { opacity: 1; }
