@@ -990,7 +990,8 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv-footer__bottom p { gap: 8px; }
 }
 @media (max-width: 860px), (prefers-reduced-motion: reduce) {
-  .echuu-website .hv-fcards { overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: thin; scrollbar-color: #e5fbff transparent; padding-bottom: 20px; }
+  .echuu-website .hv-fcards { overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; padding-bottom: 20px; }
+  .echuu-website .hv-fcards::-webkit-scrollbar { display: none; } /* 横滑卡片不显示滚动条（手机上是一道白杠） */
   .echuu-website .hv-fcards__track { animation: none; padding-inline: 20px; }
   .echuu-website .hv-fcard { scroll-snap-align: start; flex-basis: min(548px, calc(100vw - 56px)); }
   .echuu-website .hv-fcard[aria-hidden='true'] { display: none; }
