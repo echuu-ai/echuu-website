@@ -280,27 +280,38 @@ export function WaterRipples() {
       return y >= b.top && y <= b.bottom;
     };
 
-    const onMove = (e: PointerEvent) => {
-      if (!inBody(e.clientY)) { lastPointer = null; return; }
+    const trail = (x: number, y: number) => {
+      if (!inBody(y)) { lastPointer = null; return; }
       const prev = lastPointer;
-      lastPointer = { x: e.clientX, y: e.clientY };
+      lastPointer = { x, y };
       // 沿指针轨迹每隔一段滴一滴，快速划过也是连续的一道水痕
-      const dist = prev ? Math.hypot(e.clientX - prev.x, e.clientY - prev.y) : 0;
+      const dist = prev ? Math.hypot(x - prev.x, y - prev.y) : 0;
       const n = prev ? Math.min(6, Math.floor(dist / 24)) : 1;
       for (let i = 1; i <= Math.max(1, n); i++) {
         const t = prev ? i / Math.max(1, n) : 1;
-        drops.push({ x: (prev ? prev.x : e.clientX) + (e.clientX - (prev ? prev.x : e.clientX)) * t, y: (prev ? prev.y : e.clientY) + (e.clientY - (prev ? prev.y : e.clientY)) * t, r: 34, s: 0.03 });
+        drops.push({ x: prev ? prev.x + (x - prev.x) * t : x, y: prev ? prev.y + (y - prev.y) * t : y, r: 34, s: 0.03 });
       }
       wake();
     };
+    // 手指拖动会变成页面滚动，浏览器随即发 pointercancel、不再给 pointermove；
+    // touchmove 在滚动时照样来，所以触屏的水痕走 touchmove
+    const onMove = (e: PointerEvent) => { if (e.pointerType !== 'touch') trail(e.clientX, e.clientY); };
+    const onTouchMove = (e: TouchEvent) => { const t = e.touches[0]; if (t) trail(t.clientX, t.clientY); };
     const onDown = (e: PointerEvent) => {
       if (!inBody(e.clientY)) return;
       drops.push({ x: e.clientX, y: e.clientY, r: 80, s: 0.22 });
       wake();
     };
-    const onResize = () => { sizeCanvas(); makeSim(); wake(); };
+    // 手机滚动时地址栏伸缩也会触发 resize：只有宽度变了才重建水面，不然一滚动水波就被清空
+    let simForWidth = window.innerWidth;
+    const onResize = () => {
+      sizeCanvas();
+      if (window.innerWidth !== simForWidth) { simForWidth = window.innerWidth; makeSim(); }
+      wake();
+    };
     const onScroll = () => wake();
     const onLeave = () => { lastPointer = null; };
+    const onTouchEnd = () => { lastPointer = null; };
 
     sizeCanvas();
     makeSim();
@@ -321,6 +332,9 @@ export function WaterRipples() {
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerdown', onDown, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
     document.documentElement.addEventListener('pointerleave', onLeave);
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
@@ -338,6 +352,9 @@ export function WaterRipples() {
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
       document.documentElement.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
