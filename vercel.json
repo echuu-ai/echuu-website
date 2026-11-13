@@ -4,6 +4,17 @@
   "framework": "vite",
   "routes": [
     {
+      "src": "^/vlogger$",
+      "status": 308,
+      "headers": {
+        "Location": "/vlogger/"
+      }
+    },
+    {
+      "src": "^/vlogger/(.*)$",
+      "dest": "https://echuu-vlog.vercel.app/vlogger/$1"
+    },
+    {
       "src": "^/website/((?:zh|en|ja|ko)(?:/[^.]*[^/.])?)$",
       "status": 308,
       "headers": {
