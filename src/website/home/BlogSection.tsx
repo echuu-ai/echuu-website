@@ -23,9 +23,8 @@ export function BlogSection() {
           <h2 className="hv-h2" id="hv-blog-title">{h.blog.title}</h2>
           <p className="hv-lede">{h.blog.lede}</p>
         </div>
-        <LiquidGlass className="hv-lglass hv-lglass--pill" {...GLASS} radius={26}>
-          <Link className="hv-blog__all ps-glass__content" to={websitePath(locale, 'blog')}>{h.blog.all}</Link>
-        </LiquidGlass>
+        {/* 和创作者区 / 页脚的玻璃按钮同一套（12px 圆角、半透明白 + 1px 白线），不再单独包液态玻璃胶囊 */}
+        <Link className="hv-blog__all" to={websitePath(locale, 'blog')}>{h.blog.all}</Link>
       </div>
       <ul className="hv-blog__list">
         {posts.map((post, index) => (
