@@ -62,5 +62,10 @@ export const LEGAL_DOCS = {
 /** 条款定稿状态：2026-10-05 补齐运营主体、服务商、保存期限与删除流程后定稿（四份法律文件同步）。 */
 export const LEGAL_FINALIZED = true;
 
-/** Product sign-up remains on the separately deployed product app. */
+/** The product app handles sign-in and registration. */
 export const PRODUCT_ORIGIN = (import.meta.env.VITE_PRODUCT_ORIGIN || (import.meta.env.DEV ? "http://localhost:5173" : "https://echuu.live")).replace(/\/$/, "");
+
+// Use the same public host as the platform’s OAuth callbacks.
+export const PRODUCT_ENTRY_URL = PRODUCT_ORIGIN === "https://echuu.live"
+  ? "https://www.echuu.live/"
+  : `${PRODUCT_ORIGIN}/`;

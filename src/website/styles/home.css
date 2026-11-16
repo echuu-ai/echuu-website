@@ -498,7 +498,7 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 8px 22px rgba(20, 90, 150, 0.22);
   transition: transform 0.18s var(--hv-ease), background-color 0.18s;
 }
-.echuu-website .hv-title__register:hover { transform: translateY(-2px); background: #41dbfe; }
+.echuu-website .hv-title__register:hover { transform: translateY(-2px); background: #41dbfe; color: #fff; }
 
 .echuu-website .hv-cta {
   position: absolute; left: 50%; bottom: max(9%, calc(env(safe-area-inset-bottom) + 20px)); transform: translateX(-50%);
@@ -1055,9 +1055,9 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
   .echuu-website .hv .reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* CTA elements are buttons now: keep the original artwork's typography. */
-.echuu-website button.hv-title__register, .echuu-website button.hv-cta__beta { font-family: inherit; cursor: pointer; border: 0; }
-.echuu-website button.hv-glass--beta { cursor: pointer; }
+/* Product links share the original button typography and surfaces. */
+.echuu-website :is(.hv-title__register, .hv-cta__beta) { font-family: inherit; border: 0; }
+.echuu-website :is(.hv-title__register, .hv-cta__beta, .hv-glass--beta) { text-decoration: none; }
 
 /* Compact persistent dock, portalled outside the animated/clipped hero. */
 .echuu-website .hv-cta {
@@ -1074,8 +1074,6 @@ html.hv-lock, html.hv-lock body { overflow: hidden !important; height: 100%; }
 .echuu-website .hv-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 .echuu-website .hv-social-link { display:flex; align-items:center; min-height:44px; padding:0; border:0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
 .echuu-website .hv-cta__icon svg { color: white; width:22px; height:22px; }
-
-.echuu-website .hv-title__beta-count { display:flex; align-items:center; justify-content:center; gap:8px; margin:0; color:#215775; font:400 12px/1.5 system-ui,sans-serif; text-shadow:0 1px 8px rgba(255,255,255,.8); }
 
 .echuu-website .hv-vrm-trigger { border:0; cursor:pointer; }
 .hv-vrm-guide.echuu-access { width: min(760px, calc(100vw - 32px)); height: auto; max-height: calc(100dvh - 32px); }
@@ -1160,7 +1158,7 @@ html.hv-charm-dragging, html.hv-charm-dragging * { user-select: none !important;
 @keyframes hv-langpop-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) { .echuu-website .hv-langpop__list { animation: none; } }
 
-/* --- 底部栏随文案宽度自适应（日文、英文的「参与内测」更长），不超出屏幕 ------------------- */
+/* --- 底部栏随文案宽度自适应（各语言的进入按钮宽度不同），不超出屏幕 ------------------- */
 .echuu-website .hv-cta { width: auto; max-width: calc(100% - 24px); }
 .echuu-website .hv-cta__beta { white-space: nowrap; flex-shrink: 0; }
 
@@ -1271,7 +1269,7 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   .hv-footer__col, .hv-footer__col h3, .hv-footer__bottom) { letter-spacing: 0; }
 .echuu-website .hv .hv-footer__col h3 { font-weight: 600; }
 /* 字体收口：Inter 与 system-ui 残留改回 42dot */
-.echuu-website .hv :is(.hv-mcard__name, .hv-cta__beta, .hv-title__beta-count) { font-family: var(--hv-sans); }
+.echuu-website .hv :is(.hv-mcard__name, .hv-cta__beta) { font-family: var(--hv-sans); }
 /* ===== 按钮规范（docs/website-ui-spec.md §3）：形状、尺寸、字重全站一套，颜色按底色反转 =====
  * 尺寸 sm 36 / md 44 / lg 52，左右内边距 16 / 20 / 24；圆角一律 12（标签胶囊 999）；字重 400；字距 0。
  * 深色 / 天空底：主按钮白底深字，次按钮玻璃。浅色纸面（子页面 .btn）：主按钮深底白字，次按钮透明 + 1px 线。
@@ -1292,7 +1290,7 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
 }
 /* lg：区块主行动、子页面主次按钮 */
 .echuu-website .hv :is(.hv-glass, .btn) { min-height: var(--btn-h-lg); padding: 0 var(--btn-pad-lg); }
-/* md：页头登录、底栏参与内测、全部文章、子页面小按钮 */
+/* md：首屏及底栏入口、全部文章、子页面小按钮 */
 .echuu-website .hv :is(.hv-title__register, .hv-blog__all, .btn--small, .btn--quiet),
 .echuu-website .hv-cta .hv-cta__beta { min-height: var(--btn-h-md); padding: 0 var(--btn-pad-md); }
 /* sm：标签胶囊 */
@@ -1310,7 +1308,7 @@ html.hv-doodling, html.hv-doodling * { user-select: none !important; -webkit-use
   backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
 }
 .echuu-website .hv :is(.hv-glass, .hv-blog__all):hover { background: rgba(255, 255, 255, .26); transform: none; }
-/* 页头「登录」保留 Figma 的青色作首屏唯一重点色，只统一形状 */
+/* 首屏入口保留 Figma 的青色。 */
 .echuu-website .hv .hv-title__register:hover { background: #41dbfe; transform: none; }
 
 /* 浅色纸面（子页面）· 主按钮：深底白字 */

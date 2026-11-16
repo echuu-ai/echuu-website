@@ -12,7 +12,7 @@ import { SoundToggle } from './SoundToggle';
 import { LangPopover } from './LangPopover';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
-import { BetaCount } from '../components/BetaCount';
+import { PRODUCT_ENTRY_URL } from '../config/site';
 import { OcText } from '../components/OcText';
 import { SocialLinks } from '../components/SocialLinks';
 import type { HoleRect } from './three/OpeningStage3D';
@@ -99,7 +99,7 @@ const MENU_ANCHORS = [
   ['beta', '#beta'],
 ] as const;
 
-export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: () => void }) {
+export function OpeningHero() {
   const { h, locale } = useHomeDict();
   const reduced = usePrefersReducedMotion();
   const clock = useMemo(createOpeningClock, []);
@@ -443,8 +443,7 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
             {h.hero.slogan.mid}
             <mark className="hv-title__hl hv-title__hl--blue"><OcText>{h.hero.slogan.hl2}</OcText></mark>
           </h1>
-          <button type="button" className="hv-title__register" onClick={onLogin}>{h.hero.register}</button>
-          <BetaCount />
+          <a className="hv-title__register" href={PRODUCT_ENTRY_URL}>{h.hero.enter}</a>
         </div>
       </div> : null}
 
@@ -453,10 +452,10 @@ export function OpeningHero({ onLogin, onBeta }: { onLogin: () => void; onBeta: 
           <LangPopover locale={locale} label={h.header.language} />
           <SoundToggle label={h.header.sound} />
           <span className="hv-cta__group"><SocialLinks compact /></span>
-          <button type="button" className="hv-cta__beta" onClick={onBeta}>
-            {h.hero.beta}
+          <a className="hv-cta__beta" href={PRODUCT_ENTRY_URL}>
+            {h.hero.enter}
             <i aria-hidden="true" />
-          </button>
+          </a>
         </div>,
         document.querySelector('.echuu-website') ?? document.body,
       ) : null}

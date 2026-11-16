@@ -3,13 +3,13 @@ import { useHomeDict } from './useHomeDict';
 import { HOME_ASSETS } from '../assets';
 import { Link } from '../components/Link';
 import { websitePath } from '../router';
-import { BETA_DOC_URL, CONTACT_EMAIL, CONTACT_EMAIL_ALT, LEGAL_DOCS } from '../config/site';
+import { BETA_DOC_URL, CONTACT_EMAIL, CONTACT_EMAIL_ALT, LEGAL_DOCS, PRODUCT_ENTRY_URL } from '../config/site';
 import { fill } from '../i18n';
 import { Reveal } from '../components/Reveal';
 import { LoopArt } from '../components/LoopArt';
 
-/** 内测邀请 + 巨字 + 页脚。背景是从天空色沉到深蓝的渐变，中间是背对镜头的翅膀。 */
-export function HomeFooter({ onBeta }: { onBeta: () => void }) {
+/** 产品入口 + 巨字 + 页脚。背景是从天空色沉到深蓝的渐变，中间是背对镜头的翅膀。 */
+export function HomeFooter() {
   const { h, locale } = useHomeDict();
   const [title1, title2] = h.beta.title.split('\n');
   const home = websitePath(locale);
@@ -24,9 +24,9 @@ export function HomeFooter({ onBeta }: { onBeta: () => void }) {
           {title2}
         </h2>
         <p className="hv-beta__body">{h.beta.body}</p>
-        <button type="button" className="hv-glass hv-glass--beta" onClick={onBeta}>
-          {h.beta.cta}
-        </button>
+        <a className="hv-glass hv-glass--beta" href={PRODUCT_ENTRY_URL}>
+          {h.hero.enter}
+        </a>
       </Reveal>
 
       <p className="hv-footer__giant" aria-hidden="true">{h.footer.giant}</p>

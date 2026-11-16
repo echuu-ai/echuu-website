@@ -31,7 +31,7 @@ export const homeZh = {
     agent: 'Vtuber 表演Agent',
     creators: '创作者',
     blog: '博客',
-    beta: '参与内测',
+    beta: '开始使用',
     team: '团队',
   },
   blog: {
@@ -43,8 +43,7 @@ export const homeZh = {
   hero: {
     /** 三段拼接：前缀 / 黄底高亮 / 中缀 / 蓝底高亮 */
     slogan: { pre: '为', hl1: 'OC创作者', mid: '打造的', hl2: '虚拟主播平台' },
-    register: '登录',
-    beta: '参与内测',
+    enter: '进入 Echuu',
     logoAlt: 'Echuu エチュウゥ',
   },
   intro: {
@@ -97,8 +96,7 @@ export const homeZh = {
   },
   beta: {
     title: '下一位出道的\n是你的角色',
-    body: '想来试试？告诉我们怎么联系你。',
-    cta: '申请内测',
+    body: '选个角色，开始你的第一场直播。',
     ctaEmail: '邮件申请内测',
     emailSubject: '申请 Echuu 内测',
     emailBody: '你好 Echuu 团队：\n\n我想申请内测。\n\n联系邮箱：\n角色简介（选填）：\n作品链接（选填）：\n\n谢谢！',
@@ -154,7 +152,7 @@ export const homeEn: HomeDict = {
     agent: 'VTuber performance agent',
     creators: 'Creators',
     blog: 'Blog',
-    beta: 'Join the beta',
+    beta: 'Get started',
     team: 'Team',
   },
   blog: {
@@ -165,8 +163,7 @@ export const homeEn: HomeDict = {
   },
   hero: {
     slogan: { pre: 'The ', hl1: 'AI VTuber', mid: ' platform built for ', hl2: 'OC creators' },
-    register: 'Log in',
-    beta: 'Join the beta',
+    enter: 'Enter Echuu',
     logoAlt: 'Echuu エチュウゥ',
   },
   intro: {
@@ -219,8 +216,7 @@ export const homeEn: HomeDict = {
   },
   beta: {
     title: 'The next debut\ncould be your character',
-    body: 'Want in? Tell us how to reach you.',
-    cta: 'Apply for the beta',
+    body: 'Choose a character and start your first stream.',
     ctaEmail: 'Apply by email',
     emailSubject: 'Echuu beta application',
     emailBody: 'Hi Echuu team,\n\nI would like to join the beta.\n\nContact email:\nCharacter intro (optional):\nPortfolio link (optional):\n\nThanks!',
@@ -273,7 +269,7 @@ export const homeJa: HomeDict = {
     agent: 'Vtuber 演技エージェント',
     creators: 'クリエイター',
     blog: 'ブログ',
-    beta: 'ベータに参加',
+    beta: 'はじめる',
     team: 'チーム',
   },
   blog: {
@@ -284,8 +280,7 @@ export const homeJa: HomeDict = {
   },
   hero: {
     slogan: { pre: '', hl1: 'OCクリエイター', mid: 'のための', hl2: 'AI VTuber 配信プラットフォーム' },
-    register: 'ログイン',
-    beta: 'ベータに参加',
+    enter: 'Echuu を開く',
     logoAlt: 'Echuu エチュウゥ',
   },
   intro: {
@@ -338,8 +333,7 @@ export const homeJa: HomeDict = {
   },
   beta: {
     title: '次にデビューするのは\nあなたのキャラクター',
-    body: '試してみたい？連絡先を教えてください。',
-    cta: 'ベータに応募',
+    body: 'キャラクターを選んで、初めての配信を始めましょう。',
     ctaEmail: 'メールで応募',
     emailSubject: 'Echuu ベータ応募',
     emailBody: 'Echuu チームの皆さま\n\nベータに応募したいです。\n\n連絡先メール：\nキャラクター紹介（任意）：\n作品リンク（任意）：\n\nよろしくお願いします。',
@@ -392,7 +386,7 @@ export const homeKo: HomeDict = {
     agent: 'Vtuber 퍼포먼스 에이전트',
     creators: '크리에이터',
     blog: '블로그',
-    beta: '베타 참여',
+    beta: '시작하기',
     team: '팀',
   },
   blog: {
@@ -403,8 +397,7 @@ export const homeKo: HomeDict = {
   },
   hero: {
     slogan: { pre: '', hl1: 'OC 크리에이터', mid: '를 위한', hl2: 'AI VTuber 플랫폼' },
-    register: '로그인',
-    beta: '베타 참여',
+    enter: 'Echuu 열기',
     logoAlt: 'Echuu エチュウゥ',
   },
   intro: {
@@ -457,8 +450,7 @@ export const homeKo: HomeDict = {
   },
   beta: {
     title: '다음에 데뷔할\n당신의 캐릭터',
-    body: '해보고 싶나요? 연락 방법을 알려주세요.',
-    cta: '베타 신청',
+    body: '캐릭터를 골라 첫 방송을 시작해 보세요.',
     ctaEmail: '이메일로 신청',
     emailSubject: 'Echuu 베타 신청',
     emailBody: '안녕하세요 Echuu 팀,\n\n베타에 참여하고 싶습니다.\n\n연락 이메일:\n캐릭터 소개(선택):\n작품 링크(선택):\n\n감사합니다!',

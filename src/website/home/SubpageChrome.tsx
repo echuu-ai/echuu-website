@@ -6,12 +6,11 @@ import { useHomeDict } from './useHomeDict';
 import { Link } from '../components/Link';
 import { LangInline } from '../components/LangInline';
 import { websitePath } from '../router';
-import { LazyAccessDialog, type AccessMode } from '../auth/LazyAccessDialog';
 import { HOME_ASSETS } from '../assets';
 import '../styles/subpage.css';
 
 /**
- * 官网子页统一外壳：首页同款页头、菜单弹层、内测入口与页脚，不挂开场 3D。
+ * 官网子页统一外壳：首页同款页头、菜单弹层、产品入口与页脚，不挂开场 3D。
  * 除首页外的每个页面都必须经过它（见 index.tsx），不再有旧版 SiteHeader / SiteFooter。
  *
  * - `world`：铺一层固定的模糊天空背景（团队页自带背景，不需要）。
@@ -20,8 +19,6 @@ import '../styles/subpage.css';
 export function SubpageChrome({ children, className, world = false }: { children: ReactNode; className: string; world?: boolean }) {
   const { locale, h } = useHomeDict();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [accessMode, setAccessMode] = useState<AccessMode | null>(null);
-  const accessTrigger = useRef<HTMLElement | null>(null);
   const menuTrigger = useRef<HTMLElement | null>(null);
   const home = websitePath(locale);
   const menuId = `${className}-menu`;
@@ -34,11 +31,7 @@ export function SubpageChrome({ children, className, world = false }: { children
         setMenuOpen(!menuOpen);
       }} />
       {children}
-      <HomeFooter onBeta={() => {
-        accessTrigger.current = document.activeElement as HTMLElement;
-        setAccessMode('signup');
-      }} />
-      <LazyAccessDialog mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} returnFocusRef={accessTrigger} />
+      <HomeFooter />
       <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
         <Dialog.Content className="hv-menu-overlay" id={menuId} aria-describedby={undefined} onCloseAutoFocus={(event) => { event.preventDefault(); menuTrigger.current?.focus(); }}>
           <Dialog.Title className="team-menu-title">{h.header.menu}</Dialog.Title>
