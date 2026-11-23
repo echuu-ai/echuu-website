@@ -135,6 +135,7 @@
 .echuu-website .survey-form__footer a {
   padding-block: 12px;
   line-height: 2;
+  white-space: nowrap;
 }
 
 .echuu-website .survey-form__submit {
