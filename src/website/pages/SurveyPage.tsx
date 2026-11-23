@@ -4,7 +4,7 @@ import { LangInline } from '../components/LangInline';
 import { LEGAL_DOCS } from '../config/site';
 import { fill, type Locale } from '../i18n';
 import { surveyUi } from '../i18n/surveyUi';
-import { getSurvey, isSurveyScreenOut, type SurveyAnswers, type SurveyId, type SurveyQuestion } from '../lib/surveys';
+import { getSurvey, isSurveyScreenOut, normalizeSurveyEmail, type SurveyAnswers, type SurveyId, type SurveyQuestion } from '../lib/surveys';
 import { useLocale } from '../locale-context';
 import './SurveyPage.css';
 
@@ -20,11 +20,13 @@ function SurveyForm({ surveyId }: Props) {
   const copy = surveyUi[locale];
   const survey = getSurvey(surveyId);
   const [answers, setAnswers] = useState<SurveyAnswers>({});
+  const [email, setEmail] = useState('');
   const [validate, setValidate] = useState(false);
   const [phase, setPhase] = useState<'editing' | 'submitting' | 'submitted' | 'failed'>('editing');
   const attempt = useRef<Submission | null>(null);
   const request = useRef<AbortController | null>(null);
   const form = useRef<HTMLFormElement>(null);
+  const emailInput = useRef<HTMLInputElement>(null);
   const terminalHeading = useRef<HTMLHeadingElement>(null);
 
   const screenedOut = isSurveyScreenOut(surveyId, answers);
@@ -33,7 +35,11 @@ function SurveyForm({ surveyId }: Props) {
   const canShowAll = surveyId !== '01' || Boolean(answers.Q01?.length && answers.Q02?.length);
   const questions = canShowAll ? survey.questions : survey.questions.slice(0, 2);
   const missing = survey.questions.filter(question => question.required && !answers[question.id]?.length);
-  const answered = survey.questions.length - missing.length;
+  const normalizedEmail = normalizeSurveyEmail(email);
+  const emailError = validate && !normalizedEmail ? (email.trim() ? copy.emailInvalid : copy.emailRequired) : null;
+  const emailId = `survey-${surveyId}-email`;
+  const total = survey.questions.length + 1;
+  const answered = survey.questions.length - missing.length + Number(Boolean(normalizedEmail));
 
   useEffect(() => () => {
     const pending = request.current;
@@ -57,12 +63,21 @@ function SurveyForm({ surveyId }: Props) {
     if (phase === 'failed') setPhase('editing');
   }
 
+  function changeEmail(value: string) {
+    if (request.current) return;
+    setEmail(value);
+    if (normalizeSurveyEmail(value) === normalizedEmail) return;
+    attempt.current = null;
+    if (phase === 'failed') setPhase('editing');
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (request.current || screenedOut || complete) return;
-    if (missing.length) {
+    if (missing.length || !normalizedEmail) {
       setValidate(true);
-      form.current?.querySelector<HTMLInputElement>(`input[name="${missing[0].id}"]`)?.focus();
+      if (missing.length) form.current?.querySelector<HTMLInputElement>(`input[name="${missing[0].id}"]`)?.focus();
+      else emailInput.current?.focus();
       return;
     }
 
@@ -76,7 +91,7 @@ function SurveyForm({ surveyId }: Props) {
         method: 'POST',
         credentials: 'omit',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ surveyId, answers, ...attempt.current }),
+        body: JSON.stringify({ surveyId, answers, email: normalizedEmail, ...attempt.current }),
         signal: controller.signal,
       });
       if (response.status !== 200 && response.status !== 201) throw new Error('Survey response rejected');
@@ -122,7 +137,7 @@ function SurveyForm({ surveyId }: Props) {
           </header>
           <div className="survey-page__overview">
             <p>{copy.required}</p>
-            <p role="status">{fill(copy.progress, { answered, total: survey.questions.length })}</p>
+            <p role="status">{fill(copy.progress, { answered, total })}</p>
           </div>
           <form ref={form} className="survey-form" onSubmit={submit} noValidate aria-busy={busy}>
             {questions.map(question => {
@@ -172,19 +187,41 @@ function SurveyForm({ surveyId }: Props) {
               );
             })}
             {canShowAll && (
-              <footer className="survey-form__footer">
-                <p>
-                  {copy.privacy}{' '}
-                  <a href={`${LEGAL_DOCS.privacy}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
-                    {t.footer.legalLinks.privacy}
-                  </a>
-                </p>
-                {validate && missing.length > 0 && <p className="field__error" role="alert">{copy.incomplete}</p>}
-                {phase === 'failed' && <p className="field__error" role="alert">{copy.failed}</p>}
-                <button className="btn btn--primary survey-form__submit" type="submit" disabled={busy}>
-                  {busy ? copy.submitting : copy.submit}
-                </button>
-              </footer>
+              <>
+                <div className="field survey-email">
+                  <label htmlFor={emailId}>
+                    <span className="survey-question__index" aria-hidden="true">{survey.emailQuestion.id}</span>
+                    {survey.emailQuestion.stem[locale]}
+                  </label>
+                  <input
+                    ref={emailInput}
+                    id={emailId}
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required={survey.emailQuestion.required}
+                    disabled={busy}
+                    value={email}
+                    aria-invalid={Boolean(emailError) || undefined}
+                    aria-describedby={emailError ? `${emailId}-error` : undefined}
+                    onChange={event => changeEmail(event.currentTarget.value)}
+                  />
+                  {emailError && <p id={`${emailId}-error`} className="field__error" role="alert">{emailError}</p>}
+                </div>
+                <footer className="survey-form__footer">
+                  <p>
+                    {copy.privacy}{' '}
+                    <a href={`${LEGAL_DOCS.privacy}?lang=${locale}`} target="_blank" rel="noreferrer noopener">
+                      {t.footer.legalLinks.privacy}
+                    </a>
+                  </p>
+                  {validate && missing.length > 0 && <p className="field__error" role="alert">{copy.incomplete}</p>}
+                  {phase === 'failed' && <p className="field__error" role="alert">{copy.failed}</p>}
+                  <button className="btn btn--primary survey-form__submit" type="submit" disabled={busy}>
+                    {busy ? copy.submitting : copy.submit}
+                  </button>
+                </footer>
+              </>
             )}
           </form>
         </>

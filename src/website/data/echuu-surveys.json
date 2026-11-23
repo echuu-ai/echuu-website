@@ -34,10 +34,10 @@
         "ko": "Echuu 사용자 조사 설문 01 — OC 동기와 프로필"
       },
       "intro": {
-        "zh": "本问卷用于了解 OC（原创角色）爱好者的创作习惯与期待，共 10 题，约 3 分钟。匿名填写，仅用于产品研究，不会公开个人作答。",
-        "en": "This survey explores how OC (original character) fans create and what they expect. It has 10 questions and takes about 3 minutes. Responses are anonymous and used only for product research; individual answers will not be made public.",
-        "ja": "本アンケートは、OC（オリジナルキャラクター）愛好家の創作習慣と期待を把握するためのものです。全10問、約3分で回答できます。匿名で、製品研究のみに使用し、個人の回答を公開することはありません。",
-        "ko": "이 설문은 OC(오리지널 캐릭터) 애호가의 창작 습관과 기대를 파악하기 위한 것입니다. 총 10문항, 약 3분 소요됩니다. 익명으로 수집하며 제품 연구 목적으로만 사용하고, 개인의 응답을 공개하지 않습니다."
+        "zh": "本问卷用于了解 OC（原创角色）爱好者的创作习惯与期待，共 11 题，约 3 分钟。我们会用您的邮箱匹配体验前后的问卷。个人作答仅用于产品研究，并会保密。",
+        "en": "This survey explores how OC (original character) fans create and what they expect. It has 11 questions and takes about 3 minutes. We use your email address to match your pre- and post-experience responses. Individual answers are kept private and used only for product research.",
+        "ja": "本アンケートは、OC（オリジナルキャラクター）愛好家の創作習慣と期待を把握するためのものです。全11問、約3分で回答できます。メールアドレスは体験前後の回答の照合に使用します。個人の回答は非公開とし、製品研究にのみ使用します。",
+        "ko": "이 설문은 OC(오리지널 캐릭터) 애호가의 창작 습관과 기대를 파악하기 위한 것입니다. 총 11문항이며 약 3분이 소요됩니다. 이메일 주소는 체험 전후의 응답을 연결하는 데 사용합니다. 개인의 응답은 비공개로 유지하며 제품 연구에만 사용합니다."
       },
       "questions": [
         {
@@ -778,7 +778,18 @@
             }
           ]
         }
-      ]
+      ],
+      "emailQuestion": {
+        "id": "Q11",
+        "type": "email",
+        "required": true,
+        "stem": {
+          "zh": "你的邮箱是？",
+          "en": "What is your email address?",
+          "ja": "メールアドレスを教えてください。",
+          "ko": "이메일 주소는 무엇인가요?"
+        }
+      }
     },
     {
       "id": "02",
@@ -789,10 +800,10 @@
         "ko": "Echuu 사용자 조사 설문 02 — 체험 후 감상과 결제 선택"
       },
       "intro": {
-        "zh": "本问卷用于了解实际体验 Echuu 后的感受与付费选择，共 10 题，约 4 分钟。匿名填写，仅用于产品研究，不会公开个人作答。请在实际体验后 24 小时内填写。",
-        "en": "This survey asks about your experience with Echuu and your payment preferences. It has 10 questions and takes about 4 minutes. Responses are anonymous and used only for product research; individual answers will not be made public. Please respond within 24 hours of your experience.",
-        "ja": "本アンケートは、Echuuを実際に体験した後の感想と支払い意向を把握するためのものです。全10問、約4分で回答できます。匿名で、製品研究のみに使用し、個人の回答を公開することはありません。実際の体験後24時間以内にご回答ください。",
-        "ko": "이 설문은 Echuu를 실제로 체험한 후의 감상과 결제 선택을 파악하기 위한 것입니다. 총 10문항, 약 4분 소요됩니다. 익명으로 수집하며 제품 연구 목적으로만 사용하고, 개인의 응답을 공개하지 않습니다. 실제 체험 후 24시간 이내에 응답해 주세요."
+        "zh": "本问卷用于了解实际体验 Echuu 后的感受与付费选择，共 11 题，约 4 分钟。我们会用您的邮箱匹配体验前后的问卷。个人作答仅用于产品研究，并会保密。请在实际体验后 24 小时内填写。",
+        "en": "This survey asks about your experience with Echuu and your payment preferences. It has 11 questions and takes about 4 minutes. We use your email address to match your pre- and post-experience responses. Individual answers are kept private and used only for product research. Please respond within 24 hours of your experience.",
+        "ja": "本アンケートは、Echuuを実際に体験した後の感想と支払い意向を把握するためのものです。全11問、約4分で回答できます。メールアドレスは体験前後の回答の照合に使用します。個人の回答は非公開とし、製品研究にのみ使用します。実際の体験後24時間以内にご回答ください。",
+        "ko": "이 설문은 Echuu를 실제로 체험한 후의 감상과 결제 선택을 파악하기 위한 것입니다. 총 11문항이며 약 4분이 소요됩니다. 이메일 주소는 체험 전후의 응답을 연결하는 데 사용합니다. 개인의 응답은 비공개로 유지하며 제품 연구에만 사용합니다. 실제 체험 후 24시간 이내에 응답해 주세요."
       },
       "questions": [
         {
@@ -1504,7 +1515,18 @@
           ],
           "maxSelections": 3
         }
-      ]
+      ],
+      "emailQuestion": {
+        "id": "Q11",
+        "type": "email",
+        "required": true,
+        "stem": {
+          "zh": "你的邮箱是？",
+          "en": "What is your email address?",
+          "ja": "メールアドレスを教えてください。",
+          "ko": "이메일 주소는 무엇인가요?"
+        }
+      }
     }
   ]
 }

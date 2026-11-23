@@ -40,7 +40,8 @@
   padding: 0;
 }
 
-.echuu-website .survey-question legend {
+.echuu-website .survey-question legend,
+.echuu-website .survey-email label {
   width: 100%;
   padding: 0;
   font-size: var(--t-lede);
@@ -113,6 +114,14 @@
 .echuu-website .survey-option:has(input:focus-visible),
 .echuu-website .survey-option:hover:not(:has(input:disabled)) {
   border-color: var(--accent);
+}
+
+.echuu-website .survey-email {
+  width: min(100%, 448px);
+}
+
+.echuu-website .survey-email input[aria-invalid='true'] {
+  border-color: #a3272b;
 }
 
 .echuu-website .survey-form__footer {

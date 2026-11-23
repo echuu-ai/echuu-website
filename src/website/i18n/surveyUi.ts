@@ -8,6 +8,8 @@ type SurveyUi = {
   limit: string;
   limitReached: string;
   requiredAnswer: string;
+  emailRequired: string;
+  emailInvalid: string;
   privacy: string;
   submit: string;
   submitting: string;
@@ -28,7 +30,9 @@ export const surveyUi: Record<Locale, SurveyUi> = {
     limit: '最多选 {max} 项。',
     limitReached: '已选满 {max} 项。取消一项后可更换。',
     requiredAnswer: '请回答这道题。',
-    privacy: '关于资料处理，请阅读我们的',
+    emailRequired: '请填写你的邮箱。',
+    emailInvalid: '请输入有效的邮箱地址。',
+    privacy: '如果两份问卷都填写，请使用同一个邮箱。关于数据处理，请阅读我们的',
     submit: '提交问卷',
     submitting: '提交中…',
     incomplete: '还有题目未作答。请补齐后再提交。',
@@ -46,7 +50,9 @@ export const surveyUi: Record<Locale, SurveyUi> = {
     limit: 'Select up to {max} options.',
     limitReached: 'You’ve selected {max} options. Deselect one to make a change.',
     requiredAnswer: 'Please answer this question.',
-    privacy: 'For details on how we handle data, read our',
+    emailRequired: 'Enter your email address.',
+    emailInvalid: 'Enter a valid email address.',
+    privacy: 'If you complete both surveys, please use the same email address. For details on how we handle data, read our',
     submit: 'Submit survey',
     submitting: 'Submitting…',
     incomplete: 'Please answer the remaining questions before submitting.',
@@ -64,7 +70,9 @@ export const surveyUi: Record<Locale, SurveyUi> = {
     limit: '最大{max}つまで選択できます。',
     limitReached: '{max}つ選択済みです。変更するには、いずれかの選択を解除してください。',
     requiredAnswer: 'この質問に回答してください。',
-    privacy: 'データの取り扱いについては、以下をご覧ください。',
+    emailRequired: 'メールアドレスを入力してください。',
+    emailInvalid: '有効なメールアドレスを入力してください。',
+    privacy: '両方のアンケートに回答する場合は、同じメールアドレスを入力してください。データの取り扱いについては、以下をご覧ください。',
     submit: '回答を送信',
     submitting: '送信中…',
     incomplete: '未回答の質問に回答してから送信してください。',
@@ -82,7 +90,9 @@ export const surveyUi: Record<Locale, SurveyUi> = {
     limit: '최대 {max}개까지 선택할 수 있습니다.',
     limitReached: '{max}개를 선택했습니다. 변경하려면 선택을 하나 해제해 주세요.',
     requiredAnswer: '이 문항에 응답해 주세요.',
-    privacy: '데이터 처리에 대한 자세한 내용은 아래에서 확인해 주세요.',
+    emailRequired: '이메일 주소를 입력해 주세요.',
+    emailInvalid: '유효한 이메일 주소를 입력해 주세요.',
+    privacy: '두 설문에 모두 응답하는 경우 같은 이메일 주소를 사용해 주세요. 데이터 처리에 대한 자세한 내용은 아래에서 확인해 주세요.',
     submit: '설문 제출',
     submitting: '제출 중…',
     incomplete: '응답하지 않은 문항에 답한 후 제출해 주세요.',

@@ -49,6 +49,8 @@ describe('search documents', () => {
         const doc = parse(pages[`website/${locale}/${path}/index.html`]);
         expect(doc.title).toBe(survey.title[locale]);
         expect(doc.querySelector('h1')?.textContent).toBe(survey.title[locale]);
+        expect(doc.querySelector('main > p')?.textContent).toBe(survey.intro[locale]);
+        expect(doc.querySelector('meta[name=description]')?.getAttribute('content')).toBe(survey.intro[locale]);
         expect(doc.querySelector('meta[name=robots]')?.getAttribute('content')).toBe('noindex,follow');
         for (const alternate of WEBSITE_LOCALES) {
           expect(doc.querySelector(`a[href="/website/${alternate}/${path}/"]`)).toBeTruthy();
