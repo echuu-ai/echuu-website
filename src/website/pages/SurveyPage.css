@@ -1,0 +1,180 @@
+.echuu-website .survey-page {
+  padding-bottom: 8px;
+  min-width: 0;
+}
+
+.echuu-website .survey-page__language {
+  display: none;
+}
+
+.echuu-website .subpage-sheet .survey-page .page-head h1 {
+  font-size: var(--t-h1);
+  font-weight: 300;
+  -webkit-text-stroke: 0.015em currentColor;
+}
+
+.echuu-website .survey-page .page-head p {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+
+.echuu-website .survey-page__overview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin: 12px 0 24px;
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+}
+
+.echuu-website .survey-form {
+  display: grid;
+  gap: clamp(24px, 4vw, 40px);
+}
+
+.echuu-website .survey-question {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.echuu-website .survey-question legend {
+  width: 100%;
+  padding: 0;
+  font-size: var(--t-lede);
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.echuu-website .survey-question__index {
+  margin-inline-end: 8px;
+  color: var(--accent);
+  font-size: var(--t-meta);
+  white-space: nowrap;
+}
+
+.echuu-website .survey-question__hint {
+  margin: 4px 0;
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+}
+
+.echuu-website .survey-question__options {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.echuu-website .survey-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: var(--btn-h-md);
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--btn-radius);
+  background: var(--white);
+  color: var(--ink);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.echuu-website .survey-option input {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: inherit;
+}
+
+.echuu-website .survey-option span {
+  min-width: 0;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+.echuu-website .survey-option:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.echuu-website .survey-option:has(input:disabled:not(:checked)) {
+  background: transparent;
+  color: var(--ink-faint);
+  border-color: var(--line);
+  cursor: default;
+}
+
+.echuu-website .survey-option:has(input:focus-visible),
+.echuu-website .survey-option:hover:not(:has(input:disabled)) {
+  border-color: var(--accent);
+}
+
+.echuu-website .survey-form__footer {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+}
+
+.echuu-website .survey-form__footer a {
+  padding-block: 12px;
+  line-height: 2;
+}
+
+.echuu-website .survey-form__submit {
+  white-space: nowrap;
+}
+
+.echuu-website .survey-form__submit:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.echuu-website .survey-page__terminal {
+  min-height: 204px;
+  padding-bottom: 32px;
+}
+
+@media (max-width: 1023px) {
+  .echuu-website .survey-page__language {
+    display: block;
+    padding-top: 16px;
+  }
+
+  .echuu-website .subpage-sheet .survey-page .page-head {
+    padding-top: 16px;
+  }
+
+  .echuu-website .survey-page__language .hv-lang {
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .echuu-website .survey-page__language .hv-lang a {
+    min-width: var(--btn-h-md);
+    height: var(--btn-h-md);
+    border-radius: var(--btn-radius);
+    color: var(--accent);
+    font-size: var(--t-small);
+    opacity: 1;
+  }
+
+  .echuu-website .survey-page__language .hv-lang a:is(:hover, :focus-visible, [aria-current='true']) {
+    background: var(--accent-tint);
+    color: var(--accent-strong);
+  }
+}
+
+@media (min-width: 760px) {
+  .echuu-website .survey-question__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

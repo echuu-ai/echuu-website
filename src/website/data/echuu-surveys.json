@@ -1,0 +1,1510 @@
+{
+  "project": "Echuu OC user research",
+  "version": "2026-11-23",
+  "defaultLanguage": "zh",
+  "languages": [
+    {
+      "code": "zh",
+      "label": "中文",
+      "htmlLang": "zh-CN"
+    },
+    {
+      "code": "en",
+      "label": "English",
+      "htmlLang": "en"
+    },
+    {
+      "code": "ja",
+      "label": "日本語",
+      "htmlLang": "ja"
+    },
+    {
+      "code": "ko",
+      "label": "한국어",
+      "htmlLang": "ko"
+    }
+  ],
+  "surveys": [
+    {
+      "id": "01",
+      "title": {
+        "zh": "Echuu 用户调研问卷 01 - OC 动机与画像",
+        "en": "Echuu User Research Survey 01 — OC Motivation and Profile",
+        "ja": "Echuu ユーザー調査アンケート 01 — OC の動機とプロフィール",
+        "ko": "Echuu 사용자 조사 설문 01 — OC 동기와 프로필"
+      },
+      "intro": {
+        "zh": "本问卷用于了解 OC（原创角色）爱好者的创作习惯与期待，共 10 题，约 3 分钟。匿名填写，仅用于产品研究，不会公开个人作答。",
+        "en": "This survey explores how OC (original character) fans create and what they expect. It has 10 questions and takes about 3 minutes. Responses are anonymous and used only for product research; individual answers will not be made public.",
+        "ja": "本アンケートは、OC（オリジナルキャラクター）愛好家の創作習慣と期待を把握するためのものです。全10問、約3分で回答できます。匿名で、製品研究のみに使用し、個人の回答を公開することはありません。",
+        "ko": "이 설문은 OC(오리지널 캐릭터) 애호가의 창작 습관과 기대를 파악하기 위한 것입니다. 총 10문항, 약 3분 소요됩니다. 익명으로 수집하며 제품 연구 목적으로만 사용하고, 개인의 응답을 공개하지 않습니다."
+      },
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您的年龄段是？",
+            "en": "What is your age group?",
+            "ja": "あなたの年齢層は？",
+            "ko": "귀하의 연령대는?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "18 岁以下",
+                "en": "Under 18",
+                "ja": "18歳未満",
+                "ko": "18세 미만"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "18–24 岁",
+                "en": "18–24",
+                "ja": "18～24歳",
+                "ko": "18–24세"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "25–34 岁",
+                "en": "25–34",
+                "ja": "25～34歳",
+                "ko": "25–34세"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "35–44 岁",
+                "en": "35–44",
+                "ja": "35～44歳",
+                "ko": "35–44세"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "45 岁及以上",
+                "en": "45 or older",
+                "ja": "45歳以上",
+                "ko": "45세 이상"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "已满 18 岁但不愿提供",
+                "en": "18 or older, prefer not to say",
+                "ja": "18歳以上（回答したくない）",
+                "ko": "18세 이상이나 응답을 원하지 않음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您目前和 OC（原创角色）的关系是？",
+            "en": "What best describes your current relationship with OCs (original characters)?",
+            "ja": "現在、OC（オリジナルキャラクター）との関わりはどれに近いですか？",
+            "ko": "현재 OC(오리지널 캐릭터)와의 관계는 어느 쪽에 가장 가깝습니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "已有自己的 OC",
+                "en": "I already have my own OC",
+                "ja": "すでに自分のOCがいる",
+                "ko": "이미 나만의 OC가 있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "正在创作第一个 OC",
+                "en": "I'm creating my first OC",
+                "ja": "最初のOCを制作中",
+                "ko": "첫 OC를 만들고 있다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "还没有，但有兴趣",
+                "en": "I don't have one yet, but I'm interested",
+                "ja": "まだいないが、興味はある",
+                "ko": "아직 없지만 관심은 있다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "暂时没有兴趣（问卷到此结束）",
+                "en": "Not interested for now (survey ends here)",
+                "ja": "今は興味がない（アンケートはここで終了）",
+                "ko": "현재 관심 없음(설문은 여기서 종료)"
+              }
+            }
+          ],
+          "screenOutValues": [
+            "D"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您接触 OC 多久了？",
+            "en": "How long have you been involved with OCs?",
+            "ja": "OCに触れてどのくらいになりますか？",
+            "ko": "OC를 접한 지 얼마나 되셨나요?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "还在了解",
+                "en": "Just learning about them",
+                "ja": "まだ知り始めたところ",
+                "ko": "아직 알아보는 중"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "不满 3 个月",
+                "en": "Less than 3 months",
+                "ja": "3か月未満",
+                "ko": "3개월 미만"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "3 个月至不满 1 年",
+                "en": "3 to under 12 months",
+                "ja": "3か月以上1年未満",
+                "ko": "3개월 이상 1년 미만"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "1 年至不满 3 年",
+                "en": "1 to under 3 years",
+                "ja": "1年以上3年未満",
+                "ko": "1년 이상 3년 미만"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "3 年及以上",
+                "en": "3 years or more",
+                "ja": "3年以上",
+                "ko": "3년 이상"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "记不清",
+                "en": "Can't remember",
+                "ja": "覚えていない",
+                "ko": "기억나지 않음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "过去 30 天，您为 OC 做过哪些事？",
+            "en": "In the past 30 days, which of these have you done for your OC?",
+            "ja": "過去30日間に、OCのために行ったことはどれですか？",
+            "ko": "지난 30일 동안 OC를 위해 한 일은 무엇입니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "画图 / 整理外观 / 收集参考",
+                "en": "Drawing / refining the design / collecting references",
+                "ja": "絵を描く／外見を整理する／参考資料を集める",
+                "ko": "그림 그리기 / 외형 정리 / 레퍼런스 수집"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "写人设 / 故事 / 世界观",
+                "en": "Writing the character profile / story / worldbuilding",
+                "ja": "設定・ストーリー・世界観を書く",
+                "ko": "설정 / 스토리 / 세계관 작성"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "约稿或与创作者沟通",
+                "en": "Commissioning art or communicating with creators",
+                "ja": "依頼（コミッション）やクリエイターとのやり取り",
+                "ko": "커미션 의뢰 또는 창작자와 소통"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "共同创作 / 角色扮演",
+                "en": "Co-creating / role-playing",
+                "ja": "共同制作／ロールプレイ",
+                "ko": "공동 창작 / 역할극"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "与 AI 角色聊天或演绎剧情",
+                "en": "Chatting with AI characters or acting out stories",
+                "ja": "AIキャラクターと会話したり、物語を演じたりする",
+                "ko": "AI 캐릭터와 대화하거나 이야기 연출"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "使用 2D / 3D 模型或制作动画",
+                "en": "Using 2D/3D models or making animations",
+                "ja": "2D／3Dモデルの使用やアニメーション制作",
+                "ko": "2D/3D 모델 사용 또는 애니메이션 제작"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "分享作品 / 视频 / 直播",
+                "en": "Sharing artwork / videos / livestreams",
+                "ja": "作品・動画・配信の共有",
+                "ko": "작품 / 영상 / 라이브 공유"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "浏览作品与社区讨论",
+                "en": "Browsing artwork and community discussions",
+                "ja": "作品やコミュニティの議論を見る",
+                "ko": "작품과 커뮤니티 논의 열람"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "J",
+              "label": {
+                "zh": "都没有",
+                "en": "None of these",
+                "ja": "どれもしていない",
+                "ko": "해당 없음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "您拥有或创作 OC，最重要的原因是什么？（最多选 3 项）",
+            "en": "What are the most important reasons you have or create OCs? (Select up to 3)",
+            "ja": "OCを持つ／創作する最も重要な理由は何ですか？（最大3つまで）",
+            "ko": "OC를 보유하거나 창작하는 가장 중요한 이유는 무엇입니까? (최대 3개 선택)"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "表达审美或某一面",
+                "en": "To express my aesthetic or a side of myself",
+                "ja": "美意識や自分のある一面を表現するため",
+                "ko": "미적 감각이나 자신의 한 면을 표현하기 위해"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "创作故事和世界观",
+                "en": "To create stories and worldbuilding",
+                "ja": "物語や世界観を創作するため",
+                "ko": "스토리와 세계관을 창작하기 위해"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "获得陪伴或情感寄托",
+                "en": "For companionship or emotional attachment",
+                "ja": "陪伴や心の支えを得るため",
+                "ko": "동반 또는 정서적 위로를 얻기 위해"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "与朋友同好一起创作交流",
+                "en": "To create and connect with friends and fellow fans",
+                "ja": "友人や同好の仲間と創作・交流するため",
+                "ko": "친구나 동호인과 함께 창작하고 교류하기 위해"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "欣赏收藏角色形象",
+                "en": "To appreciate and collect character designs",
+                "ja": "キャラクターのビジュアルを鑑賞・収集するため",
+                "ko": "캐릭터 이미지를 감상하고 수집하기 위해"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "制作内容 / 表演 / 分享",
+                "en": "To make content / perform / share",
+                "ja": "コンテンツ制作・演じる・共有するため",
+                "ko": "콘텐츠 제작 / 공연 / 공유를 위해"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "探索不同身份或生活",
+                "en": "To explore different identities or lives",
+                "ja": "異なるアイデンティティや生活を探究するため",
+                "ko": "다른 정체성이나 삶을 탐험하기 위해"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "还没有明确原因",
+                "en": "No clear reason yet",
+                "ja": "まだ明確な理由はない",
+                "ko": "아직 명확한 이유 없음"
+              }
+            }
+          ],
+          "maxSelections": 3
+        },
+        {
+          "id": "Q06",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您观看 VTuber 直播的经历是？",
+            "en": "What is your experience watching VTuber livestreams?",
+            "ja": "VTuberのライブ配信を見た経験は？",
+            "ko": "VTuber 라이브 방송을 시청한 경험은?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "从未看过直播，也没看过切片 / 录播",
+                "en": "Never watched a livestream or clips/VODs",
+                "ja": "ライブ配信も切り抜き・録画も見たことがない",
+                "ko": "라이브 방송도, 클립/다시보기도 본 적이 없다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "只看过切片 / 录播，没看过直播",
+                "en": "Only watched clips/VODs, never a livestream",
+                "ja": "切り抜き・録画だけ見たことがあり、ライブ配信は見たことがない",
+                "ko": "클립/다시보기만 봤고 라이브 방송은 본 적이 없다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "以前看过，但近 30 天没看",
+                "en": "Watched before, but not in the past 30 days",
+                "ja": "以前は見ていたが、過去30日間は見ていない",
+                "ko": "예전에는 봤지만 지난 30일 동안은 보지 않았다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "近 30 天看过 1–3 天",
+                "en": "Watched on 1–3 days in the past 30 days",
+                "ja": "過去30日間に1～3日見た",
+                "ko": "지난 30일 동안 1~3일 시청"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "近 30 天看过 4–9 天",
+                "en": "Watched on 4–9 days in the past 30 days",
+                "ja": "過去30日間に4～9日見た",
+                "ko": "지난 30일 동안 4~9일 시청"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "近 30 天看过 10 天及以上",
+                "en": "Watched on 10 days or more in the past 30 days",
+                "ja": "過去30日間に10日以上見た",
+                "ko": "지난 30일 동안 10일 이상 시청"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "记不清",
+                "en": "Can't remember",
+                "ja": "覚えていない",
+                "ko": "기억나지 않음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q07",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "如果现在可以体验一个“能演能聊”的 OC，您最想先尝试什么？",
+            "en": "If you could now try an OC that can perform and chat, what would you most want to try first?",
+            "ja": "今、『演じたり話したりできる』OCを体験できるとしたら、最初に何を試したいですか？",
+            "ko": "지금 '연기하고 대화할 수 있는' OC를 체험할 수 있다면, 가장 먼저 무엇을 시도하고 싶으십니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "观看角色聊天、表演、讲故事",
+                "en": "Watch the character chat, perform, and tell stories",
+                "ja": "キャラクターの会話・演技・ストーリーテリングを見る",
+                "ko": "캐릭터의 대화, 연기, 스토리텔링 시청"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "直播式场景，用弹幕参与",
+                "en": "Join a livestream-style scene via bullet comments",
+                "ja": "ライブ配信風のシーンにコメント（弾幕）で参加する",
+                "ko": "라이브 방송 형식의 장면에 실시간 댓글로 참여"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "与 OC 一对一聊天 / 语音",
+                "en": "Chat one-on-one with the OC, by text or voice",
+                "ja": "OCと1対1でチャット／音声会話する",
+                "ko": "OC와 1:1 채팅 / 음성 대화"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "与 OC 共同演绎剧情、创作故事",
+                "en": "Act out a story or create one together with the OC",
+                "ja": "OCと一緒に物語を演じたり創作したりする",
+                "ko": "OC와 함께 이야기를 연출하거나 창작"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "控制 OC 制作图片 / 视频 / 直播内容",
+                "en": "Control the OC to make images / videos / livestream content",
+                "ja": "OCを操作して画像・動画・配信コンテンツを制作する",
+                "ko": "OC를 조작해 이미지 / 영상 / 라이브 콘텐츠 제작"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "欣赏换装、布置生活场景",
+                "en": "Enjoy outfit changes and decorating lifestyle scenes",
+                "ja": "着せ替えや生活シーンの模様替えを楽しむ",
+                "ko": "코디 체인지와 생활 장면 꾸미기 감상"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "与朋友的 OC 共同活动 / 创作",
+                "en": "Do activities or create together with a friend's OC",
+                "ja": "友人のOCと一緒に活動・創作する",
+                "ko": "친구의 OC와 함께 활동 / 창작"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "都不想 / 不确定",
+                "en": "None of these / not sure",
+                "ja": "どれもしたくない／わからない",
+                "ko": "모두 원하지 않음 / 잘 모르겠음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q08",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "哪些方面最能让您觉得“这还是我的 OC”？（最多选 3 项）",
+            "en": "Which aspects best make you feel “this is still my OC”? (Select up to 3)",
+            "ja": "どの点があると『これは自分のOCだ』と最も感じますか？（最大3つまで）",
+            "ko": "어떤 점이 있을 때 '이건 여전히 내 OC다'라고 가장 느끼십니까? (최대 3개 선택)"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "外观细节与原设计一致",
+                "en": "Visual details match my original design",
+                "ja": "外見の細部が元のデザインと一致している",
+                "ko": "외형 디테일이 원래 디자인과 일치"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "性格、说话、行为符合设定",
+                "en": "Personality, speech, and behavior match the character setting",
+                "ja": "性格・話し方・行動が設定に合っている",
+                "ko": "성격, 말투, 행동이 설정과 일치"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "尊重已有的故事和关系",
+                "en": "Respects my existing story and relationships",
+                "ja": "既存の物語や関係性を尊重している",
+                "ko": "기존 스토리와 관계를 존중"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "我能决定和修改它的表现",
+                "en": "I can decide and change how it behaves",
+                "ja": "私がその振る舞いを決めたり変更したりできる",
+                "ko": "내가 표현을 결정하고 수정할 수 있음"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "声音、动作符合想象",
+                "en": "Voice and movements match how I imagine them",
+                "ja": "声や動きがイメージ通りである",
+                "ko": "목소리와 동작이 상상과 일치"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "我能控制作品和设定的公开范围",
+                "en": "I can control who sees my works and settings",
+                "ja": "作品や設定の公開範囲を自分で管理できる",
+                "ko": "작품과 설정의 공개 범위를 내가 통제할 수 있음"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "还不确定",
+                "en": "Not sure yet",
+                "ja": "まだわからない",
+                "ko": "아직 잘 모르겠음"
+              }
+            }
+          ],
+          "maxSelections": 3
+        },
+        {
+          "id": "Q09",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您对 AI 参与 OC 创作与互动的态度是？",
+            "en": "What is your attitude toward AI participating in OC creation and interaction?",
+            "ja": "OCの創作や交流にAIが関わることについて、どうお考えですか？",
+            "ko": "OC 창작과 상호작용에 AI가 참여하는 것에 대한 태도는?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "已经用过，愿意继续尝试",
+                "en": "I've used it and want to keep trying it",
+                "ja": "すでに使ったことがあり、今後も試したい",
+                "ko": "이미 사용해 봤고 계속 시도하고 싶다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "没用过，但愿意尝试",
+                "en": "I haven't used it, but I'm open to trying",
+                "ja": "使ったことはないが、試してみたい",
+                "ko": "사용해 본 적은 없지만 시도해 보고 싶다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "取决于用途、授权和效果",
+                "en": "It depends on the use case, permissions, and results",
+                "ja": "用途・許諾・結果次第",
+                "ko": "용도, 권한, 결과에 따라 다르다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "目前不愿使用",
+                "en": "I don't want to use it for now",
+                "ja": "今は使いたくない",
+                "ko": "현재는 사용하고 싶지 않다"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "不了解",
+                "en": "I'm not familiar with it",
+                "ja": "よく知らない",
+                "ko": "잘 모른다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q10",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您是否曾为 OC 相关内容付过费？",
+            "en": "Have you ever paid for OC-related content?",
+            "ja": "OC関連のコンテンツにお金を払ったことはありますか？",
+            "ko": "OC 관련 콘텐츠에 비용을 지불한 적이 있습니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "有过",
+                "en": "Yes",
+                "ja": "ある",
+                "ko": "있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "没有过",
+                "en": "No",
+                "ja": "ない",
+                "ko": "없다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "记不清 / 不愿透露",
+                "en": "Can't remember / prefer not to say",
+                "ja": "覚えていない／答えたくない",
+                "ko": "기억나지 않음 / 응답을 원하지 않음"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "title": {
+        "zh": "Echuu 用户调研问卷 02 - 体验后感受与付费选择",
+        "en": "Echuu User Research Survey 02 — Post-Experience Feedback and Payment Preferences",
+        "ja": "Echuu ユーザー調査アンケート 02 — 体験後の感想と支払い意向",
+        "ko": "Echuu 사용자 조사 설문 02 — 체험 후 감상과 결제 선택"
+      },
+      "intro": {
+        "zh": "本问卷用于了解实际体验 Echuu 后的感受与付费选择，共 10 题，约 4 分钟。匿名填写，仅用于产品研究，不会公开个人作答。请在实际体验后 24 小时内填写。",
+        "en": "This survey asks about your experience with Echuu and your payment preferences. It has 10 questions and takes about 4 minutes. Responses are anonymous and used only for product research; individual answers will not be made public. Please respond within 24 hours of your experience.",
+        "ja": "本アンケートは、Echuuを実際に体験した後の感想と支払い意向を把握するためのものです。全10問、約4分で回答できます。匿名で、製品研究のみに使用し、個人の回答を公開することはありません。実際の体験後24時間以内にご回答ください。",
+        "ko": "이 설문은 Echuu를 실제로 체험한 후의 감상과 결제 선택을 파악하기 위한 것입니다. 총 10문항, 약 4분 소요됩니다. 익명으로 수집하며 제품 연구 목적으로만 사용하고, 개인의 응답을 공개하지 않습니다. 실제 체험 후 24시간 이내에 응답해 주세요."
+      },
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "在这次体验之前，您是否使用过类似的 AI 角色或 AI 聊天产品？",
+            "en": "Before this experience, had you used similar AI character or AI chat products?",
+            "ja": "今回の体験以前に、同様のAIキャラクターやAIチャット製品を使ったことはありますか？",
+            "ko": "이번 체험 전에 유사한 AI 캐릭터 또는 AI 채팅 제품을 사용한 적이 있습니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "用过",
+                "en": "Yes",
+                "ja": "ある",
+                "ko": "있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "没用过",
+                "en": "No",
+                "ja": "ない",
+                "ko": "없다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您这次体验到了哪一步？",
+            "en": "How far did you get in this experience?",
+            "ja": "今回の体験はどこまで進みましたか？",
+            "ko": "이번 체험은 어디까지 진행하셨나요?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "只看过介绍 / 演示，暂不继续",
+                "en": "Only viewed the intro/demo and didn't continue",
+                "ja": "紹介・デモを見ただけで、続けなかった",
+                "ko": "소개/데모만 보고 계속하지 않았다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "实际操作过，但因问题未完成",
+                "en": "Tried it, but couldn't finish due to an issue",
+                "ja": "実際に操作したが、問題が発生して完了できなかった",
+                "ko": "실제로 조작했지만 문제로 완료하지 못했다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "实际操作过，但主动退出",
+                "en": "Tried it, but exited voluntarily",
+                "ja": "実際に操作したが、自分から終了した",
+                "ko": "실제로 조작했지만 스스로 종료했다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "完成过至少一次想做的操作",
+                "en": "Completed at least one operation I wanted to do",
+                "ja": "やりたかった操作を少なくとも1回完了した",
+                "ko": "원하는 조작을 적어도 한 번 완료했다"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "随便体验，没有具体目标",
+                "en": "Just explored without a specific goal",
+                "ja": "特に目的を決めずに試した",
+                "ko": "특별한 목표 없이 가볍게 체험했다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "您实际用过哪些功能？",
+            "en": "Which features did you actually use?",
+            "ja": "実際に使った機能はどれですか？",
+            "ko": "실제로 사용한 기능은 무엇입니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "查看 / 操作预制角色",
+                "en": "Viewing / operating preset characters",
+                "ja": "プリセットキャラクターの閲覧・操作",
+                "ko": "프리셋 캐릭터 조회 / 조작"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "导入 / 生成自己的角色",
+                "en": "Importing / generating my own character",
+                "ja": "自分のキャラクターの読み込み・生成",
+                "ko": "내 캐릭터 불러오기 / 생성"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "观看角色持续聊天、表演、讲故事",
+                "en": "Watching a character chat, perform, and tell stories over time",
+                "ja": "キャラクターが継続的に会話・演技・ストーリーテリングするのを見る",
+                "ko": "캐릭터가 지속적으로 대화, 연기, 스토리텔링하는 것을 시청"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "文字 / 弹幕参与互动",
+                "en": "Interacting via text / bullet comments",
+                "ja": "テキストやコメント（弾幕）で参加",
+                "ko": "텍스트 / 실시간 댓글로 참여"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "语音互动",
+                "en": "Voice interaction",
+                "ja": "音声での交流",
+                "ko": "음성 상호작용"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "播放 / 控制角色动作",
+                "en": "Playing / controlling character movements",
+                "ja": "キャラクターの動作を再生・操作",
+                "ko": "캐릭터 동작 재생 / 제어"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "制作 / 保存 / 分享内容",
+                "en": "Creating / saving / sharing content",
+                "ja": "コンテンツの制作・保存・共有",
+                "ko": "콘텐츠 제작 / 저장 / 공유"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "记不清",
+                "en": "Can't remember",
+                "ja": "覚えていない",
+                "ko": "기억나지 않음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "您主要使用的是谁的角色？",
+            "en": "Whose character did you mainly use?",
+            "ja": "主に誰のキャラクターを使いましたか？",
+            "ko": "주로 누구의 캐릭터를 사용하셨나요?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "我自己的 OC",
+                "en": "My own OC",
+                "ja": "自分のOC",
+                "ko": "내 OC"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "平台预制角色",
+                "en": "A preset character on the platform",
+                "ja": "プラットフォームのプリセットキャラクター",
+                "ko": "플랫폼 프리셋 캐릭터"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "两种都用过",
+                "en": "Both",
+                "ja": "両方使った",
+                "ko": "둘 다 사용"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "尚未成功进入角色体验",
+                "en": "I didn't manage to enter the character experience",
+                "ja": "キャラクター体験に入れなかった",
+                "ko": "캐릭터 체험에 진입하지 못했다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "哪些因素最影响您继续使用或购买？（最多选 3 项）",
+            "en": "Which factors most affect whether you continue using or purchase? (Select up to 3)",
+            "ja": "今後も使い続けるか、購入するかに最も影響する要因は何ですか？（最大3つまで）",
+            "ko": "계속 사용하거나 구매하는 데 가장 영향을 미치는 요인은 무엇입니까? (최대 3개 선택)"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "外观与我的 OC 不一致",
+                "en": "The appearance doesn't match my OC",
+                "ja": "外見が自分のOCと一致しない",
+                "ko": "외형이 내 OC와 일치하지 않는다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "性格、语气、行为不符设定",
+                "en": "Personality, tone, or behavior doesn't match the setting",
+                "ja": "性格・口調・行動が設定と合わない",
+                "ko": "성격, 말투, 행동이 설정과 맞지 않는다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "参与、控制、修改的范围不足",
+                "en": "Not enough room to participate, control, or modify",
+                "ja": "参加・操作・変更できる範囲が足りない",
+                "ko": "참여, 제어, 수정할 수 있는 범위가 부족"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "等待和操作时间太长",
+                "en": "Waiting and operation take too long",
+                "ja": "待ち時間や操作に時間がかかりすぎる",
+                "ko": "기다림과 조작 시간이 너무 길다"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "出错、卡顿或功能未完成",
+                "en": "Errors, lag, or unfinished features",
+                "ja": "エラー・動作の重さ・未完成の機能がある",
+                "ko": "오류, 끊김, 미완성 기능"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "内容不够有趣，没找到用途",
+                "en": "The content isn't interesting enough, or I couldn't find a use for it",
+                "ja": "内容が十分に面白くない、使い道が見つからない",
+                "ko": "콘텐츠가 재미없거나 활용 용도를 찾지 못했다"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "不了解收费范围、后续费用或失败处理",
+                "en": "I don't understand the pricing scope, follow-up costs, or failure handling",
+                "ja": "料金範囲・追加費用・失敗時の対応がわからない",
+                "ko": "요금 범위, 추가 비용, 실패 처리 방식을 모른다"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "不了解作品设定和数据如何使用",
+                "en": "I don't understand how my character setting and data are used",
+                "ja": "作品設定やデータがどう使われるかわからない",
+                "ko": "작품 설정과 데이터가 어떻게 사용되는지 모른다"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "缺少导出、保存、分享能力",
+                "en": "Missing export, save, or share capabilities",
+                "ja": "エクスポート・保存・共有機能が足りない",
+                "ko": "내보내기, 저장, 공유 기능이 부족"
+              }
+            },
+            {
+              "value": "J",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "K",
+              "label": {
+                "zh": "暂无问题",
+                "en": "No issues for now",
+                "ja": "今のところ問題なし",
+                "ko": "현재 문제 없음"
+              }
+            }
+          ],
+          "maxSelections": 3
+        },
+        {
+          "id": "Q06",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "未来 7 天，您还想继续使用吗？",
+            "en": "Do you want to keep using it in the next 7 days?",
+            "ja": "今後7日間も使い続けたいですか？",
+            "ko": "앞으로 7일 동안 계속 사용하고 싶으십니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "想继续做这次做过的事",
+                "en": "I want to keep doing what I did this time",
+                "ja": "今回やったことを続けたい",
+                "ko": "이번에 한 일을 계속하고 싶다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "想尝试另一件具体的事",
+                "en": "I want to try another specific thing",
+                "ja": "別の具体的なことを試したい",
+                "ko": "다른 구체적인 일을 시도하고 싶다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "还不确定",
+                "en": "Not sure yet",
+                "ja": "まだわからない",
+                "ko": "아직 잘 모르겠다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "暂时不打算回来",
+                "en": "I don't plan to come back for now",
+                "ja": "今は戻るつもりはない",
+                "ko": "당분간 다시 사용할 계획이 없다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q07",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "按这次实际体验，您会考虑付费吗？",
+            "en": "Based on this experience, would you consider paying?",
+            "ja": "今回の実際の体験を踏まえて、支払いを検討しますか？",
+            "ko": "이번 실제 체험을 기준으로 결제를 고려하시겠습니까?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "愿意考虑",
+                "en": "Yes, I'd consider it",
+                "ja": "検討してもよい",
+                "ko": "고려할 의향이 있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "改善某些问题后才考虑",
+                "en": "Only after certain issues are improved",
+                "ja": "いくつかの問題が改善されたら検討する",
+                "ko": "일부 문제가 개선되면 고려하겠다"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "只考虑免费使用",
+                "en": "Only interested in free use",
+                "ja": "無料利用のみ検討する",
+                "ko": "무료 사용만 고려한다"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "不打算继续使用",
+                "en": "I don't plan to keep using it",
+                "ja": "使い続けるつもりはない",
+                "ko": "계속 사용할 계획이 없다"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "信息不足，无法判断",
+                "en": "Not enough information to decide",
+                "ja": "情報が足りず判断できない",
+                "ko": "정보가 부족해 판단할 수 없다"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q08",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "您最可能因为什么付费？（最多选 2 项）",
+            "en": "What would most likely make you pay? (Select up to 2)",
+            "ja": "どのような理由なら最も支払う可能性がありますか？（最大2つまで）",
+            "ko": "무엇 때문에 가장 결제할 가능성이 있습니까? (최대 2개 선택)"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "更好地呈现自己的 OC",
+                "en": "Presenting my own OC better",
+                "ja": "自分のOCをよりよく表現できる",
+                "ko": "내 OC를 더 잘 표현할 수 있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "符合设定的回应和互动",
+                "en": "Responses and interactions that match the setting",
+                "ja": "設定に合った反応や交流",
+                "ko": "설정에 맞는 반응과 상호작용"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "值得持续观看的内容表演",
+                "en": "Content performances worth watching regularly",
+                "ja": "継続して見る価値のあるコンテンツ演技",
+                "ko": "지속적으로 볼 가치가 있는 콘텐츠 연기"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "有趣的剧情创作结果",
+                "en": "Interesting story-creation results",
+                "ja": "面白い物語創作の結果",
+                "ko": "재미있는 스토리 창작 결과"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "节省时间和操作",
+                "en": "Saving time and effort",
+                "ja": "時間と手間を省ける",
+                "ko": "시간과 조작을 절약"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "能保存、分享的成果",
+                "en": "Results I can save and share",
+                "ja": "保存・共有できる成果",
+                "ko": "저장하고 공유할 수 있는 결과물"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "持续使用熟悉的角色",
+                "en": "Keep using a character I'm familiar with",
+                "ja": "慣れ親しんだキャラクターを使い続けられる",
+                "ko": "익숙한 캐릭터를 계속 사용할 수 있다"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "没有付费理由",
+                "en": "No reason to pay",
+                "ja": "支払う理由がない",
+                "ko": "결제할 이유가 없다"
+              }
+            }
+          ],
+          "maxSelections": 2
+        },
+        {
+          "id": "Q09",
+          "type": "single",
+          "required": true,
+          "stem": {
+            "zh": "过去 90 天，您为 OC 付费过几次？",
+            "en": "In the past 90 days, how many times have you paid for OC-related things?",
+            "ja": "過去90日間に、OC関連で何回支払いましたか？",
+            "ko": "지난 90일 동안 OC 관련 비용을 몇 번 지불하셨나요?"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "0 次",
+                "en": "0 times",
+                "ja": "0回",
+                "ko": "0회"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "1 次",
+                "en": "1 time",
+                "ja": "1回",
+                "ko": "1회"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "2–3 次",
+                "en": "2–3 times",
+                "ja": "2～3回",
+                "ko": "2~3회"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "4–6 次",
+                "en": "4–6 times",
+                "ja": "4～6回",
+                "ko": "4~6회"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "7 次及以上",
+                "en": "7 times or more",
+                "ja": "7回以上",
+                "ko": "7회 이상"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "记不清 / 不愿透露",
+                "en": "Can't remember / prefer not to say",
+                "ja": "覚えていない／答えたくない",
+                "ko": "기억나지 않음 / 응답을 원하지 않음"
+              }
+            }
+          ]
+        },
+        {
+          "id": "Q10",
+          "type": "multi",
+          "required": true,
+          "stem": {
+            "zh": "关于积分消费，您最在意哪些规则？（最多选 3 项）",
+            "en": "Which rules about credit spending matter most to you? (Select up to 3)",
+            "ja": "クレジット消費について、最も重視するルールはどれですか？（最大3つまで）",
+            "ko": "크레딧 소비와 관련해 가장 중요하게 여기는 규칙은 무엇입니까? (최대 3개 선택)"
+          },
+          "options": [
+            {
+              "value": "A",
+              "label": {
+                "zh": "用前能看到扣点和现金等值",
+                "en": "Seeing the credit deduction and cash equivalent before use",
+                "ja": "使用前に消費ポイントと現金換算額が見える",
+                "ko": "사용 전에 차감 크레딧과 현금 환산액을 볼 수 있다"
+              }
+            },
+            {
+              "value": "B",
+              "label": {
+                "zh": "支持小额按需充值",
+                "en": "Small top-ups whenever needed",
+                "ja": "必要なときに少額チャージできる",
+                "ko": "필요할 때 소액 충전 가능"
+              }
+            },
+            {
+              "value": "C",
+              "label": {
+                "zh": "不自动续费 / 不自动充值",
+                "en": "No auto-renewal / no auto top-up",
+                "ja": "自動更新・自動チャージなし",
+                "ko": "자동 갱신 / 자동 충전 없음"
+              }
+            },
+            {
+              "value": "D",
+              "label": {
+                "zh": "余额和消费记录清楚",
+                "en": "Clear balance and spending history",
+                "ja": "残高と利用履歴が明確",
+                "ko": "잔액과 소비 기록이 명확"
+              }
+            },
+            {
+              "value": "E",
+              "label": {
+                "zh": "有效期足够长",
+                "en": "Long enough validity period",
+                "ja": "有効期限が十分に長い",
+                "ko": "유효 기간이 충분히 길다"
+              }
+            },
+            {
+              "value": "F",
+              "label": {
+                "zh": "技术失败自动恢复积分",
+                "en": "Credits automatically restored after technical failures",
+                "ja": "技術的な失敗時にポイントが自動で戻る",
+                "ko": "기술적 실패 시 크레딧 자동 복구"
+              }
+            },
+            {
+              "value": "G",
+              "label": {
+                "zh": "退款和停服后的余额处理清楚",
+                "en": "Clear rules for refunds and balances after service shutdown",
+                "ja": "返金やサービス終了後の残高処理が明確",
+                "ko": "환불과 서비스 종료 후 잔액 처리 기준이 명확"
+              }
+            },
+            {
+              "value": "H",
+              "label": {
+                "zh": "其他",
+                "en": "Other",
+                "ja": "その他",
+                "ko": "기타"
+              }
+            },
+            {
+              "value": "I",
+              "label": {
+                "zh": "不想用积分",
+                "en": "I don't want to use credits",
+                "ja": "クレジットを使いたいと思わない",
+                "ko": "크레딧을 사용하고 싶지 않다"
+              }
+            }
+          ],
+          "maxSelections": 3
+        }
+      ]
+    }
+  ]
+}

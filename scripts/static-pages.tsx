@@ -6,6 +6,8 @@ import { BLOG_POSTS } from '../src/website/data/blog';
 import { JOURNAL_NOTES, RESEARCH_NOTES } from '../src/website/data/journal';
 import { TEAM } from '../src/website/data/team';
 import { ANSWERS } from '../src/website/data/answers';
+import { getSurvey } from '../src/website/lib/surveys';
+import { isSurveyRoute, SURVEY_ROUTES } from '../src/website/surveyRoutes';
 import { SHARE_IMAGE, seoDocument, publicRoutes, type SeoOptions } from '../src/website/seo/siteSeo';
 
 function Content({ locale, path, base }: { locale: Locale; path: string; base: string }) {
@@ -20,6 +22,7 @@ function Content({ locale, path, base }: { locale: Locale; path: string; base: s
   </nav>;
   const paragraphs = (items: readonly { title: string; body: string }[]) => items.map((item) => <section key={item.title}><h3>{item.title}</h3><p>{item.body}</p></section>);
   let body: React.ReactNode;
+  const survey = isSurveyRoute(path) ? getSurvey(SURVEY_ROUTES[path]) : undefined;
   if (!path) body = <>
     <h1>{h.hero.slogan.pre} {h.hero.slogan.hl1} {h.hero.slogan.mid} {h.hero.slogan.hl2}</h1>
     <p>{h.intro.body}</p>
@@ -38,8 +41,9 @@ function Content({ locale, path, base }: { locale: Locale; path: string; base: s
   else if (path === 'journal') body = <><h1>{t.journalPage.title}</h1><p>{t.journalPage.lede}</p><div>{[...JOURNAL_NOTES, ...RESEARCH_NOTES].map((note) => <article key={note.id}><h2>{note.title[locale] ?? note.title.en}</h2><p>{note.body[locale] ?? note.body.en}</p></article>)}</div><a href={href('blog')}>{t.blogPage.title}</a></>;
   else if (path === 'feedback') body = <><h1>{t.feedbackPage.title}</h1><p>{t.feedbackPage.lede}</p><p>{t.feedbackPage.noBackendNotice}</p><p>{t.feedbackPage.privacyNotice}</p></>;
   else if (path === 'doodle') body = <><h1>{t.doodlePage.title}</h1><p>{t.doodlePage.lede}</p><p>{t.doodlePage.localOnly}</p><p>{t.doodlePage.noPublicWall}</p></>;
+  else if (survey) body = <><h1>{survey.title[locale]}</h1><p>{survey.intro[locale]}</p></>;
   else body = <><h1>{t.common.notFound}</h1><a href={href()}>{t.common.backHome}</a></>;
-  return <main id="main" className="seo-static">{links}{body}<footer><a href="mailto:cory@anngel.live">cory@anngel.live</a><p>Echuu · Anngel LLC</p><nav aria-label={t.nav.language}>{WEBSITE_LOCALES.map((l) => <a key={l} href={`${base}website/${l}/${path && publicRoutes().includes(path) ? `${path}/` : ''}`} hrefLang={DICTS[l].htmlLang}>{DICTS[l].localeName}{' '}</a>)}</nav></footer></main>;
+  return <main id="main" className="seo-static">{links}{body}<footer><a href="mailto:cory@anngel.live">cory@anngel.live</a><p>Echuu · Anngel LLC</p><nav aria-label={t.nav.language}>{WEBSITE_LOCALES.map((l) => <a key={l} href={`${base}website/${l}/${path && (survey || publicRoutes().includes(path)) ? `${path}/` : ''}`} hrefLang={DICTS[l].htmlLang}>{DICTS[l].localeName}{' '}</a>)}</nav></footer></main>;
 }
 
 /**
@@ -102,7 +106,10 @@ export function staticPages(template: string, options: SeoOptions) {
   const result: Record<string, string> = {};
   const base = `/${options.base.split('/').filter(Boolean).join('/')}${options.base === '/' ? '' : '/'}`;
   const make = (locale: Locale, path: string) => {
-    const seo = seoDocument(locale, path, options);
+    const survey = isSurveyRoute(path) ? getSurvey(SURVEY_ROUTES[path]) : undefined;
+    const seo = seoDocument(locale, path, options, survey && {
+      title: survey.title[locale], description: survey.intro[locale], noindex: true,
+    });
     const meta = (attr: string, name: string, value: string) => `<meta data-seo="1" ${attr}="${name}" content="${escape(value)}" />`;
     const tags = [
       `<title>${escape(seo.title)}</title>`, meta('name', 'description', seo.description),
@@ -126,7 +133,7 @@ export function staticPages(template: string, options: SeoOptions) {
       .replace('</head>', `${tags.join('\n')}\n</head>`)
       .replace(/<div id="root">[\s\S]*?<\/div>/, `<div id="root">${renderToStaticMarkup(<Content locale={locale} path={path} base={base} />)}</div>`);
   };
-  for (const locale of WEBSITE_LOCALES) for (const path of [...publicRoutes(), 'moodboard']) result[`website/${locale}/${path ? `${path}/` : ''}index.html`] = make(locale, path);
+  for (const locale of WEBSITE_LOCALES) for (const path of [...publicRoutes(), 'moodboard', ...Object.keys(SURVEY_ROUTES)]) result[`website/${locale}/${path ? `${path}/` : ''}index.html`] = make(locale, path);
   result['index.html'] = make('en', '');
   result['website/index.html'] = make('en', '');
   result['404.html'] = make('en', 'not-found');

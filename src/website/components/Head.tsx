@@ -4,10 +4,10 @@ import { CANONICAL_ORIGIN } from '../config/site';
 import { SHARE_IMAGE, seoDocument } from '../seo/siteSeo';
 import { startAnalytics, trackPageView } from '../lib/googleAnalytics';
 
-type Props = { locale: Locale; htmlLang: string; title: string; description: string; path: string; noindex?: boolean };
+type Props = { locale: Locale; htmlLang: string; title: string; description: string; path: string; noindex?: boolean; track?: boolean };
 
 /** Replace only managed head entries; initial HTML and SPA navigation share the same metadata. */
-export function Head({ locale, htmlLang, title, description, path, noindex }: Props) {
+export function Head({ locale, htmlLang, title, description, path, noindex, track = true }: Props) {
   useEffect(() => {
     const indexingEnabled = import.meta.env.PROD && import.meta.env.VITE_SITE_INDEXABLE === '1'
       && window.location.origin === CANONICAL_ORIGIN;
@@ -44,9 +44,11 @@ export function Head({ locale, htmlLang, title, description, path, noindex }: Pr
     }
     add('script', { type: 'application/ld+json' }, JSON.stringify(seo.schema));
     // 每个页面（含站内跳转、切换语言）记一次浏览；只在正式站且配置了 GA 时生效
-    startAnalytics();
-    trackPageView(title);
-  }, [locale, htmlLang, title, description, path, noindex]);
+    if (track) {
+      startAnalytics();
+      trackPageView(title);
+    }
+  }, [locale, htmlLang, title, description, path, noindex, track]);
   return null;
 }
 const HOME_IMAGE_ALT = 'Echuu — Original characters on stage';

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { navigateWithTransition, SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
 import { DEFAULT_WEBSITE_LOCALE, isWebsiteLocale, type Locale } from './i18n';
+import { isSurveyRoute, type SurveyRoute } from './surveyRoutes';
 
 export const WEBSITE_BASE = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/website`;
 
 export type WebsitePage =
-  | 'home' | 'gallery' | 'creators' | 'journal' | 'blog' | 'team' | 'feedback' | 'doodle' | 'moodboard' | 'not-found';
+  | 'home' | 'gallery' | 'creators' | 'journal' | 'blog' | 'team' | 'feedback' | 'doodle' | 'moodboard' | 'not-found'
+  | SurveyRoute;
 
 const PAGES: Record<string, WebsitePage> = {
   '': 'home',
@@ -31,7 +33,7 @@ export function parseWebsiteLocation(pathname: string, hash: string): WebsiteLoc
   if (!isWebsiteLocale(maybeLocale)) {
     return { locale: DEFAULT_WEBSITE_LOCALE, page: 'home', hash };
   }
-  const page = PAGES[maybePage] ?? 'not-found';
+  const page = isSurveyRoute(maybePage) ? maybePage : PAGES[maybePage] ?? 'not-found';
   if (maybeSlug && !PAGES_WITH_SLUG.has(page)) return { locale: maybeLocale, page: 'not-found', hash };
   const slug = maybeSlug ? decodeURIComponent(maybeSlug) : undefined;
   return { locale: maybeLocale, page, hash, slug };

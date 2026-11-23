@@ -3,6 +3,8 @@ import { staticPages } from '../../../scripts/static-pages';
 import { publicRoutes, seoDocument } from './siteSeo';
 import { WEBSITE_LOCALES } from '../i18n';
 import { ANSWERS } from '../data/answers';
+import { getSurvey } from '../lib/surveys';
+import { SURVEY_ROUTES } from '../surveyRoutes';
 const template = '<html><head><title>Generic</title><meta name="robots" content="index,follow"></head><body><div id="root"></div></body></html>';
 const options = { origin: 'https://echuu.ai', base: '/', indexable: true };
 function parse(html: string) { return new DOMParser().parseFromString(html, 'text/html'); }
@@ -38,5 +40,21 @@ describe('search documents', () => {
     expect(pages['sitemap.xml']).not.toContain('moodboard');
     expect(parse(pages['404.html']).querySelector('meta[name=robots]')?.getAttribute('content')).toBe('noindex,follow');
     expect(seoDocument('en', 'missing', options, { title: 'Missing', description: '' }).indexable).toBe(false);
+  });
+  it('prerenders both research surveys in all languages without adding them to the sitemap', () => {
+    const pages = staticPages(template, options);
+    for (const [path, id] of Object.entries(SURVEY_ROUTES)) {
+      const survey = getSurvey(id);
+      for (const locale of WEBSITE_LOCALES) {
+        const doc = parse(pages[`website/${locale}/${path}/index.html`]);
+        expect(doc.title).toBe(survey.title[locale]);
+        expect(doc.querySelector('h1')?.textContent).toBe(survey.title[locale]);
+        expect(doc.querySelector('meta[name=robots]')?.getAttribute('content')).toBe('noindex,follow');
+        for (const alternate of WEBSITE_LOCALES) {
+          expect(doc.querySelector(`a[href="/website/${alternate}/${path}/"]`)).toBeTruthy();
+        }
+      }
+      expect(pages['sitemap.xml']).not.toContain(path);
+    }
   });
 });

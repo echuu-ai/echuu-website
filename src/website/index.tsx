@@ -4,6 +4,7 @@ import { DICTS, WEBSITE_LOCALES, type Locale } from './i18n';
 import { LocaleContext } from './locale-context';
 import { useI18nStore } from '../hooks/use-i18n';
 import { useWebsiteLocation, WEBSITE_BASE } from './router';
+import { isSurveyRoute, SURVEY_ROUTES } from './surveyRoutes';
 import { SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
 import { useSmoothScroll } from './lib/useSmoothScroll';
 import { findOrphans, watchOrphans } from './lib/orphanGuard';
@@ -35,6 +36,7 @@ const FeedbackPage = lazy(PAGE_LOADERS.feedback);
 const DoodlePage = lazy(PAGE_LOADERS.doodle);
 const MoodboardPage = lazy(PAGE_LOADERS.moodboard);
 const NotFoundPage = lazy(PAGE_LOADERS.notFound);
+const SurveyPage = lazy(() => import('./pages/SurveyPage').then((m) => ({ default: m.SurveyPage })));
 
 /** 页面加载完、浏览器空闲时预取全部子页面代码（开场资源优先，8 s 后再开始） */
 function usePrefetchPages() {
@@ -123,6 +125,7 @@ export default function EchuuWebsite() {
     : page === 'feedback' ? <FeedbackPage />
     : page === 'doodle' ? <DoodlePage />
     : page === 'moodboard' ? <MoodboardPage />
+    : isSurveyRoute(page) ? <SurveyPage surveyId={SURVEY_ROUTES[page]} />
     : page === 'not-found' ? <NotFoundPage />
     : <HomeV2 />;
 
