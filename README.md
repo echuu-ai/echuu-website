@@ -64,9 +64,9 @@ rsync -a --delete --exclude .git --exclude .github --exclude .preview-parts --ex
 - 语言：首屏页头新增一行「中 · 日 · EN · 한」切换（`LangInline`），保留当前子页与文章；子页面继续用 `LangSwitch`。四语路由本身未变。
 - 原「创作日志」子页改称「短记录」（journal），避免与博客重名。
 
-## 邀请码与内测申请（2026-09-29）
+## 产品入口
 
-首页登录/内测入口使用居中玻璃弹窗。服务端尚未提供，默认展示准备状态与邮件申请入口，不收集账号或密码。待确认部署契约后配置 `VITE_INVITE_REDEEM_ENDPOINT` 与 `VITE_BETA_ACCOUNT_ENDPOINT`；不要将邀请码或发信密钥放进前端。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产默认 `https://echuu.live`（2026-10-03 Cory 确认；官网正式地址 https://www.echuu.ai）。契约与状态见 `docs/reviews/2026-09-29-invitation-access.md`；可定制中文邀请函在 `emails/beta-invitation.zh.html`。
+官网入口打开 Echuu，注册和登录由产品内的 Logto 流程处理。已分享的 `/website/{locale}/?access=signup` 链接会转到产品登录页，并携带语言、公开推荐码与 UTM 参数。`VITE_PRODUCT_ORIGIN` 未设置时，开发默认 `http://localhost:5173`，生产入口为 `https://www.echuu.live`。早期内测流程保存在 `docs/reviews/2026-09-29-invitation-access.md`。
 
 
 ## 搜索与交互音效（2026-10-03）

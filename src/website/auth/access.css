@@ -1,5 +1,5 @@
 /*
- * 官网弹窗统一面板（内测 / 登录 / 微信 / QQ 群）——Cory 的面板模版：
+ * 官网弹窗统一面板（微信 / QQ 群 / VRM 帮助）：
  * 363 × 543、rgba(10, 36, 53, .3)、圆角 14。所有弹窗同一尺寸、同一结构：
  * 头部（标题 + 说明）在上，主按钮固定在底部，中间放各自的内容。
  */
@@ -18,8 +18,7 @@
   border: 1px solid rgba(255, 255, 255, .16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 24px 64px rgba(2, 18, 32, .35);
 }
-.echuu-access button, .echuu-access input { font: inherit; }
-.echuu-access button { cursor: pointer; }
+.echuu-access button { font: inherit; cursor: pointer; }
 .echuu-access button:focus-visible { outline: 2px solid #8fe3ff; outline-offset: 3px; }
 
 .echuu-access__close {
@@ -41,19 +40,6 @@
 .echuu-access__body { flex: 1; display: flex; flex-direction: column; gap: 16px; margin-top: 24px; min-height: 0; }
 .echuu-access__actions { display: grid; gap: 12px; margin-top: auto; padding-top: 20px; }
 
-/* 表单 */
-.echuu-access__form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
-.echuu-access label { display: grid; gap: 8px; font-size: 13px; font-weight: 550; color: rgba(255, 255, 255, .86); }
-.echuu-access input {
-  width: 100%; height: 46px; padding: 0 14px; border-radius: var(--btn-radius, 12px); font-size: 15px; color: #fff;
-  border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08);
-}
-.echuu-access input::placeholder { color: rgba(255, 255, 255, .45); }
-.echuu-access input:focus { outline: none; border-color: rgba(143, 227, 255, .9); background: rgba(255, 255, 255, .12); }
-.echuu-access__password { position: relative; display: block; }
-.echuu-access__password input { padding-right: 46px; }
-.echuu-access__password button { position: absolute; right: 1px; top: 1px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; color: rgba(255, 255, 255, .7); background: transparent; }
-
 /* 主按钮：白底深字，全宽，一行。尺寸 / 圆角 / 字重跟官网按钮规范同一套（lg 52、圆角 12、字重 400）；
  * 弹窗挂在 body 上拿不到 .echuu-website 的 token，所以带回退值 */
 .echuu-access__submit {
@@ -64,18 +50,7 @@
 .echuu-access__submit:hover:not(:disabled) { background: rgba(255, 255, 255, .86); }
 .echuu-access__submit:disabled { cursor: not-allowed; opacity: .5; }
 
-.echuu-access__switch { margin: 0; font-size: 13px; text-align: center; color: rgba(255, 255, 255, .7); }
-.echuu-access__switch button { border: 0; background: none; color: #8fe3ff; font-weight: 650; padding: 6px; white-space: nowrap; }
-.echuu-access__switch a { color: #00ddff; text-underline-offset: 3px; }
-.echuu-access__switch a:hover { color: #fff; }
-.echuu-access__switch a:focus-visible { outline: 2px solid #00ddff; outline-offset: 3px; }
-.echuu-access__notice, .echuu-access__error, .echuu-access__privacy { margin: 0; font-size: 12px; line-height: 1.6; }
-.echuu-access__notice, .echuu-access__privacy { color: rgba(255, 255, 255, .6); }
-.echuu-access__privacy { text-align: center; }
-.echuu-access__privacy a { color: #00ddff; text-underline-offset: 3px; }
-.echuu-access__privacy a:hover { color: #fff; }
-.echuu-access__privacy a:focus-visible { outline: 2px solid #00ddff; outline-offset: 3px; }
-.echuu-access__error { color: #ffb3c0; }
+.echuu-access__privacy { margin: 0; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, .6); text-align: center; }
 
 /* 社群：二维码、号码卡、加入步骤 */
 /* 微信名片是竖图（888 × 1206）：占满头部与按钮之间的空间，完整显示不裁切 */
@@ -98,15 +73,3 @@
 @supports not (backdrop-filter: blur(1px)) { .echuu-access__glass { background: rgba(10, 36, 53, .92); } }
 .echuu-access__body > p { line-height: 1.65; }
 .echuu-access__body > p a { color: inherit; text-underline-offset: 4px; }
-/* 未开放时的邮件兜底：联系邮箱一行，跟主按钮一起贴在底部 */
-.echuu-access__contact { margin: 0; text-align: center; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, .55); }
-.echuu-access__contact a { color: #fff; font-weight: 550; text-underline-offset: 4px; }
-
-/* Registration fields remain usable on short screens without hiding content. */
-.echuu-access--registration { height: auto; max-height: calc(100dvh - 32px); }
-.echuu-access--registration .echuu-access__glass { max-height: calc(100dvh - 32px); }
-.echuu-access--registration .echuu-access__body { flex: 0 0 auto; }
-.echuu-access--registration .echuu-access__actions { padding-top: 0; }
-.echuu-access--registration .echuu-access__switch button { min-height: 44px; color: #00ddff; }
-.echuu-access--registration .echuu-access__switch a { display: inline-block; padding-block: 12px; }
-.echuu-access--registration .echuu-access__close { width: 44px; height: 44px; right: 8px; top: 8px; }

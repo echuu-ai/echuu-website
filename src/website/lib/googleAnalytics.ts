@@ -61,13 +61,6 @@ export function trackPageView(title: string) {
 
 /** 官网自定义事件名。命名用 GA4 惯例的小写下划线，含义见各埋点处注释。 */
 export type SiteEvent =
-  | 'access_opened'        // 打开邀请码 / 注册弹窗
-  | 'access_completed'     // 邀请码兑换成功（跳产品）或内测注册成功
-  | 'access_failed'        // 兑换 / 注册失败
-  | 'access_email_fallback'// 无接口时点「邮件申请」
-  | 'waitlist_viewed'      // 后端确认满额后展示候补入口
-  | 'waitlist_completed'   // 后端确认联系方式已保存
-  | 'waitlist_failed'      // 候补提交失败，不记录邮箱
   | 'feedback_submitted'   // 意见箱提交（邮件 / 复制）
   | 'outbound_click';      // 外链点击（社交 / 产品 / 文档）
 

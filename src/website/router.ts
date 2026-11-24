@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { navigateWithTransition, SITE_NAVIGATE_EVENT } from '../lib/pageTransition';
+import { PRODUCT_ENTRY_URL } from './config/site';
 import { DEFAULT_WEBSITE_LOCALE, isWebsiteLocale, type Locale } from './i18n';
 import { isSurveyRoute, type SurveyRoute } from './surveyRoutes';
 
@@ -44,6 +45,31 @@ export function websitePath(locale: Locale, page: WebsitePage | '' = '', slug?: 
   const tail = slug && page && PAGES_WITH_SLUG.has(page) ? `/${encodeURIComponent(slug)}` : '';
   // 结尾带 /：和预渲染的静态页、canonical、sitemap 同一个地址（不带 / 的地址服务器会 308 过来，多跳一次）
   return `${WEBSITE_BASE}/${locale}${segment}${tail}/`;
+}
+
+/** Route already-shared website signup links to the product login page. */
+export function productLoginFromLegacyAccess(
+  { pathname, search }: Pick<Location, 'pathname' | 'search'>,
+  fallbackLocale: Locale,
+): URL | null {
+  const path = pathname.replace(/\/+$/, '');
+  const locale = path === WEBSITE_BASE ? fallbackLocale : path.slice(WEBSITE_BASE.length + 1);
+  if (!isWebsiteLocale(locale) || (path !== WEBSITE_BASE && path !== `${WEBSITE_BASE}/${locale}`)) return null;
+
+  const params = new URLSearchParams(search);
+  if (params.get('access') !== 'signup') return null;
+
+  const login = new URL('/login', PRODUCT_ENTRY_URL);
+  login.searchParams.set('locale', locale);
+  const referral = params.get('ref');
+  if (referral && /^[A-Za-z0-9_-]{8,32}$/.test(referral) && !/^ECHU[-_]/i.test(referral)) {
+    login.searchParams.set('ref', referral);
+  }
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+    const value = params.get(key);
+    if (value) login.searchParams.set(key, value);
+  }
+  return login;
 }
 
 /** 站内跳转，复用 app 既有的过渡与 popstate 处理。 */

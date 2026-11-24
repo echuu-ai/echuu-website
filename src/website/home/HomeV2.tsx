@@ -1,6 +1,4 @@
-import { lazy, Suspense, useState, useRef, type CSSProperties } from 'react';
-import '../auth/referral';
-import { LazyAccessDialog, type AccessMode } from '../auth/LazyAccessDialog';
+import { lazy, Suspense, useRef, type CSSProperties } from 'react';
 import { useLocale } from '../locale-context';
 import { Head } from '../components/Head';
 import { HOME_ASSETS } from '../assets';
@@ -34,8 +32,6 @@ const showSeamTuning = () => tuneParam() === 'seam';
  */
 export function HomeV2() {
   const { locale, t } = useLocale();
-  const [accessMode, setAccessMode] = useState<AccessMode | null>(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('access') === 'signup' ? 'signup' : null);
-  const accessTrigger = useRef<HTMLElement | null>(null);
   const { h } = useHomeDict();
   // 开场覆盖层下面的内容（天空背景、各区块、页脚）等开场第一屏画好再挂载，不和纸张抢带宽；见 openingPaint.ts
   const painted = useOpeningPainted();
@@ -69,7 +65,6 @@ export function HomeV2() {
       {LogoTuningPanel && tuneParam() === 'logo' && <Suspense fallback={null}><LogoTuningPanel /></Suspense>}
       {SceneGradePanel && tuneParam() === 'grade' && <Suspense fallback={null}><SceneGradePanel /></Suspense>}
       {HeroTuningPanel && tuneParam() === 'hero' && <Suspense fallback={null}><HeroTuningPanel /></Suspense>}
-      <LazyAccessDialog returnFocusRef={accessTrigger} mode={accessMode} onClose={() => setAccessMode(null)} onModeChange={setAccessMode} />
     </div>
   );
 }
